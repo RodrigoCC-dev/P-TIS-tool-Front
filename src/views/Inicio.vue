@@ -20,11 +20,13 @@
               </div>
             </div>
             <br>
-            <div class="field">
-              <label class="label has-text-left">Clave de acceso</label>
+            <div class="field has-text-left">
+              <label class="label">Clave de acceso</label>
               <div class="control">
-                <input v-model="password" class="input" type="password">
+                <input v-model="password" class="input" type="password" v-bind:class="[ passError ? '' : 'is-danger']" v-on:click="noError">
+                <span></span>
               </div>
+              <p class="help is-danger" v-bind:style="{display: passError ? 'none' : 'inline'}">No es la contraseña correcta</p>
             </div>
             <br>
           </div>
@@ -62,7 +64,8 @@ export default {
   data () {
     return {
       correo: '',
-      password: ''
+      password: '',
+      passError: false
     }
   },
   computed: {
@@ -77,18 +80,43 @@ export default {
       console.log(this.password)
       if (this.correo === 'estudiante@usach.cl') {
         if (this.password === 'estudiante') {
-          this.$router.push('About')
+          this.$router.push('estudiante')
+        } else {
+          console.log('Error. No es estudiante')
+          this.passError = true
+        }
+      } else {
+        if (this.correo === 'profesor@usach.cl') {
+          if (this.password === 'profesor') {
+            this.$router.push('profesor')
+          } else {
+            console.log('Error. No es un profesor')
+            this.passError = true
+          }
+        } else {
+          if (this.correo === 'coordinador@usach.cl') {
+            if (this.password === 'coordinador') {
+              this.$router.push('coordinador')
+            } else {
+              console.log('Error. No es un coordinador')
+              this.passError = true
+            }
+          }
         }
       }
       return true
     }
+  },
+  noError: function () {
+    this.passError = false
+    return 0
   }
 }
 </script>
 
 <style lang="css" scoped>
 #init-container {
-  height: 650px;
+  height: 585px;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -104,7 +132,7 @@ export default {
 
 #init-container img {
   position: absolute;
-  height: 650px;
+  height: 585px;
   object-fit: cover;
 }
 </style>
