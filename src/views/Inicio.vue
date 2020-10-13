@@ -14,14 +14,14 @@
           <div class="field">
             <label class="label">Correo electrónico</label>
             <div class="control">
-              <input class="input" type="text" placeholder="nombre.apellido@usach.cl">
+              <input v-model="correo" class="input" type="text" placeholder="nombre.apellido@usach.cl">
             </div>
           </div>
           <br>
           <div class="field">
             <label class="label">Clave de acceso</label>
             <div class="control">
-              <input class="input" type="password">
+              <input v-model="password" class="input" type="password">
             </div>
           </div>
 
@@ -30,7 +30,7 @@
             <div class="column is-6">
               <div class="field">
                 <div class="control">
-                  <button class="button is-link is-fullwidth">Acceder</button>
+                  <button class="button is-link is-fullwidth" v-on:click="disteClick">Acceder</button>
                 </div>
               </div>
             </div>
@@ -51,6 +51,24 @@ export default {
   name: 'Inicio',
   components: {
     Header
+  },
+  data () {
+    return {
+      correo: '',
+      password: ''
+    }
+  },
+  computed: {
+    print: function () {
+      console.log(this.correo)
+      return console.log(this.password)
+    }
+  },
+  methods: {
+    disteClick: function () {
+      console.log(this.correo)
+      return console.log(this.password)
+    }
   }
 }
 </script>
