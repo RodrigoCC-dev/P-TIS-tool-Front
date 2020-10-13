@@ -2,7 +2,7 @@
   <div>
     <Header/>
     <div class="container">
-      <div id="init-container" class="columns">
+      <div id="init-container" class="columns is-vcentered is-fullheight">
         <img src="@/assets/images/eao-usach.png" class="is-tablet" style="z-index: 1"/>
         <div class="column is-3" style="z-index: 999"></div>
         <div class="column is-6 bg-semitransparent px-5 py-5" style="z-index: 999">
@@ -11,18 +11,22 @@
             <p>Herramienta de apoyo a las actividades de desarrollo de proyecto de software de los cursos P/TIS</p>
           </div>
 
-          <div class="field">
-            <label class="label">Correo electrónico</label>
-            <div class="control">
-              <input v-model="correo" class="input" type="text" placeholder="nombre.apellido@usach.cl">
+          <div class="is-vcentered">
+
+            <div class="field">
+              <label class="label has-text-left">Correo electrónico</label>
+              <div class="control">
+                <input v-model="correo" class="input" type="text" placeholder="nombre.apellido@usach.cl">
+              </div>
             </div>
-          </div>
-          <br>
-          <div class="field">
-            <label class="label">Clave de acceso</label>
-            <div class="control">
-              <input v-model="password" class="input" type="password">
+            <br>
+            <div class="field">
+              <label class="label has-text-left">Clave de acceso</label>
+              <div class="control">
+                <input v-model="password" class="input" type="password">
+              </div>
             </div>
+            <br>
           </div>
 
           <div class="columns">
@@ -41,16 +45,19 @@
         <div class="column is-3" style="z-index: 999"></div>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'Inicio',
   components: {
-    Header
+    Header,
+    Footer
   },
   data () {
     return {
@@ -67,7 +74,13 @@ export default {
   methods: {
     disteClick: function () {
       console.log(this.correo)
-      return console.log(this.password)
+      console.log(this.password)
+      if (this.correo === 'estudiante@usach.cl') {
+        if (this.password === 'estudiante') {
+          this.$router.push('About')
+        }
+      }
+      return true
     }
   }
 }

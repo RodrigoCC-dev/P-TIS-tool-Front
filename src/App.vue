@@ -3,7 +3,7 @@
 </template>
 
 <style lang="scss">
- @import './assets/styles/bulma.css';
+ @import './assets/stylesheets/bulma.css';
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
