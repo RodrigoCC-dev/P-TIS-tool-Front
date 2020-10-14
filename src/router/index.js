@@ -28,6 +28,11 @@ const routes = [
     path: '/coordinador',
     name: 'Coordinador',
     component: () => import(/* webpackChunkName: "coordinador" */ '../views/Coordinador.vue')
+  },
+  {
+    path: '/cliente',
+    name: 'Stakeholder',
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue')
   }
 ]
 
