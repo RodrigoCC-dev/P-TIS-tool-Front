@@ -19,6 +19,6 @@ test:
   before_script:
     - apt-get update
     # Install Chromium
-    - apt install -y chromium-browser
+    - apt install -y chromium
     # Install Firefox
     - apt-get install -y firefox
