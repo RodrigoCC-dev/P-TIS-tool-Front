@@ -15,7 +15,7 @@ test:
   script:
     - npm install --progres:false
     - npm run test:unit
-    - npm run test:e2e --env firefox,chrome [--headless]
+    - npm run test:e2e --env firefox,chrome --headless
   before_script:
     - apt-get update
     # Install Chrome
