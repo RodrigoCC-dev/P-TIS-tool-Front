@@ -9,16 +9,10 @@ build site:
     paths:
       - dist
 
-unit test:
+test:
   image: node:10
   stage: test
   script:
     - npm install --progres:false
     - npm run test:unit
-
-e2e test:
-  image: node:10
-  stage: acceptance test
-  script:
-    - npm install --progress=false
     - npm run test:e2e --env firefox,chrome [--headless]
