@@ -18,9 +18,6 @@ COPY package.json package-lock.json ./
 
 RUN npm install --progres:false
 
-# Generate build
-RUN npm run build
-
 ################
 ## Production ##
 ################
