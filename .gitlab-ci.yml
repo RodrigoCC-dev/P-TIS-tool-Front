@@ -25,11 +25,11 @@ e2e:
   image: node:10
   stage: integrations test
   services:
-    - chromedriver
-    - geckodriver
+    - selenium/standalone-chrome
+    - selenium/standalone-firefox
   script:
     - npm install --progres:false
-    - npm run test:e2e
+    - npm run test:e2e --env chrome,firefox --headless --disable-gpu
   before_script:
     - apt-get update
     # Install Chrome
@@ -39,4 +39,3 @@ e2e:
     - apt install -y ./google-chrome-stable_current_amd64.deb
     # Install Firefox
     - apt-get install -y firefox-esr
-    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
