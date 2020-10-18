@@ -1,7 +1,7 @@
 stages:
   - build
-  - test
-  - confidence-check
+  - unit test
+  - integrations test
 
 build site:
   image: node:10
@@ -14,19 +14,19 @@ build site:
     paths:
       - dist
 
-test:
+unit:
   image: node:10
-  stage: test
+  stage: unit test
   script:
     - npm install --progres:false
     - npm run test:unit
 
 e2e:
   image: node:10
-  stage: confidence-check
+  stage: integrations test
   services:
     - selenium/standalone-firefox
     - selenium/standalone-chrome
   script:
-    - npm run confidence-check --host=selenium__standalone-firefox
-    - npm run confidence-check --host=selenium__standalone-chrome
+    - npm run test:e2e --host=selenium__standalone-firefox
+    - npm run test:e2e --host=selenium__standalone-chrome
