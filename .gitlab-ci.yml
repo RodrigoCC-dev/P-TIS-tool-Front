@@ -45,7 +45,6 @@ test:
 
 to_docker:
   image: docker:latest
-  extends: build site
   stage: deploy
   services:
     - docker:dind
