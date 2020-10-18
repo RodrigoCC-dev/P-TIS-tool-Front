@@ -45,8 +45,8 @@ test:
 
 to_docker:
   image: docker:latest
-  stage: deploy
   extends: build
+  stage: deploy
   services:
     - docker:dind
   before_script:
