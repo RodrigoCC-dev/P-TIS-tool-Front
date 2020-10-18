@@ -15,10 +15,12 @@ test:
   script:
     - npm install --progres:false
     - npm run test:unit
-    - npm run test:e2e --env firefox,chrome --headless
-  before_script:
-    - apt-get update
-    # Install Chromium
-    - apt install -y chromium
-    # Install Firefox
-    - apt-get install -y firefox-esr
+
+e2e:
+  stage: confidence-check
+  services:
+    - selenium/standalone-firefox
+    - selenium/standalone-chrome
+  script:
+    - npm run confidence-check --host=selenium__standalone-firefox
+    - npm run confidence-check --host=selenium__standalone-chrome
