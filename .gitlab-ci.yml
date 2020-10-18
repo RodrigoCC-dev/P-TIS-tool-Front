@@ -28,5 +28,6 @@ e2e:
     - selenium/standalone-firefox
     - selenium/standalone-chrome
   script:
+    - npm install --progres:false
     - npm run test:e2e --host=selenium__standalone-firefox
     - npm run test:e2e --host=selenium__standalone-chrome
