@@ -30,7 +30,7 @@ e2e:
   script:
     # - npm install --progres:false
     # - npm run test:e2e --env chrome,firefox --headless --disable-gpu
-    - yarn install --frozen-lockfile
+    - yarn install
     - yarn test:e2e
   before_script:
     - apt-get update
