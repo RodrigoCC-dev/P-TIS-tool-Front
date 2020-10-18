@@ -1,3 +1,8 @@
+stages:
+  - build
+  - test
+  - confidence-check
+
 build site:
   image: node:10
   stage: build
