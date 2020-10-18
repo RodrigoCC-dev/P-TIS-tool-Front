@@ -25,11 +25,10 @@ e2e:
   image: node:10
   stage: integrations test
   services:
-    - selenium/standalone-firefox
-    - selenium/standalone-chrome
+    - chromedriver
+    - geckodriver
   script:
     - npm install --progres:false
-    - npm run test:e2e
     - npm run test:e2e
   before_script:
     - apt-get update
