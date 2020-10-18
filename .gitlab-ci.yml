@@ -39,3 +39,4 @@ e2e:
     - apt install -y ./google-chrome-stable_current_amd64.deb
     # Install Firefox
     - apt-get install -y firefox-esr
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
