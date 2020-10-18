@@ -29,8 +29,8 @@ e2e:
     - selenium/standalone-chrome
   script:
     - npm install --progres:false
-    - npm run test:e2e --host=selenium__standalone-firefox
-    - npm run test:e2e --host=selenium__standalone-chrome
+    - npm run test:e2e
+    - npm run test:e2e
   before_script:
     - apt-get update
     # Install Chrome
