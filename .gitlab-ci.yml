@@ -1,10 +1,11 @@
+image: node:10
 stages:
   - build
+  - static code analisys
   - unit test
-  - integrations test
+  - deploy
 
 build site:
-  image: node:10
   stage: build
   script:
     - npm install --progress=false
@@ -14,30 +15,43 @@ build site:
     paths:
       - dist
 
-unit:
-  image: node:10
+test:
   stage: unit test
   script:
     - npm install --progres:false
     - npm run test:unit
 
-e2e:
-  image: node:10
-  stage: integrations test
-  services:
-    - selenium/standalone-chrome
-    - selenium/standalone-firefox
-  script:
+# e2e:
+#  image: node:10
+#  stage: integrations test
+#  services:
+#    - selenium/standalone-chrome
+#    - selenium/standalone-firefox
+#  script:
     # - npm install --progres:false
     # - npm run test:e2e --env chrome,firefox --headless --disable-gpu
-    - yarn install
-    - yarn test:e2e
-  before_script:
-    - apt-get update
+#    - yarn install
+#    - yarn test:e2e
+#  before_script:
+#    - apt-get update
     # Install Chrome
-    - apt-get install -yq libnss3 unzip openjdk-8-jre-headless xvfb libxi6 libgconf-2-4
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-    - apt install -y ./google-chrome-stable_current_amd64.deb
+#    - apt-get install -yq libnss3 unzip openjdk-8-jre-headless xvfb libxi6 libgconf-2-4
+#    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#    - curl -sS -o - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+#    - apt install -y ./google-chrome-stable_current_amd64.deb
     # Install Firefox
-    - apt-get install -y firefox-esr
+#    - apt-get install -y firefox-esr
+##
+
+to_docker:
+  image: docker:latest
+  stage: deploy
+  extends: build
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - echo "deploying to Docker start..."
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
