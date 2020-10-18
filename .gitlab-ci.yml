@@ -28,8 +28,10 @@ e2e:
     - selenium/standalone-chrome
     - selenium/standalone-firefox
   script:
-    - npm install --progres:false
-    - npm run test:e2e --env chrome,firefox --headless --disable-gpu
+    # - npm install --progres:false
+    # - npm run test:e2e --env chrome,firefox --headless --disable-gpu
+    - yarn install --frozen-lockfile
+    - yarn test:e2e
   before_script:
     - apt-get update
     # Install Chrome
