@@ -29,8 +29,8 @@ FROM nginx:alpine
 EXPOSE 80
 
 # Copy artifact build from the 'build environment'
-COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY usr/src/app/dist /usr/share/nginx/html
 
 # Run nginx
 CMD ["nginx", "-g", "daemon off;"]
