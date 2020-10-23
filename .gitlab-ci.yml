@@ -5,6 +5,10 @@ stages:
   - static code analisys
   - deploy
 
+only:
+  - tags
+  - master
+
 build site:
   stage: build
   script:
