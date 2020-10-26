@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Inicio',
+    component: () => import('../views/Inicio.vue')
   },
   {
     path: '/about',
@@ -14,6 +13,26 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/estudiante',
+    name: 'Estudiante',
+    component: () => import(/* webpackChunkName: "estudiante" */ '../views/Estudiante.vue')
+  },
+  {
+    path: '/profesor',
+    name: 'Profesor',
+    component: () => import(/* webpackChunkName: "profesor" */ '../views/Profesor.vue')
+  },
+  {
+    path: '/coordinador',
+    name: 'Coordinador',
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Coordinador.vue')
+  },
+  {
+    path: '/cliente',
+    name: 'Stakeholder',
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue')
   }
 ]
 
