@@ -65,7 +65,7 @@ export default {
     verRevision: function () {
       return true
     },
-    verComentadas: function () {
+    /*  verComentadas: function () {
       for (var valor in this.tabs) {
         if (valor === 'is-active') {
           set(valor) = ''
@@ -81,7 +81,7 @@ export default {
       console.log(this.tabs)
       console.log(this.componentes)
       return true
-    },
+    }, */
     verRespondidas: function () {
       return true
     },

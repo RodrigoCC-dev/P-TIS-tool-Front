@@ -23,10 +23,10 @@
             <div class="field has-text-left">
               <label class="label">Clave de acceso</label>
               <div class="control">
-                <input v-model="password" class="input" type="password" v-bind:class="[ passError ? '' : 'is-danger']" v-on:click="noError">
+                <input v-model="password" class="input" type="password" v-bind:class="{ 'is-danger' : passError }" v-on:click="noError">
                 <span></span>
               </div>
-              <p class="help is-danger" v-bind:style="{display: passError ? 'none' : 'inline'}">No es la contraseña correcta</p>
+              <p class="help is-danger" v-bind:style="{display: clases.displayText}">No es la contraseña correcta</p>
             </div>
             <br>
           </div>
@@ -65,13 +65,20 @@ export default {
     return {
       correo: '',
       password: '',
-      passError: false
+      passError: false,
+      clases: {
+        inputBox: '',
+        displayText: 'none'
+      }
     }
   },
   computed: {
-    print: function () {
-      console.log(this.correo)
-      return console.log(this.password)
+    loginError: function () {
+      if (this.passError === true) {
+        return this.mostrarError()
+      } else {
+        return this.ocultarError()
+      }
     }
   },
   methods: {
@@ -109,6 +116,14 @@ export default {
   },
   noError: function () {
     this.passError = false
+    return 0
+  },
+  mostrarError: function () {
+    this.clases.displayText = 'inline'
+    return 0
+  },
+  ocultarError: function () {
+    this.clases.displayText = 'none'
     return 0
   }
 }
