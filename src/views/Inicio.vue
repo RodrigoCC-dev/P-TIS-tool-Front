@@ -54,6 +54,7 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import Auth from '@/services/auth.js'
 
 export default {
   name: 'Inicio',
@@ -73,24 +74,18 @@ export default {
     }
   },
   computed: {
-    loginError: function () {
-      if (this.passError === true) {
-        return this.mostrarError()
-      } else {
-        return this.ocultarError()
-      }
-    }
   },
   methods: {
-    disteClick: function () {
+    async disteClick () {
       console.log(this.correo)
       console.log(this.password)
-      if (this.correo === 'estudiante@usach.cl') {
+      /*  if (this.correo === 'estudiante@usach.cl') {
         if (this.password === 'estudiante') {
           this.$router.push('estudiante')
         } else {
           console.log('Error. No es estudiante')
           this.passError = true
+          this.mostrarError()
         }
       } else {
         if (this.correo === 'profesor@usach.cl') {
@@ -99,6 +94,7 @@ export default {
           } else {
             console.log('Error. No es un profesor')
             this.passError = true
+            this.mostrarError()
           }
         } else {
           if (this.correo === 'coordinador@usach.cl') {
@@ -107,24 +103,32 @@ export default {
             } else {
               console.log('Error. No es un coordinador')
               this.passError = true
+              this.mostrarError()
             }
           }
         }
+      } */
+      try {
+        await Auth.login(this.correo, this.password)
+        console.log('Logueado')
+      } catch (e) {
+        this.passError = true
       }
       return true
     }
   },
   noError: function () {
     this.passError = false
+    this.ocultarError()
     return 0
   },
   mostrarError: function () {
     this.clases.displayText = 'inline'
-    return 0
+    return true
   },
   ocultarError: function () {
     this.clases.displayText = 'none'
-    return 0
+    return true
   }
 }
 </script>
