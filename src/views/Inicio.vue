@@ -113,6 +113,7 @@ export default {
         console.log('Logueado')
       } catch (e) {
         this.passError = true
+        this.mostrarError()
       }
       return true
     }

@@ -12,6 +12,7 @@ export default {
     }
     return axios.post(ENDPOINT_PATH + '/auth/login', user).then(response => {
       console.log(response.data)
+      localStorage.removeItem('user_tk')
       localStorage.setItem('user_tk', response.data.jwt)
     })
   }
