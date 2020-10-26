@@ -17,22 +17,26 @@ const routes = [
   {
     path: '/estudiante',
     name: 'Estudiante',
-    component: () => import(/* webpackChunkName: "estudiante" */ '../views/Estudiante.vue')
+    component: () => import(/* webpackChunkName: "estudiante" */ '../views/Estudiante.vue'),
+    meta: { requireAuth: true }
   },
   {
     path: '/profesor',
     name: 'Profesor',
-    component: () => import(/* webpackChunkName: "profesor" */ '../views/Profesor.vue')
+    component: () => import(/* webpackChunkName: "profesor" */ '../views/Profesor.vue'),
+    meta: { requireAuth: true }
   },
   {
     path: '/coordinador',
     name: 'Coordinador',
-    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Coordinador.vue')
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Coordinador.vue'),
+    meta: { requireAuth: true }
   },
   {
     path: '/cliente',
     name: 'Stakeholder',
-    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue')
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue'),
+    meta: { requireAuth: true }
   }
 ]
 

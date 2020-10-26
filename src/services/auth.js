@@ -15,5 +15,15 @@ export default {
       localStorage.removeItem('user_tk')
       localStorage.setItem('user_tk', response.data.jwt)
     })
+  },
+
+  authHeader () {
+    const user = localStorage.getItem('user_tk')
+    console.log(user)
+    if (user) {
+      return { Authorization: 'Bearer ' + user }
+    } else {
+      return {}
+    }
   }
 }

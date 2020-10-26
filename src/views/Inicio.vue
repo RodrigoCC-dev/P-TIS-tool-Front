@@ -26,7 +26,7 @@
                 <input v-model="password" class="input" type="password" v-bind:class="{ 'is-danger' : passError }" v-on:click="noError">
                 <span></span>
               </div>
-              <p class="help is-danger" v-bind:style="{display: clases.displayText}">No es la contraseña correcta</p>
+              <p class="help is-danger" v-bind:style="{ display: clases.displayText }">No es la contraseña correcta</p>
             </div>
             <br>
           </div>
@@ -56,6 +56,9 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Auth from '@/services/auth.js'
 
+import { mapState } from 'vuex'
+import axios from 'axios'
+
 export default {
   name: 'Inicio',
   components: {
@@ -74,6 +77,16 @@ export default {
     }
   },
   computed: {
+    ...mapState(['apiUrl', 'authenticated']),
+
+    registrarAutenticacion: {
+      get: function () {
+        return this.$store.state.authenticated
+      },
+      set: function (valor) {
+        return this.$store.commit('setAutenticacion', valor)
+      }
+    }
   },
   methods: {
     async disteClick () {
@@ -111,11 +124,18 @@ export default {
       try {
         await Auth.login(this.correo, this.password)
         console.log('Logueado')
-      } catch (e) {
+        try {
+          const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
+          console.log(usuario)
+        } catch (e1) {
+          console.log(e1)
+        }
+        this.registrarAutenticacion = true
+      } catch (e2) {
+        console.log(e2)
         this.passError = true
         this.mostrarError()
       }
-      return true
     }
   },
   noError: function () {
