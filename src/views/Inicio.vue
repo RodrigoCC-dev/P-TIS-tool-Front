@@ -26,7 +26,7 @@
                 <input v-model="password" class="input" type="password" v-bind:class="{ 'is-danger' : passError }" v-on:click="noError">
                 <span></span>
               </div>
-              <p class="help is-danger" v-bind:style="{ display: clases.displayText }">No es la contraseña correcta</p>
+              <p class="help is-danger" v-bind:style="{ display: clases.displayText }">Usuario o contraseña incorrectos</p>
             </div>
             <br>
           </div>
@@ -77,7 +77,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'authenticated']),
+    ...mapState(['apiUrl', 'authenticated', 'usuario']),
 
     registrarAutenticacion: {
       get: function () {
@@ -89,44 +89,44 @@ export default {
     }
   },
   methods: {
+    noError: function () {
+      this.passError = false
+      this.ocultarError()
+      return 0
+    },
+    mostrarError: function () {
+      this.clases.displayText = 'inline'
+      return true
+    },
+    ocultarError: function () {
+      this.clases.displayText = 'none'
+      return true
+    },
+    redirigirUsuario () {
+      if (this.usuario.rol.rango === 1) {
+        this.$router.push('coordinador')
+      } else if (this.usuario.rol.rango === 2) {
+        this.$router.push('profesor')
+      } else if (this.usuario.rol.rango === 3) {
+        this.$router.push('estudiante')
+      } else if (this.usuario.rol.rango === 4) {
+        this.$router.push('stakeholder')
+      } else {
+        this.$router.push('inicio')
+      }
+    },
+
     async disteClick () {
       console.log(this.correo)
       console.log(this.password)
-      /*  if (this.correo === 'estudiante@usach.cl') {
-        if (this.password === 'estudiante') {
-          this.$router.push('estudiante')
-        } else {
-          console.log('Error. No es estudiante')
-          this.passError = true
-          this.mostrarError()
-        }
-      } else {
-        if (this.correo === 'profesor@usach.cl') {
-          if (this.password === 'profesor') {
-            this.$router.push('profesor')
-          } else {
-            console.log('Error. No es un profesor')
-            this.passError = true
-            this.mostrarError()
-          }
-        } else {
-          if (this.correo === 'coordinador@usach.cl') {
-            if (this.password === 'coordinador') {
-              this.$router.push('coordinador')
-            } else {
-              console.log('Error. No es un coordinador')
-              this.passError = true
-              this.mostrarError()
-            }
-          }
-        }
-      } */
       try {
         await Auth.login(this.correo, this.password)
         console.log('Logueado')
         try {
           const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
-          console.log(usuario)
+          console.log(usuario.data)
+          this.$store.commit('setUsuario', usuario.data)
+          this.redirigirUsuario()
         } catch (e1) {
           console.log(e1)
         }
@@ -137,19 +137,6 @@ export default {
         this.mostrarError()
       }
     }
-  },
-  noError: function () {
-    this.passError = false
-    this.ocultarError()
-    return 0
-  },
-  mostrarError: function () {
-    this.clases.displayText = 'inline'
-    return true
-  },
-  ocultarError: function () {
-    this.clases.displayText = 'none'
-    return true
   }
 }
 </script>
