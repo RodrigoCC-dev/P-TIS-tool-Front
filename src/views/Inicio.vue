@@ -23,10 +23,10 @@
             <div class="field has-text-left">
               <label class="label">Clave de acceso</label>
               <div class="control">
-                <input v-model="password" class="input" type="password" v-bind:class="[ passError ? '' : 'is-danger']" v-on:click="noError">
+                <input v-model="password" class="input" type="password" v-bind:class="{ 'is-danger' : passError }" v-on:click="noError">
                 <span></span>
               </div>
-              <p class="help is-danger" v-bind:style="{display: passError ? 'none' : 'inline'}">No es la contraseña correcta</p>
+              <p class="help is-danger" v-bind:style="{ display: clases.displayText }">Usuario o contraseña incorrectos</p>
             </div>
             <br>
           </div>
@@ -54,6 +54,10 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import Auth from '@/services/auth.js'
+
+import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Inicio',
@@ -65,51 +69,74 @@ export default {
     return {
       correo: '',
       password: '',
-      passError: false
+      passError: false,
+      clases: {
+        inputBox: '',
+        displayText: 'none'
+      }
     }
   },
   computed: {
-    print: function () {
-      console.log(this.correo)
-      return console.log(this.password)
+    ...mapState(['apiUrl', 'authenticated', 'usuario']),
+
+    registrarAutenticacion: {
+      get: function () {
+        return this.$store.state.authenticated
+      },
+      set: function (valor) {
+        return this.$store.commit('setAutenticacion', valor)
+      }
     }
   },
   methods: {
-    disteClick: function () {
+    noError: function () {
+      this.passError = false
+      this.ocultarError()
+      return 0
+    },
+    mostrarError: function () {
+      this.clases.displayText = 'inline'
+      return true
+    },
+    ocultarError: function () {
+      this.clases.displayText = 'none'
+      return true
+    },
+    redirigirUsuario () {
+      if (this.usuario.rol.rango === 1) {
+        this.$router.push('coordinador')
+      } else if (this.usuario.rol.rango === 2) {
+        this.$router.push('profesor')
+      } else if (this.usuario.rol.rango === 3) {
+        this.$router.push('estudiante')
+      } else if (this.usuario.rol.rango === 4) {
+        this.$router.push('stakeholder')
+      } else {
+        this.$router.push('inicio')
+      }
+    },
+
+    async disteClick () {
       console.log(this.correo)
       console.log(this.password)
-      if (this.correo === 'estudiante@usach.cl') {
-        if (this.password === 'estudiante') {
-          this.$router.push('estudiante')
-        } else {
-          console.log('Error. No es estudiante')
-          this.passError = true
+      try {
+        await Auth.login(this.correo, this.password)
+        console.log('Logueado')
+        try {
+          const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
+          console.log(usuario.data)
+          this.$store.commit('setUsuario', usuario.data)
+          this.redirigirUsuario()
+        } catch (e1) {
+          console.log(e1)
         }
-      } else {
-        if (this.correo === 'profesor@usach.cl') {
-          if (this.password === 'profesor') {
-            this.$router.push('profesor')
-          } else {
-            console.log('Error. No es un profesor')
-            this.passError = true
-          }
-        } else {
-          if (this.correo === 'coordinador@usach.cl') {
-            if (this.password === 'coordinador') {
-              this.$router.push('coordinador')
-            } else {
-              console.log('Error. No es un coordinador')
-              this.passError = true
-            }
-          }
-        }
+        this.registrarAutenticacion = true
+      } catch (e2) {
+        console.log(e2)
+        this.passError = true
+        this.mostrarError()
       }
-      return true
     }
-  },
-  noError: function () {
-    this.passError = false
-    return 0
   }
 }
 </script>
