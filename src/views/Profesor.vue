@@ -11,8 +11,8 @@
           </ul>
         </div>
       </nav>
-      <Grupos v-if="nombreComponente === 'estudiantes'"/>
-      <Estudiantes v-else/>
+      <Estudiantes v-if="nombreComponente === 'estudiantes'"/>
+      <Grupos v-else-if="nombreComponente === 'grupos'"/>
     </div>
 
     <Footer/>
@@ -40,7 +40,7 @@ export default {
   },
   data () {
     return {
-      nombreComponente: null,
+      nombreComponente: 'estudiantes',
       nombreTabActiva: 'estudiantes',
       nombreTabs,
       tabs: {
