@@ -11,8 +11,8 @@
           </ul>
         </div>
       </nav>
-      <Estudiantes v-if="nombreComponente === 'estudiantes'"/>
-      <Grupos v-else-if="nombreComponente === 'grupos'"/>
+      <Estudiantes v-if="nombreTabActiva === nombreTabs.Estudiantes"/>
+      <Grupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
     </div>
 
     <Footer/>
@@ -40,19 +40,13 @@ export default {
   },
   data () {
     return {
-      nombreComponente: 'estudiantes',
       nombreTabActiva: 'estudiantes',
-      nombreTabs,
-      tabs: {
-        [nombreTabs.Estudiantes]: Estudiantes,
-        [nombreTabs.Grupos]: Grupos
-      }
+      nombreTabs
     }
   },
   methods: {
     elegirTab: function (nombreTab) {
       this.nombreTabActiva = nombreTab
-      this.nombreComponente = nombreTab
     }
   }
 }
