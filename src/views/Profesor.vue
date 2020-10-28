@@ -3,8 +3,15 @@
     <Header/>
 
     <div class="container">
-      <Navbar/>
-      <p>Esta es la página del profesor</p>
+      <nav>
+        <div class="tabs">
+          <ul>
+            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Estudiantes }" v-on:click="elegirTab(nombreTabs.Estudiantes)"><a><strong>Estudiantes</strong></a></li>
+            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Grupos }" v-on:click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
+          </ul>
+        </div>
+      </nav>
+      <Component v-bind:is="nombreComponente"/>
     </div>
 
     <Footer/>
@@ -14,14 +21,38 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import Navbar from '@/components/Navbar.vue'
+import Estudiantes from '@/components/Estudiantes.vue'
+import Grupos from '@/components/Grupos.vue'
+
+const nombreTabs = {
+  Estudiantes: 'estudiantes',
+  Grupos: 'grupos'
+}
 
 export default {
   name: 'Profesor',
   components: {
     Header,
     Footer,
-    Navbar
+    Estudiantes,
+    Grupos
+  },
+  data () {
+    return {
+      nombreComponente: Estudiantes,
+      nombreTabActiva: 'estudiantes',
+      nombreTabs,
+      tabs: {
+        [nombreTabs.Estudiantes]: Estudiantes,
+        [nombreTabs.Grupos]: Grupos
+      }
+    }
+  },
+  methods: {
+    elegirTab: function (nombreTab) {
+      this.nombreTabActiva = nombreTab
+      this.nombreComponente = this.tabs[nombreTab]
+    }
   }
 }
 </script>
