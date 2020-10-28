@@ -117,18 +117,14 @@ export default {
     },
 
     async disteClick () {
-      console.log(this.correo)
-      console.log(this.password)
       try {
         await Auth.login(this.correo, this.password)
-        console.log('Logueado')
         try {
           const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
-          console.log(usuario.data)
           this.$store.commit('setUsuario', usuario.data)
           this.redirigirUsuario()
         } catch (e1) {
-          console.log(e1)
+          console.log('No se pudo obtener la información del usuario')
         }
         this.registrarAutenticacion = true
       } catch (e2) {

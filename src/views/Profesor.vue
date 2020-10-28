@@ -11,7 +11,8 @@
           </ul>
         </div>
       </nav>
-      <Component v-bind:is="nombreComponente"/>
+      <Grupos v-if="nombreComponente === 'estudiantes'"/>
+      <Estudiantes v-else/>
     </div>
 
     <Footer/>
@@ -39,7 +40,7 @@ export default {
   },
   data () {
     return {
-      nombreComponente: Estudiantes,
+      nombreComponente: null,
       nombreTabActiva: 'estudiantes',
       nombreTabs,
       tabs: {
@@ -51,7 +52,7 @@ export default {
   methods: {
     elegirTab: function (nombreTab) {
       this.nombreTabActiva = nombreTab
-      this.nombreComponente = this.tabs[nombreTab]
+      this.nombreComponente = nombreTab
     }
   }
 }
