@@ -33,8 +33,10 @@ export default {
   },
   methods: {
     cerrarSesion: function () {
-      this.$router.push('/')
-      return this.$store.commit('setAutenticacion', false)
+      localStorage.removeItem('user_tk')
+      this.$store.commit('setAutenticacion', false)
+      this.$store.commit('setUsuario', {})
+      return this.$router.push('/')
     }
   }
 }
