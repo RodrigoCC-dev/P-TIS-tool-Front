@@ -16,7 +16,7 @@
             <div class="field">
               <label class="label has-text-left">Correo electrónico</label>
               <div class="control">
-                <input v-model="correo" class="input" type="text" placeholder="nombre.apellido@usach.cl">
+                <input v-model="correo" class="input" type="text" v-bind:class="{ 'is-danger' : passError }" placeholder="nombre.apellido@usach.cl" v-on:click="noError">
               </div>
             </div>
             <br>
@@ -26,7 +26,7 @@
                 <input v-model="password" class="input" type="password" v-bind:class="{ 'is-danger' : passError }" v-on:click="noError">
                 <span></span>
               </div>
-              <p class="help is-danger" v-bind:style="{ display: clases.displayText }">Usuario o contraseña incorrectos</p>
+              <p class="help is-danger" v-bind:style="{ display: displayText }">Usuario o contraseña incorrectos</p>
             </div>
             <br>
           </div>
@@ -70,10 +70,7 @@ export default {
       correo: '',
       password: '',
       passError: false,
-      clases: {
-        inputBox: '',
-        displayText: 'none'
-      }
+      displayText: 'none'
     }
   },
   computed: {
@@ -95,11 +92,11 @@ export default {
       return 0
     },
     mostrarError: function () {
-      this.clases.displayText = 'inline'
+      this.displayText = 'inline'
       return true
     },
     ocultarError: function () {
-      this.clases.displayText = 'none'
+      this.displayText = 'none'
       return true
     },
     redirigirUsuario () {
@@ -112,7 +109,7 @@ export default {
       } else if (this.usuario.rol.rango === 4) {
         this.$router.push('stakeholder')
       } else {
-        this.$router.push('inicio')
+        this.$router.push('/')
       }
     },
 
@@ -124,11 +121,10 @@ export default {
           this.$store.commit('setUsuario', usuario.data)
           this.redirigirUsuario()
         } catch (e1) {
-          console.log('No se pudo obtener la información del usuario')
+          console.log('No se ha cargado la información del usuario')
         }
         this.registrarAutenticacion = true
       } catch (e2) {
-        console.log(e2)
         this.passError = true
         this.mostrarError()
       }
