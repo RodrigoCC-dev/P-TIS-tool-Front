@@ -12,7 +12,7 @@
         <template v-if="this.authenticated">
           <div class="column is-6"></div>
           <div class="column is-2">
-            <button class="btn is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
+            <button class="button is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
           </div>
         </template>
         <template v-else>
