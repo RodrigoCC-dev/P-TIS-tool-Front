@@ -4,7 +4,7 @@
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2">
-        <button class="button is-success" @click="nuevoEstudiante">Agregar Estudiante</button>
+        <button class="button is-success" @click="agregarEstudiante">Agregar Estudiante</button>
       </div>
     </div>
     <div v-if="verFormulario">
@@ -70,10 +70,10 @@
           <div class="column is-12">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-link">Agregar</a>
+                <a class="button is-link" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-light">Cancelar</a>
+                <a class="button is-light" @click="noAgregar">Cancelar</a>
               </div>
             </div>
           </div>
@@ -106,7 +106,25 @@ export default {
   },
   methods: {
     nuevoEstudiante: function () {
+      this.estudiante.usuario.nombre = null
+      this.estudiante.usuario.apellido_paterno = null
+      this.estudiante.usuario.apellido_materno = null
+      this.estudiante.usuario.run = null
+      this.estudiante.usuario.correo_elec = null
+      this.estudiante.seccion.codigo = null
+    },
+    agregarEstudiante: function () {
       this.verFormulario = true
+      this.nuevoEstudiante()
+    },
+    agregar: function () {
+      console.log(this.estudiante)
+      this.nuevoEstudiante()
+      this.verFormulario = false
+    },
+    noAgregar: function () {
+      this.nuevoEstudiante()
+      this.verFormulario = false
     }
   }
 }
