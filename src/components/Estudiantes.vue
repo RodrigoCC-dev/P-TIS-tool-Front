@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Este es el componente de los estudiantes</p>
+    <br>
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2">
@@ -48,18 +48,17 @@
             <div class="field">
               <label class="label">Correo electrónico:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.correo_elec" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
+                <input v-model="estudiante.usuario.email" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
               </div>
             </div>
           </div>
           <div class="column is-9">
             <div class="field">
               <label class="label">Sección - Curso:</label>
-              <div class="control is-expanded">
-                <div class="select is-fullwith">
-                  <select v-model="estudiante.seccion.codigo">
-                    <option value="V5">V5 - Curso</option>
-                    <option value="V6">V6 - Otro curso</option>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select v-model="estudiante.seccion_id">
+                    <option  v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">{{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{seccion.curso.codigo}})</option>
                   </select>
                 </div>
               </div>
@@ -79,11 +78,17 @@
           </div>
         </div>
       </form>
+      <hr>
     </div>
   </div>
 </template>
 
 <script>
+import Auth from '@/services/auth.js'
+
+import { mapState } from 'vuex'
+import axios from 'axios'
+
 export default {
   name: 'Estudiantes',
   data () {
@@ -96,13 +101,14 @@ export default {
           apellido_paterno: null,
           apellido_materno: null,
           run: null,
-          correo_elec: null
+          email: null
         },
-        seccion: {
-          codigo: null
-        }
+        seccion_id: null
       }
     }
+  },
+  computed: {
+    ...mapState(['apiUrl'])
   },
   methods: {
     nuevoEstudiante: function () {
@@ -110,22 +116,46 @@ export default {
       this.estudiante.usuario.apellido_paterno = null
       this.estudiante.usuario.apellido_materno = null
       this.estudiante.usuario.run = null
-      this.estudiante.usuario.correo_elec = null
-      this.estudiante.seccion.codigo = null
+      this.estudiante.usuario.email = null
+      this.estudiante.seccion_id = null
     },
     agregarEstudiante: function () {
       this.verFormulario = true
       this.nuevoEstudiante()
     },
-    agregar: function () {
+    async agregar () {
       console.log(this.estudiante)
-      this.nuevoEstudiante()
+      // this.nuevoEstudiante()
+      const nuevoEstudiante = {
+        estudiante: {
+          seccion_id: this.estudiante.seccion_id,
+          usuario_attributes: this.estudiante.usuario
+        }
+      }
+      try {
+        const respuesta = await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
+        console.log(respuesta)
+      } catch (e) {
+        console.log(e)
+      }
       this.verFormulario = false
     },
     noAgregar: function () {
       this.nuevoEstudiante()
       this.verFormulario = false
+    },
+    async obtenerSecciones () {
+      try {
+        const secciones = await axios.get(this.apiUrl + '/secciones', { headers: Auth.authHeader() })
+        console.log(secciones.data)
+        this.secciones = secciones.data
+      } catch (error) {
+        console.log(error)
+      }
     }
+  },
+  mounted () {
+    this.obtenerSecciones()
   }
 }
 </script>

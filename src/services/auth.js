@@ -24,5 +24,14 @@ export default {
     } else {
       return {}
     }
+  },
+
+  postHeader () {
+    const user = localStorage.getItem('user_tk')
+    if (user) {
+      return { Authorization: 'Bearer ' + user, 'Content-Type': 'application/json' }
+    } else {
+      return {}
+    }
   }
 }
