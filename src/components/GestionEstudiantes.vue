@@ -168,7 +168,8 @@ export default {
         correo_mal: 'El correo ingresado no es válido',
         sin_usach: 'El correo ingresado no es corporativo (@usach.cl)',
         sin_run: 'No se ha ingresado R.U.N. del estudiante',
-        run_error: 'No es un R.U.N. válido'
+        run_error: 'No es un R.U.N. válido',
+        run_repetido: 'Usuario ya se encuentra en el sistema'
       }
     }
   },
@@ -210,6 +211,19 @@ export default {
       this.verFormulario = true
       this.nuevoEstudiante()
     },
+    existeEstudiante: function () {
+      let existe = false
+      let aux = false
+      for (var i = 0; i < this.listaEstudiantes.length; i++) {
+        aux = (this.listaEstudiantes[i].run_est === this.estudiante.usuario.run)
+        existe = aux || existe
+      }
+      if (existe) {
+        this.runEntrada.error = true
+        this.runEntrada.mensaje = this.mensajes.run_repetido
+      }
+      return existe
+    },
     async agregar () {
       if (this.validarFormulario()) {
         const nuevoEstudiante = {
@@ -230,6 +244,12 @@ export default {
     noAgregar: function () {
       this.nuevoEstudiante()
       this.verFormulario = false
+      this.nombreEntrada.error = false
+      this.apellidoPaternoEntrada.error = false
+      this.apellidoMaternoEntrada.error = false
+      this.runEntrada.error = false
+      this.emailEntrada.error = false
+      this.seccionEntrada.error = false
     },
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
@@ -396,6 +416,7 @@ export default {
       esvalido = esvalido && this.validarApellidoM()
       esvalido = esvalido && this.validarEmail()
       esvalido = esvalido && this.validarSeccion()
+      esvalido = esvalido && !this.existeEstudiante()
       return esvalido
     }
   },
