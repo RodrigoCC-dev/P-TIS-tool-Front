@@ -129,11 +129,11 @@ export default {
       secciones: {},
       estudiante: {
         usuario: {
-          nombre: null,
-          apellido_paterno: null,
-          apellido_materno: null,
-          run: null,
-          email: null
+          nombre: '',
+          apellido_paterno: '',
+          apellido_materno: '',
+          run: '',
+          email: ''
         },
         seccion_id: null
       },
@@ -199,11 +199,11 @@ export default {
       }
     },
     nuevoEstudiante: function () {
-      this.estudiante.usuario.nombre = null
-      this.estudiante.usuario.apellido_paterno = null
-      this.estudiante.usuario.apellido_materno = null
-      this.estudiante.usuario.run = null
-      this.estudiante.usuario.email = null
+      this.estudiante.usuario.nombre = ''
+      this.estudiante.usuario.apellido_paterno = ''
+      this.estudiante.usuario.apellido_materno = ''
+      this.estudiante.usuario.run = ''
+      this.estudiante.usuario.email = ''
       this.estudiante.seccion_id = null
     },
     agregarEstudiante: function () {
@@ -239,7 +239,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.estudiante.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || sinEsp.test(nombre)) {
+        if (nombre === null || nombre.length === 0 || sinEsp.test(nombre) || nombre === undefined || nombre === '') {
           this.nombreEntrada.error = true
           this.nombreEntrada.mensaje = this.mensajes.sin_nombre
           return false
@@ -263,9 +263,9 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_paterno
       try {
-        if (apellido === null || apellido.length === 0 || sinEsp.test(apellido)) {
+        if (apellido === null || apellido.length === 0 || sinEsp.test(apellido) || apellido === undefined || apellido === '') {
           this.apellidoPaternoEntrada.error = true
-          this.apeliidoPaternoEntrada.mensaje = this.mensajes.sin_nombre
+          this.apellidoPaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
         } else if (!regExp.test(apellido)) {
           this.apellidoPaternoEntrada.error = true
@@ -289,7 +289,7 @@ export default {
       try {
         if (apellido === undefined || apellido.length === 0 || sinEsp.test(apellido) || apellido === '' || apellido === null) {
           this.apellidoMaternoEntrada.error = true
-          this.apeliidoMaternoEntrada.mensaje = this.mensajes.sin_nombre
+          this.apellidoMaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
         } else if (!regExp.test(apellido)) {
           this.apellidoMaternoEntrada.error = true
@@ -396,7 +396,6 @@ export default {
       esvalido = esvalido && this.validarApellidoM()
       esvalido = esvalido && this.validarEmail()
       esvalido = esvalido && this.validarSeccion()
-      console.log(esvalido)
       return esvalido
     }
   },
