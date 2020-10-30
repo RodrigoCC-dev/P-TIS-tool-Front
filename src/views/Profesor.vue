@@ -11,8 +11,8 @@
           </ul>
         </div>
       </nav>
-      <Estudiantes v-if="nombreTabActiva === nombreTabs.Estudiantes"/>
-      <Grupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
+      <GestionEstudiantes v-if="nombreTabActiva === nombreTabs.Estudiantes"/>
+      <GestionGrupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
     </div>
 
     <Footer/>
@@ -22,8 +22,8 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import Estudiantes from '@/components/Estudiantes.vue'
-import Grupos from '@/components/Grupos.vue'
+import GestionEstudiantes from '@/components/GestionEstudiantes.vue'
+import GestionGrupos from '@/components/GestionGrupos.vue'
 
 const nombreTabs = {
   Estudiantes: 'estudiantes',
@@ -35,8 +35,8 @@ export default {
   components: {
     Header,
     Footer,
-    Estudiantes,
-    Grupos
+    GestionEstudiantes,
+    GestionGrupos
   },
   data () {
     return {

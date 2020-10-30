@@ -3,7 +3,8 @@
     <br>
     <div class="columns">
       <div class="column is-10"></div>
-      <div class="column is-2">
+      <div class="column is-2" v-if="verFormulario"></div>
+      <div class="column is-2" v-else>
         <button class="button is-success" @click="agregarEstudiante">Agregar Estudiante</button>
       </div>
     </div>
@@ -58,7 +59,9 @@
               <div class="control">
                 <div class="select is-fullwidth">
                   <select v-model="estudiante.seccion_id">
-                    <option  v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">{{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{seccion.curso.codigo}})</option>
+                    <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
+                      {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -80,6 +83,29 @@
       </form>
       <hr>
     </div>
+    <br>
+    <div v-if="mostrarLista">
+      <table class="table is-bordered is-narrow is-fullwidth">
+        <thead>
+          <tr class="has-text-centered has-background-light">
+            <th>N°</th>
+            <th>R.U.N.</th>
+            <th>Nombre estudiante</th>
+            <th>Sección</th>
+            <th>Jornada</th>
+          </tr>
+        </thead>
+        <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
+          <tr>
+            <th>{{ index + 1 }}</th>
+            <td>{{ estudiante.usuario.run }}</td>
+            <td class="has-text-left">{{ nombreCompleto(estudiante.usuario) }}</td>
+            <td>{{ estudiante.seccion.codigo }}</td>
+            <td>{{ estudiante.seccion.jornada.nombre }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -90,7 +116,7 @@ import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
-  name: 'Estudiantes',
+  name: 'GestionEstudiantes',
   data () {
     return {
       verFormulario: false,
@@ -104,13 +130,37 @@ export default {
           email: null
         },
         seccion_id: null
-      }
+      },
+      listaEstudiantes: {},
+      mostrarLista: false
     }
   },
   computed: {
     ...mapState(['apiUrl'])
   },
   methods: {
+    async obtenerSecciones () {
+      try {
+        const secciones = await axios.get(this.apiUrl + '/secciones', { headers: Auth.authHeader() })
+        this.secciones = secciones.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async obtenerEstudiantes () {
+      try {
+        const response = await axios.get(this.apiUrl + '/estudiantes', { headers: Auth.authHeader() })
+        this.listaEstudiantes = response.data
+        if (Object.keys(this.listaEstudiantes).length > 0) {
+          this.mostrarLista = true
+        } else {
+          this.mostrarLista = false
+        }
+      } catch (error) {
+        console.log(error)
+        this.mostrarLista = false
+      }
+    },
     nuevoEstudiante: function () {
       this.estudiante.usuario.nombre = null
       this.estudiante.usuario.apellido_paterno = null
@@ -124,8 +174,6 @@ export default {
       this.nuevoEstudiante()
     },
     async agregar () {
-      console.log(this.estudiante)
-      // this.nuevoEstudiante()
       const nuevoEstudiante = {
         estudiante: {
           seccion_id: this.estudiante.seccion_id,
@@ -133,8 +181,8 @@ export default {
         }
       }
       try {
-        const respuesta = await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
-        console.log(respuesta)
+        await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
+        this.obtenerEstudiantes()
       } catch (e) {
         console.log(e)
       }
@@ -144,18 +192,13 @@ export default {
       this.nuevoEstudiante()
       this.verFormulario = false
     },
-    async obtenerSecciones () {
-      try {
-        const secciones = await axios.get(this.apiUrl + '/secciones', { headers: Auth.authHeader() })
-        console.log(secciones.data)
-        this.secciones = secciones.data
-      } catch (error) {
-        console.log(error)
-      }
+    nombreCompleto: function (estudiante) {
+      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
     }
   },
   mounted () {
     this.obtenerSecciones()
+    this.obtenerEstudiantes()
   }
 }
 </script>
