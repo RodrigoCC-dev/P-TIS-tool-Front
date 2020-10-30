@@ -15,7 +15,7 @@
             <div class="field">
               <label class="label">R.U.N.:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.run" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
+                <input v-model="estudiante.usuario.run" v-on:change="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
               </div>
               <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
             </div>
@@ -33,7 +33,7 @@
             <div class="field">
               <label class="label">Apellido paterno:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.apellido_paterno" :class="{ 'is-danger' : apellidoPaternoEntrada.error }" class="input" type="text" placeholder="ej.: Contreras">
+                <input v-model="estudiante.usuario.apellido_paterno" v-on:input="validarApellidoP" :class="{ 'is-danger' : apellidoPaternoEntrada.error }" class="input" type="text" placeholder="ej.: Contreras">
               </div>
               <p class="is-danger help" v-if="apellidoPaternoEntrada.error">{{ apellidoPaternoEntrada.mensaje }}</p>
             </div>
@@ -42,7 +42,7 @@
             <div class="field">
               <label class="label">Apellido materno:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.apellido_materno" :class="{ 'is-danger' : apellidoMaternoEntrada.error }" class="input" type="text" placeholder="ej.: Soto">
+                <input v-model="estudiante.usuario.apellido_materno" v-on:change="validarApellidoM" :class="{ 'is-danger' : apellidoMaternoEntrada.error }" class="input" type="text" placeholder="ej.: Soto">
               </div>
               <p class="is-danger help" v-if="apellidoMaternoEntrada.error">{{ apellidoMaternoEntrada.mensaje }}</p>
             </div>
@@ -53,7 +53,7 @@
             <div class="field">
               <label class="label">Correo electrónico:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.email" :class="{ 'is-danger' : emailEntrada.error }" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
+                <input v-model="estudiante.usuario.email" v-on:change="validarEmail" :class="{ 'is-danger' : emailEntrada.error }" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
               </div>
               <p class="is-danger help" v-if="emailEntrada.error">{{ emailEntrada.mensaje }}</p>
             </div>
@@ -162,7 +162,9 @@ export default {
         sin_nombre: 'Debe ingresar el nombre del estudiante',
         sin_apellido: 'Debe ingresar el apellido del estudiante',
         sin_correo: 'Debe ingresar el correo electrónico del estudiante',
-        sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales.'
+        sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales.',
+        correo_mal: 'El correo ingresado no es válido',
+        sin_usach: 'El correo ingresado no es corporativo (@usach.cl)'
       }
     }
   },
@@ -230,19 +232,109 @@ export default {
       const sinEsp = /^\s+$/
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.estudiante.usuario.nombre
-      if (nombre === null || nombre.length === 0 || sinEsp.test(nombre)) {
+      try {
+        if (nombre === null || nombre.length === 0 || sinEsp.test(nombre)) {
+          this.nombreEntrada.error = true
+          this.nombreEntrada.mensaje = this.mensajes.sin_nombre
+          return false
+        } else if (!regExp.test(nombre)) {
+          this.nombreEntrada.error = true
+          this.nombreEntrada.mensaje = this.mensajes.sin_especiales
+          return false
+        } else {
+          this.nombreEntrada.error = false
+          this.nombreEntrada.mensaje = ''
+          return true
+        }
+      } catch {
         this.nombreEntrada.error = true
-        this.nombreEntrada.mensaje = this.mensajes.sin_nombre
-        return false
-      } else if (!regExp.test(nombre)) {
-        this.nombreEntrada.error = true
-        this.nombreEntrada.mensaje = this.mensajes.sin_especiales
-        return false
-      } else {
-        this.nombreEntrada.error = false
         this.nombreEntrada.mensaje = ''
-        return true
+        return false
       }
+    },
+    validarApellidoP: function () {
+      const sinEsp = /^\s+$/
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      const apellido = this.estudiante.usuario.apellido_paterno
+      try {
+        if (apellido === null || apellido.length === 0 || sinEsp.test(apellido)) {
+          this.apellidoPaternoEntrada.error = true
+          this.apeliidoPaternoEntrada.mensaje = this.mensajes.sin_nombre
+          return false
+        } else if (!regExp.test(apellido)) {
+          this.apellidoPaternoEntrada.error = true
+          this.apellidoPaternoEntrada.mensaje = this.mensajes.sin_especiales
+          return false
+        } else {
+          this.apellidoPaternoEntrada.error = false
+          this.apellidoPaternoEntrada.mensaje = ''
+          return true
+        }
+      } catch {
+        this.apellidoPaternoEntrada.error = true
+        this.apellidoPaternoEntrada.mensaje = ''
+        return false
+      }
+    },
+    validarApellidoM: function () {
+      const sinEsp = /^\s+$/
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      const apellido = this.estudiante.usuario.apellido_materno
+      try {
+        if (apellido === undefined || apellido.length === 0 || sinEsp.test(apellido) || apellido === '') {
+          this.apellidoMaternoEntrada.error = true
+          this.apeliidoMaternoEntrada.mensaje = this.mensajes.sin_nombre
+          return false
+        } else if (!regExp.test(apellido)) {
+          this.apellidoMaternoEntrada.error = true
+          this.apellidoMaternoEntrada.mensaje = this.mensajes.sin_especiales
+          return false
+        } else {
+          this.apellidoMaternoEntrada.error = false
+          this.apellidoMaternoEntrada.mensaje = ''
+          return true
+        }
+      } catch {
+        this.apellidoMaternoEntrada.error = true
+        this.apellidoMaternoEntrada.mensaje = ''
+        return false
+      }
+    },
+    validarEmail: function () {
+      const sinEsp = /^\s+$/
+      const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
+      const correo = this.estudiante.usuario.email
+      var separarCorreo = correo.split('@')
+      try {
+        if (correo === undefined || correo.length === 0 || sinEsp.test(correo) || correo === '') {
+          this.emailEntrada.error = true
+          this.emailEntrada.mensaje = this.mensajes.sin_correo
+          return false
+        } else if (!regExp.test(correo)) {
+          this.emailEntrada.error = true
+          this.emailEntrada.mensaje = this.mensajes.correo_mal
+          return false
+        } else if (separarCorreo.length !== 2) {
+          this.emailEntrada.error = true
+          this.emailEntrada.mensaje = this.mensajes.correo_mal
+          return false
+        } else if (separarCorreo[1] !== 'usach.cl') {
+          this.emailEntrada.error = true
+          this.emailEntrada.mensaje = this.mensajes.sin_usach
+          return false
+        } else {
+          this.emailEntrada.error = false
+          this.emailEntrada.mensaje = ''
+          return true
+        }
+      } catch {
+        this.emailEntrada.error = true
+        this.emailEntrada.mensaje = ''
+        return false
+      }
+    },
+    validarRun: function () {
+      return true
     }
   },
   mounted () {
