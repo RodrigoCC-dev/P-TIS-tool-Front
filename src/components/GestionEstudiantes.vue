@@ -15,7 +15,7 @@
             <div class="field">
               <label class="label">R.U.N.:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.run" v-on:change="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
+                <input v-model="estudiante.usuario.run" v-on:input="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
               </div>
               <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
             </div>
@@ -24,7 +24,7 @@
             <div class="field">
               <label class="label">Nombre:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.nombre" v-on:change="validarNombre" class="input" :class="{ 'is-danger' : nombreEntrada.error }" type="text" placeholder="ej.: Pablo">
+                <input v-model="estudiante.usuario.nombre" v-on:input="validarNombre" class="input" :class="{ 'is-danger' : nombreEntrada.error }" type="text" placeholder="ej.: Pablo">
               </div>
               <p class="is-danger help" v-if="nombreEntrada.error">{{ nombreEntrada.mensaje }}</p>
             </div>
@@ -42,7 +42,7 @@
             <div class="field">
               <label class="label">Apellido materno:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.apellido_materno" v-on:change="validarApellidoM" :class="{ 'is-danger' : apellidoMaternoEntrada.error }" class="input" type="text" placeholder="ej.: Soto">
+                <input v-model="estudiante.usuario.apellido_materno" v-on:input="validarApellidoM" :class="{ 'is-danger' : apellidoMaternoEntrada.error }" class="input" type="text" placeholder="ej.: Soto">
               </div>
               <p class="is-danger help" v-if="apellidoMaternoEntrada.error">{{ apellidoMaternoEntrada.mensaje }}</p>
             </div>
@@ -53,7 +53,7 @@
             <div class="field">
               <label class="label">Correo electrónico:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.email" v-on:change="validarEmail" :class="{ 'is-danger' : emailEntrada.error }" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
+                <input v-model="estudiante.usuario.email" v-on:input="validarEmail" :class="{ 'is-danger' : emailEntrada.error }" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
               </div>
               <p class="is-danger help" v-if="emailEntrada.error">{{ emailEntrada.mensaje }}</p>
             </div>
@@ -164,7 +164,9 @@ export default {
         sin_correo: 'Debe ingresar el correo electrónico del estudiante',
         sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales.',
         correo_mal: 'El correo ingresado no es válido',
-        sin_usach: 'El correo ingresado no es corporativo (@usach.cl)'
+        sin_usach: 'El correo ingresado no es corporativo (@usach.cl)',
+        sin_run: 'No se ha ingresado R.U.N. del estudiante',
+        run_error: 'No es un R.U.N. válido'
       }
     }
   },
@@ -334,7 +336,47 @@ export default {
       }
     },
     validarRun: function () {
-      return true
+      const sinEsp = /^\s+$/
+      const regExp = /(\d{7,8})-(\d|K)/i
+      const run = this.estudiante.usuario.run
+      let valor = run.replace('.', '')
+      valor = valor.replace('-', '')
+      var cuerpo = valor.slice(0, -1)
+      var dv = valor.slice(-1).toUpperCase()
+      this.estudiante.usuario.run = cuerpo + '-' + dv
+      let suma = 0
+      let multiplo = 2
+      let index
+      for (var i = 1; i <= cuerpo.length; i++) {
+        index = multiplo * cuerpo.charAt(cuerpo.length - i)
+        suma = suma + index
+        if (multiplo < 7) {
+          multiplo++
+        } else {
+          multiplo = 2
+        }
+      }
+      var dvEsperado = 11 - (suma % 11)
+      var dvReal = (dv === 'K') ? 10 : ((dv === '0') ? 11 : parseInt(dv))
+      try {
+        if (run === undefined || run.length === 0 || sinEsp.test(run) || run === '') {
+          this.runEntrada.error = true
+          this.runEntrada.mensaje = this.mensajes.sin_run
+          return false
+        } else if (!regExp.test(run) || (dvEsperado !== dvReal)) {
+          this.runEntrada.error = true
+          this.runEntrada.mensaje = this.mensajes.run_error
+          return false
+        } else {
+          this.runEntrada.error = false
+          this.runEntrada.mensaje = ''
+          return true
+        }
+      } catch {
+        this.runEntrada.error = true
+        this.runEntrada.mensaje = ''
+        return false
+      }
     }
   },
   mounted () {
