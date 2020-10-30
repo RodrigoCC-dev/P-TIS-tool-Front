@@ -63,13 +63,14 @@
               <label class="label">Sección - Curso:</label>
               <div class="control">
                 <div class="select is-fullwidth">
-                  <select v-model="estudiante.seccion_id">
+                  <select v-model="estudiante.seccion_id" v-on:change="validarSeccion" :class="{ 'is-danger' : seccionEntrada}">
                     <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
                       {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
                     </option>
                   </select>
                 </div>
               </div>
+              <p class="is-danger help" v-if="seccionEntrada">No ha seleccionado la sección</p>
             </div>
           </div>
         </div>
@@ -144,7 +145,7 @@ export default {
       },
       nombreEntrada: {
         error: false,
-        mensaje: 'Sólo letras. Verificar que no tenga caracteres especiales.'
+        mensaje: ''
       },
       apellidoPaternoEntrada: {
         error: false,
@@ -158,6 +159,7 @@ export default {
         error: false,
         mensaje: ''
       },
+      seccionEntrada: false,
       mensajes: {
         sin_nombre: 'Debe ingresar el nombre del estudiante',
         sin_apellido: 'Debe ingresar el apellido del estudiante',
@@ -209,19 +211,21 @@ export default {
       this.nuevoEstudiante()
     },
     async agregar () {
-      const nuevoEstudiante = {
-        estudiante: {
-          seccion_id: this.estudiante.seccion_id,
-          usuario_attributes: this.estudiante.usuario
+      if (this.validarFormulario()) {
+        const nuevoEstudiante = {
+          estudiante: {
+            seccion_id: this.estudiante.seccion_id,
+            usuario_attributes: this.estudiante.usuario
+          }
         }
+        try {
+          await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
+          this.obtenerEstudiantes()
+        } catch (e) {
+          console.log(e)
+        }
+        this.verFormulario = false
       }
-      try {
-        await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
-        this.obtenerEstudiantes()
-      } catch (e) {
-        console.log(e)
-      }
-      this.verFormulario = false
     },
     noAgregar: function () {
       this.nuevoEstudiante()
@@ -283,7 +287,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_materno
       try {
-        if (apellido === undefined || apellido.length === 0 || sinEsp.test(apellido) || apellido === '') {
+        if (apellido === undefined || apellido.length === 0 || sinEsp.test(apellido) || apellido === '' || apellido === null) {
           this.apellidoMaternoEntrada.error = true
           this.apeliidoMaternoEntrada.mensaje = this.mensajes.sin_nombre
           return false
@@ -308,7 +312,7 @@ export default {
       const correo = this.estudiante.usuario.email
       var separarCorreo = correo.split('@')
       try {
-        if (correo === undefined || correo.length === 0 || sinEsp.test(correo) || correo === '') {
+        if (correo === undefined || correo.length === 0 || sinEsp.test(correo) || correo === '' || correo === null) {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.sin_correo
           return false
@@ -339,31 +343,31 @@ export default {
       const sinEsp = /^\s+$/
       const regExp = /(\d{7,8})-(\d|K)/i
       const run = this.estudiante.usuario.run
-      let valor = run.replace('.', '')
-      valor = valor.replace('-', '')
-      var cuerpo = valor.slice(0, -1)
-      var dv = valor.slice(-1).toUpperCase()
-      this.estudiante.usuario.run = cuerpo + '-' + dv
-      let suma = 0
-      let multiplo = 2
-      let index
-      for (var i = 1; i <= cuerpo.length; i++) {
-        index = multiplo * cuerpo.charAt(cuerpo.length - i)
-        suma = suma + index
-        if (multiplo < 7) {
-          multiplo++
-        } else {
-          multiplo = 2
+      if (run === undefined || run.length === 0 || sinEsp.test(run) || run === '' || run === null) {
+        this.runEntrada.error = true
+        this.runEntrada.mensaje = this.mensajes.sin_run
+        return false
+      } else {
+        let valor = run.replace('.', '')
+        valor = valor.replace('-', '')
+        var cuerpo = valor.slice(0, -1)
+        var dv = valor.slice(-1).toUpperCase()
+        this.estudiante.usuario.run = cuerpo + '-' + dv
+        let suma = 0
+        let multiplo = 2
+        let index
+        for (var i = 1; i <= cuerpo.length; i++) {
+          index = multiplo * cuerpo.charAt(cuerpo.length - i)
+          suma = suma + index
+          if (multiplo < 7) {
+            multiplo++
+          } else {
+            multiplo = 2
+          }
         }
-      }
-      var dvEsperado = 11 - (suma % 11)
-      var dvReal = (dv === 'K') ? 10 : ((dv === '0') ? 11 : parseInt(dv))
-      try {
-        if (run === undefined || run.length === 0 || sinEsp.test(run) || run === '') {
-          this.runEntrada.error = true
-          this.runEntrada.mensaje = this.mensajes.sin_run
-          return false
-        } else if (!regExp.test(run) || (dvEsperado !== dvReal)) {
+        var dvEsperado = 11 - (suma % 11)
+        var dvReal = (dv === 'K') ? 10 : ((dv === '0') ? 11 : parseInt(dv))
+        if (!regExp.test(run) || (dvEsperado !== dvReal)) {
           this.runEntrada.error = true
           this.runEntrada.mensaje = this.mensajes.run_error
           return false
@@ -372,11 +376,28 @@ export default {
           this.runEntrada.mensaje = ''
           return true
         }
-      } catch {
-        this.runEntrada.error = true
-        this.runEntrada.mensaje = ''
-        return false
       }
+    },
+    validarSeccion: function () {
+      const seleccion = this.estudiante.seccion_id
+      if (seleccion === null || seleccion === '' || seleccion === 0) {
+        this.seccionEntrada = true
+        return false
+      } else {
+        this.seccionEntrada = false
+        return true
+      }
+    },
+    validarFormulario: function () {
+      var esvalido = true
+      esvalido = esvalido && this.validarRun()
+      esvalido = esvalido && this.validarNombre()
+      esvalido = esvalido && this.validarApellidoP()
+      esvalido = esvalido && this.validarApellidoM()
+      esvalido = esvalido && this.validarEmail()
+      esvalido = esvalido && this.validarSeccion()
+      console.log(esvalido)
+      return esvalido
     }
   },
   mounted () {
