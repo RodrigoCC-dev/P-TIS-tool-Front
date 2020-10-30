@@ -98,10 +98,10 @@
         <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
           <tr>
             <th>{{ index + 1 }}</th>
-            <td>{{ estudiante.usuario.run }}</td>
-            <td class="has-text-left">{{ nombreCompleto(estudiante.usuario) }}</td>
-            <td>{{ estudiante.seccion.codigo }}</td>
-            <td>{{ estudiante.seccion.jornada.nombre }}</td>
+            <td>{{ estudiante.run_est }}</td>
+            <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
+            <td>{{ estudiante.codigo_seccion }}</td>
+            <td>{{ estudiante.jornada }}</td>
           </tr>
         </tbody>
       </table>
@@ -193,7 +193,7 @@ export default {
       this.verFormulario = false
     },
     nombreCompleto: function (estudiante) {
-      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
     }
   },
   mounted () {
