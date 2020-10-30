@@ -15,32 +15,36 @@
             <div class="field">
               <label class="label">R.U.N.:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.run" class="input" type="text" placeholder="ej.: 12345678-9">
+                <input v-model="estudiante.usuario.run" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
               </div>
+              <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
             </div>
           </div>
           <div class="column is-3">
             <div class="field">
               <label class="label">Nombre:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.nombre" class="input" type="text" placeholder="ej.: Pablo">
+                <input v-model="estudiante.usuario.nombre" v-on:change="validarNombre" class="input" :class="{ 'is-danger' : nombreEntrada.error }" type="text" placeholder="ej.: Pablo">
               </div>
+              <p class="is-danger help" v-if="nombreEntrada.error">{{ nombreEntrada.mensaje }}</p>
             </div>
           </div>
           <div class="column is-3">
             <div class="field">
               <label class="label">Apellido paterno:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.apellido_paterno" class="input" type="text" placeholder="ej.: Contreras">
+                <input v-model="estudiante.usuario.apellido_paterno" :class="{ 'is-danger' : apellidoPaternoEntrada.error }" class="input" type="text" placeholder="ej.: Contreras">
               </div>
+              <p class="is-danger help" v-if="apellidoPaternoEntrada.error">{{ apellidoPaternoEntrada.mensaje }}</p>
             </div>
           </div>
           <div class="column is-3">
             <div class="field">
               <label class="label">Apellido materno:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.apellido_materno" class="input" type="text" placeholder="ej.: Soto">
+                <input v-model="estudiante.usuario.apellido_materno" :class="{ 'is-danger' : apellidoMaternoEntrada.error }" class="input" type="text" placeholder="ej.: Soto">
               </div>
+              <p class="is-danger help" v-if="apellidoMaternoEntrada.error">{{ apellidoMaternoEntrada.mensaje }}</p>
             </div>
           </div>
         </div>
@@ -49,8 +53,9 @@
             <div class="field">
               <label class="label">Correo electrónico:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.email" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
+                <input v-model="estudiante.usuario.email" :class="{ 'is-danger' : emailEntrada.error }" class="input" type="text" placeholder="ej.: pablo.contreras@usach.cl">
               </div>
+              <p class="is-danger help" v-if="emailEntrada.error">{{ emailEntrada.mensaje }}</p>
             </div>
           </div>
           <div class="column is-9">
@@ -132,7 +137,33 @@ export default {
         seccion_id: null
       },
       listaEstudiantes: {},
-      mostrarLista: false
+      mostrarLista: false,
+      runEntrada: {
+        error: false,
+        mensaje: ''
+      },
+      nombreEntrada: {
+        error: false,
+        mensaje: 'Sólo letras. Verificar que no tenga caracteres especiales.'
+      },
+      apellidoPaternoEntrada: {
+        error: false,
+        mensaje: ''
+      },
+      apellidoMaternoEntrada: {
+        error: false,
+        mensaje: ''
+      },
+      emailEntrada: {
+        error: false,
+        mensaje: ''
+      },
+      mensajes: {
+        sin_nombre: 'Debe ingresar el nombre del estudiante',
+        sin_apellido: 'Debe ingresar el apellido del estudiante',
+        sin_correo: 'Debe ingresar el correo electrónico del estudiante',
+        sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales.'
+      }
     }
   },
   computed: {
@@ -194,6 +225,24 @@ export default {
     },
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
+    validarNombre: function () {
+      const sinEsp = /^\s+$/
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      const nombre = this.estudiante.usuario.nombre
+      if (nombre === null || nombre.length === 0 || sinEsp.test(nombre)) {
+        this.nombreEntrada.error = true
+        this.nombreEntrada.mensaje = this.mensajes.sin_nombre
+        return false
+      } else if (!regExp.test(nombre)) {
+        this.nombreEntrada.error = true
+        this.nombreEntrada.mensaje = this.mensajes.sin_especiales
+        return false
+      } else {
+        this.nombreEntrada.error = false
+        this.nombreEntrada.mensaje = ''
+        return true
+      }
     }
   },
   mounted () {
