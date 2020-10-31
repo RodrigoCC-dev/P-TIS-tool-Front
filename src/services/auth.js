@@ -1,6 +1,7 @@
 import axios from 'axios'
+import store from '../store'
 
-const ENDPOINT_PATH = 'http://127.0.0.1:3000'
+const ENDPOINT_PATH = store.state.apiUrl
 
 export default {
   login (email, password) {
@@ -20,6 +21,15 @@ export default {
     const user = localStorage.getItem('user_tk')
     if (user) {
       return { Authorization: 'Bearer ' + user }
+    } else {
+      return {}
+    }
+  },
+
+  postHeader () {
+    const user = localStorage.getItem('user_tk')
+    if (user) {
+      return { Authorization: 'Bearer ' + user, 'Content-Type': 'application/json' }
     } else {
       return {}
     }
