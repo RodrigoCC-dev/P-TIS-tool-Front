@@ -185,6 +185,9 @@ export default {
         console.log(error)
       }
     },
+    nombreCompleto: function (estudiante) {
+      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
     async obtenerEstudiantes () {
       try {
         const response = await axios.get(this.apiUrl + '/estudiantes', { headers: Auth.authHeader() })
@@ -250,9 +253,6 @@ export default {
       this.runEntrada.error = false
       this.emailEntrada.error = false
       this.seccionEntrada = false
-    },
-    nombreCompleto: function (estudiante) {
-      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
     },
     validarNombre: function () {
       const sinEsp = /^\s+$/

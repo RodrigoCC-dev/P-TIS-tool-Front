@@ -1,5 +1,4 @@
 <template>
-  <p>Este es el componente de los grupos - editado</p>
   <div class="">
     <br>
     <div class="columns">
@@ -11,7 +10,7 @@
     </div>
     <div v-if="verFormulario">
       <div class="columns">
-        <div class="column is-6">
+        <div class="column is-5">
           <form class="form" method="post">
             <div class="columns has-text-left">
               <div class="column is-12">
@@ -34,31 +33,45 @@
                 </div>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-12">
+                <div class="field is-grouped is-grouped-centered">
+                  <div class="constrol">
+                    <button class="button is-link">Crear grupo</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
         </div>
-        <div class="column is-6 has-text-centered">
+        <div class="column is-7 has-text-centered">
           <div class="field">
-            <label label="label">Estudiantes:</label>
+            <label class="label">Estudiantes</label>
           </div>
           <br>
-          <table class="table is-bordered is-narrow is-fullwidth">
-            <thead>
-              <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>R.U.N.</th>
-                <th>Nombre estudiante</th>
-                <th>Sección</th>
-              </tr>
-            </thead>
-            <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estuidante.id">
-              <tr>
-                <th>{{ index + 1 }}</th>
-                <td>{{ estudiante.run_est}}</td>
-                <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
-                <td>{{ estuidante.codigo_seccion}}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div v-if="mostrarLista">
+            <table class="table is-bordered is-narrow is-fullwidth">
+              <thead>
+                <tr class="has-text-centered has-background-light">
+                  <th>N°</th>
+                  <th>R.U.N.</th>
+                  <th>Nombre estudiante</th>
+                  <th>Sección</th>
+                </tr>
+              </thead>
+              <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
+                <tr>
+                  <th>{{ index + 1 }}</th>
+                  <td>{{ estudiante.run_est}}</td>
+                  <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
+                  <td>{{ estudiante.codigo_seccion}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-else>
+            <p>No hay estudiantes para asignar</p>
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +87,8 @@ export default {
   name: 'GestionGrupos',
   data () {
     return {
-      verFormulario: true,
+      verFormulario: false,
+      mostrarLista: false,
       proyecto: '',
       entradas: {
         proyecto: {
@@ -82,14 +96,37 @@ export default {
           mensaje: ''
         }
       },
-      estudiantes: {},
+      listaEstudiantes: {},
       grupo: []
     }
   },
+  computed: {
+    ...mapState(['apiUrl'])
+  },
   methods: {
+    nombreCompleto: function (estudiante) {
+      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
     agregarGrupo: function () {
-      return true
+      this.verFormulario = true
+    },
+    async obtenerEstudiantes () {
+      try {
+        const response = await axios.get(this.apiUrl + '/estudiantes/sin_grupo', { headers: Auth.authHeader() })
+        this.listaEstudiantes = response.data
+        if (Object.keys(this.listaEstudiantes).length > 0) {
+          this.mostrarLista = true
+        } else {
+          this.mostrarLista = false
+        }
+      } catch (error) {
+        console.log(error)
+        this.mostrarLista = false
+      }
     }
+  },
+  mounted () {
+    this.obtenerEstudiantes()
   }
 }
 </script>
