@@ -249,7 +249,7 @@ export default {
       this.apellidoMaternoEntrada.error = false
       this.runEntrada.error = false
       this.emailEntrada.error = false
-      this.seccionEntrada.error = false
+      this.seccionEntrada = false
     },
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
