@@ -29,13 +29,13 @@
     <div v-if="verFormulario">
       <div class="columns">
         <div class="column is-5">
-          <form class="form" method="post">
+          <form class="form">
             <div class="columns has-text-left">
               <div class="column is-12">
                 <div class="field">
                   <label class="label">Grupo:</label>
                   <div class="control">
-                    <input v-model="proyecto" class="input" :class="{ 'is-danger' : entradas.proyecto.error }" type="text" disabled>
+                    <input v-model="grupo.nombre" class="input" :class="{ 'is-danger' : entradas.proyecto.error }" type="text" disabled>
                   </div>
                 </div>
               </div>
@@ -45,20 +45,21 @@
                 <div class="field">
                   <label class="label">Proyecto:</label>
                   <div class="control">
-                    <input class="input" :class="{ 'is-danger' : entradas.proyecto.error }" type="text">
+                    <input class="input" v-model="grupo.proyecto" :class="{ 'is-danger' : entradas.proyecto.error }" type="text">
                   </div>
                   <p class="is-danger help" v-if="entradas.proyecto.error">{{ entradas.proyecto.mensaje}}</p>
                 </div>
               </div>
             </div>
+            <br>
             <div class="columns">
               <div class="column is-12">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <button class="button is-link">Crear grupo</button>
+                    <a class="button is-link" @click="agregar">Crear grupo</a>
                   </div>
                   <div class="control">
-                    <button class="button is-light"><strong>Cancelar</strong></button>
+                    <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
                   </div>
                 </div>
               </div>
@@ -114,15 +115,20 @@ export default {
       mostrarLista: false,
       jornadasProfesor: [],
       mostrarJornadas: false,
-      proyecto: '',
+      jornadaActual: 'Diurna',
+      grupo: {
+        nombre: '',
+        proyecto: '',
+        correlativo: 0
+      },
+      estudiantes: [],
       entradas: {
         proyecto: {
           error: false,
           mensaje: ''
         }
       },
-      listaEstudiantes: {},
-      grupo: []
+      listaEstudiantes: {}
     }
   },
   computed: {
@@ -134,6 +140,7 @@ export default {
     },
     agregarGrupo: function () {
       this.verFormulario = true
+      this.obtenerCorrelativo(this.jornadaActual)
     },
     async obtenerEstudiantes () {
       try {
@@ -152,22 +159,58 @@ export default {
     async obtenerJornadas () {
       try {
         const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
-        if (Object.keys(response.data).length > 0) {
+        var datos = response.data
+        if (Object.keys(datos).length > 0) {
           var aux = 0
-          for (var i = 0; i < Object.keys(response.data); i++) {
-            if (this.jornadasProfesor.indexOf(response.data[i].nombre) === -1) {
-              aux = this.jornadasProfesor.push(response.data[i].nombre)
+          for (var i = 0; i < Object.keys(datos).length; i++) {
+            if (this.jornadasProfesor.indexOf(datos[i].nombre) === -1) {
+              aux = this.jornadasProfesor.push(datos[i].nombre)
             }
           }
           if (aux === 2) {
             this.mostrarJornadas = true
+          } else if (aux === 1) {
+            this.jornadaActual = this.jornadasProfesor[0]
           } else {
             this.mostrarJornadas = false
           }
         }
-        console.log(this.jornadasProfesor)
       } catch {
         console.log('No fue posible obtener las jornadas del profesor')
+      }
+    },
+    agregar: function () {
+      console.log(this.jornadasProfesor)
+    },
+    noAgregar: function () {
+      this.nuevoGrupo()
+      this.verFormulario = false
+    },
+    nuevoGrupo: function () {
+      this.grupo.nombre = ''
+      this.grupo.proyecto = ''
+      this.grupo.correlativo = 0
+      this.estudiantes = []
+    },
+    async obtenerCorrelativo (jornadaAct) {
+      try {
+        const solicitud = {
+          jornada: jornadaAct
+        }
+        const response = await axios.post(this.apiUrl + '/grupos/ultimo_grupo', solicitud, { headers: Auth.postHeader() })
+        if (response.data === null) {
+          this.grupo.correlativo = 1
+          this.grupo.nombre = 'G01'
+        } else {
+          this.grupo.correlativo = response.data.correlativo + 1
+          if (this.grupo.correlativo < 10) {
+            this.grupo.nombre = 'G0' + this.grupo.correlativo
+          } else {
+            this.grupo.nombre = 'G' + this.grupo.correlativo
+          }
+        }
+      } catch {
+        console.log('No se pudo obtener correlativo')
       }
     }
   },
