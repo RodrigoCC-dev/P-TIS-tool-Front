@@ -35,7 +35,7 @@
                 <div class="field">
                   <label class="label">Grupo:</label>
                   <div class="control">
-                    <input v-model="grupo.nombre" class="input" :class="{ 'is-danger' : entradas.proyecto.error }" type="text" disabled>
+                    <input v-model="grupo.nombre" class="input" type="text" disabled>
                   </div>
                 </div>
               </div>
@@ -45,7 +45,7 @@
                 <div class="field">
                   <label class="label">Proyecto:</label>
                   <div class="control">
-                    <input class="input" v-model="grupo.proyecto" :class="{ 'is-danger' : entradas.proyecto.error }" type="text">
+                    <input class="input" v-model="grupo.proyecto" :class="{ 'is-danger' : entradas.proyecto.error }" type="text" v-on:input="validarProyecto">
                   </div>
                   <p class="is-danger help" v-if="entradas.proyecto.error">{{ entradas.proyecto.mensaje}}</p>
                 </div>
@@ -70,6 +70,7 @@
           <div class="field">
             <label class="label">Estudiantes a asignar:</label>
           </div>
+          <p class="is-danger help" v-if="entradas.estudiantes.error">{{ entradas.estudiantes.mensaje }}</p>
           <br>
           <div v-if="mostrarLista">
             <table class="table is-bordered is-narrow is-fullwidth">
@@ -125,6 +126,10 @@ export default {
       estudiantes: [],
       entradas: {
         proyecto: {
+          error: false,
+          mensaje: ''
+        },
+        estudiantes: {
           error: false,
           mensaje: ''
         }
@@ -198,6 +203,8 @@ export default {
     noAgregar: function () {
       this.nuevoGrupo()
       this.verFormulario = false
+      this.entradas.proyecto.error = false
+      this.entradas.estudiantes.error = false
     },
     nuevoGrupo: function () {
       this.grupo.nombre = ''
@@ -226,8 +233,40 @@ export default {
         console.log('No se pudo obtener correlativo')
       }
     },
+    validarProyecto: function () {
+      const sinEsp = /^\s+$/
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      const proyecto = this.grupo.proyecto
+      if (proyecto === null || proyecto === undefined || proyecto === '' || sinEsp.test(proyecto)) {
+        this.entradas.proyecto.error = true
+        this.entradas.proyecto.mensaje = 'Se debe ingresar el nombre del proyecto a realizar'
+        return false
+      } else if (!regExp.test(proyecto)) {
+        this.entradas.proyecto.error = true
+        this.entradas.proyecto.mensaje = 'Sólo se admiten letras. Verificar que no tenga caracteres especiales'
+        return false
+      } else {
+        this.entradas.proyecto.error = false
+        this.entradas.proyecto.mensaje = ''
+        return true
+      }
+    },
+    validarAsignacion: function () {
+      if (this.estudiantes.length === 0) {
+        this.entradas.estudiantes.error = true
+        this.entradas.estudiantes.mensaje = 'No se han asignado estudiantes al grupo'
+        return false
+      } else {
+        this.entradas.estudiantes.error = false
+        this.entradas.estudiantes.mensaje = ''
+        return true
+      }
+    },
     validarDatos: function () {
-      return true
+      var esvalido = true
+      esvalido = esvalido && this.validarProyecto()
+      esvalido = esvalido && this.validarAsignacion()
+      return esvalido
     }
   },
   mounted () {
