@@ -13,6 +13,7 @@
       </nav>
       <GestionEstudiantes v-if="nombreTabActiva === nombreTabs.Estudiantes"/>
       <GestionGrupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
+      <br>
     </div>
 
     <Footer/>

@@ -81,7 +81,7 @@
                 <a class="button is-link" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-light" @click="noAgregar">Cancelar</a>
+                <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
           </div>

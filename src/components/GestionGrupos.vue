@@ -1,6 +1,24 @@
 <template>
   <div class="">
     <br>
+    <div v-if="mostrarJornadas">
+      <section>
+        <div class="tabs is-toggle is-toggle-rounded is-centered">
+          <ul>
+            <li class="is-active">
+              <a>
+                <span>Diurnos</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <span>Vespertinos</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
@@ -36,8 +54,11 @@
             <div class="columns">
               <div class="column is-12">
                 <div class="field is-grouped is-grouped-centered">
-                  <div class="constrol">
+                  <div class="control">
                     <button class="button is-link">Crear grupo</button>
+                  </div>
+                  <div class="control">
+                    <button class="button is-light"><strong>Cancelar</strong></button>
                   </div>
                 </div>
               </div>
@@ -46,7 +67,7 @@
         </div>
         <div class="column is-7 has-text-centered">
           <div class="field">
-            <label class="label">Estudiantes</label>
+            <label class="label">Estudiantes a asignar:</label>
           </div>
           <br>
           <div v-if="mostrarLista">
@@ -57,6 +78,7 @@
                   <th>R.U.N.</th>
                   <th>Nombre estudiante</th>
                   <th>Sección</th>
+                  <th><input type="checkbox" name="" value=""></th>
                 </tr>
               </thead>
               <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
@@ -65,6 +87,7 @@
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
                   <td>{{ estudiante.codigo_seccion}}</td>
+                  <td><input type="checkbox" name="" value=""></td>
                 </tr>
               </tbody>
             </table>
@@ -89,6 +112,8 @@ export default {
     return {
       verFormulario: false,
       mostrarLista: false,
+      jornadasProfesor: [],
+      mostrarJornadas: false,
       proyecto: '',
       entradas: {
         proyecto: {
@@ -123,10 +148,32 @@ export default {
         console.log(error)
         this.mostrarLista = false
       }
+    },
+    async obtenerJornadas () {
+      try {
+        const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
+        if (Object.keys(response.data).length > 0) {
+          var aux = 0
+          for (var i = 0; i < Object.keys(response.data); i++) {
+            if (this.jornadasProfesor.indexOf(response.data[i].nombre) === -1) {
+              aux = this.jornadasProfesor.push(response.data[i].nombre)
+            }
+          }
+          if (aux === 2) {
+            this.mostrarJornadas = true
+          } else {
+            this.mostrarJornadas = false
+          }
+        }
+        console.log(this.jornadasProfesor)
+      } catch {
+        console.log('No fue posible obtener las jornadas del profesor')
+      }
     }
   },
   mounted () {
     this.obtenerEstudiantes()
+    this.obtenerJornadas()
   }
 }
 </script>
