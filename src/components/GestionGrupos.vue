@@ -140,6 +140,7 @@ export default {
     },
     agregarGrupo: function () {
       this.verFormulario = true
+      this.nuevoGrupo()
       this.obtenerCorrelativo(this.jornadaActual)
     },
     async obtenerEstudiantes () {
@@ -179,19 +180,18 @@ export default {
         console.log('No fue posible obtener las jornadas del profesor')
       }
     },
-    agregar: function () {
-      console.log(this.jornadasProfesor)
-      console.log(this.estudiantes)
+    async agregar () {
       if (this.validarDatos()) {
         const nuevoGrupo = {
           grupo: this.grupo,
           estudiantes: this.estudiantes
         }
-      }
-      try {
-        await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
-      } catch {
-        console.log('No fue posible crear el grupo')
+        try {
+          await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
+        } catch {
+          console.log('No fue posible crear el grupo')
+        }
+        this.verFormulario = false
       }
     },
     noAgregar: function () {
