@@ -88,7 +88,7 @@
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
                   <td>{{ estudiante.codigo_seccion}}</td>
-                  <td><input type="checkbox" name="" value=""></td>
+                  <td><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -181,6 +181,18 @@ export default {
     },
     agregar: function () {
       console.log(this.jornadasProfesor)
+      console.log(this.estudiantes)
+      if (this.validarDatos()) {
+        const nuevoGrupo = {
+          grupo: this.grupo,
+          estudiantes: this.estudiantes
+        }
+      }
+      try {
+        await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
+      } catch {
+        console.log('No fue posible crear el grupo')
+      }
     },
     noAgregar: function () {
       this.nuevoGrupo()
@@ -212,6 +224,9 @@ export default {
       } catch {
         console.log('No se pudo obtener correlativo')
       }
+    },
+    validarDatos: function () {
+      return true
     }
   },
   mounted () {
