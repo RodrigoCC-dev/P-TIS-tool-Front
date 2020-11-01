@@ -255,11 +255,10 @@ export default {
       this.seccionEntrada = false
     },
     validarNombre: function () {
-      const sinEsp = /^\s+$/
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.estudiante.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || sinEsp.test(nombre) || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
           this.nombreEntrada.error = true
           this.nombreEntrada.mensaje = this.mensajes.sin_nombre
           return false
@@ -279,11 +278,10 @@ export default {
       }
     },
     validarApellidoP: function () {
-      const sinEsp = /^\s+$/
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_paterno
       try {
-        if (apellido === null || apellido.length === 0 || sinEsp.test(apellido) || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
           this.apellidoPaternoEntrada.error = true
           this.apellidoPaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
@@ -303,11 +301,10 @@ export default {
       }
     },
     validarApellidoM: function () {
-      const sinEsp = /^\s+$/
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_materno
       try {
-        if (apellido === undefined || apellido.length === 0 || sinEsp.test(apellido) || apellido === '' || apellido === null) {
+        if (apellido === undefined || apellido.length === 0 || apellido === '' || apellido === null) {
           this.apellidoMaternoEntrada.error = true
           this.apellidoMaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
@@ -327,12 +324,11 @@ export default {
       }
     },
     validarEmail: function () {
-      const sinEsp = /^\s+$/
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.estudiante.usuario.email
       var separarCorreo = correo.split('@')
       try {
-        if (correo === undefined || correo.length === 0 || sinEsp.test(correo) || correo === '' || correo === null) {
+        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.sin_correo
           return false
@@ -360,10 +356,9 @@ export default {
       }
     },
     validarRun: function () {
-      const sinEsp = /^\s+$/
       const regExp = /(\d{7,8})-(\d|K)/i
       const run = this.estudiante.usuario.run
-      if (run === undefined || run.length === 0 || sinEsp.test(run) || run === '' || run === null) {
+      if (run === undefined || run.length === 0 || run === '' || run === null) {
         this.runEntrada.error = true
         this.runEntrada.mensaje = this.mensajes.sin_run
         return false

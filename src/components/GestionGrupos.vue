@@ -234,10 +234,9 @@ export default {
       }
     },
     validarProyecto: function () {
-      const sinEsp = /^\s+$/
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const proyecto = this.grupo.proyecto
-      if (proyecto === null || proyecto === undefined || proyecto === '' || sinEsp.test(proyecto)) {
+      if (proyecto === null || proyecto === undefined || proyecto === '') {
         this.entradas.proyecto.error = true
         this.entradas.proyecto.mensaje = 'Se debe ingresar el nombre del proyecto a realizar'
         return false
