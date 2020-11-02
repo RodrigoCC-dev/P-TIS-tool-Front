@@ -1,24 +1,18 @@
 <template>
   <div class="">
     <br>
+
     <div v-if="mostrarJornadas">
       <section>
         <div class="tabs is-toggle is-toggle-rounded is-centered">
           <ul>
-            <li class="is-active">
-              <a>
-                <span>Diurnos</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <span>Vespertinos</span>
-              </a>
-            </li>
+            <li :class="{ 'is-active' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
+            <li :class="{ 'is-active' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
           </ul>
         </div>
       </section>
     </div>
+
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
@@ -26,6 +20,7 @@
         <button class="button is-success" @click="agregarGrupo">Agregar Grupo</button>
       </div>
     </div>
+
     <div v-if="verFormulario">
       <div class="columns">
         <div class="column is-5">
@@ -100,7 +95,25 @@
         </div>
       </div>
     </div>
+
     <hr>
+
+    <div class="columns">
+      <div v-for="grupo in listaGrupos" :key="grupo.id">
+        <div class="column is-narrow" v-if="grupo.jornada === jornadaActual">
+          <article class="message is-info">
+            <div class="message-header">
+              <p>{{ grupo.nombre }}</p>
+            </div>
+            <div class="message-body">
+              <p class="title is-6">{{ grupo.proyecto }}</p>
+              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante) }}</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -108,6 +121,11 @@
 import Auth from '@/services/auth.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
+
+const nombreTabs = {
+  diurna: 'Diurna',
+  vespertina: 'Vespertina'
+}
 
 export default {
   name: 'GestionGrupos',
@@ -134,7 +152,9 @@ export default {
           mensaje: ''
         }
       },
-      listaEstudiantes: {}
+      listaEstudiantes: {},
+      listaGrupos: [],
+      nombreTabs
     }
   },
   computed: {
@@ -153,6 +173,9 @@ export default {
   methods: {
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
+    elegirTab: function (nombreTab) {
+      this.jornadaActual = nombreTab
     },
     agregarGrupo: function () {
       this.verFormulario = true
@@ -194,6 +217,15 @@ export default {
         }
       } catch {
         console.log('No fue posible obtener las jornadas del profesor')
+      }
+    },
+    async obtenerGrupos () {
+      try {
+        const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
+        this.listaGrupos = response.data
+        console.log(this.listaGrupos)
+      } catch {
+        console.log('No se han obtenido los grupos')
       }
     },
     async agregar () {
@@ -281,6 +313,7 @@ export default {
   mounted () {
     this.obtenerEstudiantes()
     this.obtenerJornadas()
+    this.obtenerGrupos()
   }
 }
 </script>
