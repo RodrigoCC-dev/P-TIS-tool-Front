@@ -75,7 +75,7 @@
                   <th>R.U.N.</th>
                   <th>Nombre estudiante</th>
                   <th>Sección</th>
-                  <th><input type="checkbox" name="" value=""></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
