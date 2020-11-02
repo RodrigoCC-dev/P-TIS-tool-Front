@@ -236,6 +236,7 @@ export default {
         }
         try {
           await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
+          this.obtenerGrupos()
         } catch {
           console.log('No fue posible crear el grupo')
         }
