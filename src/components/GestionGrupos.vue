@@ -83,7 +83,7 @@
                   <th><input type="checkbox" name="" value=""></th>
                 </tr>
               </thead>
-              <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
+              <tbody v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                 <tr>
                   <th>{{ index + 1 }}</th>
                   <td>{{ estudiante.run_est}}</td>
@@ -138,7 +138,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl']),
+
+    sinAsignar: function () {
+      var lista = []
+      for (var i = 0; i < this.listaEstudiantes.length; i++) {
+        if (this.listaEstudiantes[i].jornada === this.jornadaActual) {
+          lista.push(this.listaEstudiantes[i])
+        }
+      }
+      return lista
+    }
   },
   methods: {
     nombreCompleto: function (estudiante) {
