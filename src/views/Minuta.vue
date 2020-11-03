@@ -95,19 +95,47 @@
         </div>
       </div>
       <div class="columns">
-        <div class="colum is-three-quarters">
+        <div class="column is-three-quarters is-offset-1 has-text-left">
           <div class="field">
             <label class="label">Participantes:</label>
           </div>
-          <p>Juanito</p>
-          <p>Pepito</p>
+          <p class="has-text-info has-text-weight-semibold">Juanito</p>
+          <p class="has-text-info">Pepito</p>
         </div>
         <div class="column">
           <div class="field">
-            <label class="lable">Iniciales:</label>
+            <label class="label">Iniciales:</label>
           </div>
           <p>JPP</p>
           <p>PCQ</p>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-full">
+          <p class="title is-5">CLASIFICACIÓN</p>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-one-fifth">
+          <p>Informativa</p>
+          <input type="checkbox" value="">
+        </div>
+        <div class="column">
+          <p>Control de Avance</p>
+          <input type="checkbox" value="">
+        </div>
+        <div class="column">
+          <p>Coordinador</p>
+          <input type="checkbox" value="">
+        </div>
+        <div class="column">
+          <p>Decisión</p>
+          <input type="checkbox" value="">
+        </div>
+        <div class="column">
+          <p>Otros</p>
+          <input type="checkbox" name="" value="">
         </div>
       </div>
     </div>
