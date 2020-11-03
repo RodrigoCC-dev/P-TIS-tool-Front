@@ -4,6 +4,13 @@
 
     <div class="container">
 
+      <div class="columns">
+        <div class="column is-10"></div>
+        <div class="column is-2">
+          <button class="button is-success" @click="nuevaMinuta">Nueva Minuta</button>
+        </div>
+      </div>
+
       <section class="new-section">
         <div class="container">
           <p class="title is-5">Borradores</p>
@@ -111,6 +118,11 @@ export default {
   components: {
     Header,
     Footer
+  },
+  methods: {
+    nuevaMinuta: function () {
+      this.$router.push({ name: 'Minuta' })
+    }
   }
 }
 </script>
