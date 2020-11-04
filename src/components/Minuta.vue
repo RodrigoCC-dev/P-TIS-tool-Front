@@ -1,12 +1,9 @@
 <template>
   <div>
-    <Header/>
-
-    <div class="container">
 
       <div class="columns">
         <div class="column is-full">
-          <p class="title is-4">MINUTA DE REUNIÓN</p>
+          <p class="title is-4 has-text-centered">MINUTA DE REUNIÓN</p>
         </div>
       </div>
       <div class="field is-horizontal">
@@ -128,7 +125,7 @@
 
       <div class="columns">
         <div class="column is-full">
-          <p class="title is-5">CLASIFICACIÓN</p>
+          <p class="title is-5 has-text-centered">CLASIFICACIÓN</p>
         </div>
       </div>
       <div class="columns">
@@ -177,7 +174,7 @@
       <br>
       <div class="columns">
         <div class="column is-8 is-offset-2">
-          <p class="title is-5">Agenda / Objetivos</p>
+          <p class="title is-5 has-text-centered">Agenda / Objetivos</p>
         </div>
         <div class="column">
           <div class="columns">
@@ -209,7 +206,7 @@
       <br>
       <div class="columns">
         <div class="column is-8 is-offset-2">
-          <p class="title is-5">Resultados / Conclusiones</p>
+          <p class="title is-5 has-text-centered">Resultados / Conclusiones</p>
         </div>
         <div class="column">
           <div class="columns">
@@ -243,11 +240,11 @@
         <table class="table is-hoverable is-fullwidth">
           <thead>
             <tr>
-              <th class="is-narrow">N°</th>
-              <th><abbr title="Tipo de actividad">Item</abbr></th>
-              <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
-              <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
-              <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
+              <th class="is-narrow has-text-centered">N°</th>
+              <th class="has-text-centered"><abbr title="Tipo de actividad">Item</abbr></th>
+              <th class="has-text-centered"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
+              <th class="has-text-centered"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
+              <th class="has-text-centered"><abbr title="Responsable de realizarla">Responsable</abbr></th>
               <th><a class="button is-success is-small" @click="agregarItem"><strong>+</strong></a></th>
             </tr>
           </thead>
@@ -298,22 +295,13 @@
         </div>
       </div>
 
-    </div>
-
-    <Footer/>
   </div>
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'Minuta',
-  components: {
-    Header,
-    Footer
-  },
   data () {
     return {
       minuta: {

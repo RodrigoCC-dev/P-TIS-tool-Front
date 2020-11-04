@@ -37,12 +37,6 @@ const routes = [
     name: 'Stakeholder',
     component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue'),
     meta: { requireAuth: true }
-  },
-  {
-    path: '/estudiante/minuta',
-    name: 'Minuta',
-    component: () => import(/* webpackChunkName: "coordinador" */ '../views/Minuta.vue'),
-    meta: { requireAuth: true }
   }
 ]
 
