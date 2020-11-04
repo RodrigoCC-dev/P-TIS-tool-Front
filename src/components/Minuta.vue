@@ -114,9 +114,7 @@
             <label class="label"><abbr title="ACA: Ausente con aviso">Asistencia:</abbr></label>
             <div class="select control is-small">
               <select>
-                <option value="">Ausente</option>
-                <option value="">ACA</option>
-                <option value="">Presente</option>
+                <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="asistencia.id">{{ asistencia.tipo }}</option>
               </select>
             </div>
           </div>
@@ -254,9 +252,7 @@
               <td>
                 <div class="select is-small">
                   <select v-model="item.tipo_item_id">
-                    <option value="1">INFO</option>
-                    <option value="2">COMP</option>
-                    <option value="3">AGENDA</option>
+                    <option v-for="item in tipo_items" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                   </select>
                 </div>
               </td>
@@ -299,6 +295,9 @@
 </template>
 
 <script>
+import Auth from '@/services/auth.js'
+import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
@@ -339,9 +338,15 @@ export default {
         }
       ],
       tipo_items: [],
+      tipo_asistencias: [],
+      tipo_estados: [],
+      motivos: [],
       grupo: {},
       clasificacion: []
     }
+  },
+  computed: {
+    ...mapState(['apiUrl'])
   },
   methods: {
     removeFromArray: function (arr, item) {
@@ -381,7 +386,49 @@ export default {
       console.log(this.objetivos)
       console.log(this.conclusiones)
       console.log(this.listaItems)
+    },
+    async obtenerTiposItem () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_items', { headers: Auth.authHeader() })
+        this.tipo_items = response.data
+        console.log(this.tipo_items)
+      } catch {
+        console.log('No fue posible obtener los tipos de items')
+      }
+    },
+    async obtenerTiposAsistencia () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_asistencias', { headers: Auth.authHeader() })
+        this.tipo_asistencias = response.data
+        console.log(this.tipo_asistencias)
+      } catch {
+        console.log('No fue posible obtener los tipos de asistencia')
+      }
+    },
+    async obtenerTiposEstado () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_estados', { headers: Auth.authHeader() })
+        this.tipo_estados = response.data
+        console.log(this.tipo_estados)
+      } catch {
+        console.log('No fue posible obtener los tipos de estados')
+      }
+    },
+    async obtenerMotivos () {
+      try {
+        const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
+        this.motivos = response.data
+        console.log(this.motivos)
+      } catch {
+        console.log('No fue posible obtener los motivos de emisión')
+      }
     }
+  },
+  mounted () {
+    this.obtenerTiposItem()
+    this.obtenerTiposAsistencia()
+    this.obtenerTiposEstado()
+    this.obtenerMotivos()
   }
 }
 </script>
