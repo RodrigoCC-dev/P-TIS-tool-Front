@@ -49,7 +49,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input class="input" type="text">
+            <input class="input has-text-centered" type="text">
           </div>
         </div>
         <div class="field-label-2c">
@@ -57,7 +57,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input class="input" v-model="minuta.fecha_reunion" type="text">
+            <input class="input has-text-centered" v-model="minuta.fecha_reunion" type="date">
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input is-normal" v-model="minuta.h_inicio" type="text">
+              <input class="input is-normal has-text-centered" v-model="minuta.h_inicio" type="time">
             </p>
           </div>
         </div>
@@ -78,7 +78,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input is-normal" v-model="minuta.h_termino" type="text">
+              <input class="input is-normal has-text-centered" v-model="minuta.h_termino" type="time">
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@
       </div>
 
       <div class="columns">
-        <div class="column is-three-quarters is-offset-1 has-text-left">
+        <div class="column is-two-thirds is-offset-1 has-text-left">
           <div class="field">
             <label class="label">Participantes:</label>
           </div>
@@ -112,6 +112,18 @@
           <p>JPP</p>
           <p>PCQ</p>
         </div>
+        <div class="column">
+          <div class="field">
+            <label class="label"><abbr title="ACA: Ausente con aviso">Asistencia:</abbr></label>
+            <div class="select control is-small">
+              <select>
+                <option value="">Ausente</option>
+                <option value="">ACA</option>
+                <option value="">Presente</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="columns">
@@ -120,7 +132,7 @@
         </div>
       </div>
       <div class="columns">
-        <div class="column is-one-fifth">
+        <div class="column is-one-fifth is-offset-1">
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Informativa</p>
             <div class="control">
@@ -189,12 +201,6 @@
                   </p>
                 </div>
               </li>
-              <li>Primer objetivo</li>
-              <li>Segundo objetivo</li>
-              <li>Tercer objetivo</li>
-              <li>
-                <input class="input" type="text">
-              </li>
             </dl>
           </div>
         </div>
@@ -227,11 +233,6 @@
                   </p>
                 </div>
               </li>
-              <li>Primer resultado</li>
-              <li>Segundo resultado</li>
-              <li>
-                <input class="input" type="text">
-              </li>
             </dl>
           </div>
         </div>
@@ -251,13 +252,6 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="is-vcentered">
-              <th>1</th>
-              <td>INFO</td>
-              <td class="has-text-left">Se realizan el primer set de historias de usuario en Taiga.io</td>
-              <td></td>
-              <td></td>
-            </tr>
             <tr class="is-vcentered" v-for="(item, index) in listaItems" :key="index">
               <th>{{ index + 1 }}</th>
               <td>
@@ -292,7 +286,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success">Guardar</a>
+              <a class="button is-success" @click="guardarMinuta">Guardar</a>
             </div>
             <div class="control">
               <a class="button is-link">Emitir</a>
@@ -392,6 +386,13 @@ export default {
       if (this.conclusiones.length > 1) {
         this.removeFromArray(this.conclusiones, conclusion)
       }
+    },
+    guardarMinuta: function () {
+      console.log(this.minuta)
+      console.log(this.clasificacion)
+      console.log(this.objetivos)
+      console.log(this.conclusiones)
+      console.log(this.listaItems)
     }
   }
 }
