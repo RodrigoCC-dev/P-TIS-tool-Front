@@ -121,40 +121,58 @@
       </div>
       <div class="columns">
         <div class="column is-one-fifth">
-          <p>Informativa</p>
-          <div class="control">
-            <input type="checkbox" v-model="clasificacion" value="informativa">
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">Informativa</p>
+            <div class="control">
+              <input type="checkbox" v-model="clasificacion" value="informativa">
+            </div>
           </div>
         </div>
         <div class="column">
-          <p>Control de Avance</p>
-          <div class="control">
-            <input type="checkbox" v-model="clasificacion" value="avance">
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">Control de Avance</p>
+            <div class="control">
+              <input type="checkbox" v-model="clasificacion" value="avance">
+            </div>
           </div>
         </div>
         <div class="column">
-          <p>Coordinación</p>
-          <div class="control">
-            <input type="checkbox" v-model="clasificacion" value="coordinación">
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">Coordinación</p>
+            <div class="control">
+              <input type="checkbox" v-model="clasificacion" value="coordinación">
+            </div>
           </div>
         </div>
         <div class="column">
-          <p>Decisión</p>
-          <div class="control">
-            <input type="checkbox" v-model="clasificacion" value="decisión">
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">Decisión</p>
+            <div class="control">
+              <input type="checkbox" v-model="clasificacion" value="decisión">
+            </div>
           </div>
         </div>
         <div class="column">
-          <p>Otros</p>
-          <div class="control">
-            <input type="checkbox" v-model="clasificacion" value="otro">
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">Otros</p>
+            <div class="control">
+              <input type="checkbox" v-model="clasificacion" value="otro">
+            </div>
           </div>
         </div>
       </div>
 
+      <br>
       <div class="columns">
-        <div class="column is-full">
+        <div class="column is-8 is-offset-2">
           <p class="title is-5">Agenda / Objetivos</p>
+        </div>
+        <div class="column">
+          <div class="columns">
+            <div class="column is-2 is-offset-3">
+              <a class="button is-small is-success" @click="agregarObjetivo"><strong>+</strong></a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="columns">
@@ -162,7 +180,14 @@
           <div class="content has-text-left">
             <dl>
               <li v-for="(objetivo, index) in objetivos" :key="index">
-                <input v-model="objetivos[index]" class="input" type="text">
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input v-model="objetivos[index]" class="input" type="text">
+                  </p>
+                  <p class="control">
+                    <a class="button is-danger is-light" @click="removerObjetivo(objetivo)"><strong>X</strong></a>
+                  </p>
+                </div>
               </li>
               <li>Primer objetivo</li>
               <li>Segundo objetivo</li>
@@ -175,9 +200,17 @@
         </div>
       </div>
 
+      <br>
       <div class="columns">
-        <div class="column is-full">
+        <div class="column is-8 is-offset-2">
           <p class="title is-5">Resultados / Conclusiones</p>
+        </div>
+        <div class="column">
+          <div class="columns">
+            <div class="column is-2 is-offset-3">
+              <a class="button is-small is-success" @click="agregarConclusion"><strong>+</strong></a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="columns">
@@ -185,7 +218,14 @@
           <div class="content has-text-left">
             <dl>
               <li v-for="(conclusion, index) in conclusiones" :key="index">
-                <input v-model="conclusiones[index]" class="input" type="text">
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input v-model="conclusiones[index]" class="input" type="text">
+                  </p>
+                  <p class="control">
+                    <a class="button is-danger is-light" @click="removerConclusion(conclusion)"><strong>X</strong></a>
+                  </p>
+                </div>
               </li>
               <li>Primer resultado</li>
               <li>Segundo resultado</li>
@@ -197,7 +237,7 @@
         </div>
       </div>
 
-      <div class="">
+      <div>
         <br>
         <table class="table is-hoverable is-fullwidth">
           <thead>
@@ -207,6 +247,7 @@
               <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
               <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
               <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
+              <th><a class="button is-success is-small" @click="agregarItem"><strong>+</strong></a></th>
             </tr>
           </thead>
           <tbody>
@@ -217,29 +258,30 @@
               <td></td>
               <td></td>
             </tr>
-            <tr class="is-vcentered">
-              <th>2</th>
+            <tr class="is-vcentered" v-for="(item, index) in listaItems" :key="index">
+              <th>{{ index + 1 }}</th>
               <td>
                 <div class="select is-small">
-                  <select>
-                    <option value="">INFO</option>
-                    <option value="">COMP</option>
-                    <option value="">AGENDA</option>
+                  <select v-model="item.tipo_item_id">
+                    <option value="1">INFO</option>
+                    <option value="2">COMP</option>
+                    <option value="3">AGENDA</option>
                   </select>
                 </div>
               </td>
-              <td><textarea class="textarea is-small is-extend" type="text" name="" value=""></textarea></td>
-              <td><input class="input is-small has-text-centered" type="date" name="" value=""></td>
+              <td><textarea class="textarea is-small is-extend" v-model="item.descripcion"></textarea></td>
+              <td><input class="input is-small has-text-centered" type="date" v-model="item.fecha"></td>
               <td>
                 <div class="select is-small">
-                  <select>
-                    <option value="">-- SA --</option>
-                    <option value="">MCR</option>
-                    <option value="">PTR</option>
-                    <option value="">ITZ</option>
+                  <select v-model="item.responsables">
+                    <option value="0" selected>- Sin Asig -</option>
+                    <option value="1">MCR</option>
+                    <option value="2">PTR</option>
+                    <option value="3">ITZ</option>
                   </select>
                 </div>
               </td>
+              <td><a class="button is-small is-danger is-light" @click="removerItem(item)"><strong>X</strong></a></td>
             </tr>
           </tbody>
         </table>
@@ -307,15 +349,49 @@ export default {
       responsables: [],
       listaItems: [
         {
-          correlativo: 0,
+          correlativo: 1,
           descripcion: '',
           fecha: '',
-          tipo_item_id: 0
+          tipo_item_id: 0,
+          responsables: []
         }
       ],
       tipo_items: [],
       grupo: {},
       clasificacion: []
+    }
+  },
+  methods: {
+    removeFromArray: function (arr, item) {
+      var i = arr.indexOf(item)
+      i !== -1 && arr.splice(i, 1)
+    },
+    agregarItem: function () {
+      var nuevoItem = Object.assign({}, this.item)
+      const anterior = this.listaItems[this.listaItems.length - 1].correlativo
+      nuevoItem.correlativo = anterior + 1
+      this.listaItems.push(nuevoItem)
+    },
+    removerItem: function (item) {
+      if (this.listaItems.length > 1) {
+        this.removeFromArray(this.listaItems, item)
+      }
+    },
+    agregarObjetivo: function () {
+      this.objetivos.push('')
+    },
+    removerObjetivo: function (objetivo) {
+      if (this.objetivos.length > 1) {
+        this.removeFromArray(this.objetivos, objetivo)
+      }
+    },
+    agregarConclusion: function () {
+      this.conclusiones.push('')
+    },
+    removerConclusion: function (conclusion) {
+      if (this.conclusiones.length > 1) {
+        this.removeFromArray(this.conclusiones, conclusion)
+      }
     }
   }
 }
