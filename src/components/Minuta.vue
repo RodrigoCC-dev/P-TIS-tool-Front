@@ -13,7 +13,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input" type="text" disabled>
+              <input v-model="grupo.proyecto" class="input" type="text" disabled>
             </p>
           </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input" type="text" disabled>
+              <input v-model="grupo.correlativo" class="input" type="text" disabled>
             </p>
           </div>
         </div>
@@ -301,6 +301,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
+  props: ['tipoMinuta'],
   data () {
     return {
       minuta: {
@@ -341,12 +342,13 @@ export default {
       tipo_asistencias: [],
       tipo_estados: [],
       motivos: [],
-      grupo: {},
-      clasificacion: []
+      clasificacion: [],
+      estudiante: {},
+      grupo: {}
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl', 'usuario'])
   },
   methods: {
     removeFromArray: function (arr, item) {
@@ -422,6 +424,20 @@ export default {
       } catch {
         console.log('No fue posible obtener los motivos de emisión')
       }
+    },
+    async obtenerInfoEstudiante () {
+      try {
+        const response = await axios.get(this.apiUrl + '/estudiantes/' + this.usuario.id, { headers: Auth.authHeader() })
+        this.estudiante = response.data
+        try {
+          const respuesta = await axios.get(this.apiUrl + '/grupos/' + this.estudiante.grupo_id, { headers: Auth.authHeader() })
+          this.grupo = respuesta.data
+        } catch {
+          console.log('No fue posible obtener la información del grupo del estudiante')
+        }
+      } catch {
+        console.log('No fue posible obtener la información del estudiante')
+      }
     }
   },
   mounted () {
@@ -429,6 +445,7 @@ export default {
     this.obtenerTiposAsistencia()
     this.obtenerTiposEstado()
     this.obtenerMotivos()
+    this.obtenerInfoEstudiante()
   }
 }
 </script>
