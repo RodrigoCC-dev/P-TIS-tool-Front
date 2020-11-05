@@ -50,7 +50,7 @@
           </div>
         </div>
         <div class="field-label-2c">
-          <label class="label">Fecha:</label>
+          <label class="label">Fecha de la reunión:</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -98,24 +98,23 @@
           <div class="field">
             <label class="label">Participantes:</label>
           </div>
-          <p class="has-text-info has-text-weight-semibold" v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ estudiante }}</p>
-          <p class="has-text-info has-text-weight-semibold">Juanito</p>
-          <p class="has-text-info">Pepito</p>
+          <p class="has-text-info has-text-weight-semibold" v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante) }}</p>
         </div>
         <div class="column">
           <div class="field">
             <label class="label">Iniciales:</label>
           </div>
-          <p>JPP</p>
-          <p>PCQ</p>
+          <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ estudiante.iniciales }}</p>
         </div>
         <div class="column">
           <div class="field">
             <label class="label"><abbr title="ACA: Ausente con aviso">Asistencia:</abbr></label>
-            <div class="select control is-small">
-              <select>
-                <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="asistencia.id">{{ asistencia.tipo }}</option>
-              </select>
+            <div v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
+              <div class="select control is-small">
+                <select v-model="asistencia[index]">
+                  <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="asistencia.id">{{ asistencia.tipo }}</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -262,9 +261,7 @@
                 <div class="select is-small">
                   <select v-model="item.responsables">
                     <option value="0" selected>- Sin Asig -</option>
-                    <option value="1">MCR</option>
-                    <option value="2">PTR</option>
-                    <option value="3">ITZ</option>
+                    <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
               </td>
@@ -319,7 +316,7 @@ export default {
         }
       },
       tema: '',
-      asistencia: {},
+      asistencia: [],
       objetivos: [''],
       conclusiones: [''],
       item: {
@@ -355,6 +352,9 @@ export default {
       var i = arr.indexOf(item)
       i !== -1 && arr.splice(i, 1)
     },
+    nombreCompleto (estudiante) {
+      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+    },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
       const anterior = this.listaItems[this.listaItems.length - 1].correlativo
@@ -384,6 +384,7 @@ export default {
     },
     guardarMinuta: function () {
       console.log(this.minuta)
+      console.log(this.asistencia)
       console.log(this.clasificacion)
       console.log(this.objetivos)
       console.log(this.conclusiones)
@@ -437,6 +438,21 @@ export default {
         }
       } catch {
         console.log('No fue posible obtener la información del estudiante')
+      }
+    },
+    establecerClasificacion: function () {
+      for (var i = 0; i < this.clasificacion; i++) {
+        if (this.clasificacion[i] === 'informativa') {
+          this.minuta.clasificacion.informativa = true
+        } else if (this.clasificacion[i] === 'avance') {
+          this.minuta.clasificacion.avance = true
+        } else if (this.clasificacion[i] === 'decision') {
+          this.minuta.clasificacion.decision = true
+        } else if (this.clasificacion[i] === 'coordinacion') {
+          this.minuta.clasificacion.coordinacion = true
+        } else if (this.clasificacion[i] === 'otro') {
+          this.minuta.clasificacion.otro = true
+        }
       }
     }
   },

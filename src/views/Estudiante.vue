@@ -23,7 +23,7 @@
                 </div>
                 <div class="field-body">
                   <div class="field has-addons has-addons-right">
-                    <div class="control">
+                    <div class="control is-expanded">
                       <div class="select is-fullwidth">
                         <select v-model="tipo">
                           <option v-for="item in tipos_minutas" :key="item.id" :value="item.id">{{ item.tipo }}</option>
