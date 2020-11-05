@@ -12,6 +12,10 @@ export default createStore({
     },
     setUsuario (state, valor) {
       state.usuario = valor
+    },
+    removeFromArray (arr, item) {
+      var i = arr.indexOf(item)
+      i !== -1 && arr.splice(i, 1)
     }
   },
   actions: {
