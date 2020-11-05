@@ -25,7 +25,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input v-model="grupo.correlativo" class="input" type="text" disabled>
+              <input v-model="grupo.correlativo" class="input has-text-centered" type="text" disabled>
             </p>
           </div>
         </div>
@@ -35,7 +35,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input" type="text" disabled>
+              <input v-model="minuta.correlativo" class="input has-text-centered" type="text" disabled>
             </p>
           </div>
         </div>
@@ -298,7 +298,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta'],
+  props: ['tipoMinuta', 'idMinuta'],
   data () {
     return {
       minuta: {
@@ -360,6 +360,13 @@ export default {
     nombreCompleto (estudiante) {
       return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
     },
+    buscarIdEstado: function (array, busqueda) {
+      for (var i = 0; i < array.lenght; i++) {
+        if (array[i].abreviacion === busqueda) {
+          return array[i].id
+        }
+      }
+    },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
       const anterior = this.listaItems[this.listaItems.length - 1].correlativo
@@ -386,14 +393,6 @@ export default {
       if (this.conclusiones.length > 1) {
         this.removeFromArray(this.conclusiones, conclusion)
       }
-    },
-    guardarMinuta: function () {
-      console.log(this.minuta)
-      console.log(this.asistencia)
-      console.log(this.clasificacion)
-      console.log(this.objetivos)
-      console.log(this.conclusiones)
-      console.log(this.listaItems)
     },
     async obtenerTiposItem () {
       try {
@@ -438,6 +437,7 @@ export default {
         try {
           const respuesta = await axios.get(this.apiUrl + '/grupos/' + this.estudiante.grupo_id, { headers: Auth.authHeader() })
           this.grupo = respuesta.data
+          this.obtenerCorrelativo()
         } catch {
           console.log('No fue posible obtener la información del grupo del estudiante')
         }
@@ -450,7 +450,20 @@ export default {
         const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
         this.semestre = response.data
       } catch {
-        consola.log('No se obtuvo la información del semestre')
+        console.log('No se obtuvo la información del semestre')
+      }
+    },
+    async obtenerCorrelativo () {
+      try {
+        if (this.idMinuta === '') {
+          const response = await axios.get(this.apiUrl + '/minutas/correlativo/' + this.grupo.id.toString(), { headers: Auth.authHeader() })
+          this.minuta.correlativo = response.data
+        } else {
+          console.log(this.idMinuta)
+        }
+      } catch (e) {
+        console.log(this.grupo.id)
+        console.log(e)
       }
     },
     establecerId: function () {
@@ -484,7 +497,7 @@ export default {
       codigo += '_' + this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[2] + fecha[1] + '_' + this.revision
       return codigo
     },
-    async emitirMinuta () {
+    async enviarMinuta (estado) {
       this.establecerId()
       this.establecerClasificacion()
       const nuevaMinuta = {
@@ -505,7 +518,8 @@ export default {
           revision: this.revision,
           motivo_id: this.motivo_id
         },
-        asistencia: this.asistencia
+        asistencia: this.asistencia,
+        tipo_estado: this.buscarIdEstado(this.tipo_estados, estado)
       }
       try {
         await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
@@ -513,6 +527,12 @@ export default {
       } catch {
         console.log('No se pudo emitir la minuta')
       }
+    },
+    guardarMinuta: function () {
+      this.enviarMinuta('BOR')
+    },
+    emitirMinuta: function () {
+      this.enviarMinuta('EMI')
     }
   },
   mounted () {

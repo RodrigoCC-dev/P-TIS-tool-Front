@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <Minuta v-bind:tipo-minuta="tipo" v-if="verFormulario"/>
+      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-minuta="idMinuta" v-if="verFormulario"/>
 
       <div v-else>
 
@@ -161,7 +161,8 @@ export default {
       verFormulario: false,
       tipos_minutas: [],
       tipo: 0,
-      seleccionarMinuta: false
+      seleccionarMinuta: false,
+      idMinuta: ''
     }
   },
   computed: {
