@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input class="input has-text-centered" type="text">
+            <input v-model="revision" class="input has-text-centered" type="text">
           </div>
         </div>
         <div class="field-label-2c">
@@ -112,7 +112,7 @@
             <div v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
               <div class="select control is-small">
                 <select v-model="asistencia[index]">
-                  <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="asistencia.id">{{ asistencia.tipo }}</option>
+                  <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id }">{{ asistencia.tipo }}</option>
                 </select>
               </div>
             </div>
@@ -279,7 +279,7 @@
               <a class="button is-success" @click="guardarMinuta">Guardar</a>
             </div>
             <div class="control">
-              <a class="button is-link">Emitir</a>
+              <a class="button is-link" @click="emitirMinuta">Emitir</a>
             </div>
             <div class="control">
               <a class="button is-dark">Cancelar</a>
@@ -302,6 +302,7 @@ export default {
   data () {
     return {
       minuta: {
+        estudiante_id: 0,
         codigo: '',
         correlativo: 0,
         fecha_reunion: '',
@@ -313,9 +314,11 @@ export default {
           coordinacion: false,
           decision: false,
           otro: false
-        }
+        },
+        tipo_minuta_id: this.tipoMinuta
       },
       tema: '',
+      revision: '',
       asistencia: [],
       objetivos: [''],
       conclusiones: [''],
@@ -325,7 +328,7 @@ export default {
         fecha: '',
         tipo_item_id: 0
       },
-      responsables: [],
+      motivo_id: 0,
       listaItems: [
         {
           correlativo: 1,
@@ -341,11 +344,13 @@ export default {
       motivos: [],
       clasificacion: [],
       estudiante: {},
-      grupo: {}
+      grupo: {},
+      semestre: {}
     }
   },
   computed: {
     ...mapState(['apiUrl', 'usuario'])
+
   },
   methods: {
     removeFromArray: function (arr, item) {
@@ -440,6 +445,17 @@ export default {
         console.log('No fue posible obtener la información del estudiante')
       }
     },
+    async obtenerSemestre () {
+      try {
+        const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
+        this.semestre = response.data
+      } catch {
+        consola.log('No se obtuvo la información del semestre')
+      }
+    },
+    establecerId: function () {
+      this.minuta.estudiante_id = this.estudiante.id
+    },
     establecerClasificacion: function () {
       for (var i = 0; i < this.clasificacion; i++) {
         if (this.clasificacion[i] === 'informativa') {
@@ -454,6 +470,49 @@ export default {
           this.minuta.clasificacion.otro = true
         }
       }
+    },
+    establecerCodigo: function () {
+      var codigo = 'MINUTA'
+      var correlativo = ''
+      if (this.minuta.correlativo < 10) {
+        correlativo = '0' + this.minuta.correlativo
+      } else {
+        correlativo = this.minuta.correlativo
+      }
+      var semestre = this.semestre.agno + '-' + this.semestre.numero
+      var fecha = this.minuta.fecha_reunion.split('-')
+      codigo += '_' + this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[2] + fecha[1] + '_' + this.revision
+      return codigo
+    },
+    async emitirMinuta () {
+      this.establecerId()
+      this.establecerClasificacion()
+      const nuevaMinuta = {
+        minuta: {
+          estudiante_id: this.minuta.estudiante_id,
+          codigo: this.establecerCodigo(),
+          correlativo: this.minuta.correlativo,
+          fecha_reunion: this.minuta.fecha_reunion,
+          h_inicio: this.minuta.h_inicio,
+          h_termino: this.minuta.h_termino,
+          tipo_minuta_id: this.minuta.tipo_minuta_id,
+          clasificacion_attributes: this.minuta.clasificacion
+        },
+        objetivos: this.objetivos,
+        conclusiones: this.conclusiones,
+        items: this.listaItems,
+        revision: {
+          revision: this.revision,
+          motivo_id: this.motivo_id
+        },
+        asistencia: this.asistencia
+      }
+      try {
+        await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
+        console.log(true)
+      } catch {
+        console.log('No se pudo emitir la minuta')
+      }
     }
   },
   mounted () {
@@ -462,6 +521,7 @@ export default {
     this.obtenerTiposEstado()
     this.obtenerMotivos()
     this.obtenerInfoEstudiante()
+    this.obtenerSemestre()
   }
 }
 </script>
