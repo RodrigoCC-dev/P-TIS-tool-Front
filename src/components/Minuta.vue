@@ -146,7 +146,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Coordinación</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="coordinación">
+              <input type="checkbox" v-model="clasificacion" value="coordinacion">
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Decisión</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="decisión">
+              <input type="checkbox" v-model="clasificacion" value="decision">
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@
               <td>
                 <div class="select is-small">
                   <select v-model="item.responsables">
-                    <option value="0" selected>- Sin Asig -</option>
+                    <option value="0" selected="true">- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
@@ -276,7 +276,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="guardarMinuta">Guardar</a>
+              <a class="button is-success" @click="guardarMinuta" disabled>Guardar</a>
             </div>
             <div class="control">
               <a class="button is-link" @click="emitirMinuta">Emitir</a>
@@ -326,16 +326,17 @@ export default {
         correlativo: 0,
         descripcion: '',
         fecha: '',
-        tipo_item_id: 0
+        tipo_item_id: 0,
+        responsables: 0
       },
-      motivo_id: 0,
+      motivo_id: 1,
       listaItems: [
         {
           correlativo: 1,
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: []
+          responsables: 0
         }
       ],
       tipo_items: [],
@@ -361,11 +362,13 @@ export default {
       return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
     },
     buscarIdEstado: function (array, busqueda) {
-      for (var i = 0; i < array.lenght; i++) {
+      var id = 0
+      for (var i = 0; i < array.length; i++) {
         if (array[i].abreviacion === busqueda) {
-          return array[i].id
+          id = array[i].id
         }
       }
+      return id
     },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
@@ -462,15 +465,14 @@ export default {
           console.log(this.idMinuta)
         }
       } catch (e) {
-        console.log(this.grupo.id)
-        console.log(e)
+        console.log('No fue posible obtener el correlativo')
       }
     },
     establecerId: function () {
       this.minuta.estudiante_id = this.estudiante.id
     },
     establecerClasificacion: function () {
-      for (var i = 0; i < this.clasificacion; i++) {
+      for (var i = 0; i < this.clasificacion.length; i++) {
         if (this.clasificacion[i] === 'informativa') {
           this.minuta.clasificacion.informativa = true
         } else if (this.clasificacion[i] === 'avance') {
@@ -511,10 +513,11 @@ export default {
           tipo_minuta_id: this.minuta.tipo_minuta_id,
           clasificacion_attributes: this.minuta.clasificacion
         },
+        tema: this.tema,
         objetivos: this.objetivos,
         conclusiones: this.conclusiones,
         items: this.listaItems,
-        revision: {
+        bitacora_revision: {
           revision: this.revision,
           motivo_id: this.motivo_id
         },
