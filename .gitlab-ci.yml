@@ -1,13 +1,10 @@
-image: node:10
 stages:
   - build
   - unit test
   - static code analisys
   - deploy
 
-only:
-  - tags
-  - master
+image: node:10
 
 build site:
   stage: build
@@ -18,6 +15,8 @@ build site:
     expire_in: 1 week
     paths:
       - dist
+  before_script:
+    - echo "VUE_APP_API_URL='http://34.122.101.158:8080'" > .env
 
 sonarqube:
   image:
