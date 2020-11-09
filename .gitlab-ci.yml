@@ -16,7 +16,7 @@ build site:
     paths:
       - dist
   before_script:
-    - echo "VUE_APP_API_URL='http://127.0.0.1:8080'" > .env
+    - echo "VUE_APP_API_URL='http://34.122.101.158:8080'" > .env
 
 sonarqube:
   image:
