@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    apiUrl: 'http://127.0.0.1:3000',
+    apiUrl: process.env.VUE_APP_API_URL,
     authenticated: false,
     usuario: {}
   },

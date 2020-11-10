@@ -130,7 +130,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Informativa</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="informativa">
+              <input type="checkbox" v-model="listaClasificacion" value="informativa">
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Control de Avance</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="avance">
+              <input type="checkbox" v-model="listaClasificacion" value="avance">
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Coordinación</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="coordinacion">
+              <input type="checkbox" v-model="listaClasificacion" value="coordinacion">
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Decisión</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="decision">
+              <input type="checkbox" v-model="listaClasificacion" value="decision">
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Otros</p>
             <div class="control">
-              <input type="checkbox" v-model="clasificacion" value="otro">
+              <input type="checkbox" v-model="listaClasificacion" value="otro">
             </div>
           </div>
         </div>
@@ -308,14 +308,14 @@ export default {
         fecha_reunion: '',
         h_inicio: '',
         h_termino: '',
-        clasificacion: {
-          informativa: false,
-          avance: false,
-          coordinacion: false,
-          decision: false,
-          otro: false
-        },
         tipo_minuta_id: this.tipoMinuta
+      },
+      clasificacion: {
+        informativa: false,
+        avance: false,
+        coordinacion: false,
+        decision: false,
+        otro: false
       },
       tema: '',
       revision: '',
@@ -327,7 +327,7 @@ export default {
         descripcion: '',
         fecha: '',
         tipo_item_id: 0,
-        responsables: 0
+        responsables: []
       },
       motivo_id: 1,
       listaItems: [
@@ -336,14 +336,14 @@ export default {
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: 0
+          responsables: []
         }
       ],
       tipo_items: [],
       tipo_asistencias: [],
       tipo_estados: [],
       motivos: [],
-      clasificacion: [],
+      listaClasificacion: [],
       estudiante: {},
       grupo: {},
       semestre: {}
@@ -472,17 +472,17 @@ export default {
       this.minuta.estudiante_id = this.estudiante.id
     },
     establecerClasificacion: function () {
-      for (var i = 0; i < this.clasificacion.length; i++) {
-        if (this.clasificacion[i] === 'informativa') {
-          this.minuta.clasificacion.informativa = true
-        } else if (this.clasificacion[i] === 'avance') {
-          this.minuta.clasificacion.avance = true
-        } else if (this.clasificacion[i] === 'decision') {
-          this.minuta.clasificacion.decision = true
-        } else if (this.clasificacion[i] === 'coordinacion') {
-          this.minuta.clasificacion.coordinacion = true
-        } else if (this.clasificacion[i] === 'otro') {
-          this.minuta.clasificacion.otro = true
+      for (var i = 0; i < this.listaClasificacion.length; i++) {
+        if (this.listaClasificacion[i] === 'informativa') {
+          this.clasificacion.informativa = true
+        } else if (this.listaClasificacion[i] === 'avance') {
+          this.clasificacion.avance = true
+        } else if (this.listaClasificacion[i] === 'decision') {
+          this.clasificacion.decision = true
+        } else if (this.listaClasificacion[i] === 'coordinacion') {
+          this.clasificacion.coordinacion = true
+        } else if (this.listaClasificacion[i] === 'otro') {
+          this.clasificacion.otro = true
         }
       }
     },
@@ -502,6 +502,23 @@ export default {
     async enviarMinuta (estado) {
       this.establecerId()
       this.establecerClasificacion()
+      const lista = []
+      for (var i = 0; i < this.listaItems.length; i++) {
+        var listaResp = []
+        if (this.listaItems[i].responsables.length === undefined) {
+          listaResp.push(this.listaItems[i].responsables)
+        } else {
+          listaResp = this.listaItems[i].responsables
+        }
+        var item = {
+          correlativo: this.listaItems[i].correlativo,
+          descripcion: this.listaItems[i].descripcion,
+          fecha: this.listaItems[i].fecha,
+          tipo_item_id: this.listaItems[i].tipo_item_id,
+          responsables: listaResp
+        }
+        lista.push(item)
+      }
       const nuevaMinuta = {
         minuta: {
           estudiante_id: this.minuta.estudiante_id,
@@ -510,13 +527,13 @@ export default {
           fecha_reunion: this.minuta.fecha_reunion,
           h_inicio: this.minuta.h_inicio,
           h_termino: this.minuta.h_termino,
-          tipo_minuta_id: this.minuta.tipo_minuta_id,
-          clasificacion_attributes: this.minuta.clasificacion
+          tipo_minuta_id: this.minuta.tipo_minuta_id
         },
+        clasificacion: this.clasificacion,
         tema: this.tema,
         objetivos: this.objetivos,
         conclusiones: this.conclusiones,
-        items: this.listaItems,
+        items: lista,
         bitacora_revision: {
           revision: this.revision,
           motivo_id: this.motivo_id
