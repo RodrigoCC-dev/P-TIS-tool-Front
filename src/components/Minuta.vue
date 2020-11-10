@@ -94,29 +94,32 @@
       </div>
 
       <div class="columns">
-        <div class="column is-two-thirds is-offset-1 has-text-left">
-          <div class="field">
-            <label class="label">Participantes:</label>
-          </div>
-          <p class="has-text-info has-text-weight-semibold" v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante) }}</p>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label">Iniciales:</label>
-          </div>
-          <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ estudiante.iniciales }}</p>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label"><abbr title="ACA: Ausente con aviso">Asistencia:</abbr></label>
-            <div v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
-              <div class="select control is-small">
-                <select v-model="asistencia[index]">
-                  <option v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id }">{{ asistencia.tipo }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
+        <div class="column is-11 is-offset-1">
+          <br>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Participantes</th>
+                <th></th>
+                <th class="has-text-centered">Iniciales</th>
+                <th class="has-text-centered">Asistencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
+                <td class="has-text-info has-text-weight-semibold">{{ nombreCompleto(estudiante) }}</td>
+                <td></td>
+                <td class="has-text-centered">{{ estudiante.iniciales }}</td>
+                <td class="has-text-centered">
+                  <div class="select control is-small is-expanded">
+                    <select v-model="asistencia[index]">
+                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -401,7 +404,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_items', { headers: Auth.authHeader() })
         this.tipo_items = response.data
-        console.log(this.tipo_items)
       } catch {
         console.log('No fue posible obtener los tipos de items')
       }
@@ -410,7 +412,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_asistencias', { headers: Auth.authHeader() })
         this.tipo_asistencias = response.data
-        console.log(this.tipo_asistencias)
       } catch {
         console.log('No fue posible obtener los tipos de asistencia')
       }
@@ -419,7 +420,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_estados', { headers: Auth.authHeader() })
         this.tipo_estados = response.data
-        console.log(this.tipo_estados)
       } catch {
         console.log('No fue posible obtener los tipos de estados')
       }
@@ -428,7 +428,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
         this.motivos = response.data
-        console.log(this.motivos)
       } catch {
         console.log('No fue posible obtener los motivos de emisión')
       }
