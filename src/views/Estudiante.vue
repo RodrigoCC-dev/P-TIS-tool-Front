@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-minuta="idMinuta" v-if="verFormulario"/>
+      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-minuta="idMinuta" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
       <div v-else>
 
@@ -177,6 +177,9 @@ export default {
     elegirTipo: function () {
       this.verFormulario = true
       this.seleccionarMinuta = false
+    },
+    cerrarFormulario: function () {
+      this.verFormulario = false
     },
     async obtenerTipoMinutas () {
       try {

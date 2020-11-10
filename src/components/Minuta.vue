@@ -282,7 +282,7 @@
               <a class="button is-link" @click="emitirMinuta">Emitir</a>
             </div>
             <div class="control">
-              <a class="button is-dark">Cancelar</a>
+              <a class="button is-dark" @click="cancelarEnvio">Cancelar</a>
             </div>
           </div>
         </div>
@@ -543,7 +543,7 @@ export default {
       }
       try {
         await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
-        console.log(true)
+        this.$emit('cerrar')
       } catch {
         console.log('No se pudo emitir la minuta')
       }
@@ -553,6 +553,9 @@ export default {
     },
     emitirMinuta: function () {
       this.enviarMinuta('EMI')
+    },
+    cancelarEnvio: function () {
+      this.$emit('cerrar')
     }
   },
   mounted () {
