@@ -46,8 +46,9 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text">
+            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision">
           </div>
+          <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
         <div class="field-label-2c">
           <label class="label">Fecha de la reunión:</label>
@@ -56,6 +57,7 @@
           <div class="field">
             <input class="input has-text-centered" v-model="minuta.fecha_reunion" type="date">
           </div>
+          <p class="is-danger help" v-if="entradas.fecha_reunion">No se ha ingresado fecha de la reunión</p>
         </div>
       </div>
       <div class="field is-horizontal is-grouped">
@@ -68,6 +70,7 @@
               <input class="input is-normal has-text-centered" v-model="minuta.h_inicio" type="time">
             </p>
           </div>
+          <p class="is-danger help" v-if="entradas.h_inicio">No se ha ingresado la hora de inicio</p>
         </div>
         <div class="field-label-2c">
           <label class="label">Hora de termino:</label>
@@ -78,6 +81,7 @@
               <input class="input is-normal has-text-centered" v-model="minuta.h_termino" type="time">
             </p>
           </div>
+          <p class="is-danger help" v-if="entradas.h_termino">No se ha ingresado la hora de término</p>
         </div>
       </div>
       <div class="field is-horizontal">
@@ -90,6 +94,7 @@
               <input class="input" v-model="tema" type="text">
             </p>
           </div>
+          <p class="is-danger help" v-if="entradas.tema">No se ha ingresado el tema de la reunión</p>
         </div>
       </div>
 
@@ -112,7 +117,7 @@
                 <td class="has-text-centered">{{ estudiante.iniciales }}</td>
                 <td class="has-text-centered">
                   <div class="select control is-small is-expanded">
-                    <select v-model="asistencia[index]">
+                    <select v-model="asistencia[index]" @change="limpiarAsistencias">
                       <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
                     </select>
                   </div>
@@ -120,6 +125,7 @@
               </tr>
             </tbody>
           </table>
+          <p class="is-danger help" v-if="entradas.asistencias">No se han ingresado todas las asistencias a esta reunión</p>
         </div>
       </div>
 
@@ -170,6 +176,11 @@
           </div>
         </div>
       </div>
+      <div class="columns" v-if="entradas.clasificacion">
+        <div class="column is-4 is-offset-4">
+          <p class="is-danger help has-text-centered">No se ha ingresado la clasificación de la reunión</p>
+        </div>
+      </div>
 
       <br>
       <div class="columns">
@@ -199,6 +210,7 @@
                 </div>
               </li>
             </dl>
+            <p class="is-danger help" v-if="entradas.objetivos">No se han llenado todos los objetivos</p>
           </div>
         </div>
       </div>
@@ -231,6 +243,7 @@
                 </div>
               </li>
             </dl>
+            <p class="is-danger help" v-if="entradas.conclusiones">No se han ingresado todas las conclusiones</p>
           </div>
         </div>
       </div>
@@ -251,22 +264,30 @@
           <tbody>
             <tr class="is-vcentered" v-for="(item, index) in listaItems" :key="index">
               <th>{{ index + 1 }}</th>
-              <td>
+              <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.tipo_item_id">
                     <option v-for="item in tipo_items" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                   </select>
                 </div>
+                <p class="is-danger help">No se ha ingresado el tipo de ítem</p>
               </td>
-              <td><textarea class="textarea is-small is-extend" v-model="item.descripcion"></textarea></td>
-              <td><input class="input is-small has-text-centered" type="date" v-model="item.fecha"></td>
               <td>
+                <textarea class="textarea is-small is-extend" v-model="item.descripcion"></textarea>
+                <p class="is-danger help">No se ha ingresado la descripción del ítem</p>
+              </td>
+              <td>
+                <input class="input is-small has-text-centered" type="date" v-model="item.fecha">
+                <p class="is-danger help">No se ha ingresado la fecha</p>
+              </td>
+              <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.responsables">
-                    <option value="0" selected="true">- Sin Asig -</option>
+                    <option selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
+                <p class="is-danger help">Falta asignar responsable</p>
               </td>
               <td><a class="button is-small is-danger is-light" @click="removerItem(item)"><strong>X</strong></a></td>
             </tr>
@@ -349,7 +370,21 @@ export default {
       listaClasificacion: [],
       estudiante: {},
       grupo: {},
-      semestre: {}
+      semestre: {},
+      entradas: {
+        revision: {
+          error: false,
+          mensaje: ''
+        },
+        fecha_reunion: false,
+        tema: false,
+        h_inicio: false,
+        h_termino: false,
+        asistencias: true,
+        clasificacion: true,
+        objetivos: true,
+        conclusiones: true
+      }
     }
   },
   computed: {
@@ -555,6 +590,35 @@ export default {
     },
     cancelarEnvio: function () {
       this.$emit('cerrar')
+    },
+    validarRevision: function () {
+      const regExp = /^([A-Z0-9]{1})$/
+      const revision = this.revision
+      if (revision === '' || revision === undefined) {
+        this.entradas.revision.error = true
+        this.entradas.revision.mensaje = 'No se ha ingresado la revisión de la minuta'
+        return false
+      } else if (!regExp.test(revision)) {
+        this.entradas.revision.error = true
+        this.entradas.revision.mensaje = 'Sólo letras mayúsculas o números'
+        return false
+      } else {
+        this.entradas.revision.error = false
+        this.entradas.revision.mensaje = ''
+        return true
+      }
+    },
+    limpiarAsistencias: function () {
+      this.entradas.asistencias = false
+    },
+    validarAsistencia: function () {
+      if (this.asistencia.length < this.grupo.estudiantes.length) {
+        this.entradas.asistencias = true
+        return false
+      } else {
+        this.entradas.asistencias = false
+        return true
+      }
     }
   },
   mounted () {
