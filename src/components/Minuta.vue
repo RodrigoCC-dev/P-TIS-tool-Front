@@ -55,7 +55,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input class="input has-text-centered" v-model="minuta.fecha_reunion" type="date">
+            <input class="input has-text-centered" v-model="minuta.fecha_reunion" type="date" v-on:input="validarFecha">
           </div>
           <p class="is-danger help" v-if="entradas.fecha_reunion">No se ha ingresado fecha de la reunión</p>
         </div>
@@ -67,7 +67,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input is-normal has-text-centered" v-model="minuta.h_inicio" type="time">
+              <input class="input is-normal has-text-centered" v-model="minuta.h_inicio" type="time" v-on:input="validarHinicio">
             </p>
           </div>
           <p class="is-danger help" v-if="entradas.h_inicio">No se ha ingresado la hora de inicio</p>
@@ -78,7 +78,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input is-normal has-text-centered" v-model="minuta.h_termino" type="time">
+              <input class="input is-normal has-text-centered" v-model="minuta.h_termino" type="time" @input="validarHtermino">
             </p>
           </div>
           <p class="is-danger help" v-if="entradas.h_termino">No se ha ingresado la hora de término</p>
@@ -91,7 +91,7 @@
         <div class="field-body">
           <div class="field">
             <p class="control">
-              <input class="input" v-model="tema" type="text">
+              <input class="input" v-model="tema" type="text" @input="validarTema">
             </p>
           </div>
           <p class="is-danger help" v-if="entradas.tema">No se ha ingresado el tema de la reunión</p>
@@ -139,7 +139,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Informativa</p>
             <div class="control">
-              <input type="checkbox" v-model="listaClasificacion" value="informativa">
+              <input type="checkbox" v-model="listaClasificacion" value="informativa" @change="limpiarClasificacion">
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Control de Avance</p>
             <div class="control">
-              <input type="checkbox" v-model="listaClasificacion" value="avance">
+              <input type="checkbox" v-model="listaClasificacion" value="avance" @change="limpiarClasificacion">
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Coordinación</p>
             <div class="control">
-              <input type="checkbox" v-model="listaClasificacion" value="coordinacion">
+              <input type="checkbox" v-model="listaClasificacion" value="coordinacion" @change="limpiarClasificacion">
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Decisión</p>
             <div class="control">
-              <input type="checkbox" v-model="listaClasificacion" value="decision">
+              <input type="checkbox" v-model="listaClasificacion" value="decision" @change="limpiarClasificacion">
             </div>
           </div>
         </div>
@@ -171,7 +171,7 @@
           <div class="field is-grouped is-grouped-centered">
             <p class="control">Otros</p>
             <div class="control">
-              <input type="checkbox" v-model="listaClasificacion" value="otro">
+              <input type="checkbox" v-model="listaClasificacion" value="otro" @change="limpiarClasificacion">
             </div>
           </div>
         </div>
@@ -202,7 +202,7 @@
               <li v-for="(objetivo, index) in objetivos" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="objetivos[index]" class="input" type="text">
+                    <input v-model="objetivos[index]" class="input" type="text" @change="validarObjetivos">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerObjetivo(objetivo)"><strong>X</strong></a>
@@ -235,7 +235,7 @@
               <li v-for="(conclusion, index) in conclusiones" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="conclusiones[index]" class="input" type="text">
+                    <input v-model="conclusiones[index]" class="input" type="text" @change="validarConclusiones">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerConclusion(conclusion)"><strong>X</strong></a>
@@ -534,52 +534,58 @@ export default {
       return codigo
     },
     async enviarMinuta (estado) {
-      this.establecerId()
-      this.establecerClasificacion()
-      const lista = []
-      for (var i = 0; i < this.listaItems.length; i++) {
-        var listaResp = []
-        if (this.listaItems[i].responsables.length === undefined) {
-          listaResp.push(this.listaItems[i].responsables)
-        } else {
-          listaResp = this.listaItems[i].responsables
+      if (this.validarFormulario()) {
+        this.establecerId()
+        this.establecerClasificacion()
+        const lista = []
+        for (var i = 0; i < this.listaItems.length; i++) {
+          var listaResp = []
+          if (this.listaItems[i].responsables.length === undefined) {
+            listaResp.push(this.listaItems[i].responsables)
+          } else {
+            listaResp = this.listaItems[i].responsables
+          }
+          var item = {
+            correlativo: this.listaItems[i].correlativo,
+            descripcion: this.listaItems[i].descripcion,
+            fecha: this.listaItems[i].fecha,
+            tipo_item_id: this.listaItems[i].tipo_item_id,
+            responsables: listaResp
+          }
+          lista.push(item)
         }
-        var item = {
-          correlativo: this.listaItems[i].correlativo,
-          descripcion: this.listaItems[i].descripcion,
-          fecha: this.listaItems[i].fecha,
-          tipo_item_id: this.listaItems[i].tipo_item_id,
-          responsables: listaResp
+        const nuevaMinuta = {
+          minuta: {
+            estudiante_id: this.minuta.estudiante_id,
+            codigo: this.establecerCodigo(),
+            correlativo: this.minuta.correlativo,
+            fecha_reunion: this.minuta.fecha_reunion,
+            h_inicio: this.minuta.h_inicio,
+            h_termino: this.minuta.h_termino,
+            tipo_minuta_id: this.minuta.tipo_minuta_id
+          },
+          clasificacion: this.clasificacion,
+          tema: this.tema,
+          objetivos: this.objetivos,
+          conclusiones: this.conclusiones,
+          items: lista,
+          bitacora_revision: {
+            revision: this.revision,
+            motivo_id: this.motivo_id
+          },
+          asistencia: this.asistencia,
+          tipo_estado: this.buscarIdEstado(this.tipo_estados, estado)
         }
-        lista.push(item)
-      }
-      const nuevaMinuta = {
-        minuta: {
-          estudiante_id: this.minuta.estudiante_id,
-          codigo: this.establecerCodigo(),
-          correlativo: this.minuta.correlativo,
-          fecha_reunion: this.minuta.fecha_reunion,
-          h_inicio: this.minuta.h_inicio,
-          h_termino: this.minuta.h_termino,
-          tipo_minuta_id: this.minuta.tipo_minuta_id
-        },
-        clasificacion: this.clasificacion,
-        tema: this.tema,
-        objetivos: this.objetivos,
-        conclusiones: this.conclusiones,
-        items: lista,
-        bitacora_revision: {
-          revision: this.revision,
-          motivo_id: this.motivo_id
-        },
-        asistencia: this.asistencia,
-        tipo_estado: this.buscarIdEstado(this.tipo_estados, estado)
-      }
-      try {
-        await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
-        this.$emit('cerrar')
-      } catch {
-        console.log('No se pudo emitir la minuta')
+        try {
+          await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
+          this.$emit('cerrar')
+        } catch {
+          if (estado === 'BOR') {
+            console.log('No se pudo guardar la minuta')
+          } else {
+            console.log('No se pudo emitir la minuta')
+          }
+        }
       }
     },
     guardarMinuta: function () {
@@ -608,6 +614,54 @@ export default {
         return true
       }
     },
+    validarFecha: function () {
+      const regExp = /^(\d{4})-(\d{2})-(\d{2})$/
+      const fecha = this.minuta.fecha_reunion
+      if (fecha === '' || fecha === undefined || !regExp.test(fecha)) {
+        this.entradas.fecha_reunion = true
+        return false
+      } else {
+        this.entradas.fecha_reunion = false
+        return true
+      }
+    },
+    validarHora: function (hora) {
+      const regExp = /^(\d{2}):(\d{2})$/
+      if (regExp.test(hora)) {
+        return true
+      } else {
+        return false
+      }
+    },
+    validarHinicio: function () {
+      const validacion = this.validarHora(this.minuta.h_inicio)
+      if (validacion) {
+        this.entradas.h_inicio = false
+        return true
+      } else {
+        this.entradas.h_inicio = true
+        return false
+      }
+    },
+    validarHtermino: function () {
+      const validacion = this.validarHora(this.minuta.h_termino)
+      if (validacion) {
+        this.entradas.h_termino = false
+        return true
+      } else {
+        this.entradas.h_termino = true
+        return false
+      }
+    },
+    validarTema: function () {
+      if (this.tema === '') {
+        this.entradas.tema = true
+        return false
+      } else {
+        this.entradas.tema = false
+        return true
+      }
+    },
     limpiarAsistencias: function () {
       this.entradas.asistencias = false
     },
@@ -619,6 +673,68 @@ export default {
         this.entradas.asistencias = false
         return true
       }
+    },
+    validarClasificacion: function () {
+      if (this.listaClasificacion.length === 0) {
+        this.entradas.clasificacion = true
+        return false
+      } else {
+        this.entradas.clasificacion = false
+        return true
+      }
+    },
+    validarObjetivos: function () {
+      if (this.objetivos.length === 1) {
+        if (this.objetivos[0] === '') {
+          this.entradas.objetivos = true
+          return false
+        } else {
+          this.entradas.objetivos = false
+          return true
+        }
+      } else {
+        var validar = true
+        for (var i = 0; i < this.objetivos.length; i++) {
+          if (this.objetivos[i] === '') {
+            validar = false
+            this.entradas.objetivos = true
+          }
+        }
+        return validar
+      }
+    },
+    validarConclusiones: function () {
+      if (this.conclusiones.length === 1) {
+        if (this.conclusiones[0] === '') {
+          this.entradas.conclusiones = true
+          return false
+        } else {
+          this.entradas.conclusiones = false
+          return true
+        }
+      } else {
+        var validar = true
+        for (var i = 0; i < this.conclusiones.length; i++) {
+          if (this.conclusiones[i] === '') {
+            validar = false
+            this.entradas.conclusiones = true
+          }
+        }
+        return validar
+      }
+    },
+    validarFormulario: function () {
+      var validacion = true
+      validacion = validacion && this.validarRevision()
+      validacion = validacion && this.validarFecha()
+      validacion = validacion && this.validarHinicio()
+      validacion = validacion && this.validarHtermino()
+      validacion = validacion && this.validarTema()
+      validacion = validacion && this.validarAsistencia()
+      validacion = validacion && this.validarClasificacion()
+      validacion = validacion && this.validarObjetivos()
+      validacion = validacion && this.validarConclusiones()
+      return validacion
     }
   },
   mounted () {
