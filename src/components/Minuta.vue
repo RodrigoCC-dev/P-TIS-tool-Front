@@ -270,15 +270,15 @@
                     <option v-for="item in tipo_items" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                   </select>
                 </div>
-                <p class="is-danger help">No se ha ingresado el tipo de ítem</p>
+                <p class="is-danger help" v-if="item.entradas.tipo_item">No se ha ingresado el tipo de ítem</p>
               </td>
               <td>
                 <textarea class="textarea is-small is-extend" v-model="item.descripcion"></textarea>
-                <p class="is-danger help">No se ha ingresado la descripción del ítem</p>
+                <p class="is-danger help" v-if="item.entradas.descripcion">No se ha ingresado la descripción del ítem</p>
               </td>
               <td>
                 <input class="input is-small has-text-centered" type="date" v-model="item.fecha">
-                <p class="is-danger help">No se ha ingresado la fecha</p>
+                <p class="is-danger help" v-if="item.entradas.fecha">No se ha ingresado la fecha</p>
               </td>
               <td class="has-text-centered">
                 <div class="select is-small">
@@ -287,7 +287,7 @@
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
-                <p class="is-danger help">Falta asignar responsable</p>
+                <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
               </td>
               <td><a class="button is-small is-danger is-light" @click="removerItem(item)"><strong>X</strong></a></td>
             </tr>
@@ -351,7 +351,13 @@ export default {
         descripcion: '',
         fecha: '',
         tipo_item_id: 0,
-        responsables: []
+        responsables: 0,
+        entradas: {
+          descripcion: false,
+          fecha: false,
+          tipo_item: false,
+          responsables: false
+        }
       },
       motivo_id: 1,
       listaItems: [
@@ -360,7 +366,13 @@ export default {
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: []
+          responsables: 0,
+          entradas: {
+            descripcion: false,
+            fecha: false,
+            tipo_item: false,
+            responsables: false
+          }
         }
       ],
       tipo_items: [],
@@ -521,7 +533,7 @@ export default {
       }
     },
     establecerCodigo: function () {
-      var codigo = 'MINUTA'
+      var codigo = 'MINUTA_'
       var correlativo = ''
       if (this.minuta.correlativo < 10) {
         correlativo = '0' + this.minuta.correlativo
@@ -530,7 +542,7 @@ export default {
       }
       var semestre = this.semestre.agno + '-' + this.semestre.numero
       var fecha = this.minuta.fecha_reunion.split('-')
-      codigo += '_' + this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[2] + fecha[1] + '_' + this.revision
+      codigo += this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[2] + fecha[1] + '_' + this.revision
       return codigo
     },
     async enviarMinuta (estado) {
@@ -723,6 +735,37 @@ export default {
         return validar
       }
     },
+    obtenerIdTipoItem: function (tipo) {
+      for (var i = 0; i < this.tipo_items.length; i++) {
+        if (this.tipo_items[i].tipo === tipo) {
+          return this.tipo_items[i].id
+        }
+      }
+    },
+    validarItems: function () {
+      const items = this.listaItems
+      var validacion = true
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].descripcion === '' || items[i].descripcion === undefined) {
+          this.listaItems[i].entradas.descripcion = true
+          validacion = validacion && false
+        } else if (items[i].tipo_item_id === 0) {
+          this.listaItems[i].entradas.tipo_item = true
+          validacion = validacion && false
+        } else if (items[i].tipo_item_id === this.obtenerIdTipoItem('Agenda') || items[i].tipo_item_id === this.obtenerIdTipoItem('Por hacer') || items[i].tipo_item_id === this.obtenerIdTipoItem('Compromiso')) {
+          if (items[i].fecha === '') {
+            this.listaItems[i].entradas.fecha = true
+            validacion = validacion && false
+          }
+        } else if (items[i].tipo_item_id === this.obtenerIdTipoItem('Hecho') || items[i].tipo_item_id === this.obtenerIdTipoItem('Idea') || items[i].tipo_item_id === this.obtenerIdTipoItem('Compromiso')) {
+          if (item[i].responsables === 0) {
+            this.listaItems[i].entradas.responsables = true
+            validacion = validacion && false
+          }
+        }
+      }
+      return validacion
+    },
     validarFormulario: function () {
       var validacion = true
       validacion = validacion && this.validarRevision()
@@ -734,6 +777,7 @@ export default {
       validacion = validacion && this.validarClasificacion()
       validacion = validacion && this.validarObjetivos()
       validacion = validacion && this.validarConclusiones()
+      validacion = validacion && this.validarItems()
       return validacion
     }
   },
