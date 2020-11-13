@@ -1,5 +1,6 @@
 import { shallowMount, mount } from '@vue/test-utils'
 import Minuta from '@/components/Minuta.vue'
+import { nextTick } from 'vue'
 
 describe('Minuta.vue', () => {
   it('se asigna prop adecuadamente', () => {
@@ -164,5 +165,109 @@ describe('Minuta.vue', () => {
     }
     const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.entradas).toEqual(entrada)
+  })
+
+  it('método removeFromArray funciona correctamente', () => {
+    const array = ['Papa', 'Manzana', 'Naranja']
+    const resultado = ['Manzana', 'Naranja']
+    const wrapper = shallowMount(Minuta)
+    wrapper.vm.removeFromArray(array, 'Papa')
+    expect(array).toEqual(resultado)
+  })
+
+  it('método nombreCompleto funciona correctamente', () => {
+    const estudiante = {
+      nombre: 'Pablo',
+      apellido_paterno: 'Mackena',
+      apellido_materno: 'Saldias'
+    }
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Pablo Mackena Saldias')
+  })
+
+  it('método buscarIdEstado funciona correctamente', () => {
+    const array = [{
+      id: 1,
+      abreviacion: 'BO'
+    },
+    {
+      id: 2,
+      abreviacion: 'QU'
+    }]
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.buscarIdEstado(array, 'QU')).toEqual(2)
+  })
+
+  it('método agregarItem funciona correctamente', () => {
+    const nuevo = {
+      correlativo: 2,
+      descripcion: '',
+      fecha: '',
+      tipo_item_id: 0,
+      responsables: 0,
+      entradas: {
+        descripcion: false,
+        fecha: false,
+        tipo_item: false,
+        responsables: false
+      }
+    }
+    const wrapper = shallowMount(Minuta)
+    wrapper.vm.agregarItem()
+    expect(wrapper.vm.listaItems[1]).toEqual(nuevo)
+  })
+
+  it('método removerItem funciona correctamente', async () => {
+    const elemento = {
+      correlativo: 1,
+      descripcion: '',
+      fecha: '',
+      tipo_item_id: 0,
+      responsables: 0,
+      entradas: {
+        descripcion: false,
+        fecha: false,
+        tipo_item: false,
+        responsables: false
+      }
+    }
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: '',
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: 0,
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            },
+            {
+              correlativo: 2,
+              descripcion: '',
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: 0,
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ]
+        }
+      }
+    })
+    wrapper.vm.removerItem(elemento)
+    await nextTick()
+    await nextTick()
+    expect(wrapper.vm.listaItems.length).toEqual(1)
   })
 })
