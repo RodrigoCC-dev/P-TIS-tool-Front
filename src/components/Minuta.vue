@@ -581,7 +581,7 @@ export default {
       }
       var semestre = this.semestre.agno + '-' + this.semestre.numero
       var fecha = this.minuta.fecha_reunion.split('-')
-      codigo += this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[2] + fecha[1]
+      codigo += this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[1] + fecha[2]
       return codigo
     },
     async enviarMinuta (estado) {
