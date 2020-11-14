@@ -68,6 +68,43 @@
         </div>
       </div>
 
+      <div v-if="mostrarMinutas">
+        <br>
+        <div class="columns">
+          <div class="column is-10 is-offset-1">
+            <div class="field">
+              <div class="control">
+                <label class="label">Minutas</label>
+              </div>
+            </div>
+            <div v-if="listaMinutas.length > 0">
+              <table class="table is-bordered is-fullwidth is-narrow">
+                <thead>
+                  <tr class="has-text-centered has-background-light">
+                    <th>N°</th>
+                    <th>Código minuta</th>
+                    <th>Revisión</th>
+                    <th>Creada por</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
+                    <th>{{ index + 1 }}</th>
+                    <td>{{ bitacora.minuta.codigo }}</td>
+                    <td>{{ bitacora.revision }}</td>
+                    <td>{{ bitacora.minuta.creada_por }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-else>
+              <br>
+              <p class="subtitle is-5">No hay minutas emitidas para revisar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -92,8 +129,10 @@ export default {
       listaGrupos: [],
       mostrarFormulario: false,
       mostrarJornadas: false,
+      mostrarMinutas: false,
       grupoActual: 0,
       grupoSeleccionado: {},
+      listaMinutas: [],
       nombreTabs
     }
   },
@@ -114,6 +153,7 @@ export default {
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab
       this.grupoActual = 0
+      this.mostrarMinutas = false
     },
     buscarPorId: function (lista, id) {
       for (var i = 0; i < lista.length; i++) {
@@ -125,6 +165,8 @@ export default {
     seleccionarGrupo: function (id) {
       this.grupoActual = id
       this.grupoSeleccionado = this.buscarPorId(this.listaGrupos, id)
+      this.obtenerMinutas(id)
+      this.mostrarMinutas = true
     },
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
@@ -158,6 +200,14 @@ export default {
         }
       } catch {
         console.log('No fue posible obtener las jornadas del profesor')
+      }
+    },
+    async obtenerMinutas (grupoId) {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/grupo/' + grupoId, { headers: Auth.authHeader() })
+        this.listaMinutas = response.data
+      } catch {
+        console.log('No fue posible obtener las minutas')
       }
     }
   },
