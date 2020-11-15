@@ -112,10 +112,9 @@
       <Informacion :proyecto="grupoSeleccionado" :minuta="minuta"/>
       <Objetivos :lista="minuta.objetivos"/>
       <Conclusiones :lista="minuta.conclusiones"/>
-      <div>
-        <Item/>
-      </div>
+      <Items :lista="minuta.items"/>
 
+      <br>
       <div class="columns">
         <div class="column is-4 is-offset-4">
           <div class="control">
@@ -137,7 +136,7 @@ import { mapState } from 'vuex'
 import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
 import Conclusiones from '@/components/minutas/Conclusiones.vue'
-import Item from '@/components/minutas/Item.vue'
+import Items from '@/components/minutas/Items.vue'
 
 const nombreTabs = {
   diurna: 'Diurna',
@@ -150,7 +149,7 @@ export default {
     Informacion,
     Objetivos,
     Conclusiones,
-    Item
+    Items
   },
   data () {
     return {

@@ -60,7 +60,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input has-text-centered is-static" type="text" :value="bitacora.minuta.fecha_reunion">
+            <input class="input has-text-centered is-static" type="text" :value="fechaReunion">
           </p>
         </div>
       </div>
@@ -73,7 +73,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input has-text-centered is-static" type="text" :value="bitacora.minuta.h_inicio">
+            <input class="input has-text-centered is-static" type="text" :value="horaInicio">
           </p>
         </div>
       </div>
@@ -83,7 +83,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input has-text-centered is-static" type="text" :value="bitacora.minuta.h_termino">
+            <input class="input has-text-centered is-static" type="text" :value="horaTermino">
           </p>
         </div>
       </div>
@@ -132,32 +132,32 @@
       </div>
     </div>
     <div class="columns">
-      <div class="column is-one-fifth is-offset-1">
-        <div class="tags has-addons">
-          <span class="tag">Informativa</span>
-          <span class="tag" :class="bitacora.minuta.clasificacion.informativa ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.informativa ? 'Si' : 'No'}}</span>
+      <div class="column is-2 is-offset-1">
+        <div class="tags are-medium has-addons">
+          <span class="tag is-medium">Informativa</span>
+          <span class="tag is-medium" :class="bitacora.minuta.clasificacion.informativa ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.informativa ? 'Si' : 'No'}}</span>
         </div>
       </div>
       <div class="column">
-        <div class="tags has-addons">
+        <div class="tags are-medium has-addons">
           <span class="tag">Control de Avance</span>
           <span class="tag" :class="bitacora.minuta.clasificacion.avance ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.avance ? 'Si' : 'No' }}</span>
         </div>
       </div>
       <div class="column">
-        <div class="tags has-addons">
+        <div class="tags are-medium has-addons">
           <span class="tag">Coordinación</span>
           <span class="tag" :class="bitacora.minuta.clasificacion.coordinacion ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.coordinacion ? 'Si' : 'No' }}</span>
         </div>
       </div>
       <div class="column">
-        <div class="tags has-addons">
+        <div class="tags are-medium has-addons">
           <span class="tag">Decisión</span>
           <span class="tag" :class="bitacora.minuta.clasificacion.decision ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.decision ? 'Si' : 'No'}}</span>
         </div>
       </div>
       <div class="column">
-        <div class="tags has-addons">
+        <div class="tags are-medium has-addons">
           <span class="tag">Otros</span>
           <span class="tag" :class="bitacora.minuta.clasificacion.otro ? 'is-info' : 'is-danger is-light'">{{ bitacora.minuta.clasificacion.otro ? 'Si' : 'No'}}</span>
         </div>
@@ -178,9 +178,27 @@ export default {
       bitacora: this.minuta
     }
   },
+  computed: {
+    horaInicio: function () {
+      return this.obtenerHora(this.bitacora.minuta.h_inicio)
+    },
+    horaTermino: function () {
+      return this.obtenerHora(this.bitacora.minuta.h_termino)
+    },
+    fechaReunion: function () {
+      var fecha = this.bitacora.minuta.fecha_reunion.split('T')
+      var separar = fecha[0].split('-')
+      return separar[2] + '-' + separar[1] + '-' + separar[0]
+    }
+  },
   methods: {
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
+    obtenerHora: function (timestamp) {
+      var separar = timestamp.split('T')
+      var tiempo = separar[1].split(':')
+      return tiempo[0] + ':' + tiempo[1]
     },
     asistenciaEstudiante: function (iniciales) {
       for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
