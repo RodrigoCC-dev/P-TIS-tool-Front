@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="field is-horizontal">
-        <div class="field-label">
+        <div class="field-label is-normal">
           <label class="label">Proyecto:</label>
         </div>
         <div class="field-body">
