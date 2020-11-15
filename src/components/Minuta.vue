@@ -73,7 +73,7 @@
           <p class="is-danger help" v-if="entradas.h_inicio">No se ha ingresado la hora de inicio</p>
         </div>
         <div class="field-label-2c">
-          <label class="label">Hora de termino:</label>
+          <label class="label">Hora de término:</label>
         </div>
         <div class="field-body">
           <div class="field">

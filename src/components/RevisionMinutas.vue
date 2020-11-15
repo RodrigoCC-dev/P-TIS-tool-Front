@@ -90,7 +90,7 @@
                 <tbody>
                   <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
                     <th>{{ index + 1 }}</th>
-                    <td>{{ bitacora.minuta.codigo }}</td>
+                    <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                     <td>{{ bitacora.revision }}</td>
                     <td>{{ bitacora.minuta.creada_por }}</td>
                   </tr>
@@ -107,6 +107,25 @@
 
     </div>
 
+    <div v-else>
+
+      <Informacion :proyecto="grupoSeleccionado" :minuta="minuta"/>
+      <Objetivos :lista="minuta.objetivos"/>
+      <Conclusiones :lista="minuta.conclusiones"/>
+      <div>
+        <Item/>
+      </div>
+
+      <div class="columns">
+        <div class="column is-4 is-offset-4">
+          <div class="control">
+            <button class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -115,6 +134,11 @@ import Auth from '@/services/auth.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
+import Informacion from '@/components/minutas/Informacion.vue'
+import Objetivos from '@/components/minutas/Objetivos.vue'
+import Conclusiones from '@/components/minutas/Conclusiones.vue'
+import Item from '@/components/minutas/Item.vue'
+
 const nombreTabs = {
   diurna: 'Diurna',
   vespertina: 'Vespertina'
@@ -122,6 +146,12 @@ const nombreTabs = {
 
 export default {
   name: 'RevisionMinutas',
+  components: {
+    Informacion,
+    Objetivos,
+    Conclusiones,
+    Item
+  },
   data () {
     return {
       jornadaActual: 'Diurna',
@@ -133,6 +163,7 @@ export default {
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
+      minuta: {},
       nombreTabs
     }
   },
@@ -209,6 +240,18 @@ export default {
       } catch {
         console.log('No fue posible obtener las minutas')
       }
+    },
+    async traerMinuta (bitacoraId) {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
+        this.minuta = response.data
+        this.mostrarFormulario = true
+      } catch {
+        console.log('No fue posible obtener la información de la minuta seleccionada')
+      }
+    },
+    cerrarFormulario: function () {
+      this.mostrarFormulario = false
     }
   },
   mounted () {
