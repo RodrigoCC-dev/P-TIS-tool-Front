@@ -283,7 +283,7 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.responsables" @change="validarItem(index)">
-                    <option selected>- Sin Asig -</option>
+                    <option value="0" selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>

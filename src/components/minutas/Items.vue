@@ -17,7 +17,7 @@
           <td>{{ item.tipo }}</td>
           <td class="has-text-left">{{ item.descripcion }}</td>
           <td>{{ fechaItem(item.fecha) }}</td>
-          <td>{{ item.responsables }}</td>
+          <td>{{ obtenerIniciales(item.responsables) }}</td>
         </tr>
       </tbody>
     </table>
@@ -28,10 +28,11 @@
 <script>
 export default {
   name: 'Item',
-  props: ['lista'],
+  props: ['lista', 'asistentes'],
   data () {
     return {
-      listaItems: this.lista
+      listaItems: this.lista,
+      asistencia: this.asistentes
     }
   },
   computed: {
@@ -55,6 +56,17 @@ export default {
       } else {
         return ''
       }
+    },
+    obtenerIniciales: function (listaResponsables) {
+      var resp = []
+      for (var i = 0; i < listaResponsables.length; i++) {
+        for (var j = 0; j < this.asistencia.length; j++) {
+          if (listaResponsables[i].asistencia_id === this.asistencia[j].id) {
+            resp.push(this.asistencia[j].iniciales)
+          }
+        }
+      }
+      return resp.join(' / ')
     }
   }
 }

@@ -112,7 +112,7 @@
       <Informacion :proyecto="grupoSeleccionado" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia"/>
 
       <br>
       <div class="columns">
@@ -245,7 +245,6 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
         this.bitacora = response.data
         this.mostrarFormulario = true
-        console.log(this.bitacora)
       } catch {
         console.log('No fue posible obtener la información de la minuta seleccionada')
       }

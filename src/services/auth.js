@@ -37,7 +37,7 @@ export default {
   },
 
   setUser (userLogged) {
-    Cookies.set('userLogged', userLogged, { sameSite: 'strict' })
+    Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
   },
   getUser () {
     return Cookies.get('userLogged')

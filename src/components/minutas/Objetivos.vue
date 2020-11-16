@@ -32,9 +32,6 @@ export default {
     return {
       objetivos: this.lista
     }
-  },
-  mounted () {
-    console.log(this.objetivos)
   }
 }
 </script>
