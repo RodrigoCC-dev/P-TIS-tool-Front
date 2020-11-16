@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="field is-horizontal">
-        <div class="field-label">
+        <div class="field-label is-normal">
           <label class="label">Proyecto:</label>
         </div>
         <div class="field-body">
@@ -73,7 +73,7 @@
           <p class="is-danger help" v-if="entradas.h_inicio">No se ha ingresado la hora de inicio</p>
         </div>
         <div class="field-label-2c">
-          <label class="label">Hora de termino:</label>
+          <label class="label">Hora de término:</label>
         </div>
         <div class="field-body">
           <div class="field">
@@ -283,7 +283,7 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.responsables" @change="validarItem(index)">
-                    <option selected>- Sin Asig -</option>
+                    <option value="0" selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
                   </select>
                 </div>

@@ -7,38 +7,62 @@ const routes = [
     component: () => import('../views/Inicio.vue')
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
     path: '/estudiante',
     name: 'Estudiante',
     component: () => import(/* webpackChunkName: "estudiante" */ '../views/Estudiante.vue'),
-    meta: { requireAuth: true }
+    meta: { requireAuth: true },
+    beforeEnter: (to, from, next) => {
+      if (existToken()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
   },
   {
     path: '/profesor',
     name: 'Profesor',
     component: () => import(/* webpackChunkName: "profesor" */ '../views/Profesor.vue'),
-    meta: { requireAuth: true }
+    meta: { requireAuth: true },
+    beforeEnter: (to, from, next) => {
+      if (existToken()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
   },
   {
     path: '/coordinador',
     name: 'Coordinador',
     component: () => import(/* webpackChunkName: "coordinador" */ '../views/Coordinador.vue'),
-    meta: { requireAuth: true }
+    meta: { requireAuth: true },
+    beforeEnter: (to, from, next) => {
+      if (existToken()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
   },
   {
     path: '/cliente',
     name: 'Stakeholder',
     component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue'),
-    meta: { requireAuth: true }
+    meta: { requireAuth: true },
+    breforeEnter: (to, from, next) => {
+      if (existToken()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
   }
 ]
+
+function existToken () {
+  return !!localStorage.user_tk
+}
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

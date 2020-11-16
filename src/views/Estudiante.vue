@@ -185,7 +185,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_minutas', { headers: Auth.authHeader() })
         this.tipos_minutas = response.data
-        console.log(this.tipos_minutas)
       } catch {
         console.log('No se han obtenido los tipos de minutas')
       }
