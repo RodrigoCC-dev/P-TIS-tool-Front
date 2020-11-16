@@ -60,4 +60,100 @@ describe('RevisionMinutas.vue', () => {
     const wrapper = shallowMount(RevisionMinutas)
     expect(wrapper.vm.nombreTabs).toEqual(tabs)
   })
+
+  it('propiedad computada gruposJornada funciona correctamente', () => {
+    const lista = [
+      {
+        id: 1, jornada: 'Diurna'
+      },
+      {
+        id: 2, jornada: 'Vespertina'
+      },
+      {
+        id: 3, jornada: 'Vespertina'
+      },
+      {
+        id: 4, jornada: 'Diurna'
+      }
+    ]
+    const esperado = [
+      {
+        id: 1, jornada: 'Diurna'
+      },
+      {
+        id: 4, jornada: 'Diurna'
+      }
+    ]
+    const wrapper = shallowMount(RevisionMinutas, {
+      data() {
+        return {
+          listaGrupos: lista
+        }
+      }
+    })
+    expect(wrapper.vm.gruposJornada).toEqual(esperado)
+  })
+
+  it('método elegirTab funciona correctamente', () => {
+    const wrapper = shallowMount(RevisionMinutas, {
+      data() {
+        return {
+          grupoActual: 5,
+          mostrarMinutas: true
+        }
+      }
+    })
+    wrapper.vm.elegirTab('Vespertina')
+    expect(wrapper.vm.jornadaActual).toEqual('Vespertina')
+    expect(wrapper.vm.grupoActual).toEqual(0)
+    expect(wrapper.vm.mostrarMinutas).toBeFalsy()
+  })
+
+  it('método buscarPorId funciona correctamente', () => {
+    const lista = [
+      {
+        id: 5,
+        nombre: 'Juan'
+      },
+      {
+        id: 6,
+        nombre: 'Teresa'
+      }
+    ]
+    const esperado = {
+      id: 6,
+      nombre: 'Teresa'
+    }
+    const wrapper = shallowMount(RevisionMinutas)
+    expect(wrapper.vm.buscarPorId(lista, 6)).toEqual(esperado)
+  })
+
+  it('método nombreCompleto funciona correctamente', () => {
+    const estudiante = {
+      nombre_est: 'Juan',
+      apellido1: 'Perez',
+      apellido2: 'Muñoz'
+    }
+    const wrapper = shallowMount(RevisionMinutas)
+    expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Juan Perez Muñoz')
+  })
+
+  it('método cerrarFormulario funciona correctamente', () => {
+    const wrapper = shallowMount(RevisionMinutas, {
+      data() {
+        return {
+          mostrarFormulario: true,
+          bitacora: {
+            minuta: {
+              objetivos: [],
+              conclusiones: [],
+              items: []
+            }
+          }
+        }
+      }
+    })
+    wrapper.vm.cerrarFormulario()
+    expect(wrapper.vm.mostrarFormulario).toBeFalsy()
+  })
 })
