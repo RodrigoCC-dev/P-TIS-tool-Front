@@ -9,7 +9,7 @@
         <div class="column is-4">
           <img src="../assets/images/logo_diinf.jpeg">
         </div>
-        <template v-if="this.authenticated">
+        <template v-if="sesionIniciada">
           <div class="column is-6"></div>
           <div class="column is-2">
             <button class="button is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
@@ -25,17 +25,23 @@
 
 <script>
 import { mapState } from 'vuex'
+import Auth from '@/services/auth.js'
 
 export default {
   name: 'Header',
   computed: {
-    ...mapState(['authenticated'])
+    ...mapState(['authenticated']),
+
+    sesionIniciada: function () {
+      return this.authenticated || !!localStorage.user_tk
+    }
   },
   methods: {
     cerrarSesion: function () {
       localStorage.removeItem('user_tk')
       this.$store.commit('setAutenticacion', false)
       this.$store.commit('setUsuario', {})
+      Auth.deleteUser('userLogged')
       return this.$router.push('/')
     }
   }
