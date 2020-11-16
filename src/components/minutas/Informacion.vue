@@ -207,10 +207,6 @@ export default {
         }
       }
     }
-  },
-  mounted () {
-    console.log(this.grupo)
-    console.log(this.bitacora)
   }
 }
 </script>

@@ -109,10 +109,10 @@
 
     <div v-else>
 
-      <Informacion :proyecto="grupoSeleccionado" :minuta="minuta"/>
-      <Objetivos :lista="minuta.objetivos"/>
-      <Conclusiones :lista="minuta.conclusiones"/>
-      <Items :lista="minuta.items"/>
+      <Informacion :proyecto="grupoSeleccionado" :minuta="bitacora"/>
+      <Objetivos :lista="bitacora.minuta.objetivos"/>
+      <Conclusiones :lista="bitacora.minuta.conclusiones"/>
+      <Items :lista="bitacora.minuta.items"/>
 
       <br>
       <div class="columns">
@@ -162,7 +162,7 @@ export default {
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
-      minuta: {},
+      bitacora: {},
       nombreTabs
     }
   },
@@ -243,8 +243,9 @@ export default {
     async traerMinuta (bitacoraId) {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
-        this.minuta = response.data
+        this.bitacora = response.data
         this.mostrarFormulario = true
+        console.log(this.bitacora)
       } catch {
         console.log('No fue posible obtener la información de la minuta seleccionada')
       }

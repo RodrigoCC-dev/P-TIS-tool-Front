@@ -9,7 +9,7 @@
     </div>
 
     <div class="columns">
-      <div class="columns is-10 is-offset-1">
+      <div class="column is-10 is-offset-1">
         <div class="content has-text-left">
           <dl>
             <li v-for="objetivo in objetivos" :key="objetivo.id">
@@ -32,6 +32,9 @@ export default {
     return {
       objetivos: this.lista
     }
+  },
+  mounted () {
+    console.log(this.objetivos)
   }
 }
 </script>

@@ -12,10 +12,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="is-vcentered" v-for="item in listaItems" :key="item.id">
+        <tr class="is-vcentered" v-for="item in listaOrdenada" :key="item.id">
           <th>{{ item.correlativo }}</th>
           <td>{{ item.tipo }}</td>
-          <td>{{ item.descripcion }}</td>
+          <td class="has-text-left">{{ item.descripcion }}</td>
           <td>{{ fechaItem(item.fecha) }}</td>
           <td>{{ item.responsables }}</td>
         </tr>
@@ -34,11 +34,27 @@ export default {
       listaItems: this.lista
     }
   },
+  computed: {
+    listaOrdenada: function () {
+      var lista = this.listaItems
+      return lista.sort((a, b) => {
+        if (a.correlativo < b.correlativo) {
+          return -1
+        } else {
+          return 1
+        }
+      })
+    }
+  },
   methods: {
     fechaItem: function (cadena) {
-      var separar = cadena.split('T')
-      var fecha = separar[0].split('-')
-      return fecha[2] + '-' + fecha[1] + '-' + fecha[0]
+      if (cadena !== null) {
+        var separar = cadena.split('T')
+        var fecha = separar[0].split('-')
+        return fecha[2] + '-' + fecha[1] + '-' + fecha[0]
+      } else {
+        return ''
+      }
     }
   }
 }
