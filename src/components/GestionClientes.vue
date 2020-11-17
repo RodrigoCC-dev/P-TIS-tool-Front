@@ -109,7 +109,6 @@ export default {
     return {
       verFormulario: false,
       jornadaActual: 'Diurna',
-      mostrarJornadas: false,
       mostrarLista: false,
       stakeholder: {
         usuario: {
@@ -179,15 +178,20 @@ export default {
       this.stakeholder.usuario.email = ''
       this.stakeholder.grupo_id = null
     },
-    agregar: function () {
+    async agregar () {
       if (this.validarFormulario()) {
-        const nuevoStakeholder = {
+        const nuevo = {
           stakeholder: {
             grupo_id: this.stakeholder.grupo_id,
             usuario_attributes: this.stakeholder.usuario
           }
         }
-        console.log(nuevoStakeholder)
+        try {
+          await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
+        } catch (e) {
+          console.log(e)
+        }
+        this.verFormulario = false
       }
     },
     noAgregar: function () {
