@@ -8,7 +8,7 @@
           <ul>
             <li :class="{ 'is-active' : nombreTabActiva === nombreTabs.Estudiantes }" @click="elegirTab(nombreTabs.Estudiantes)"><a><strong>Estudiantes</strong></a></li>
             <li :class="{ 'is-active' : nombreTabActiva === nombreTabs.Grupos }" @click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
-            <li :class="{ 'is-active' : nombreTabActiva === nombretabs.Stakeholders }" @click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
+            <li :class="{ 'is-active' : nombreTabActiva === nombreTabs.Stakeholders }" @click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
             <li :class="{ 'is-active' : nombreTabActiva === nombreTabs.Minutas}" @click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
           </ul>
         </div>

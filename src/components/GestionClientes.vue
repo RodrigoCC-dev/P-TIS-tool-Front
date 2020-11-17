@@ -52,12 +52,12 @@
               <p class="is-danger help" v-if="entradas.correo_elec.error">{{ entradas.correo_elec.mensaje }}</p>
             </div>
           </div>
-          <div class="columns is-8">
+          <div class="column is-8">
             <div class="field">
               <label class="label">Grupo a asignar:</label>
               <div class="control">
                 <div class="select is-fullwidth">
-                  <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo}">
+                  <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo.error}">
                     <option v-for="grupo in listaFiltrada" :key="grupo.id" :value="grupo.id">
                       {{ grupo.nombre }} - {{ grupo.proyecto }}
                     </option>
@@ -76,7 +76,7 @@
                 <a class="button is-link" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-light" @click="noAgregr"><strong>Cancelar</strong></a>
+                <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
           </div>
@@ -104,6 +104,7 @@ export default {
       verFormulario: false,
       jornadaActual: 'Diurna',
       mostrarJornadas: false,
+      mostrarLista: false,
       stakeholder: {
         usuario: {
           nombre: '',
@@ -132,12 +133,13 @@ export default {
         correo_elec: {
           error: false,
           mensaje: ''
-        }
+        },
+        grupo: false
       },
       mensajes: {
-        sin_nombre: 'Debe ingresar el nombre del estudiante',
-        sin_apellido: 'Debe ingresar el apellido del estudiante',
-        sin_correo: 'Debe ingresar el correo electrónico del estudiante',
+        sin_nombre: 'Debe ingresar el nombre del cliente',
+        sin_apellido: 'Debe ingresar el apellido del cliente',
+        sin_correo: 'Debe ingresar el correo electrónico del cliente',
         sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales',
         correo_mal: 'El correo ingresado no es válido',
         correo_repetido: 'El correo ingresado ya se encuentra en el sistema'
@@ -168,6 +170,27 @@ export default {
       this.stakeholder.usuario.apellido_materno = ''
       this.stakeholder.usuario.email = ''
       this.stakeholder.grupo_id = null
+    },
+    agregar: function () {
+      console.log(this.stakeholder)
+      if (this.validarFormulario()) {
+        const nuevoStakeholder = {
+          stakeholder: {
+            grupo_id: this.stakeholder.grupo_id,
+            usuario_attributes: this.stakeholder.usuario
+          }
+        }
+        console.log(nuevoStakeholder)
+      }
+    },
+    noAgregar: function () {
+      this.nuevoStakeholder()
+      this.verFormulario = false
+      this.entradas.nombre.error = false
+      this.entradas.apellido_paterno.error = false
+      this.entradas.apellido_materno.error = false
+      this.entradas.correo_elec.error = false
+      this.entradas.grupo = false
     },
     async obtenerJornadas () {
       try {
@@ -246,50 +269,48 @@ export default {
       }
     },
     validarApellidoP: function () {
-      this.validarApellido(this.stakeholder.usuario.apellido_paterno, this.entradas.apellido_paterno)
+      return this.validarApellido(this.stakeholder.usuario.apellido_paterno, this.entradas.apellido_paterno)
     },
     validarApellidoM: function () {
-      this.validarApellido(this.stakeholder.usuario.apellido_materno, this.entradas.apellido_materno)
+      var validacion = this.validarApellido(this.stakeholder.usuario.apellido_materno, this.entradas.apellido_materno)
+      console.log('Apellido Materno: ', validacion)
+      return validacion
     },
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
-      const correo = this.estudiante.usuario.email
+      const correo = this.stakeholder.usuario.email
       var separarCorreo = correo.split('@')
       try {
         if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
-          this.emailEntrada.error = true
-          this.emailEntrada.mensaje = this.mensajes.sin_correo
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
         } else if (!regExp.test(correo)) {
-          this.emailEntrada.error = true
-          this.emailEntrada.mensaje = this.mensajes.correo_mal
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
           return false
         } else if (separarCorreo.length !== 2) {
-          this.emailEntrada.error = true
-          this.emailEntrada.mensaje = this.mensajes.correo_mal
-          return false
-        } else if (separarCorreo[1] !== 'usach.cl') {
-          this.emailEntrada.error = true
-          this.emailEntrada.mensaje = this.mensajes.sin_usach
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
           return false
         } else {
-          this.emailEntrada.error = false
-          this.emailEntrada.mensaje = ''
+          this.entradas.correo_elec.error = false
+          this.entradas.correo_elec.mensaje = ''
           return true
         }
       } catch {
-        this.emailEntrada.error = true
-        this.emailEntrada.mensaje = ''
+        this.entradas.correo_elec.error = true
+        this.entradas.correo_elec.mensaje = ''
         return false
       }
     },
     validarGrupo: function () {
       const seleccion = this.stakeholder.grupo_id
       if (seleccion === null || seleccion === '' || seleccion === 0 || seleccion === undefined) {
-        this.entradas.grupo.error = true
+        this.entradas.grupo = true
         return false
       } else {
-        this.entradas.grupo.error = false
+        this.entradas.grupo = false
         return true
       }
     },
@@ -301,8 +322,8 @@ export default {
         existe = aux || existe
       }
       if (existe) {
-        this.entradas.email.error = true
-        this.entradas.email.mensaje = this.mensaje.correo_repetido
+        this.entradas.correo_elec.error = true
+        this.entradas.correo_elec.mensaje = this.mensaje.correo_repetido
       }
       return existe
     },
@@ -313,7 +334,7 @@ export default {
       esValido = esValido && this.validarApellidoM()
       esValido = esValido && this.validarEmail()
       esValido = esValido && this.validarGrupo()
-      esValido = esValido && !this.exiteStakeholder()
+      esValido = esValido && !this.existeStakeholder()
       return esValido
     }
   },
