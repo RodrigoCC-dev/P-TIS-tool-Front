@@ -89,8 +89,25 @@
 
     <br>
     <div v-if="mostrarLista">
-      <p>Aquí se mostrarán los stakeholders en el sistema</p>
+      <table class="table is-bordered is-narrow is-fullwidth">
+        <thead>
+          <tr class="has-text-centered has-background-light">
+            <th>N°</th>
+            <th>Nombre cliente</th>
+            <th>Grupo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
+            <th>{{ index + 1 }}</th>
+            <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+            <td>{{ stakeholder.grupo.nombre }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <br>
+
   </div>
 </template>
 
@@ -109,7 +126,6 @@ export default {
     return {
       verFormulario: false,
       jornadaActual: 'Diurna',
-      mostrarLista: false,
       stakeholder: {
         usuario: {
           nombre: '',
@@ -161,11 +177,30 @@ export default {
         }
       }
       return lista
+    },
+    stakeholdersPorJornada: function () {
+      var lista = []
+      for (var i = 0; i < this.listaStakeholders.length; i++) {
+        if (this.listaStakeholders[i].jornada === this.jornadaActual) {
+          lista.push(this.listaStakeholders[i])
+        }
+      }
+      return lista
+    },
+    mostrarLista: function () {
+      if (this.stakeholdersPorJornada.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
     cambiarJornada: function (nuevaJornada) {
       this.jornadaActual = nuevaJornada
+    },
+    nombreCompleto (estudiante) {
+      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
     },
     agregarCliente: function () {
       this.verFormulario = true
@@ -178,6 +213,14 @@ export default {
       this.stakeholder.usuario.email = ''
       this.stakeholder.grupo_id = null
     },
+    async obtenerStakeholders () {
+      try {
+        const response = await axios.get(this.apiUrl + '/stakeholders', { headers: Auth.authHeader() })
+        this.listaStakeholders = response.data
+      } catch {
+        console.log('No fue posible obtener la lista de Clientes')
+      }
+    },
     async agregar () {
       if (this.validarFormulario()) {
         const nuevo = {
@@ -188,6 +231,7 @@ export default {
         }
         try {
           await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
+          this.obtenerStakeholders()
         } catch (e) {
           console.log(e)
         }
@@ -326,6 +370,7 @@ export default {
   },
   mounted () {
     this.obtenerGrupos()
+    this.obtenerStakeholders()
   }
 }
 </script>
