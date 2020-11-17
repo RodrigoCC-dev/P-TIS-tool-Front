@@ -1,7 +1,9 @@
 <template>
   <div>
-
     <br>
+
+    <SelectorJornada @jornada="cambiarJornada"/>
+
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
@@ -96,9 +98,13 @@
 import Auth from '@/services/auth.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
+import SelectorJornada from '@/components/SelectorJornada.vue'
 
 export default {
   name: 'GestionClientes',
+  components: {
+    SelectorJornada
+  },
   data () {
     return {
       verFormulario: false,
@@ -116,7 +122,6 @@ export default {
       },
       listaStakeholders: [],
       listaGrupos: [],
-      jornadasProfesor: [],
       entradas: {
         nombre: {
           error: false,
@@ -160,6 +165,9 @@ export default {
     }
   },
   methods: {
+    cambiarJornada: function (nuevaJornada) {
+      this.jornadaActual = nuevaJornada
+    },
     agregarCliente: function () {
       this.verFormulario = true
       this.nuevoStakeholder()
@@ -172,7 +180,6 @@ export default {
       this.stakeholder.grupo_id = null
     },
     agregar: function () {
-      console.log(this.stakeholder)
       if (this.validarFormulario()) {
         const nuevoStakeholder = {
           stakeholder: {
@@ -191,29 +198,6 @@ export default {
       this.entradas.apellido_materno.error = false
       this.entradas.correo_elec.error = false
       this.entradas.grupo = false
-    },
-    async obtenerJornadas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
-        var datos = response.data
-        if (Object.keys(datos).length > 0) {
-          var aux = 0
-          for (var i = 0; i < Object.keys(datos).length; i++) {
-            if (this.jornadasProfesor.indexOf(datos[i].nombre) === -1) {
-              aux = this.jornadasProfesor.push(datos[i].nombre)
-            }
-          }
-          if (aux === 2) {
-            this.mostrarJornadas = true
-          } else if (aux === 1) {
-            this.jornadaActual = this.jornadasProfesor[0]
-          } else {
-            this.mostrarJornadas = false
-          }
-        }
-      } catch {
-        console.log('No fue posible obtener las jornadas del profesor')
-      }
     },
     async obtenerGrupos () {
       try {
@@ -272,9 +256,7 @@ export default {
       return this.validarApellido(this.stakeholder.usuario.apellido_paterno, this.entradas.apellido_paterno)
     },
     validarApellidoM: function () {
-      var validacion = this.validarApellido(this.stakeholder.usuario.apellido_materno, this.entradas.apellido_materno)
-      console.log('Apellido Materno: ', validacion)
-      return validacion
+      return this.validarApellido(this.stakeholder.usuario.apellido_materno, this.entradas.apellido_materno)
     },
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
@@ -339,7 +321,6 @@ export default {
     }
   },
   mounted () {
-    this.obtenerJornadas()
     this.obtenerGrupos()
   }
 }
