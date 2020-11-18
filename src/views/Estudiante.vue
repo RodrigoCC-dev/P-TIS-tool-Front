@@ -40,97 +40,101 @@
           </div>
         </div>
 
-        <section class="new-section">
-          <div class="container">
-            <p class="title is-5">Borradores</p>
-            <table class="table is-fullwidth is-bordered is-narrow">
-              <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th>N°</th>
-                  <th>Código</th>
-                  <th>Realizado por</th>
-                  <th>Iniciada el</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>
-                    <a href="">MINUTA_G02_06_2020-2_1006</a>
-                  </td>
-                  <td>RCC</td>
-                  <td>12-10-2020</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>
-                    <a href="">MINUTA_G02_07_2020-2_1008</a>
-                  </td>
-                  <td>RCC</td>
-                  <td>13-10-2020</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-        <hr>
-        <section class="new-section is-small">
-          <div class="container">
-            <p class="title is-5">Revisadas por el grupo</p>
-            <table class="table is-fullwidth is-bordered is-narrow">
-              <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th>N°</th>
-                  <th>Código</th>
-                  <th>Realizada por</th>
-                  <th>Emitida el</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>
-                    <a href="">MINUTA_G02_04_2020-2_0923</a>
-                  </td>
-                  <td>RCC</td>
-                  <td>23-09-2020</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>
-                    <a href="">MINUTA_G02_05_2020-2_0930</a>
-                  </td>
-                  <td>RCC</td>
-                  <td>30-09-2020</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <Tablero v-if="mostrarTablero"/>
+
+        <div v-else>
+          <section class="new-section">
+            <div class="container">
+              <p class="title is-5">Borradores</p>
+              <table class="table is-fullwidth is-bordered is-narrow">
+                <thead>
+                  <tr class="has-text-centered has-background-light">
+                    <th>N°</th>
+                    <th>Código</th>
+                    <th>Realizado por</th>
+                    <th>Iniciada el</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>
+                      <a href="">MINUTA_G02_06_2020-2_1006</a>
+                    </td>
+                    <td>RCC</td>
+                    <td>12-10-2020</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>
+                      <a href="">MINUTA_G02_07_2020-2_1008</a>
+                    </td>
+                    <td>RCC</td>
+                    <td>13-10-2020</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <hr>
+          <section class="new-section is-small">
+            <div class="container">
+              <p class="title is-5">Revisadas por el grupo</p>
+              <table class="table is-fullwidth is-bordered is-narrow">
+                <thead>
+                  <tr class="has-text-centered has-background-light">
+                    <th>N°</th>
+                    <th>Código</th>
+                    <th>Realizada por</th>
+                    <th>Emitida el</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>
+                      <a href="">MINUTA_G02_04_2020-2_0923</a>
+                    </td>
+                    <td>RCC</td>
+                    <td>23-09-2020</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>
+                      <a href="">MINUTA_G02_05_2020-2_0930</a>
+                    </td>
+                    <td>RCC</td>
+                    <td>30-09-2020</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
 
       </div>
 
@@ -144,6 +148,7 @@
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Minuta from '@/components/Minuta.vue'
+import Tablero from '@/components/TableroEst.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -154,7 +159,8 @@ export default {
   components: {
     Header,
     Footer,
-    Minuta
+    Minuta,
+    Tablero
   },
   data () {
     return {
@@ -162,7 +168,8 @@ export default {
       tipos_minutas: [],
       tipo: 0,
       seleccionarMinuta: false,
-      idMinuta: ''
+      idMinuta: '',
+      mostrarTablero: true
     }
   },
   computed: {

@@ -107,7 +107,7 @@ export default {
       } else if (this.usuario.rol.rango === 3) {
         this.$router.push('estudiante')
       } else if (this.usuario.rol.rango === 4) {
-        this.$router.push('stakeholder')
+        this.$router.push('cliente')
       } else {
         this.$router.push('/')
       }
