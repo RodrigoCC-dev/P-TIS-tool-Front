@@ -50,11 +50,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo}}</td>
+                <td class="has-text-left">{{ bitacora.minuta.codigo}}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ bitacora.minuta.creada_el }}</td>
+                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
             </tbody>
           </table>
@@ -80,11 +80,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td class="has-text-left">{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ bitacora.minuta.creada_el }}</td>
+                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
             </tbody>
           </table>
@@ -96,12 +96,129 @@
       </section>
     </div>
 
+    <div v-if="nombreTab === nombreTabs.revision">
+      <p></p>
+    </div>
+
+    <div v-if="nombreTab === nombreTabs.comentadas">
+      <section class="section">
+        <div class="container">
+          <p class="title is-5">Comentadas por integrantes del grupo</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasGrupo">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Realizada por</th>
+                <th>Comentada por</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas comentadas por los integrantes del grupo para mostrar</p>
+          </div>
+        </div>
+      </section>
+      <hr>
+      <section class="section">
+        <div class="container">
+          <p class="title is-5">Comentadas por el Cliente</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasCliente">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Realizada por</th>
+                <th>Comentada por</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td class="has-text-left">{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas comentadas por el Cliente para mostrar</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div v-if="nombreTab === nombreTabs.respondidas">
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Respondidas por los integrantes del grupo</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Realizada por</th>
+                <th>Respondida por</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas respondidas por los integrantes del grupo</p>
+          </div>
+        </div>
+      </section>
+      <hr>
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Respondidas por el Cliente</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Realizada por</th>
+                <th>Respondida por</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas respondidas por el Cliente para mostrar</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 const nombreTabs = {
@@ -153,15 +270,29 @@ export default {
         return false
       }
     },
-    mostrarComentadas: function () {
-      if (this.listaComentadasGrupo.length > 0 || this.listaComentadasCliente > 0) {
+    mostrarComentadasGrupo: function () {
+      if (this.listaComentadasGrupo.length > 0) {
         return true
       } else {
         return false
       }
     },
-    mostrarRevisadas: function () {
-      if (this.listaRevisadasGrupo.length > 0 || this.listaRevisadasCliente.length > 0) {
+    mostrarComentadasCliente: function () {
+      if (this.listaComentadasCliente > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarRespondidasGrupo: function () {
+      if (this.listaRespondidasGrupo.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarRespondidasCliente: function () {
+      if (this.listaRespondidasCliente.length > 0) {
         return true
       } else {
         return false
@@ -171,6 +302,9 @@ export default {
   methods: {
     elegirTab: function (nombreTab) {
       this.nombreTab = nombreTab
+    },
+    convertirFecha: function (timestamp) {
+      return Funciones.obtenerFecha(timestamp)
     },
     categorizarMinutas: function () {
       if (this.listaMinutas.length > 0) {
