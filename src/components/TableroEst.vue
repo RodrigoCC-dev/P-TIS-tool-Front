@@ -52,7 +52,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td class="has-text-left">{{ bitacora.minuta.codigo}}</td>
+                <td>{{ bitacora.minuta.codigo}}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -82,7 +82,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td class="has-text-left">{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -143,7 +143,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td class="has-text-left">{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -259,7 +259,7 @@
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ bitacora.minuta.creada_el }}</td>
+                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
             </tbody>
           </table>
