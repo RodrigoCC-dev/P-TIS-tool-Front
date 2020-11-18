@@ -101,7 +101,7 @@
     </div>
 
     <div v-if="nombreTab === nombreTabs.comentadas">
-      <section class="section">
+      <section class="new-section">
         <div class="container">
           <p class="title is-5">Comentadas por integrantes del grupo</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasGrupo">
@@ -128,7 +128,7 @@
         </div>
       </section>
       <hr>
-      <section class="section">
+      <section class="new-section">
         <div class="container">
           <p class="title is-5">Comentadas por el Cliente</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasCliente">
@@ -212,6 +212,64 @@
       </section>
     </div>
 
+    <div v-if="nombreTab === nombreTabs.cerradas">
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Minutas cerradas</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerradas">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Realizada por</th>
+                <th>Cerrada el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas cerradas a mostrar</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div v-if="nombreTab === nombreTabs.revision">
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Minutas para revisar</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRevision">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Creada por</th>
+                <th>Creada el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td>{{ bitacora.minuta.creada_el }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas pendientes de revisión</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </div>
 </template>
 
@@ -243,7 +301,8 @@ export default {
       listaRespondidasGrupo: [],
       listaRespondidasCliente: [],
       listaCerradas: [],
-      listaEmitidas: []
+      listaEmitidas: [],
+      listaRevision: []
     }
   },
   computed: {
@@ -297,6 +356,13 @@ export default {
       } else {
         return false
       }
+    },
+    mostrarRevision: function () {
+      if (this.listaRevision.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -332,13 +398,22 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch (e) {
-        console.log(e)
+      } catch {
+        console.log('No se han obtenido las minutas a mostrar')
+      }
+    },
+    async obtenerParaRevisar () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
+        this.listaRevision = response.data
+      } catch {
+        console.log('No se han podido obtener las minutas a revisar')
       }
     }
   },
   mounted () {
     this.obtenerMinutas()
+    this.obtenerParaRevisar()
   }
 }
 </script>
