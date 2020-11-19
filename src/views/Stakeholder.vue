@@ -1,49 +1,28 @@
 <template lang="html">
-  <div>
-
+  <div class="has-text-left">
     <Header/>
 
     <div class="container">
-      <div class="tabs is-centered is-toggle is-toggle-rounded">
-        <ul>
-          <li v-bind:class="tabs.revision" v-on:click="verRevision">
-            <a>
-              <span>Para revisión</span>
-            </a>
-          </li>
-          <li v-bind:class="tabs.comentadas" v-on:click="verComentadas">
-            <a>
-              <span>Comentadas</span>
-            </a>
-          </li>
-          <li v-bind:class="tabs.respondidas" v-on:click="verRespondidas">
-            <a>
-              <span>Respondidas</span>
-            </a>
-          </li>
-          <li v-bind:class="tabs.cerradas" v-on:click="verCerradas">
-            <a>
-              <span>Cerradas</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+
+      <Tablero/>
+
     </div>
 
     <Footer/>
-
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import Tablero from '@/components/TableroStk.vue'
 
 export default {
   name: 'Stakeholder',
   components: {
     Header,
-    Footer
+    Footer,
+    Tablero
   },
   data () {
     return {
@@ -58,7 +37,8 @@ export default {
         comentadas: 'none',
         respondidas: 'none',
         cerradas: 'none'
-      }
+      },
+      mostrar: false
     }
   },
   methods: {
