@@ -94,7 +94,7 @@
       <section class="new-section">
         <div class="container">
           <p class="title is-5">Respondidas por los estudiantes</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidas">
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo">
             <thead>
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
@@ -105,7 +105,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidas" :key="bitacora.id">
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revison }}</td>
@@ -114,6 +114,39 @@
               </tr>
             </tbody>
           </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas para mostrar</p>
+          </div>
+        </div>
+      </section>
+      <hr>
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Respondidas por el cliente</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Revisión</th>
+                <th>Realizada por</th>
+                <th>Respondida por</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <br>
+            <p class="subtitle is-5">No hay minutas respondidas para mostrar</p>
+          </div>
         </div>
       </section>
     </div>
@@ -154,9 +187,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Auth from '@/services/auth.js'
 import Funciones from '@/services/funciones.js'
-import axios from 'axios'
 import { mapState } from 'vuex'
 
 const nombreTabs = {
@@ -252,8 +285,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/cliente', { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch (e) {
-          console.log('No se han obtenido las minutas a mostrar')
+      } catch {
+        console.log('No se han obtenido las minutas a mostrar')
       }
     }
   },
