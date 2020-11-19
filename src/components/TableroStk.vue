@@ -174,9 +174,49 @@ export default {
       listaMinutas: [],
       listaRevision: [],
       listaComentadas: [],
-      listaRespondidas: [],
+      listaRespondidasGrupo: [],
+      listaRespondidasCliente: [],
       listaCerradas: [],
       nombreTabs
+    }
+  },
+  computed: {
+    ...mapState(['apiUrl']),
+
+    mostrarRevision: function () {
+      if (this.listaRevision.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarComentadas: function () {
+      if (this.listaComentadas.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarRespondidasGrupo: function () {
+      if (this.listaRespondidasGrupo.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarRespondidasCliente: function () {
+      if (this.listaRespondidasCliente.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    mostrarCerradas: function () {
+      if (this.listaCerradas.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -184,8 +224,41 @@ export default {
       this.nombreTab = nombreTab
     },
     convertirFecha: function (timestamp) {
-      return Funciones.obtenerFecha(timestamp)
+      if (timestamp === null || timestamp === undefined) {
+        return ''
+      } else {
+        return Funciones.obtenerFecha(timestamp)
+      }
+    },
+    categorizarMinutas: function () {
+      if (this.listaMinutas.length > 0) {
+        for (var i = 0; i < this.listaMinutas.length; i++) {
+          if (this.listaMinutas[i].estado.abreviacion === 'EMI') {
+            this.listaRevision.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
+            this.listaComentadas.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'RIG') {
+            this.listaRespondidasGrupo.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
+            this.listaRespondidasCliente.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
+            this.listaCerradas.push(this.listaMinutas[i])
+          }
+        }
+      }
+    },
+    async obtenerMinutas () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/cliente', { headers: Auth.authHeader() })
+        this.listaMinutas = response.data
+        this.categorizarMinutas()
+      } catch (e) {
+          console.log('No se han obtenido las minutas a mostrar')
+      }
     }
+  },
+  mounted () {
+    this.obtenerMinutas()
   }
 }
 </script>
