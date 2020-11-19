@@ -118,6 +118,38 @@
       </section>
     </div>
 
+    <div v-if="nombreTab === nombreTabs.cerradas">
+      <section class="new-section">
+        <div class="container">
+          <p class="title is-5">Minutas cerradas</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerradas">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Código</th>
+                <th>Revisión</th>
+                <th>Realizada por</th>
+                <th>Emitida el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-text-centered" v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
+                <th>{{ index + 1 }}</th>
+                <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
+                <td>{{ bitacora.minuta.creada_por }}</td>
+                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <br>
+            <p class="subtitle is-5">No hay minutas cerradas para mostrar</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </div>
 </template>
 
@@ -140,6 +172,10 @@ export default {
     return {
       nombreTab: 'Revision',
       listaMinutas: [],
+      listaRevision: [],
+      listaComentadas: [],
+      listaRespondidas: [],
+      listaCerradas: [],
       nombreTabs
     }
   },
