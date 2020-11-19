@@ -88,7 +88,7 @@
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+                <td>{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
