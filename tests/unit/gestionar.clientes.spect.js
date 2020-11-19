@@ -72,4 +72,83 @@ describe('GestionClientes.vue', () => {
     const wrapper = shallowMount(GestionClientes)
     expect(wrapper.vm.mensajes).toEqual(esperado)
   })
+
+  it('propiedad computada listaFiltrada funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes, {
+      data() {
+        return {
+          listaGrupos: [
+            {
+              id: 4653,
+              jornada: 'Diurna'
+            },
+            {
+              id: 24534,
+              jornada: 'Vespertina'
+            }
+          ],
+          jornadaActual: 'Diurna'
+        }
+      }
+    })
+    const esperado = {
+      {
+        id: 4653,
+        jornada: 'Diurna'
+      }
+    }
+    expect(wrapper.vm.listaFiltrada).toEqual(esperado)
+  })
+
+  it('propiedad computada stakeholdersPorJornada funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes, {
+      data() {
+        return {
+          listaStakeholders: [
+            {
+              id: 6354,
+              jornada: 'Diurna'
+            },
+            {
+              id: 6435343,
+              jornada: 'Vespertina'
+            }
+          ],
+          jornadaActual: 'Diurna'
+        }
+      }
+    })
+    const esperado = {
+      id: 6354,
+      jornada: 'Diurna'
+    }
+    expect(wrapper.vm.stakeholdersPorJornada).toEqual(esperado)
+  })
+
+  it('propiedad computada mostrarLista funciona correctamente con true', () => {
+    const wrapper = shallowMount(GestionClientes, {
+      data() {
+        return {
+          stakeholdersPorJornada: [
+            {
+              id: 63453,
+              jornada: 'Diurna'
+            }
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.stakeholdersPorJornada).toBeTruthy()
+  })
+
+  it('propiedad computada mostrarLista funciona correctamente con false', () => {
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.mostrarLista).toBeFalsy()
+  })
+
+  it('método cambiarJornada funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.cambiarJornada('Diurna')
+    expect(wrapper.vm.jornadaActual).toEqual('Diurna')
+  })
 })
