@@ -320,4 +320,139 @@ describe('TableroEst.vue', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
+
+  it('método elegirTab funciona correctamente', () => {
+    const wrapper = shallowMount(TableroEst)
+    wrapper.vm.elegirTab('Revision')
+    expect(wrapper.vm.nombreTab).toEqual('Revision')
+  })
+
+  it('método convertirFecha funciona correctamente', () => {
+    const wrapper = shallowMount(TableroEst)
+    expect(wrapper.vm.convertirFecha('2020-11-19T17:45:00.000Z')).toEqual('19-11-2020')
+  })
+
+  it('método categorizarMinutas funciona correctamente' , () => {
+    const wrapper = shallowMount(TableroEst, {
+      data() {
+        return {
+          listaMinutas: [
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_04_2020-2_1207',
+                creada_por: 'ABC',
+                creada_el: '2020-11-16T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'BOR',
+                descripcion: 'Borrador'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'EMI',
+                descripcion: 'Emitida'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'CIG',
+                descripcion: 'Comentada integrante del grupo'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'CSK',
+                descripcion: 'Comentada por el cliente'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'RIG',
+                descripcion: 'Respondida por integrante del grupo'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'RSK',
+                descripcion: 'Respondida por el cliente'
+              }
+            },
+            {
+              id: 46234,
+              revision: 'A',
+              minuta: {
+                id: 42345,
+                codigo: 'MINUTA_G02_05_2020-2_1107',
+                creada_por: 'ABC',
+                creada_el: '2020-10-07T17:29:00.000Z'
+              },
+              estado: {
+                id: 46345,
+                abreviacion: 'CER',
+                descripcion: 'Cerrada'
+              }
+            }
+          ]
+        }
+      }
+    })
+    wrapper.vm.categorizarMinutas()
+    expect(wrapper.vm.listaBorradores.length).toEqual(1)
+    expect(wrapper.vm.listaEmitidas.length).toEqual(1)
+    expect(wrapper.vm.listaCerradas.length).toEqual(1)
+    expect(wrapper.vm.listaComentadasGrupo.length).toEqual(1)
+    expect(wrapper.vm.listaComentadasCliente.length).toEqual(1)
+    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
+    expect(wrapper.vm.listaRespondidasCliente.length).toEqual(1)
+  })
 })
