@@ -45,6 +45,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizado por</th>
                 <th>Iniciada el</th>
               </tr>
@@ -53,6 +54,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo}}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -75,6 +77,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Emitida el</th>
               </tr>
@@ -83,6 +86,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -105,6 +109,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Emitida el</th>
               </tr>
@@ -113,6 +118,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -135,6 +141,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Comentada por</th>
               </tr>
@@ -143,6 +150,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -162,6 +170,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Comentada por</th>
               </tr>
@@ -170,6 +179,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -191,6 +201,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Respondida por</th>
               </tr>
@@ -199,6 +210,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -218,6 +230,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Respondida por</th>
               </tr>
@@ -226,6 +239,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -247,6 +261,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Realizada por</th>
                 <th>Cerrada el</th>
               </tr>
@@ -255,6 +270,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td></td>
               </tr>
@@ -276,6 +292,7 @@
               <tr class="has-text-centered has-background-light">
                 <th>N°</th>
                 <th>Código</th>
+                <th>Revisión</th>
                 <th>Creada por</th>
                 <th>Creada el</th>
               </tr>
@@ -284,6 +301,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
+                <td>{{ bitacora.revsion }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
