@@ -349,7 +349,7 @@ export default {
       }
     },
     mostrarComentadasCliente: function () {
-      if (this.listaComentadasCliente > 0) {
+      if (this.listaComentadasCliente.length > 0) {
         return true
       } else {
         return false
