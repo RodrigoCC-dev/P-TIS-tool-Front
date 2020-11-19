@@ -353,7 +353,7 @@ export default {
       }
       if (existe) {
         this.entradas.correo_elec.error = true
-        this.entradas.correo_elec.mensaje = this.mensaje.correo_repetido
+        this.entradas.correo_elec.mensaje = this.mensajes.correo_repetido
       }
       return existe
     },
