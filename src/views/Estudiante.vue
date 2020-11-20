@@ -26,7 +26,7 @@
                     <div class="control is-expanded">
                       <div class="select is-fullwidth">
                         <select v-model="tipo">
-                          <option v-for="item in tipos_minutas" :key="item.id" :value="item.id">{{ item.tipo }}</option>
+                          <option v-for="item in minutasFiltradas" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                         </select>
                       </div>
                     </div>
@@ -79,7 +79,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl']),
+
+    minutasFiltradas: function () {
+      var lista = []
+      for (var i = 0; i < this.tipos_minutas.length; i++) {
+        if (this.tipos_minutas[i].tipo !== 'Semanal') {
+          lista.push(this.tipos_minutas[i])
+        }
+      }
+      return lista
+    }
   },
   methods: {
     ...mapMutations(['removeFromArray']),

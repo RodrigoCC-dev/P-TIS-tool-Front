@@ -382,7 +382,11 @@ export default {
       this.nombreTab = nombreTab
     },
     convertirFecha: function (timestamp) {
-      return Funciones.obtenerFecha(timestamp)
+      if (timestamp === null || timestamp === undefined) {
+        return ''
+      } else {
+        return Funciones.obtenerFecha(timestamp)
+      }
     },
     categorizarMinutas: function () {
       if (this.listaMinutas.length > 0) {
