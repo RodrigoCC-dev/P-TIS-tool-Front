@@ -185,7 +185,9 @@ export default {
     async obtenerEstudiantes () {
       try {
         const response = await axios.get(this.apiUrl + '/estudiantes/sin_grupo', { headers: Auth.authHeader() })
-        this.listaEstudiantes = response.data
+        if (response.data !== null) {
+          this.listaEstudiantes = response.data
+        }
         if (Object.keys(this.listaEstudiantes).length > 0) {
           this.mostrarLista = true
         } else {
@@ -223,7 +225,6 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
-        console.log(this.listaGrupos)
       } catch {
         console.log('No se han obtenido los grupos')
       }

@@ -107,7 +107,7 @@ export default {
       } else if (this.usuario.rol.rango === 3) {
         this.$router.push('estudiante')
       } else if (this.usuario.rol.rango === 4) {
-        this.$router.push('stakeholder')
+        this.$router.push('cliente')
       } else {
         this.$router.push('/')
       }
@@ -120,7 +120,13 @@ export default {
           const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
           this.$store.commit('setUsuario', usuario.data)
           this.redirigirUsuario()
+          const cookie = {
+            email: usuario.data.email,
+            rango: usuario.data.rol.rango
+          }
+          Auth.setUser(cookie)
         } catch (e1) {
+          console.log(e1)
           console.log('No se ha cargado la información del usuario')
         }
         this.registrarAutenticacion = true

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '../store'
+import Cookies from 'js-cookie'
 
 const ENDPOINT_PATH = store.state.apiUrl
 
@@ -33,5 +34,15 @@ export default {
     } else {
       return {}
     }
+  },
+
+  setUser (userLogged) {
+    Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
+  },
+  getUser () {
+    return Cookies.get('userLogged')
+  },
+  deleteUser () {
+    Cookies.remove('userLogged')
   }
 }
