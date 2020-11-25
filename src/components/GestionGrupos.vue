@@ -184,7 +184,7 @@ export default {
     },
     async obtenerEstudiantes () {
       try {
-        const response = await axios.get(this.apiUrl + '/estudiantes/sin_grupo', { headers: Auth.authHeader() })
+        const response = await axios.get(this.apiUrl + '/estudiantes/asignacion/sin_grupo', { headers: Auth.authHeader() })
         if (response.data !== null) {
           this.listaEstudiantes = response.data
         }
