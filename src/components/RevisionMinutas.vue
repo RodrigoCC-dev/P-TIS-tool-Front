@@ -18,27 +18,29 @@
 
       <div class="columns">
         <div class="column is-three-fifths">
-          <div class="field">
-            <div class="control">
-              <label class="label">Listado de grupos</label>
+          <div v-if="mostrarGrupos">
+            <div class="field">
+              <div class="control">
+                <label class="label">Listado de grupos</label>
+              </div>
             </div>
+            <table class="table is-fullwidth">
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Grupo</th>
+                  <th>Proyecto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
+                  <th :class="{ 'is-selected' : grupoActual === grupo.id}">{{ index + 1 }}</th>
+                  <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
+                  <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <table class="table is-fullwidth">
-            <thead>
-              <tr>
-                <th>N°</th>
-                <th>Grupo</th>
-                <th>Proyecto</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
-                <th :class="{ 'is-selected' : grupoActual === grupo.id}">{{ index + 1 }}</th>
-                <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
-                <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
         <div class="column is-1"></div>
         <div class="column">
@@ -177,6 +179,13 @@ export default {
         }
       }
       return lista
+    },
+    mostrarGrupos: function () {
+      if (this.gruposJornada.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
