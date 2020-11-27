@@ -131,7 +131,6 @@ export default {
   data () {
     return {
       verFormulario: false,
-      mostrarLista: false,
       jornadasProfesor: [],
       mostrarJornadas: false,
       jornadaActual: 'Diurna',
@@ -167,6 +166,13 @@ export default {
         }
       }
       return lista
+    },
+    mostrarLista: function () {
+      if (this.sinAsignar.length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -180,6 +186,7 @@ export default {
       this.verFormulario = true
       this.nuevoGrupo()
       this.obtenerCorrelativo(this.jornadaActual)
+      this.obtenerEstudiantes()
     },
     async obtenerEstudiantes () {
       try {
@@ -187,14 +194,8 @@ export default {
         if (response.data !== null) {
           this.listaEstudiantes = response.data
         }
-        if (Object.keys(this.listaEstudiantes).length > 0) {
-          this.mostrarLista = true
-        } else {
-          this.mostrarLista = false
-        }
       } catch (error) {
         console.log(error)
-        this.mostrarLista = false
       }
     },
     async obtenerJornadas () {
