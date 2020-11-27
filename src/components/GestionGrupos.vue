@@ -94,9 +94,8 @@
           </div>
         </div>
       </div>
+      <hr>
     </div>
-
-    <hr>
 
     <div class="columns">
       <div v-for="grupo in listaGrupos" :key="grupo.id">
