@@ -134,11 +134,6 @@ export default {
       jornadasProfesor: [],
       mostrarJornadas: false,
       jornadaActual: 'Diurna',
-      grupo: {
-        nombre: '',
-        proyecto: '',
-        correlativo: 0
-      },
       estudiantes: [],
       entradas: {
         proyecto: {
@@ -149,6 +144,11 @@ export default {
           error: false,
           mensaje: ''
         }
+      },
+      grupo: {
+        nombre: '',
+        proyecto: '',
+        correlativo: 0
       },
       listaEstudiantes: {},
       listaGrupos: [],
@@ -181,6 +181,7 @@ export default {
     },
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab
+      this.obtenerCorrelativo(this.jornadaActual)
     },
     agregarGrupo: function () {
       this.verFormulario = true
@@ -262,19 +263,28 @@ export default {
           jornada: jornadaAct
         }
         const response = await axios.post(this.apiUrl + '/grupos/ultimo_grupo', solicitud, { headers: Auth.postHeader() })
+        this.nuevoGrupo()
+        console.log(this.grupo)
+        console.log(response)
         if (response.data === null) {
           this.grupo.correlativo = 1
           this.grupo.nombre = 'G01'
         } else {
-          this.grupo.correlativo = response.data.correlativo + 1
+          if (isNaN(this.grupo.correlativo)) {
+            this.grupo.correlativo = 0
+            this.grupo.correlativo = response.data.correlativo + 1
+          } else {
+            this.grupo.correlativo = response.data.correlativo + 1
+          }
           if (this.grupo.correlativo < 10) {
             this.grupo.nombre = 'G0' + this.grupo.correlativo
           } else {
             this.grupo.nombre = 'G' + this.grupo.correlativo
           }
         }
-      } catch {
-        console.log('No se pudo obtener correlativo')
+      } catch (e) {
+        console.log(e)
+        // console.log('No se pudo obtener correlativo')
       }
     },
     validarProyecto: function () {
