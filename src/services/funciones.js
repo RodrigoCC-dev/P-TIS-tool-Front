@@ -8,5 +8,9 @@ export default {
     var fecha = timestamp.split('T')
     var separar = fecha[0].split('-')
     return separar[2] + '-' + separar[1] + '-' + separar[0]
+  },
+  removeFromArray (arr, item) {
+    var i = arr.indexOf(item)
+    i !== -1 && arr.splice(i, 1)
   }
 }
