@@ -300,7 +300,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="guardarMinuta" disabled>Guardar</a>
+              <a class="button is-success" @click="guardarMinuta">Guardar</a>
             </div>
             <div class="control">
               <a class="button is-link" @click="emitirMinuta">Emitir</a>
