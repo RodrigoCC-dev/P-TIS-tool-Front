@@ -12,5 +12,14 @@ export default {
   removeFromArray (arr, item) {
     var i = arr.indexOf(item)
     i !== -1 && arr.splice(i, 1)
+  },
+  obtenerDescripciones (lista) {
+    var resultado = []
+    if (lista.length > 0) {
+      for (var i = 0; i < lista.length; i++) {
+        resultado.push(lista[i].descripcion)
+      }
+    }
+    return resultado
   }
 }

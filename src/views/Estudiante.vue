@@ -103,6 +103,7 @@ export default {
     cerrarFormulario: function () {
       this.verFormulario = false
       this.tipo = 0
+      this.idBitacora = 0
     },
     async obtenerTipoMinutas () {
       try {

@@ -402,7 +402,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario'])
+    ...mapState(['apiUrl', 'usuario', 'tipoMinutas'])
 
   },
   methods: {
@@ -413,9 +413,28 @@ export default {
     nombreCompleto (estudiante) {
       return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
     },
-    convertirFecha (timestamp) {
+    convertirFecha: function (timestamp) {
       var fecha = timestamp.split('T')
-      return = fecha[0]
+      return fecha[0]
+    },
+    buscarIdTipoMinuta: function (array, busqueda) {
+      var id = 0
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].tipo === busqueda) {
+          id = array[i].id
+        }
+      }
+      return id
+    },
+    convertirClasificacion: function (obj) {
+      var lista = []
+      var llaves = Object.keys(obj)
+      for (var i = 0; i < llaves.length; i++) {
+        if (obj[llaves[i]]) {
+          lista.push(llaves[i])
+        }
+      }
+      return lista
     },
     buscarIdEstado: function (array, busqueda) {
       var id = 0
@@ -566,7 +585,15 @@ export default {
         this.minuta.codigo = response.data.minuta.codigo
         this.minuta.correlativo = response.data.minuta.correlativo
         this.minuta.fecha_reunion = this.convertirFecha(response.data.minuta.fecha_reunion)
-
+        this.minuta.h_inicio = Funciones.obtenerHora(response.data.minuta.h_inicio)
+        this.minuta.h_termino = Funciones.obtenerHora(response.data.minuta.h_termino)
+        this.minuta.tipo_minuta_id = this.buscarIdTipoMinuta(this.tipoMinutas, response.data.minuta.tipo)
+        this.clasificacion = response.data.minuta.clasificacion
+        this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
+        this.tema = response.data.minuta.tema
+        this.revision = response.data.revision
+        this.objetivos = Funciones.obtenerDescripciones(response.data.minuta.objetivos)
+        this.conclusiones = Funciones.obtenerDescripciones(response.data.minuta.conclusiones)
       } catch (e) {
         console.log(e)
       }
