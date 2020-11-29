@@ -418,13 +418,7 @@ export default {
       return fecha[0]
     },
     buscarIdTipoMinuta: function (array, busqueda) {
-      var id = 0
-      for (var i = 0; i < array.length; i++) {
-        if (array[i].tipo === busqueda) {
-          id = array[i].id
-        }
-      }
-      return id
+      return Funciones.obtenerIdDeLista(array, 'tipo', busqueda)
     },
     convertirClasificacion: function (obj) {
       var lista = []
@@ -433,6 +427,38 @@ export default {
         if (obj[llaves[i]]) {
           lista.push(llaves[i])
         }
+      }
+      return lista
+    },
+    buscarIdTipoItem: function (array, busqueda) {
+      return Funciones.obtenerIdDeLista(array, 'tipo', busqueda)
+    },
+    convertirItems: function (array) {
+      var lista = []
+      for (var i = 0; i < array.length; i++) {
+        var aux = {
+          correlativo: 1,
+          descripcion: '',
+          fecha: '',
+          tipo_item_id: 0,
+          responsables: 0,
+          entradas: {
+            descripcion: false,
+            fecha: false,
+            tipo_item: false,
+            responsables: false
+          }
+        }
+        aux.correlativo = array[i].correlativo
+        aux.descripcion = array[i].descripcion
+        if (array[i].fecha !== null) {
+          aux.fecha = this.convertirFecha(array[i].fecha)
+        }
+        if (array[i].responsables.length > 0) {
+          aux.responsables = array[i].responsables[0]
+        }
+        aux.tipo_item_id = this.buscarIdTipoItem(this.tipo_items, array[i].tipo)
+        lista.push(aux)
       }
       return lista
     },
@@ -594,6 +620,7 @@ export default {
         this.revision = response.data.revision
         this.objetivos = Funciones.obtenerDescripciones(response.data.minuta.objetivos)
         this.conclusiones = Funciones.obtenerDescripciones(response.data.minuta.conclusiones)
+        this.listaItems = this.convertirItems(response.data.minuta.items)
       } catch (e) {
         console.log(e)
       }

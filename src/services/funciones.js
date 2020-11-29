@@ -21,5 +21,14 @@ export default {
       }
     }
     return resultado
+  },
+  obtenerIdDeLista (listaObj, llave, valor) {
+    var id = 0
+    for (var i = 0; i < listaObj.length; i++) {
+      if (listaObj[i][llave] === valor) {
+        id = listaObj[i].id
+      }
+    }
+    return id
   }
 }
