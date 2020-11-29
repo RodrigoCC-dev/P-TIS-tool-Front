@@ -53,7 +53,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo}}</td>
+                <td><a @click="editarBorrador(bitacora.id)">{{ bitacora.minuta.codigo}}</a></td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
@@ -425,6 +425,9 @@ export default {
       } catch {
         console.log('No se han podido obtener las minutas a revisar')
       }
+    },
+    editarBorrador: function (id) {
+      this.$emit('bitacora', id)
     }
   },
   mounted () {

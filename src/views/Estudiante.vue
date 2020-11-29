@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-minuta="idMinuta" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
       <div v-else>
 
@@ -41,7 +41,7 @@
           <br>
         </div>
 
-        <Tablero/>
+        <Tablero @bitacora="establecerBitacora"/>
 
       </div>
 
@@ -75,7 +75,7 @@ export default {
       tipos_minutas: [],
       tipo: 0,
       seleccionarMinuta: false,
-      idMinuta: ''
+      idBitacora: 0
     }
   },
   computed: {
@@ -103,6 +103,7 @@ export default {
     },
     cerrarFormulario: function () {
       this.verFormulario = false
+      this.tipo = 0
     },
     async obtenerTipoMinutas () {
       try {
@@ -111,6 +112,10 @@ export default {
       } catch {
         console.log('No se han obtenido los tipos de minutas')
       }
+    },
+    establecerBitacora: function (id) {
+      this.idBitacora = id
+      this.verFormulario = true
     }
   },
   mounted () {

@@ -317,14 +317,16 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idMinuta'],
+  props: ['tipoMinuta', 'idBitacora'],
   data () {
     return {
+      bitacora: this.idBitacora,
       minuta: {
         estudiante_id: 0,
         codigo: '',
@@ -410,6 +412,10 @@ export default {
     },
     nombreCompleto (estudiante) {
       return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+    },
+    convertirFecha (timestamp) {
+      var fecha = timestamp.split('T')
+      return = fecha[0]
     },
     buscarIdEstado: function (array, busqueda) {
       var id = 0
@@ -543,14 +549,26 @@ export default {
     },
     async obtenerCorrelativo () {
       try {
-        if (this.idMinuta === '') {
+        if (this.idBitacora === 0) {
           const response = await axios.get(this.apiUrl + '/minutas/correlativo/' + this.grupo.id.toString(), { headers: Auth.authHeader() })
           this.minuta.correlativo = response.data
         } else {
-          console.log(this.idMinuta)
+          this.obtenerMinuta()
         }
       } catch (e) {
         console.log('No fue posible obtener el correlativo')
+      }
+    },
+    async obtenerMinuta () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/' + this.bitacora.toString(), { headers: Auth.authHeader() })
+        console.log(response)
+        this.minuta.codigo = response.data.minuta.codigo
+        this.minuta.correlativo = response.data.minuta.correlativo
+        this.minuta.fecha_reunion = this.convertirFecha(response.data.minuta.fecha_reunion)
+
+      } catch (e) {
+        console.log(e)
       }
     },
     establecerId: function () {
@@ -848,6 +866,7 @@ export default {
     this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
+    console.log(this.bitacora)
   }
 }
 </script>
