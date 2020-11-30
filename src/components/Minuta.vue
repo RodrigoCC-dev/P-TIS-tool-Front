@@ -700,15 +700,29 @@ export default {
           asistencia: this.asistencia,
           tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
-        try {
-          await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
-          this.$emit('cerrar')
-          this.limpiarCampos()
-        } catch {
-          if (estado === 'BOR') {
-            console.log('No se pudo guardar la minuta')
-          } else {
-            console.log('No se pudo emitir la minuta')
+        if (this.bitacora === 0) {
+          try {
+            await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+            this.limpiarCampos()
+          } catch {
+            if (estado === 'BOR') {
+              console.log('No se pudo guardar la minuta')
+            } else {
+              console.log('No se pudo emitir la minuta')
+            }
+          }
+        } else {
+          try {
+            await axios.patch(this.apiUrl + '/minutas/' + this.bitacora, nuevaMinuta, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+            this.limpiarCampos()
+          } catch {
+            if (estado === 'BOR') {
+              console.log('No se pudo actualizar la información de la minuta')
+            } else {
+              console.log('No se pudo emitir la minuta')
+            }
           }
         }
       }
