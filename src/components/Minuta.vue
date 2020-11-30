@@ -284,7 +284,7 @@
                 <div class="select is-small">
                   <select v-model="item.responsables" @change="validarItem(index)">
                     <option value="0" selected>- Sin Asig -</option>
-                    <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
+                    <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="{'tipo': 'est', 'id': integrante.id}">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
@@ -353,7 +353,7 @@ export default {
         descripcion: '',
         fecha: '',
         tipo_item_id: 0,
-        responsables: 0,
+        responsables: {tipo: '', id: 0},
         entradas: {
           descripcion: false,
           fecha: false,
@@ -368,7 +368,7 @@ export default {
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: 0,
+          responsables: {tipo: '', id: 0},
           entradas: {
             descripcion: false,
             fecha: false,
