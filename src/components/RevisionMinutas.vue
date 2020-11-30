@@ -132,6 +132,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -195,11 +196,7 @@ export default {
       this.mostrarMinutas = false
     },
     buscarPorId: function (lista, id) {
-      for (var i = 0; i < lista.length; i++) {
-        if (lista[i].id === id) {
-          return lista[i]
-        }
-      }
+      return Funciones.busquedaPorId(lista, id)
     },
     seleccionarGrupo: function (id) {
       this.grupoActual = id
