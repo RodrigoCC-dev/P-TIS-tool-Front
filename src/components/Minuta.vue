@@ -346,14 +346,14 @@ export default {
       tema: '',
       revision: '',
       asistencia: [],
-      objetivos: [{id: 0, descripcion: ''}],
-      conclusiones: [{id: 0, descripcion: ''}],
+      objetivos: [{ id: 0, descripcion: '' }],
+      conclusiones: [{ id: 0, descripcion: '' }],
       item: {
         correlativo: 0,
         descripcion: '',
         fecha: '',
         tipo_item_id: 0,
-        responsables: {tipo: '', id: 0},
+        responsables: { tipo: '', id: 0 },
         entradas: {
           descripcion: false,
           fecha: false,
@@ -368,7 +368,7 @@ export default {
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: {tipo: '', id: 0},
+          responsables: { tipo: '', id: 0 },
           entradas: {
             descripcion: false,
             fecha: false,
@@ -433,11 +433,11 @@ export default {
     convertirResponsable: function (listaAsistencia, obj) {
       var asistencia = Funciones.busquedaPorId(listaAsistencia, obj.asistencia_id)
       if (asistencia.id_estudiante !== null) {
-        return {tipo: 'est', id: asistencia.id_estudiante}
+        return { tipo: 'est', id: asistencia.id_estudiante }
       } else if (asistencia.id_stakeholder !== null) {
-        return {tipo: 'stk', id: asistencia.id_stakeholder}
+        return { tipo: 'stk', id: asistencia.id_stakeholder }
       } else {
-        return {tipo: '', id: 0}
+        return { tipo: '', id: 0 }
       }
     },
     convertirItems: function (array, asistencia) {
@@ -467,7 +467,7 @@ export default {
         aux.tipo_item_id = this.buscarIdEnLista(this.tipo_items, 'tipo', array[i].tipo)
         lista.push(aux)
       }
-      return lista.sort((a,b) => {
+      return lista.sort((a, b) => {
         if (a.correlativo < b.correlativo) {
           return -1
         } else {
@@ -478,7 +478,7 @@ export default {
     convertirAsistencia: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
-        var obj = {estudiante: this.grupo.estudiantes[i].id, asistencia: 0}
+        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
             obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
@@ -500,7 +500,7 @@ export default {
       }
     },
     agregarObjetivo: function () {
-      this.objetivos.push({id: 0, descripcion: ''})
+      this.objetivos.push({ id: 0, descripcion: '' })
     },
     removerObjetivo: function (objetivo) {
       if (this.objetivos.length > 1) {
@@ -508,7 +508,7 @@ export default {
       }
     },
     agregarConclusion: function () {
-      this.conclusiones.push({id: 0, descripcion: ''})
+      this.conclusiones.push({ id: 0, descripcion: '' })
     },
     removerConclusion: function (conclusion) {
       if (this.conclusiones.length > 1) {
