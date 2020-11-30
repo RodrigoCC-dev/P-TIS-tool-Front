@@ -459,6 +459,19 @@ export default {
       }
       return lista
     },
+    convertirAsistencia: function (array) {
+      var lista = []
+      for (var i = 0; i < this.grupo.estudiantes.length; i++) {
+        var obj = {estudiante: this.grupo.estudiantes[i].id, asistencia: 0}
+        for (var j = 0; j < array.length; j++) {
+          if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
+            obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+          }
+        }
+        lista.push(obj)
+      }
+      return lista
+    },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
       const anterior = this.listaItems[this.listaItems.length - 1].correlativo
@@ -595,13 +608,13 @@ export default {
     async obtenerMinuta () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/' + this.bitacora.toString(), { headers: Auth.authHeader() })
-        console.log(response)
         this.minuta.codigo = response.data.minuta.codigo
         this.minuta.correlativo = response.data.minuta.correlativo
         this.minuta.fecha_reunion = this.convertirFecha(response.data.minuta.fecha_reunion)
         this.minuta.h_inicio = Funciones.obtenerHora(response.data.minuta.h_inicio)
         this.minuta.h_termino = Funciones.obtenerHora(response.data.minuta.h_termino)
         this.minuta.tipo_minuta_id = this.buscarIdEnLista(this.tipoMinutas, 'tipo', response.data.minuta.tipo)
+        this.asistencia = this.convertirAsistencia(response.data.minuta.asistencia)
         this.clasificacion = response.data.minuta.clasificacion
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
@@ -908,7 +921,6 @@ export default {
     this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
-    console.log(this.bitacora)
   }
 }
 </script>
