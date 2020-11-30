@@ -417,8 +417,8 @@ export default {
       var fecha = timestamp.split('T')
       return fecha[0]
     },
-    buscarIdTipoMinuta: function (array, busqueda) {
-      return Funciones.obtenerIdDeLista(array, 'tipo', busqueda)
+    buscarIdEnLista: function (array, llave, busqueda) {
+      return Funciones.obtenerIdDeLista(array, llave, busqueda)
     },
     convertirClasificacion: function (obj) {
       var lista = []
@@ -429,9 +429,6 @@ export default {
         }
       }
       return lista
-    },
-    buscarIdTipoItem: function (array, busqueda) {
-      return Funciones.obtenerIdDeLista(array, 'tipo', busqueda)
     },
     convertirItems: function (array) {
       var lista = []
@@ -457,19 +454,10 @@ export default {
         if (array[i].responsables.length > 0) {
           aux.responsables = array[i].responsables[0]
         }
-        aux.tipo_item_id = this.buscarIdTipoItem(this.tipo_items, array[i].tipo)
+        aux.tipo_item_id = this.buscarIdEnLista(this.tipo_items, 'tipo', array[i].tipo)
         lista.push(aux)
       }
       return lista
-    },
-    buscarIdEstado: function (array, busqueda) {
-      var id = 0
-      for (var i = 0; i < array.length; i++) {
-        if (array[i].abreviacion === busqueda) {
-          id = array[i].id
-        }
-      }
-      return id
     },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
@@ -613,7 +601,7 @@ export default {
         this.minuta.fecha_reunion = this.convertirFecha(response.data.minuta.fecha_reunion)
         this.minuta.h_inicio = Funciones.obtenerHora(response.data.minuta.h_inicio)
         this.minuta.h_termino = Funciones.obtenerHora(response.data.minuta.h_termino)
-        this.minuta.tipo_minuta_id = this.buscarIdTipoMinuta(this.tipoMinutas, response.data.minuta.tipo)
+        this.minuta.tipo_minuta_id = this.buscarIdEnLista(this.tipoMinutas, 'tipo', response.data.minuta.tipo)
         this.clasificacion = response.data.minuta.clasificacion
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
@@ -697,7 +685,7 @@ export default {
             motivo_id: this.motivo_id
           },
           asistencia: this.asistencia,
-          tipo_estado: this.buscarIdEstado(this.tipo_estados, estado)
+          tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
         try {
           await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
