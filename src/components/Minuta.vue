@@ -695,6 +695,7 @@ export default {
           lista.push(item)
         }
         const nuevaMinuta = {
+          id: this.bitacora,
           minuta: {
             estudiante_id: this.minuta.estudiante_id,
             codigo: this.establecerCodigo(),
@@ -844,7 +845,7 @@ export default {
     },
     validarObjetivos: function () {
       if (this.objetivos.length === 1) {
-        if (this.objetivos[0] === '') {
+        if (this.objetivos[0].descripcion === '') {
           this.entradas.objetivos = true
           return false
         } else {
@@ -854,7 +855,7 @@ export default {
       } else {
         var validar = true
         for (var i = 0; i < this.objetivos.length; i++) {
-          if (this.objetivos[i] === '') {
+          if (this.objetivos[i].descripcion === '') {
             validar = false
             this.entradas.objetivos = true
           }
@@ -864,7 +865,7 @@ export default {
     },
     validarConclusiones: function () {
       if (this.conclusiones.length === 1) {
-        if (this.conclusiones[0] === '') {
+        if (this.conclusiones[0].descripcion === '') {
           this.entradas.conclusiones = true
           return false
         } else {
@@ -874,7 +875,7 @@ export default {
       } else {
         var validar = true
         for (var i = 0; i < this.conclusiones.length; i++) {
-          if (this.conclusiones[i] === '') {
+          if (this.conclusiones[i].descripcion === '') {
             validar = false
             this.entradas.conclusiones = true
           }
