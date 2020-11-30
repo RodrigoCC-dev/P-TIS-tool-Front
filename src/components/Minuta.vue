@@ -202,7 +202,7 @@
               <li v-for="(objetivo, index) in objetivos" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="objetivos[index]" class="input" type="text" @input="validarObjetivos">
+                    <input v-model="objetivos[index].descripcion" class="input" type="text" @input="validarObjetivos">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerObjetivo(objetivo)"><strong>X</strong></a>
@@ -235,7 +235,7 @@
               <li v-for="(conclusion, index) in conclusiones" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="conclusiones[index]" class="input" type="text" @input="validarConclusiones">
+                    <input v-model="conclusiones[index].descripcion" class="input" type="text" @input="validarConclusiones">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerConclusion(conclusion)"><strong>X</strong></a>
@@ -346,8 +346,8 @@ export default {
       tema: '',
       revision: '',
       asistencia: [],
-      objetivos: [''],
-      conclusiones: [''],
+      objetivos: [{id: 0, descripcion: ''}],
+      conclusiones: [{id: 0, descripcion: ''}],
       item: {
         correlativo: 0,
         descripcion: '',
@@ -484,7 +484,7 @@ export default {
       }
     },
     agregarObjetivo: function () {
-      this.objetivos.push('')
+      this.objetivos.push({id: 0, descripcion: ''})
     },
     removerObjetivo: function (objetivo) {
       if (this.objetivos.length > 1) {
@@ -492,7 +492,7 @@ export default {
       }
     },
     agregarConclusion: function () {
-      this.conclusiones.push('')
+      this.conclusiones.push({id: 0, descripcion: ''})
     },
     removerConclusion: function (conclusion) {
       if (this.conclusiones.length > 1) {
@@ -619,8 +619,8 @@ export default {
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
         this.revision = response.data.revision
-        this.objetivos = Funciones.obtenerDescripciones(response.data.minuta.objetivos)
-        this.conclusiones = Funciones.obtenerDescripciones(response.data.minuta.conclusiones)
+        this.objetivos = response.data.minuta.objetivos
+        this.conclusiones = response.data.minuta.conclusiones
         this.listaItems = this.convertirItems(response.data.minuta.items)
       } catch (e) {
         console.log(e)
