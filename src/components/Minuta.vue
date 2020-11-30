@@ -457,7 +457,13 @@ export default {
         aux.tipo_item_id = this.buscarIdEnLista(this.tipo_items, 'tipo', array[i].tipo)
         lista.push(aux)
       }
-      return lista
+      return lista.sort((a,b) => {
+        if (a.correlativo < b.correlativo) {
+          return -1
+        } else {
+          return 1
+        }
+      })
     },
     convertirAsistencia: function (array) {
       var lista = []
