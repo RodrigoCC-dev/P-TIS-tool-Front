@@ -30,5 +30,12 @@ export default {
       }
     }
     return id
+  },
+  busquedaPorId (lista, id) {
+    for (var i = 0; i < lista.length; i++) {
+      if (lista[i].id === id) {
+        return lista[i]
+      }
+    }
   }
 }

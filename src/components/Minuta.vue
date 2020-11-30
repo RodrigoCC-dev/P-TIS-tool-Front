@@ -430,7 +430,17 @@ export default {
       }
       return lista
     },
-    convertirItems: function (array) {
+    convertirResponsable: function (listaAsistencia, obj) {
+      var asistencia = Funciones.busquedaPorId(listaAsistencia, obj.asistencia_id)
+      if (asistencia.id_estudiante !== null) {
+        return {tipo: 'est', id: asistencia.id_estudiante}
+      } else if (asistencia.id_stakeholder !== null) {
+        return {tipo: 'stk', id: asistencia.id_stakeholder}
+      } else {
+        return {tipo: '', id: 0}
+      }
+    },
+    convertirItems: function (array, asistencia) {
       var lista = []
       for (var i = 0; i < array.length; i++) {
         var aux = {
@@ -452,7 +462,7 @@ export default {
           aux.fecha = this.convertirFecha(array[i].fecha)
         }
         if (array[i].responsables.length > 0) {
-          aux.responsables = array[i].responsables[0]
+          aux.responsables = this.convertirResponsable(asistencia, array[i].responsables[0])
         }
         aux.tipo_item_id = this.buscarIdEnLista(this.tipo_items, 'tipo', array[i].tipo)
         lista.push(aux)
@@ -627,7 +637,7 @@ export default {
         this.revision = response.data.revision
         this.objetivos = response.data.minuta.objetivos
         this.conclusiones = response.data.minuta.conclusiones
-        this.listaItems = this.convertirItems(response.data.minuta.items)
+        this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
       } catch (e) {
         console.log(e)
       }
