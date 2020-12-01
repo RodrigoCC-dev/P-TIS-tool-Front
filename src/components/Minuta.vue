@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision">
+            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" :disabled="this.esBorrador">
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -402,8 +402,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario', 'tipoMinutas'])
+    ...mapState(['apiUrl', 'usuario', 'tipoMinutas']),
 
+    esBorrador: function () {
+      if (this.bitacora !== 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     removeFromArray: function (arr, item) {
