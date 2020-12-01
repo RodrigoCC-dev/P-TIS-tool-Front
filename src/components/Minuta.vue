@@ -118,7 +118,7 @@
                 <td class="has-text-centered">
                   <div class="select control is-small is-expanded">
                     <select v-model="asistencia[index]" @change="limpiarAsistencias">
-                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
+                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'stakeholder': '', 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
                     </select>
                   </div>
                 </td>
@@ -283,7 +283,7 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.responsables" @change="validarItem(index)">
-                    <option value="0" selected>- Sin Asig -</option>
+                    <option :value="{'tipo': '', 'id': 0}" selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="{'tipo': 'est', 'id': integrante.id}">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
@@ -478,7 +478,7 @@ export default {
     convertirAsistencia: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
-        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
+        var obj = { estudiante: this.grupo.estudiantes[i].id, stakeholder: '', asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
             obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
@@ -681,7 +681,11 @@ export default {
         for (var i = 0; i < this.listaItems.length; i++) {
           var listaResp = []
           if (this.listaItems[i].responsables.length === undefined) {
-            listaResp.push(this.listaItems[i].responsables)
+            if (this.listaItems[i].responsables === 0) {
+              listaResp.push({ tipo: '', id: 0 })
+            } else {
+              listaResp.push(this.listaItems[i].responsables)
+            }
           } else {
             listaResp = this.listaItems[i].responsables
           }
