@@ -117,8 +117,20 @@
                 <td class="has-text-centered">{{ estudiante.iniciales }}</td>
                 <td class="has-text-centered">
                   <div class="select control is-small is-expanded">
-                    <select v-model="asistencia[index]" @change="limpiarAsistencias">
+                    <select v-model="asistenciaEst[index]" @change="limpiarAsistencias">
                       <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'stakeholder': '', 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="tipoMinutaTxt === 'Cliente'">
+                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente) }}</td>
+                <td></td>
+                <td class="has-text-centered">{{ cliente.iniciales }}</td>
+                <td class="has-text-centered">
+                  <div class="select control is-small is-expanded">
+                    <select v-model="asistenciaStk[index]" @change="limpiarAsistencias">
+                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': '', 'stakeholder': cliente.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
                     </select>
                   </div>
                 </td>
@@ -285,6 +297,7 @@
                   <select v-model="item.responsables" @change="validarItem(index)">
                     <option :value="{'tipo': '', 'id': 0}" selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="{'tipo': 'est', 'id': integrante.id}">{{ integrante.iniciales }}</option>
+                    <option v-for="integrante in grupo.stakeholders" :key="integrante.id" :value="{'tipo': 'stk', 'id': integrante.id}" v-show="tipoMinutaTxt === 'Cliente'">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
@@ -345,7 +358,8 @@ export default {
       },
       tema: '',
       revision: '',
-      asistencia: [],
+      asistenciaEst: [],
+      asistenciaStk: [],
       objetivos: [{ id: 0, descripcion: '' }],
       conclusiones: [{ id: 0, descripcion: '' }],
       item: {
@@ -410,6 +424,10 @@ export default {
       } else {
         return false
       }
+    },
+    tipoMinutaTxt: function () {
+      var tipo = Funciones.busquedaPorId(this.tipoMinutas, this.tipoMinuta)
+      return tipo.tipo
     }
   },
   methods: {
@@ -482,13 +500,30 @@ export default {
         }
       })
     },
-    convertirAsistencia: function (array) {
+    convertirAsistenciaEst: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
-        var obj = { estudiante: this.grupo.estudiantes[i].id, stakeholder: '', asistencia: 0 }
+        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
-          if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
-            obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+          if (array[j].id_estudiante !== null) {
+            if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
+              obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+            }
+          }
+        }
+        lista.push(obj)
+      }
+      return lista
+    },
+    convertirAsistenciaStk: function (array) {
+      var lista = []
+      for (var i = 0; i < this.grupo.stakeholders.length; i++) {
+        var obj = { stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
+        for (var j = 0; j < array.length; j++) {
+          if (array[j].id_stakeholder !== null) {
+            if (this.grupo.stakeholders[i].iniciales === array[j].iniciales) {
+              obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+            }
           }
         }
         lista.push(obj)
@@ -541,7 +576,8 @@ export default {
       }
       this.tema = ''
       this.revision = ''
-      this.asistencia = []
+      this.asistenciaEst = []
+      this.asistenciaStk = []
       this.objetivos = ['']
       this.conclusiones = ['']
       this.motivo_id = 1
@@ -637,7 +673,8 @@ export default {
         this.minuta.h_inicio = Funciones.obtenerHora(response.data.minuta.h_inicio)
         this.minuta.h_termino = Funciones.obtenerHora(response.data.minuta.h_termino)
         this.minuta.tipo_minuta_id = this.buscarIdEnLista(this.tipoMinutas, 'tipo', response.data.minuta.tipo)
-        this.asistencia = this.convertirAsistencia(response.data.minuta.asistencia)
+        this.asistenciaEst = this.convertirAsistenciaEst(response.data.minuta.asistencia)
+        this.asistenciaStk = this.convertirAsistenciaStk(response.data.minuta.asistencia)
         this.clasificacion = response.data.minuta.clasificacion
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
@@ -725,7 +762,7 @@ export default {
             revision: this.revision,
             motivo_id: this.motivo_id
           },
-          asistencia: this.asistencia,
+          asistencia: this.asistenciaEst.concat(this.asistenciaStk),
           tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
         if (this.bitacora === 0) {
@@ -834,7 +871,7 @@ export default {
       this.entradas.asistencias = false
     },
     validarAsistencia: function () {
-      if (this.asistencia.length < this.grupo.estudiantes.length) {
+      if (this.asistenciaEst.length < this.grupo.estudiantes.length) {
         this.entradas.asistencias = true
         return false
       } else {
@@ -963,6 +1000,7 @@ export default {
     this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
+    console.log(this.tipoMinutaTxt)
   }
 }
 </script>
