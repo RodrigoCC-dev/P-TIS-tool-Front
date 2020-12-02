@@ -130,6 +130,7 @@ export default {
         email: ''
       },
       seccionesAsignadas: [],
+      listaProfesores: [],
       entradas: {
         nombre: {
           error: false,
@@ -167,6 +168,51 @@ export default {
     }
   },
   methods: {
+    agregarProfesor: function () {
+      this.verFormulario = true
+      this.nuevoProfesor()
+    },
+    nuevoProfesor: function () {
+      this.usuario.nombre = ''
+      this.usuario.apellido_paterno = ''
+      this.usuario.apellido_materno = ''
+      this.usuario.email = ''
+      this.seccionesAsignadas = []
+    },
+    async obtenerProfesores () {
+      try {
+        const response = await axios.get(this.apiUrl + '/profesores', { headers: Auth.authHeader() })
+        this.listaProfesores = response.data
+      } catch {
+        console.log('No fue posible obtener la lista de Profesores')
+      }
+    },
+    async agregar () {
+      if (this.validarFormulario()) {
+        const nuevo = {
+          profesor: {
+            usuario_attributes: this.usuario
+          },
+          secciones: this.seccionesAsignadas
+        }
+        try {
+          await axios.post(this.apiUrl + '/profesores', nuevo, { headers: Auth.postHeader() })
+          this.obtenerProfesores()
+        } catch (e) {
+          console.log(e)
+        }
+        this.verFormulario = false
+      }
+    },
+    noAgregar: function () {
+      this.verFormulario = false
+      this.entradas.nombre.error = false
+      this.entradas.apellidoPaterno.error = false
+      this.entradas.apellidoMaterno.error = false
+      this.entradas.correo_elec.error = false
+      this.entradas.secciones = false
+      this.nuevoProfesor()
+    },
     validarNombre: function () {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.usuario.nombre
@@ -278,6 +324,9 @@ export default {
       esValido = esValido && !this.existeProfesor()
       return esValido
     }
+  },
+  mounted () {
+    this.obtenerProfesores()
   }
 }
 </script>
