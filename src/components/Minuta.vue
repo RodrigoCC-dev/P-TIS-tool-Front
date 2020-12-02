@@ -123,7 +123,7 @@
                   </div>
                 </td>
               </tr>
-              <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="tipoMinutaTxt === 'Cliente'">
+              <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="minuta.tipo === 'Cliente'">
                 <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente) }}</td>
                 <td></td>
                 <td class="has-text-centered">{{ cliente.iniciales }}</td>
@@ -297,7 +297,7 @@
                   <select v-model="item.responsables" @change="validarItem(index)">
                     <option :value="{'tipo': '', 'id': 0}" selected>- Sin Asig -</option>
                     <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="{'tipo': 'est', 'id': integrante.id}">{{ integrante.iniciales }}</option>
-                    <option v-for="integrante in grupo.stakeholders" :key="integrante.id" :value="{'tipo': 'stk', 'id': integrante.id}" v-show="tipoMinutaTxt === 'Cliente'">{{ integrante.iniciales }}</option>
+                    <option v-for="integrante in grupo.stakeholders" :key="integrante.id" :value="{'tipo': 'stk', 'id': integrante.id}" v-show="minuta.tipo === 'Cliente'">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
@@ -347,7 +347,8 @@ export default {
         fecha_reunion: '',
         h_inicio: '',
         h_termino: '',
-        tipo_minuta_id: this.tipoMinuta
+        tipo_minuta_id: this.tipoMinuta,
+        tipo: ''
       },
       clasificacion: {
         informativa: false,
@@ -419,15 +420,7 @@ export default {
     ...mapState(['apiUrl', 'usuario', 'tipoMinutas']),
 
     esBorrador: function () {
-      if (this.bitacora !== 0) {
-        return true
-      } else {
-        return false
-      }
-    },
-    tipoMinutaTxt: function () {
-      var tipo = Funciones.busquedaPorId(this.tipoMinutas, this.tipoMinuta)
-      return tipo.tipo
+      return this.bitacora !== 0
     }
   },
   methods: {
@@ -444,6 +437,14 @@ export default {
     },
     buscarIdEnLista: function (array, llave, busqueda) {
       return Funciones.obtenerIdDeLista(array, llave, busqueda)
+    },
+    obtenerTipoMinuta: function () {
+      if (this.minuta.tipo_minuta_id === null || this.minuta.tipo_minuta_id === undefined) {
+        this.minuta.tipo = ''
+      } else {
+        var tipo = Funciones.busquedaPorId(this.tipoMinutas, this.minuta.tipo_minuta_id)
+        this.minuta.tipo = tipo.tipo
+      }
     },
     convertirClasificacion: function (obj) {
       var lista = []
@@ -657,6 +658,7 @@ export default {
         if (this.idBitacora === 0) {
           const response = await axios.get(this.apiUrl + '/minutas/correlativo/' + this.grupo.id.toString(), { headers: Auth.authHeader() })
           this.minuta.correlativo = response.data
+          this.obtenerTipoMinuta()
         } else {
           this.obtenerMinuta()
         }
@@ -682,6 +684,7 @@ export default {
         this.objetivos = response.data.minuta.objetivos
         this.conclusiones = response.data.minuta.conclusiones
         this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
+        this.minuta.tipo = response.data.minuta.tipo
       } catch (e) {
         console.log(e)
       }
@@ -1000,7 +1003,6 @@ export default {
     this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
-    console.log(this.tipoMinutaTxt)
   }
 }
 </script>
