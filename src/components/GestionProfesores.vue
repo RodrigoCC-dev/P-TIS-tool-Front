@@ -1,6 +1,7 @@
 <template>
   <div>
 
+    <br>
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
@@ -30,18 +31,18 @@
                 <div class="field">
                   <label class="label">Apellido Paterno:</label>
                   <div class="control">
-                    <input v-model="usuario.apellido_paterno" type="text" @input="validarApellidoP" placeholder="ej.: Rosas">
+                    <input v-model="usuario.apellido_paterno" class="input" type="text" @input="validarApellidoP" placeholder="ej.: Rosas">
                   </div>
                   <p class="is-danger help" v-if="entradas.apellidoPaterno.error">{{ entradas.apellidoPaterno.mensaje }}</p>
                 </div>
               </div>
             </div>
-            <div class="conlumns has-text-left">
+            <div class="columns has-text-left">
               <div class="column is-full">
                 <div class="field">
                   <label class="label">Apellido Materno</label>
                   <div class="control">
-                    <input v-model="usuario.apellido_materno" type="text" @input="validarApellidoM" placehodler="ej.: Molina">
+                    <input v-model="usuario.apellido_materno" class="input" type="text" @input="validarApellidoM" placehodler="ej.: Molina">
                   </div>
                   <p class="is-danger help" v-if="entradas.apellidoMaterno.error">{{ entradas.apellidoMaterno.mensaje }}</p>
                 </div>
@@ -52,7 +53,7 @@
                 <div class="field">
                   <label class="label">Correo electrónico:</label>
                   <div class="control">
-                    <input v-model="usuario.email" type="text" @input="validarEmail" placeholder="ej.: ana.rosas@gmail.com">
+                    <input v-model="usuario.email" class="input" type="text" @input="validarEmail" placeholder="ej.: ana.rosas@gmail.com">
                   </div>
                   <p class="is-danger help" v-if="entradas.correo_elec.error">{{ entradas.correo_elec.mensaje }}</p>
                 </div>
@@ -99,7 +100,7 @@
                   <td class="has-text-left">{{ seccion.curso.nombre }}</td>
                   <td>{{ seccion.codigo }}</td>
                   <td>{{ seccion.jornada.nombre }}</td>
-                  <td><input type="checkbox" v-model="seccionesAsigandas" :value="seccion.id"></td>
+                  <td><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -116,6 +117,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import Auth from '@/services/auth.js'
 import { mapState } from 'vuex'
 
 export default {
