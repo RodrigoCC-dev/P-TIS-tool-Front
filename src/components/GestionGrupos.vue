@@ -78,8 +78,8 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                <tr>
+              <tbody>
+                <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                   <th>{{ index + 1 }}</th>
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
