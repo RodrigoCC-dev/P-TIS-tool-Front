@@ -96,12 +96,16 @@
                 <tr v-for="(seccion, index) in secciones" :key="seccion.id">
                   <th>{{ index + 1 }}</th>
                   <td>{{ seccion.curso.codigo }}</td>
-                  <td>{{ seccion.curso.nombre }}</td>
+                  <td class="has-text-left">{{ seccion.curso.nombre }}</td>
                   <td>{{ seccion.codigo }}</td>
                   <td>{{ seccion.jornada.nombre }}</td>
+                  <td><input type="checkbox" v-model="seccionesAsigandas" :value="seccion.id"></td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div v-else>
+            <p>No hay secciones para asignar</p>
           </div>
         </div>
 
@@ -112,13 +116,56 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
   name: 'GestionProfesores',
   data () {
     return {
-
+      verFormulario: false,
+      usuario: {
+        nombre: '',
+        apellido_paterno: '',
+        apellido_materno: '',
+        email: ''
+      },
+      entradas: {
+        nombre: {
+          error: false,
+          mensaje: ''
+        },
+        apellidoPaterno: {
+          error: false,
+          mensaje: ''
+        },
+        apellidoMaterno: {
+          error: false,
+          mensaje: ''
+        },
+        email: {
+          error: false,
+          mensaje: ''
+        }
+      },
+      mensajes: {
+        sin_nombre: 'Debe ingresar el nombre del/la profesor/a',
+        sin_apellido: 'Debe ingresar el apellido del/la profesor/a',
+        sin_correo: 'Debe ingresar el correo electrónico del/la profesor/a',
+        sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales',
+        correo_mal: 'El correo ingresado no es válido',
+        correo_repetido: 'El correo ingresado ya se encuentra en el sistema'
+      }
     }
+  },
+  computed: {
+    ...mapState(['apiUrl', 'secciones']),
+
+    mostrarLista: function () {
+      return this.secciones.length > 0
+    }
+  },
+  methods: {
+    
   }
 }
 </script>
