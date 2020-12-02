@@ -5,7 +5,8 @@ export default createStore({
     apiUrl: process.env.VUE_APP_API_URL,
     authenticated: false,
     usuario: {},
-    tipoMinutas: []
+    tipoMinutas: [],
+    secciones: []
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -16,6 +17,9 @@ export default createStore({
     },
     setTipoMinutas (state, valor) {
       state.tipoMinutas = valor
+    },
+    setSecciones (state, valor) {
+      state.secciones = valor
     }
   },
   actions: {
