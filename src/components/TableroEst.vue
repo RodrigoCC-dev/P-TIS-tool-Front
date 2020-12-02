@@ -321,60 +321,28 @@ export default {
     ...mapState(['apiUrl']),
 
     mostrarBorradores: function () {
-      if (this.listaBorradores.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaBorradores.length > 0
     },
     mostrarEmitidas: function () {
-      if (this.listaEmitidas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaEmitidas.length > 0
     },
     mostrarCerradas: function () {
-      if (this.listaCerradas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaCerradas.length > 0
     },
     mostrarComentadasGrupo: function () {
-      if (this.listaComentadasGrupo.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaComentadasGrupo.length > 0
     },
     mostrarComentadasCliente: function () {
-      if (this.listaComentadasCliente.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaComentadasCliente.length > 0
     },
     mostrarRespondidasGrupo: function () {
-      if (this.listaRespondidasGrupo.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasGrupo.length > 0
     },
     mostrarRespondidasCliente: function () {
-      if (this.listaRespondidasCliente.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasCliente.length > 0
     },
     mostrarRevision: function () {
-      if (this.listaRevision.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRevision.length > 0
     }
   },
   methods: {
