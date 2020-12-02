@@ -54,7 +54,7 @@
                   <div class="control">
                     <input v-model="usuario.email" type="text" @input="validarEmail" placeholder="ej.: ana.rosas@gmail.com">
                   </div>
-                  <p class="is-danger help" v-if="entradas.email.error">{{ entradas.email.mensaje }}</p>
+                  <p class="is-danger help" v-if="entradas.correo_elec.error">{{ entradas.correo_elec.mensaje }}</p>
                 </div>
               </div>
             </div>
@@ -129,6 +129,7 @@ export default {
         apellido_materno: '',
         email: ''
       },
+      seccionesAsignadas: [],
       entradas: {
         nombre: {
           error: false,
@@ -142,10 +143,11 @@ export default {
           error: false,
           mensaje: ''
         },
-        email: {
+        correo_elec: {
           error: false,
           mensaje: ''
-        }
+        },
+        secciones: false
       },
       mensajes: {
         sin_nombre: 'Debe ingresar el nombre del/la profesor/a',
@@ -165,7 +167,117 @@ export default {
     }
   },
   methods: {
-    
+    validarNombre: function () {
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      const nombre = this.usuario.nombre
+      try {
+        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+          this.entradas.nombre.error = true
+          this.entradas.nombre.mensaje = this.mensajes.sin_nombre
+          return false
+        } else if (!regExp.test(nombre)) {
+          this.entradas.nombre.error = true
+          this.entradas.nombre.mensaje = this.mensajes.sin_especiales
+          return false
+        } else {
+          this.entradas.nombre.error = false
+          this.entradas.nombre.mensaje = ''
+          return true
+        }
+      } catch {
+        this.entradas.nombre.error = true
+        this.entradas.nombre.mensaje = ''
+        return false
+      }
+    },
+    validarApellido: function (apellido, entradas) {
+      const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
+      try {
+        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+          entradas.error = true
+          entradas.mensaje = this.mensajes.sin_apellido
+          return false
+        } else if (!regExp.test(apellido)) {
+          entradas.error = true
+          entradas.mensaje = this.mensajes.sin_especiales
+          return false
+        } else {
+          entradas.error = false
+          entradas.mensaje = ''
+          return true
+        }
+      } catch {
+        entradas.error = true
+        entradas.mensaje = ''
+        return false
+      }
+    },
+    validarApellidoP: function () {
+      return this.validarApellido(this.usuario.apellido_paterno, this.entradas.apellidoPaterno)
+    },
+    validarApellidoM: function () {
+      return this.validarApellido(this.usuario.apellido_materno, this.entradas.apellidoMaterno)
+    },
+    validarEmail: function () {
+      const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
+      const correo = this.usuario.email
+      var separarCorreo = correo.split('@')
+      try {
+        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
+          return false
+        } else if (!regExp.test(correo)) {
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
+          return false
+        } else if (separarCorreo.length !== 2) {
+          this.entradas.correo_elec.error = true
+          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
+          return false
+        } else {
+          this.entradas.correo_elec.error = false
+          this.entradas.correo_elec.mensaje = ''
+          return true
+        }
+      } catch {
+        this.entradas.correo_elec.error = true
+        this.entradas.correo_elec.mensaje = ''
+        return false
+      }
+    },
+    validarSecciones: function () {
+      if (this.seccionesAsignadas.length > 0) {
+        this.entradas.secciones = false
+        return true
+      } else {
+        this.entradas.secciones = true
+        return false
+      }
+    },
+    existeProfesor: function () {
+      let existe = false
+      let aux = false
+      for (var i = 0; i < this.listaProfesores.length; i++) {
+        aux = (this.listaProfesores[i].email === this.usuario.email)
+        existe = aux || existe
+      }
+      if (existe) {
+        this.entradas.correo_elec.error = true
+        this.entradas.correo_elec.mensaje = this.mensajes.correo_repetido
+      }
+      return existe
+    },
+    validarFormulario: function () {
+      var esValido = true
+      esValido = esValido && this.validarNombre()
+      esValido = esValido && this.validarApellidoP()
+      esValido = esValido && this.validarApellidoM()
+      esValido = esValido && this.validarEmail()
+      esValido = esValido && this.validarSecciones()
+      esValido = esValido && !this.existeProfesor()
+      return esValido
+    }
   }
 }
 </script>
