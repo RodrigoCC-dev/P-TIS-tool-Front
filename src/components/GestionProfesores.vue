@@ -111,6 +111,7 @@
         </div>
 
       </div>
+      <br>
     </div>
 
     <div v-if="mostrarProfesores">
