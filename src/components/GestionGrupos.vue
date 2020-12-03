@@ -78,8 +78,8 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                <tr>
+              <tbody>
+                <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                   <th>{{ index + 1 }}</th>
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
@@ -106,7 +106,12 @@
             </div>
             <div class="message-body">
               <p class="title is-6">{{ grupo.proyecto }}</p>
-              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante) }}</p>
+              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
+              <div v-if="mostrarClientes(grupo)">
+                <br>
+                <p class="subtitle is-6"><strong>Clientes:</strong></p>
+                <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
+              </div>
             </div>
           </article>
         </div>
@@ -118,6 +123,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -168,16 +174,15 @@ export default {
       return lista
     },
     mostrarLista: function () {
-      if (this.sinAsignar.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.sinAsignar.length > 0
     }
   },
   methods: {
     nombreCompleto: function (estudiante) {
-      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+      return Funciones.nombreCompleto(estudiante)
+    },
+    mostrarClientes: function (grupo) {
+      return grupo.stakeholders.length > 0
     },
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab

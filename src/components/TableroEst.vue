@@ -269,7 +269,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revsion }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -321,60 +321,28 @@ export default {
     ...mapState(['apiUrl']),
 
     mostrarBorradores: function () {
-      if (this.listaBorradores.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaBorradores.length > 0
     },
     mostrarEmitidas: function () {
-      if (this.listaEmitidas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaEmitidas.length > 0
     },
     mostrarCerradas: function () {
-      if (this.listaCerradas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaCerradas.length > 0
     },
     mostrarComentadasGrupo: function () {
-      if (this.listaComentadasGrupo.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaComentadasGrupo.length > 0
     },
     mostrarComentadasCliente: function () {
-      if (this.listaComentadasCliente.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaComentadasCliente.length > 0
     },
     mostrarRespondidasGrupo: function () {
-      if (this.listaRespondidasGrupo.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasGrupo.length > 0
     },
     mostrarRespondidasCliente: function () {
-      if (this.listaRespondidasCliente.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasCliente.length > 0
     },
     mostrarRevision: function () {
-      if (this.listaRevision.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRevision.length > 0
     }
   },
   methods: {
