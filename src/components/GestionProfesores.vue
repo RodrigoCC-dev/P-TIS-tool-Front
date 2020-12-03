@@ -79,7 +79,7 @@
           <div class="field">
             <label class="label">Secciones a asignar:</label>
           </div>
-          <p class="is-danger help" v-if="entradas.secciones.error">{{ entradas.secciones.mensaje }}</p>
+          <p class="is-danger help" v-if="entradas.secciones">No se ha seleccionado sección a asignar</p>
           <br>
           <div v-if="mostrarLista">
             <table class="table is-bordered is-narrow is-fullwidth">
@@ -113,12 +113,52 @@
       </div>
     </div>
 
+    <div v-if="mostrarProfesores">
+      <div class="columns">
+        <div class="column is-full">
+          <table class="table is-bordered is-narrow is-fullwidth">
+            <thead>
+              <tr class="has-text-centered has-background-light">
+                <th>N°</th>
+                <th>Nombre</th>
+                <th>Correo Electrónico</th>
+                <th>Secciones</th>
+                <th>Jornada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(profesor, index) in listaProfesores" :key="profesor.id">
+                <th class="is-vcentered">{{ index + 1 }}</th>
+                <td class="is-vcentered">{{ nombreCompleto(profesor.usuario) }}</td>
+                <td class="is-vcentered">{{ profesor.usuario.email }}</td>
+                <td>
+                  <div v-for="seccion in profesor.secciones" :key="seccion.id">
+                    <p class="has-text-centered">{{ seccion.codigo }}</p>
+                  </div>
+                </td>
+                <td>
+                  <div v-for="seccion in profesor.secciones" :key="seccion.id">
+                    <p class="has-text-centered">{{ seccion.jornada.nombre }}</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <br>
+      <p class="subtitle is-5">No hay profesores en el sistema para mostrar</p>
+    </div>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -168,9 +208,15 @@ export default {
 
     mostrarLista: function () {
       return this.secciones.length > 0
+    },
+    mostrarProfesores: function () {
+      return this.listaProfesores.length > 0
     }
   },
   methods: {
+    nombreCompleto: function (profesor) {
+      return Funciones.nombreCompleto(profesor)
+    },
     agregarProfesor: function () {
       this.verFormulario = true
       this.nuevoProfesor()
