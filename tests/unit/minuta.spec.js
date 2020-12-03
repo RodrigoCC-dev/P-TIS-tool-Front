@@ -25,7 +25,8 @@ describe('Minuta.vue', () => {
       fecha_reunion: '',
       h_inicio: '',
       h_termino: '',
-      tipo_minuta_id: 2
+      tipo_minuta_id: 2,
+      tipo: ''
     }
     expect(wrapper.vm.minuta).toEqual(minuta)
   })
@@ -52,19 +53,24 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.revision).toEqual('')
   })
 
-  it('variable asistencia se inicializa correctamente', () => {
+  it('variable asistenciaEst se inicializa correctamente', () => {
     const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.asistencia).toEqual([])
+    expect(wrapper.vm.asistenciaEst).toEqual([])
+  })
+
+  it('variable asistenciaStk se inicializa correctamente', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.asistenciaStk).toEqual([])
   })
 
   it('variable objetivos se inicializa correctamente', () => {
     const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.objetivos).toEqual([''])
+    expect(wrapper.vm.objetivos).toEqual([{id: 0, descripcion: ''}])
   })
 
   it('variable conclusiones se inicializa correctamente', () => {
     const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.conclusiones).toEqual([''])
+    expect(wrapper.vm.conclusiones).toEqual([{id: 0, descripcion: ''}])
   })
 
   it('variable item se inicializa correctamente', () => {
@@ -73,7 +79,7 @@ describe('Minuta.vue', () => {
       descripcion: '',
       fecha: '',
       tipo_item_id: 0,
-      responsables: 0,
+      responsables: {tipo: '', id: 0},
       entradas: {
         descripcion: false,
         fecha: false,
@@ -96,7 +102,7 @@ describe('Minuta.vue', () => {
       descripcion: '',
       fecha: '',
       tipo_item_id: 0,
-      responsables: 0,
+      responsables: {tipo: '', id: 0},
       entradas: {
         descripcion: false,
         fecha: false,
@@ -185,7 +191,7 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Pablo Mackena Saldias')
   })
 
-  it('método buscarIdEstado funciona correctamente', () => {
+  it('método buscarIdEnLista funciona correctamente', () => {
     const array = [{
       id: 1,
       abreviacion: 'BO'
@@ -195,7 +201,7 @@ describe('Minuta.vue', () => {
       abreviacion: 'QU'
     }]
     const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.buscarIdEstado(array, 'QU')).toEqual(2)
+    expect(wrapper.vm.buscarIdEnLista(array, 'abreviacion', 'QU')).toEqual(2)
   })
 
   it('método agregarItem funciona correctamente', () => {
@@ -204,7 +210,7 @@ describe('Minuta.vue', () => {
       descripcion: '',
       fecha: '',
       tipo_item_id: 0,
-      responsables: 0,
+      responsables: {tipo: '', id: 0},
       entradas: {
         descripcion: false,
         fecha: false,
@@ -345,8 +351,11 @@ describe('Minuta.vue', () => {
           },
           tema: 'Esto es una prueba',
           revision: 'T',
-          asistencia: [
+          asistenciaEst: [
             {estudiante: 5, asistencia: 3}
+          ],
+          asistenciaStk: [
+            {stakeholder: 3, asistencia: 2}
           ],
           objetivos: ['Obj1', 'Obj2'],
           conclusiones: ['Con1', 'Con2'],
@@ -390,7 +399,8 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.clasificacion).toEqual(clasificacion)
     expect(wrapper.vm.tema).toEqual('')
     expect(wrapper.vm.revision).toEqual('')
-    expect(wrapper.vm.asistencia).toEqual([])
+    expect(wrapper.vm.asistenciaEst).toEqual([])
+    expect(wrapper.vm.asistenciaStk).toEqual([])
     expect(wrapper.vm.objetivos).toEqual([''])
     expect(wrapper.vm.conclusiones).toEqual([''])
     expect(wrapper.vm.motivo_id).toEqual(1)
