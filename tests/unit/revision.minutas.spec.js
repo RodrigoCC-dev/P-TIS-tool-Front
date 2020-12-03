@@ -130,9 +130,9 @@ describe('RevisionMinutas.vue', () => {
 
   it('método nombreCompleto funciona correctamente', () => {
     const estudiante = {
-      nombre_est: 'Juan',
-      apellido1: 'Perez',
-      apellido2: 'Muñoz'
+      nombre: 'Juan',
+      apellido_paterno: 'Perez',
+      apellido_materno: 'Muñoz'
     }
     const wrapper = shallowMount(RevisionMinutas)
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Juan Perez Muñoz')
