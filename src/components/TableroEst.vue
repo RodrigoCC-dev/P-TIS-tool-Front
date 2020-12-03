@@ -269,7 +269,7 @@
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revsion }}</td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
