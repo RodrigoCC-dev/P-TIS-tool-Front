@@ -60,8 +60,8 @@
                 </thead>
                 <tbody>
                   <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-                    <td>{{ estudiante.run_est }}</td>
-                    <td>{{ nombreCompleto(estudiante) }}</td>
+                    <td>{{ estudiante.usuario.run }}</td>
+                    <td>{{ nombreCompleto(estudiante.usuario) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -205,7 +205,7 @@ export default {
       this.mostrarMinutas = true
     },
     nombreCompleto: function (estudiante) {
-      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+      return Funciones.nombreCompleto(estudiante)
     },
     async obtenerGrupos () {
       try {
