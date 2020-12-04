@@ -78,8 +78,8 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                <tr>
+              <tbody>
+                <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                   <th>{{ index + 1 }}</th>
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
@@ -94,9 +94,8 @@
           </div>
         </div>
       </div>
+      <hr>
     </div>
-
-    <hr>
 
     <div class="columns">
       <div v-for="grupo in listaGrupos" :key="grupo.id">
@@ -107,7 +106,12 @@
             </div>
             <div class="message-body">
               <p class="title is-6">{{ grupo.proyecto }}</p>
-              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante) }}</p>
+              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
+              <div v-if="mostrarClientes(grupo)">
+                <br>
+                <p class="subtitle is-6"><strong>Clientes:</strong></p>
+                <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
+              </div>
             </div>
           </article>
         </div>
@@ -119,6 +123,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -132,15 +137,9 @@ export default {
   data () {
     return {
       verFormulario: false,
-      mostrarLista: false,
       jornadasProfesor: [],
       mostrarJornadas: false,
       jornadaActual: 'Diurna',
-      grupo: {
-        nombre: '',
-        proyecto: '',
-        correlativo: 0
-      },
       estudiantes: [],
       entradas: {
         proyecto: {
@@ -151,6 +150,11 @@ export default {
           error: false,
           mensaje: ''
         }
+      },
+      grupo: {
+        nombre: '',
+        proyecto: '',
+        correlativo: 0
       },
       listaEstudiantes: {},
       listaGrupos: [],
@@ -168,19 +172,27 @@ export default {
         }
       }
       return lista
+    },
+    mostrarLista: function () {
+      return this.sinAsignar.length > 0
     }
   },
   methods: {
     nombreCompleto: function (estudiante) {
-      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+      return Funciones.nombreCompleto(estudiante)
+    },
+    mostrarClientes: function (grupo) {
+      return grupo.stakeholders.length > 0
     },
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab
+      this.obtenerCorrelativo(this.jornadaActual)
     },
     agregarGrupo: function () {
       this.verFormulario = true
       this.nuevoGrupo()
       this.obtenerCorrelativo(this.jornadaActual)
+      this.obtenerEstudiantes()
     },
     async obtenerEstudiantes () {
       try {
@@ -188,14 +200,8 @@ export default {
         if (response.data !== null) {
           this.listaEstudiantes = response.data
         }
-        if (Object.keys(this.listaEstudiantes).length > 0) {
-          this.mostrarLista = true
-        } else {
-          this.mostrarLista = false
-        }
       } catch (error) {
         console.log(error)
-        this.mostrarLista = false
       }
     },
     async obtenerJornadas () {

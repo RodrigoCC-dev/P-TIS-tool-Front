@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-minuta="idMinuta" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+      <Minuta v-bind:tipo-minuta="tipo" v-bind:id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
       <div v-else>
 
@@ -41,7 +41,7 @@
           <br>
         </div>
 
-        <Tablero/>
+        <Tablero @bitacora="establecerBitacora"/>
 
       </div>
 
@@ -72,20 +72,19 @@ export default {
   data () {
     return {
       verFormulario: false,
-      tipos_minutas: [],
       tipo: 0,
       seleccionarMinuta: false,
-      idMinuta: ''
+      idBitacora: 0
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'tipoMinutas']),
 
     minutasFiltradas: function () {
       var lista = []
-      for (var i = 0; i < this.tipos_minutas.length; i++) {
-        if (this.tipos_minutas[i].tipo !== 'Semanal') {
-          lista.push(this.tipos_minutas[i])
+      for (var i = 0; i < this.tipoMinutas.length; i++) {
+        if (this.tipoMinutas[i].tipo !== 'Semanal') {
+          lista.push(this.tipoMinutas[i])
         }
       }
       return lista
@@ -103,14 +102,20 @@ export default {
     },
     cerrarFormulario: function () {
       this.verFormulario = false
+      this.tipo = 0
+      this.idBitacora = 0
     },
     async obtenerTipoMinutas () {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_minutas', { headers: Auth.authHeader() })
-        this.tipos_minutas = response.data
+        this.$store.commit('setTipoMinutas', response.data)
       } catch {
         console.log('No se han obtenido los tipos de minutas')
       }
+    },
+    establecerBitacora: function (id) {
+      this.idBitacora = id
+      this.verFormulario = true
     }
   },
   mounted () {

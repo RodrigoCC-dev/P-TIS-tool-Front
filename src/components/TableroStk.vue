@@ -217,39 +217,19 @@ export default {
     ...mapState(['apiUrl']),
 
     mostrarRevision: function () {
-      if (this.listaRevision.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRevision.length > 0
     },
     mostrarComentadas: function () {
-      if (this.listaComentadas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaComentadas.length > 0
     },
     mostrarRespondidasGrupo: function () {
-      if (this.listaRespondidasGrupo.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasGrupo.length > 0
     },
     mostrarRespondidasCliente: function () {
-      if (this.listaRespondidasCliente.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaRespondidasCliente.length > 0
     },
     mostrarCerradas: function () {
-      if (this.listaCerradas.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.listaCerradas.length > 0
     }
   },
   methods: {

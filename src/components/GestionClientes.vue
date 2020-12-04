@@ -188,11 +188,7 @@ export default {
       return lista
     },
     mostrarLista: function () {
-      if (this.stakeholdersPorJornada.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.stakeholdersPorJornada.length > 0
     }
   },
   methods: {

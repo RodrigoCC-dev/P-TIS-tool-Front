@@ -15,11 +15,6 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
-  it('variable secciones se inicializa vacía', () => {
-    const wrapper = shallowMount(GestionEstudiantes)
-    expect(wrapper.vm.secciones).toEqual({})
-  })
-
   it('variable estudiante se inicializa correctamente', () => {
     const estudiante = {
       usuario: {

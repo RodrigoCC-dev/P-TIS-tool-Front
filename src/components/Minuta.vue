@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision">
+            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" :disabled="this.esBorrador">
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -117,8 +117,20 @@
                 <td class="has-text-centered">{{ estudiante.iniciales }}</td>
                 <td class="has-text-centered">
                   <div class="select control is-small is-expanded">
-                    <select v-model="asistencia[index]" @change="limpiarAsistencias">
-                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
+                    <select v-model="asistenciaEst[index]" @change="limpiarAsistencias">
+                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': estudiante.id, 'stakeholder': '', 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="minuta.tipo === 'Cliente'">
+                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente) }}</td>
+                <td></td>
+                <td class="has-text-centered">{{ cliente.iniciales }}</td>
+                <td class="has-text-centered">
+                  <div class="select control is-small is-expanded">
+                    <select v-model="asistenciaStk[index]" @change="limpiarAsistencias">
+                      <option class="is-fullwidth" v-for="asistencia in tipo_asistencias" :key="asistencia.id" :value="{ 'estudiante': '', 'stakeholder': cliente.id, 'asistencia': asistencia.id}">{{ asistencia.descripcion }}</option>
                     </select>
                   </div>
                 </td>
@@ -202,7 +214,7 @@
               <li v-for="(objetivo, index) in objetivos" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="objetivos[index]" class="input" type="text" @input="validarObjetivos">
+                    <input v-model="objetivos[index].descripcion" class="input" type="text" @input="validarObjetivos">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerObjetivo(objetivo)"><strong>X</strong></a>
@@ -235,7 +247,7 @@
               <li v-for="(conclusion, index) in conclusiones" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="conclusiones[index]" class="input" type="text" @input="validarConclusiones">
+                    <input v-model="conclusiones[index].descripcion" class="input" type="text" @input="validarConclusiones">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerConclusion(conclusion)"><strong>X</strong></a>
@@ -283,8 +295,9 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.responsables" @change="validarItem(index)">
-                    <option value="0" selected>- Sin Asig -</option>
-                    <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="integrante.id">{{ integrante.iniciales }}</option>
+                    <option :value="{'tipo': '', 'id': 0}" selected>- Sin Asig -</option>
+                    <option v-for="integrante in grupo.estudiantes" :key="integrante.id" :value="{'tipo': 'est', 'id': integrante.id}">{{ integrante.iniciales }}</option>
+                    <option v-for="integrante in grupo.stakeholders" :key="integrante.id" :value="{'tipo': 'stk', 'id': integrante.id}" v-show="minuta.tipo === 'Cliente'">{{ integrante.iniciales }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
@@ -300,7 +313,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="guardarMinuta" disabled>Guardar</a>
+              <a class="button is-success" @click="guardarMinuta">Guardar</a>
             </div>
             <div class="control">
               <a class="button is-link" @click="emitirMinuta">Emitir</a>
@@ -317,14 +330,16 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idMinuta'],
+  props: ['tipoMinuta', 'idBitacora'],
   data () {
     return {
+      bitacora: this.idBitacora,
       minuta: {
         estudiante_id: 0,
         codigo: '',
@@ -332,7 +347,8 @@ export default {
         fecha_reunion: '',
         h_inicio: '',
         h_termino: '',
-        tipo_minuta_id: this.tipoMinuta
+        tipo_minuta_id: this.tipoMinuta,
+        tipo: ''
       },
       clasificacion: {
         informativa: false,
@@ -343,15 +359,16 @@ export default {
       },
       tema: '',
       revision: '',
-      asistencia: [],
-      objetivos: [''],
-      conclusiones: [''],
+      asistenciaEst: [],
+      asistenciaStk: [],
+      objetivos: [{ id: 0, descripcion: '' }],
+      conclusiones: [{ id: 0, descripcion: '' }],
       item: {
         correlativo: 0,
         descripcion: '',
         fecha: '',
         tipo_item_id: 0,
-        responsables: 0,
+        responsables: { tipo: '', id: 0 },
         entradas: {
           descripcion: false,
           fecha: false,
@@ -366,7 +383,7 @@ export default {
           descripcion: '',
           fecha: '',
           tipo_item_id: 0,
-          responsables: 0,
+          responsables: { tipo: '', id: 0 },
           entradas: {
             descripcion: false,
             fecha: false,
@@ -400,8 +417,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario'])
+    ...mapState(['apiUrl', 'usuario', 'tipoMinutas']),
 
+    esBorrador: function () {
+      return this.bitacora !== 0
+    }
   },
   methods: {
     removeFromArray: function (arr, item) {
@@ -409,16 +429,107 @@ export default {
       i !== -1 && arr.splice(i, 1)
     },
     nombreCompleto (estudiante) {
-      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+      return Funciones.nombreCompleto(estudiante)
     },
-    buscarIdEstado: function (array, busqueda) {
-      var id = 0
-      for (var i = 0; i < array.length; i++) {
-        if (array[i].abreviacion === busqueda) {
-          id = array[i].id
+    convertirFecha: function (timestamp) {
+      var fecha = timestamp.split('T')
+      return fecha[0]
+    },
+    buscarIdEnLista: function (array, llave, busqueda) {
+      return Funciones.obtenerIdDeLista(array, llave, busqueda)
+    },
+    obtenerTipoMinuta: function () {
+      if (this.minuta.tipo_minuta_id === null || this.minuta.tipo_minuta_id === undefined) {
+        this.minuta.tipo = ''
+      } else {
+        var tipo = Funciones.busquedaPorId(this.tipoMinutas, this.minuta.tipo_minuta_id)
+        this.minuta.tipo = tipo.tipo
+      }
+    },
+    convertirClasificacion: function (obj) {
+      var lista = []
+      var llaves = Object.keys(obj)
+      for (var i = 0; i < llaves.length; i++) {
+        if (obj[llaves[i]]) {
+          lista.push(llaves[i])
         }
       }
-      return id
+      return lista
+    },
+    convertirResponsable: function (listaAsistencia, obj) {
+      var asistencia = Funciones.busquedaPorId(listaAsistencia, obj.asistencia_id)
+      if (asistencia.id_estudiante !== null) {
+        return { tipo: 'est', id: asistencia.id_estudiante }
+      } else if (asistencia.id_stakeholder !== null) {
+        return { tipo: 'stk', id: asistencia.id_stakeholder }
+      } else {
+        return { tipo: '', id: 0 }
+      }
+    },
+    convertirItems: function (array, asistencia) {
+      var lista = []
+      for (var i = 0; i < array.length; i++) {
+        var aux = {
+          correlativo: 1,
+          descripcion: '',
+          fecha: '',
+          tipo_item_id: 0,
+          responsables: 0,
+          entradas: {
+            descripcion: false,
+            fecha: false,
+            tipo_item: false,
+            responsables: false
+          }
+        }
+        aux.correlativo = array[i].correlativo
+        aux.descripcion = array[i].descripcion
+        if (array[i].fecha !== null) {
+          aux.fecha = this.convertirFecha(array[i].fecha)
+        }
+        if (array[i].responsables.length > 0) {
+          aux.responsables = this.convertirResponsable(asistencia, array[i].responsables[0])
+        }
+        aux.tipo_item_id = this.buscarIdEnLista(this.tipo_items, 'tipo', array[i].tipo)
+        lista.push(aux)
+      }
+      return lista.sort((a, b) => {
+        if (a.correlativo < b.correlativo) {
+          return -1
+        } else {
+          return 1
+        }
+      })
+    },
+    convertirAsistenciaEst: function (array) {
+      var lista = []
+      for (var i = 0; i < this.grupo.estudiantes.length; i++) {
+        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
+        for (var j = 0; j < array.length; j++) {
+          if (array[j].id_estudiante !== null) {
+            if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
+              obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+            }
+          }
+        }
+        lista.push(obj)
+      }
+      return lista
+    },
+    convertirAsistenciaStk: function (array) {
+      var lista = []
+      for (var i = 0; i < this.grupo.stakeholders.length; i++) {
+        var obj = { stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
+        for (var j = 0; j < array.length; j++) {
+          if (array[j].id_stakeholder !== null) {
+            if (this.grupo.stakeholders[i].iniciales === array[j].iniciales) {
+              obj.asistencia = this.buscarIdEnLista(this.tipo_asistencias, 'tipo', array[j].tipo)
+            }
+          }
+        }
+        lista.push(obj)
+      }
+      return lista
     },
     agregarItem: function () {
       var nuevoItem = Object.assign({}, this.item)
@@ -432,7 +543,7 @@ export default {
       }
     },
     agregarObjetivo: function () {
-      this.objetivos.push('')
+      this.objetivos.push({ id: 0, descripcion: '' })
     },
     removerObjetivo: function (objetivo) {
       if (this.objetivos.length > 1) {
@@ -440,7 +551,7 @@ export default {
       }
     },
     agregarConclusion: function () {
-      this.conclusiones.push('')
+      this.conclusiones.push({ id: 0, descripcion: '' })
     },
     removerConclusion: function (conclusion) {
       if (this.conclusiones.length > 1) {
@@ -466,7 +577,8 @@ export default {
       }
       this.tema = ''
       this.revision = ''
-      this.asistencia = []
+      this.asistenciaEst = []
+      this.asistenciaStk = []
       this.objetivos = ['']
       this.conclusiones = ['']
       this.motivo_id = 1
@@ -543,14 +655,38 @@ export default {
     },
     async obtenerCorrelativo () {
       try {
-        if (this.idMinuta === '') {
+        if (this.idBitacora === 0) {
           const response = await axios.get(this.apiUrl + '/minutas/correlativo/' + this.grupo.id.toString(), { headers: Auth.authHeader() })
           this.minuta.correlativo = response.data
+          this.obtenerTipoMinuta()
         } else {
-          console.log(this.idMinuta)
+          this.obtenerMinuta()
         }
       } catch (e) {
         console.log('No fue posible obtener el correlativo')
+      }
+    },
+    async obtenerMinuta () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/' + this.bitacora.toString(), { headers: Auth.authHeader() })
+        this.minuta.codigo = response.data.minuta.codigo
+        this.minuta.correlativo = response.data.minuta.correlativo
+        this.minuta.fecha_reunion = this.convertirFecha(response.data.minuta.fecha_reunion)
+        this.minuta.h_inicio = Funciones.obtenerHora(response.data.minuta.h_inicio)
+        this.minuta.h_termino = Funciones.obtenerHora(response.data.minuta.h_termino)
+        this.minuta.tipo_minuta_id = this.buscarIdEnLista(this.tipoMinutas, 'tipo', response.data.minuta.tipo)
+        this.asistenciaEst = this.convertirAsistenciaEst(response.data.minuta.asistencia)
+        this.asistenciaStk = this.convertirAsistenciaStk(response.data.minuta.asistencia)
+        this.clasificacion = response.data.minuta.clasificacion
+        this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
+        this.tema = response.data.minuta.tema
+        this.revision = response.data.revision
+        this.objetivos = response.data.minuta.objetivos
+        this.conclusiones = response.data.minuta.conclusiones
+        this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
+        this.minuta.tipo = response.data.minuta.tipo
+      } catch (e) {
+        console.log(e)
       }
     },
     establecerId: function () {
@@ -592,7 +728,11 @@ export default {
         for (var i = 0; i < this.listaItems.length; i++) {
           var listaResp = []
           if (this.listaItems[i].responsables.length === undefined) {
-            listaResp.push(this.listaItems[i].responsables)
+            if (this.listaItems[i].responsables === 0) {
+              listaResp.push({ tipo: '', id: 0 })
+            } else {
+              listaResp.push(this.listaItems[i].responsables)
+            }
           } else {
             listaResp = this.listaItems[i].responsables
           }
@@ -606,6 +746,7 @@ export default {
           lista.push(item)
         }
         const nuevaMinuta = {
+          id: this.bitacora,
           minuta: {
             estudiante_id: this.minuta.estudiante_id,
             codigo: this.establecerCodigo(),
@@ -624,18 +765,32 @@ export default {
             revision: this.revision,
             motivo_id: this.motivo_id
           },
-          asistencia: this.asistencia,
-          tipo_estado: this.buscarIdEstado(this.tipo_estados, estado)
+          asistencia: this.asistenciaEst.concat(this.asistenciaStk),
+          tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
-        try {
-          await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
-          this.$emit('cerrar')
-          this.limpiarCampos()
-        } catch {
-          if (estado === 'BOR') {
-            console.log('No se pudo guardar la minuta')
-          } else {
-            console.log('No se pudo emitir la minuta')
+        if (this.bitacora === 0) {
+          try {
+            await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+            this.limpiarCampos()
+          } catch {
+            if (estado === 'BOR') {
+              console.log('No se pudo guardar la minuta')
+            } else {
+              console.log('No se pudo emitir la minuta')
+            }
+          }
+        } else {
+          try {
+            await axios.patch(this.apiUrl + '/minutas/' + this.bitacora, nuevaMinuta, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+            this.limpiarCampos()
+          } catch {
+            if (estado === 'BOR') {
+              console.log('No se pudo actualizar la información de la minuta')
+            } else {
+              console.log('No se pudo emitir la minuta')
+            }
           }
         }
       }
@@ -680,11 +835,7 @@ export default {
     },
     validarHora: function (hora) {
       const regExp = /^(\d{2}):(\d{2})$/
-      if (regExp.test(hora)) {
-        return true
-      } else {
-        return false
-      }
+      return regExp.test(hora)
     },
     validarHinicio: function () {
       const validacion = this.validarHora(this.minuta.h_inicio)
@@ -719,7 +870,7 @@ export default {
       this.entradas.asistencias = false
     },
     validarAsistencia: function () {
-      if (this.asistencia.length < this.grupo.estudiantes.length) {
+      if (this.asistenciaEst.length < this.grupo.estudiantes.length) {
         this.entradas.asistencias = true
         return false
       } else {
@@ -741,7 +892,7 @@ export default {
     },
     validarObjetivos: function () {
       if (this.objetivos.length === 1) {
-        if (this.objetivos[0] === '') {
+        if (this.objetivos[0].descripcion === '') {
           this.entradas.objetivos = true
           return false
         } else {
@@ -751,7 +902,7 @@ export default {
       } else {
         var validar = true
         for (var i = 0; i < this.objetivos.length; i++) {
-          if (this.objetivos[i] === '') {
+          if (this.objetivos[i].descripcion === '') {
             validar = false
             this.entradas.objetivos = true
           }
@@ -761,7 +912,7 @@ export default {
     },
     validarConclusiones: function () {
       if (this.conclusiones.length === 1) {
-        if (this.conclusiones[0] === '') {
+        if (this.conclusiones[0].descripcion === '') {
           this.entradas.conclusiones = true
           return false
         } else {
@@ -771,7 +922,7 @@ export default {
       } else {
         var validar = true
         for (var i = 0; i < this.conclusiones.length; i++) {
-          if (this.conclusiones[i] === '') {
+          if (this.conclusiones[i].descripcion === '') {
             validar = false
             this.entradas.conclusiones = true
           }

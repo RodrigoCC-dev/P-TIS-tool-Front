@@ -127,7 +127,6 @@ export default {
   data () {
     return {
       verFormulario: false,
-      secciones: {},
       estudiante: {
         usuario: {
           nombre: '',
@@ -175,13 +174,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl', 'secciones'])
   },
   methods: {
     async obtenerSecciones () {
       try {
         const secciones = await axios.get(this.apiUrl + '/secciones', { headers: Auth.authHeader() })
-        this.secciones = secciones.data
+        this.$store.commit('setSecciones', secciones.data)
       } catch (error) {
         console.log(error)
       }
