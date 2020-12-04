@@ -95,4 +95,42 @@ describe('GestionProfesores.vue', () => {
     const wrapper = shallowMount(GestionProfesores)
     expect(wrapper.vm.mostrarProfesores).toBeFalsy()
   })
+
+  it('método nombreCompleto funciona correctamente', () => {
+    const profesor = {
+      nombre: 'Mateo',
+      apellido_paterno: 'Iglesias',
+      apellido_materno: 'Del Campo'
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.nombreCompleto(profesor)).toEqual('Mateo Iglesias Del Campo')
+  })
+
+  it('método agregarProfesor funciona correctamente', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.agregarProfesor()
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+  })
+
+  it('método nuevoProfesor funciona correctamente', () => {
+    const wrapper = shallowMount(GestionProfesores, {
+      data() {
+        return {
+          usuario: {
+            nombre: 'Mateo',
+            apellido_paterno: 'Iglesias',
+            apellido_paterno: 'Del Campo',
+            email: 'mateo.iglesias@gmail.com'
+          },
+          seccionesAsignadas: [1, 2]
+        }
+      }
+    })
+    wrapper.vm.nuevoProfesor()
+    expect(wrapper.vm.usuario.nombre).toEqual('')
+    expect(wrapper.vm.usuario.apellido_paterno).toEqual('')
+    expect(wrapper.vm.usuario.apellido_materno).toEqual('')
+    expect(wrapper.vm.usuario.email).toEqual('')
+    expect(wrapper.vm.seccionesAsignadas).toEqual([])
+  })
 })
