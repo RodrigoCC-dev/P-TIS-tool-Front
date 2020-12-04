@@ -287,6 +287,99 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.minuta.tipo).toEqual('')
   })
 
+  it('método convertirClasificacion funciona correctamente', () => {
+    const clasificacion = {
+      informativa: false,
+      avance: true,
+      coordinacion: false,
+      decision: true,
+      otro: false
+    }
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.convertirClasificacion(clasificacion)).toEqual(['avance', 'decision'])
+  })
+
+  it('método convertirResponsable funciona correctamente para estudiantes', () => {
+    const lista = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: 6,
+        id_stakeholder: null,
+        tipo: 'PRE',
+        descripcion: 'Presente'
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: 5,
+        id_stakeholder: null,
+        tipo: 'ACA',
+        descripcion: 'Ausente con aviso'
+      }
+    ]
+    const responsable = {
+      id: 7,
+      asistencia_id: 8
+    }
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: 'est', id: 6})
+  })
+
+  it('método convertirResponsable funciona correctamente para stakeholders', () => {
+    const lista = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: null,
+        id_stakeholder: 6,
+        tipo: 'PRE',
+        descripcion: 'Presente'
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: null,
+        id_stakeholder: 5,
+        tipo: 'ACA',
+        descripcion: 'Ausente con aviso'
+      }
+    ]
+    const responsable = {
+      id: 7,
+      asistencia_id: 8
+    }
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: 'stk', id: 6})
+  })
+
+  it('método convertirResponsable funciona correctamente para estudiantes y stakeholders null', () => {
+    const lista = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: null,
+        id_stakeholder: null,
+        tipo: 'PRE',
+        descripcion: 'Presente'
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: 5,
+        id_stakeholder: null,
+        tipo: 'ACA',
+        descripcion: 'Ausente con aviso'
+      }
+    ]
+    const responsable = {
+      id: 7,
+      asistencia_id: 8
+    }
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: '', id: 0})
+  })
+
   it('método agregarItem funciona correctamente', () => {
     const nuevo = {
       correlativo: 2,
