@@ -429,7 +429,7 @@ export default {
       i !== -1 && arr.splice(i, 1)
     },
     nombreCompleto (estudiante) {
-      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+      return Funciones.nombreCompleto(estudiante)
     },
     convertirFecha: function (timestamp) {
       var fecha = timestamp.split('T')

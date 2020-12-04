@@ -12,6 +12,15 @@ describe('Minuta.vue', () => {
     expect(wrapper.props().tipoMinuta).toBe(2)
   })
 
+  it('se asigna prop idBitacora adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idBitacora: 3
+      }
+    })
+    expect(wrapper.props().idBitacora).toBe(3)
+  })
+
   it('variable minuta se inicializa correctamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
@@ -173,6 +182,24 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.entradas).toEqual(entrada)
   })
 
+  it('propiedad computada esBorrador funciona correctamente con true', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idBitacora: 3
+      }
+    })
+    expect(wrapper.vm.esBorrador).toBeTruthy()
+  })
+
+  it('propiedad computada esBorrador funciona correctamente con false', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idBitacora: 0
+      }
+    })
+    expect(wrapper.vm.esBorrador).toBeFalsy()
+  })
+
   it('método removeFromArray funciona correctamente', () => {
     const array = ['Papa', 'Manzana', 'Naranja']
     const resultado = ['Manzana', 'Naranja']
@@ -191,6 +218,12 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Pablo Mackena Saldias')
   })
 
+  it('método convertirFecha funciona correctamente', () => {
+    const fecha = '2020-12-04T13:03:50.000Z'
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.convertirFecha(fecha)).toEqual('2020-12-04')
+  })
+
   it('método buscarIdEnLista funciona correctamente', () => {
     const array = [{
       id: 1,
@@ -202,6 +235,56 @@ describe('Minuta.vue', () => {
     }]
     const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.buscarIdEnLista(array, 'abreviacion', 'QU')).toEqual(2)
+  })
+
+  it('método obtenerTipoMinuta funciona correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta:{
+            tipo_minuta_id: 1,
+            tipo: ''
+          },
+          tipoMinutas: [
+          {
+            id: 1,
+            tipo: 'Coordinacion'
+          },
+          {
+            id: 2,
+            tipo: 'Cliente'
+          }
+          ]
+        }
+      }
+    })
+    wrapper.vm.obtenerTipoMinuta()
+    expect(wrapper.vm.minuta.tipo).toEqual('Coordinacion')
+  })
+
+  it('método obtenerTipoMinuta funciona correctamente con tipo_minuta_id null', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta:{
+            tipo_minuta_id: null,
+            tipo: ''
+          },
+          tipoMinutas: [
+          {
+            id: 1,
+            tipo: 'Coordinacion'
+          },
+          {
+            id: 2,
+            tipo: 'Cliente'
+          }
+          ]
+        }
+      }
+    })
+    wrapper.vm.obtenerTipoMinuta()
+    expect(wrapper.vm.minuta.tipo).toEqual('')
   })
 
   it('método agregarItem funciona correctamente', () => {
