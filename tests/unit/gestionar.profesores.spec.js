@@ -52,4 +52,47 @@ describe('GestionProfesores.vue', () => {
     const wrapper = shallowMount(GestionProfesores)
     expect(wrapper.vm.mensajes).toEqual(esperado)
   })
+
+  it('propiedad computada mostrarProfesores funciona correctamente con true', () => {
+    const wrapper = shallowMount(GestionProfesores, {
+      data() {
+        return {
+          listaProfesores: [
+            {id: 1, secciones: [{
+              id: 2,
+              codigo: 'V21',
+              jornada: { id: 2, nombre: 'Vespertina'}
+            }],
+            usuario: {
+              id: 2,
+              nombre: 'Elizabeth',
+              apellido_paterno: 'Inostroza',
+              apellido_materno: 'Del Solar',
+              email: 'elizabeth.inostroza@gmail.com'
+            }
+          },
+            {id: 2, secciones: [{
+              id: 1,
+              codigo: 'V35',
+              jornada: { id: 1, nombre: 'Diurna'}
+            }],
+            usuario: {
+              id: 3,
+              nombre: 'Pedro',
+              apellido_paterno: 'Garmendia',
+              apellido_materno: 'Soto',
+              email: 'pedro.garmendia@gmail.com'
+            }
+          }
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.mostrarProfesores).toBeTruthy()
+  })
+
+  it('propiedad computada mostrarProfesores funciona correctamente con true', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.mostrarProfesores).toBeFalsy()
+  })
 })
