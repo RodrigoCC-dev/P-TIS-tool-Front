@@ -835,11 +835,7 @@ export default {
     },
     validarHora: function (hora) {
       const regExp = /^(\d{2}):(\d{2})$/
-      if (regExp.test(hora)) {
-        return true
-      } else {
-        return false
-      }
+      return regExp.test(hora)
     },
     validarHinicio: function () {
       const validacion = this.validarHora(this.minuta.h_inicio)
