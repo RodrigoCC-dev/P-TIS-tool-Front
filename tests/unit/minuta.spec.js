@@ -465,6 +465,88 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.convertirItems(lista, asistencia)).toEqual(esperado)
   })
 
+  it('método convertirAsistenciaEst funciona correctamente', () => {
+    const array = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: 6,
+        id_stakeholder: null,
+        tipo: 'PRE',
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: 5,
+        id_stakeholder: null,
+        tipo: 'ACA'
+      }
+    ]
+    const esperado = [
+      {estudiante: 5, asistencia: 3},
+      {estudiante: 6, asistencia: 1}
+    ]
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tipo_asistencias: [
+            { id: 1, tipo: 'PRE'},
+            { id: 2, tipo: 'AUS'},
+            { id: 3, tipo: 'ACA'}
+          ],
+          grupo: {
+            estudiantes: [
+              { id: 5, iniciales: 'CGL'},
+              { id: 6, iniciales: 'FDT'}
+            ]
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.convertirAsistenciaEst(array)).toEqual(esperado)
+  })
+
+  it('método convertirAsistenciaStk funciona correctamente', () => {
+    const array = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: null,
+        id_stakeholder: 6,
+        tipo: 'PRE',
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: null,
+        id_stakeholder: 5,
+        tipo: 'ACA'
+      }
+    ]
+    const esperado = [
+      {stakeholder: 5, asistencia: 3},
+      {stakeholder: 6, asistencia: 1}
+    ]
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tipo_asistencias: [
+            { id: 1, tipo: 'PRE'},
+            { id: 2, tipo: 'AUS'},
+            { id: 3, tipo: 'ACA'}
+          ],
+          grupo: {
+            stakeholders: [
+              { id: 5, iniciales: 'CGL'},
+              { id: 6, iniciales: 'FDT'}
+            ]
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.convertirAsistenciaStk(array)).toEqual(esperado)
+  })
+
   it('método agregarItem funciona correctamente', () => {
     const nuevo = {
       correlativo: 2,
