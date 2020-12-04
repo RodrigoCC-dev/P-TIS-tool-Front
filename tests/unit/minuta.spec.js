@@ -380,6 +380,91 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: '', id: 0})
   })
 
+  it('método convertirItems funciona correctamente', () => {
+    const lista = [
+      {
+        id: 5,
+        tipo: 'Info',
+        correlativo: 2,
+        descripcion: 'Item de prueba 1',
+        fecha: null,
+        responsables: [
+          {
+            id: 3,
+            asistencia_id: 8
+          }
+        ]
+      },
+      {
+        id: 6,
+        tipo: 'Info',
+        correlativo: 1,
+        descripcion: 'Item de prueba 2',
+        fecha: '2020-11-18T00:00:00.000Z',
+        responsables: []
+      }
+    ]
+    const asistencia = [
+      {
+        id: 8,
+        iniciales: 'FDT',
+        id_estudiante: 6,
+        id_stakeholder: null,
+        tipo: 'PRE',
+        descripcion: 'Presente'
+      },
+      {
+        id: 7,
+        iniciales: 'CGL',
+        id_estudiante: 5,
+        id_stakeholder: null,
+        tipo: 'ACA',
+        descripcion: 'Ausente con aviso'
+      }
+    ]
+    const esperado = [
+      {
+        correlativo: 1,
+        descripcion: 'Item de prueba 2',
+        fecha: '2020-11-18',
+        tipo_item_id: 2,
+        responsables: 0,
+        entradas: {
+          descripcion: false,
+          fecha: false,
+          tipo_item: false,
+          responsables: false
+        }
+      },
+      {
+        correlativo: 2,
+        descripcion: 'Item de prueba 1',
+        fecha: '',
+        tipo_item_id: 2,
+        responsables: {tipo: 'est', id: 6},
+        entradas: {
+          descripcion: false,
+          fecha: false,
+          tipo_item: false,
+          responsables: false
+        }
+      }
+    ]
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tipo_items: [
+            {
+              id: 2,
+              tipo: 'Info'
+            }
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.convertirItems(lista, asistencia)).toEqual(esperado)
+  })
+
   it('método agregarItem funciona correctamente', () => {
     const nuevo = {
       correlativo: 2,
