@@ -1,9 +1,9 @@
 <template>
   <div>
 
-    <Informacion :proyecto="" :minuta="bitacora"/>
+    <Informacion :proyecto="grupo" :minuta="bitacora"/>
     <Objetivos :lista="bitacora.minuta.objetivos"/>
-    <Conculsiones :lista="bitacora.minuta.conclusiones"/>
+    <Conclusiones :lista="bitacora.minuta.conclusiones"/>
     <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia"/>
 
   </div>
@@ -21,20 +21,20 @@ import Items from '@/components/minutas/Items.vue'
 
 export default {
   name: 'ComentarMinuta',
-  props: ['idBitacora']
+  props: ['idBitacora'],
   components: {
     Informacion,
     Objetivos,
     Conclusiones,
     Items
-  }
+  },
   data () {
     return {
       bitacora: {}
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl', 'grupo'])
   },
   methods: {
     async obtenerMinuta (bitacoraId) {

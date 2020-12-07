@@ -41,7 +41,8 @@
           <br>
         </div>
 
-        <Tablero @bitacora="establecerBitacora"/>
+        <Tablero v-if="!comentar" @bitacora="establecerBitacora" @revision="establecerRevision"/>
+        <ComentarMinuta v-else :id-bitacora="idRevision" @cerrar="verTablero"/>
 
       </div>
 
@@ -56,6 +57,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Minuta from '@/components/Minuta.vue'
 import Tablero from '@/components/TableroEst.vue'
+import ComentarMinuta from '@/components/comentarios/ComentarMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -67,18 +69,21 @@ export default {
     Header,
     Footer,
     Minuta,
-    Tablero
+    Tablero,
+    ComentarMinuta
   },
   data () {
     return {
       verFormulario: false,
       tipo: 0,
       seleccionarMinuta: false,
-      idBitacora: 0
+      idBitacora: 0,
+      idRevision: 0,
+      comentar: false
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'tipoMinutas']),
+    ...mapState(['apiUrl', 'tipoMinutas', 'usuario', 'estudiante', 'grupo']),
 
     minutasFiltradas: function () {
       var lista = []
@@ -113,13 +118,39 @@ export default {
         console.log('No se han obtenido los tipos de minutas')
       }
     },
+    async obtenerEstudiante () {
+      try {
+        const response = await axios.get(this.apiUrl + '/estudiantes/' + this.usuario.id, { headers: Auth.authHeader() })
+        this.$store.commit('setEstudiante', response.data)
+        this.obtenerGrupo()
+      } catch {
+        console.log('No se ha obtenido la infomración del estudiante')
+      }
+    },
+    async obtenerGrupo () {
+      try {
+        const response = await axios.get(this.apiUrl + '/grupos/' + this.estudiante.grupo_id, { headers: Auth.authHeader() })
+        this.$store.commit('setGrupo', response.data)
+      } catch {
+        console.log('No se ha obtenido la información del grupo')
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
+    },
+    establecerRevision: function (id) {
+      this.idRevision = id
+      this.comentar = true
+    },
+    verTablero: function () {
+      this.comentar = false
+      this.idRevision = 0
     }
   },
   mounted () {
     this.obtenerTipoMinutas()
+    this.obtenerEstudiante()
   }
 }
 </script>
