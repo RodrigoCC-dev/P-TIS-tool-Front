@@ -116,10 +116,10 @@
           </thead>
           <tbody class="has-text-centered">
             <tr v-for="estudiante in grupo.estudiantes" :key="estudiante.id">
-              <td class="has-text-left has-text-info has-text-wight-semibold">{{ nombreCompleto(estudiante) }}</td>
+              <td class="has-text-left has-text-info has-text-wight-semibold">{{ nombreCompleto(estudiante.usuario) }}</td>
               <td></td>
-              <td>{{ estudiante.iniciales_est }}</td>
-              <td>{{ asistenciaEstudiante(estudiante.iniciales_est) }}</td>
+              <td>{{ estudiante.iniciales }}</td>
+              <td>{{ asistenciaEstudiante(estudiante.iniciales) }}</td>
             </tr>
           </tbody>
         </table>
@@ -169,6 +169,8 @@
 </template>
 
 <script>
+import Funciones from '@/services/funciones.js'
+
 export default {
   name: 'Informacion',
   props: ['proyecto', 'minuta'],
@@ -193,7 +195,7 @@ export default {
   },
   methods: {
     nombreCompleto: function (estudiante) {
-      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+      return Funciones.nombreCompleto(estudiante)
     },
     obtenerHora: function (timestamp) {
       var separar = timestamp.split('T')
