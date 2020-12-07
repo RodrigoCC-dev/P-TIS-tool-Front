@@ -12,14 +12,14 @@ describe('Informacion.vue', () => {
     estudiantes: [
       {
         id: 9,
-        iniciales_est: 'GPP',
-        nombre_est: 'Gonzalo',
-        apellido1: 'Perez',
-        apellido2: 'Parada',
-        run_est: '12345678-9',
-        email_est: 'gonzalo.perez@usach.cl',
-        jornada: 'Diurna',
-        id_grupo: 62363
+        iniciales: 'GPP',
+        usuario: {
+          nombre: 'Gonzalo',
+          apellido_paterno: 'Perez',
+          apellido_materno: 'Parada',
+          run: '12345678-9',
+          email: 'gonzalo.perez@usach.cl'
+        }
       }
     ]
   }
@@ -66,14 +66,14 @@ describe('Informacion.vue', () => {
       estudiantes: [
         {
           id: 9,
-          iniciales_est: 'GPP',
-          nombre_est: 'Gonzalo',
-          apellido1: 'Perez',
-          apellido2: 'Parada',
-          run_est: '12345678-9',
-          email_est: 'gonzalo.perez@usach.cl',
-          jornada: 'Diurna',
-          id_grupo: 62363
+          iniciales: 'GPP',
+          usuario: {
+            nombre: 'Gonzalo',
+            apellido_paterno: 'Perez',
+            apellido_materno: 'Parada',
+            run: '12345678-9',
+            email: 'gonzalo.perez@usach.cl',
+          }
         }
       ]
     }
@@ -131,14 +131,14 @@ describe('Informacion.vue', () => {
       estudiantes: [
         {
           id: 9,
-          iniciales_est: 'GPP',
-          nombre_est: 'Gonzalo',
-          apellido1: 'Perez',
-          apellido2: 'Parada',
-          run_est: '12345678-9',
-          email_est: 'gonzalo.perez@usach.cl',
-          jornada: 'Diurna',
-          id_grupo: 62363
+          iniciales: 'GPP',
+          usuario: {
+            nombre: 'Gonzalo',
+            apellido_paterno: 'Perez',
+            apellido_materno: 'Parada',
+            run: '12345678-9',
+            email: 'gonzalo.perez@usach.cl'
+          }
         }
       ]
     }
@@ -222,9 +222,9 @@ describe('Informacion.vue', () => {
 
   it('método nombreCompleto funciona correctamente', () => {
     const estudiante = {
-      nombre_est: 'Marcelo',
-      apellido1: 'Farias',
-      apellido2: 'Venegas'
+      nombre: 'Marcelo',
+      apellido_paterno: 'Farias',
+      apellido_materno: 'Venegas'
     }
     const wrapper = shallowMount(Informacion, {
       propsData: {
