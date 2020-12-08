@@ -144,6 +144,7 @@ export default {
       return resp.join(' / ')
     },
     crearListas: function () {
+      this.limpiarCampos()
       for (var i = 0; i < this.listaItems.length; i++) {
         this.mostrarComentar.push(false)
         this.listaComentarios.push(Object.assign({}, this.comentario))
@@ -172,7 +173,6 @@ export default {
     enviarComentarios: function () {
       var comentarios = this.listaComentarios.concat(this.listaGenerales)
       this.$emit('comentar', comentarios)
-      this.limpiarCampos()
     },
     cancelarEnvio: function () {
       this.$emit('cerrar')
