@@ -5,7 +5,7 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" @cerrar="cerrarRevision"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" @comentar="recibirComentarios" @cerrar="cerrarRevision"/>
     </div>
 
   </div>
@@ -33,7 +33,8 @@ export default {
   data () {
     return {
       id: this.idBitacora,
-      bitacora: {}
+      bitacora: {},
+      comentarios: []
     }
   },
   computed: {
@@ -52,6 +53,9 @@ export default {
         console.log('No fue posible obtener la información de la minuta seleccionada')
         console.log(e)
       }
+    },
+    recibirComentarios: function (comentarios) {
+      this.comentarios = comentarios
     },
     cerrarRevision: function () {
       this.$emit('cerrar')

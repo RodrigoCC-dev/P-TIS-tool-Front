@@ -75,7 +75,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-link">Guardar comentarios</a>
+              <a class="button is-link" @click="enviarComentarios">Guardar comentarios</a>
             </div>
             <div class="control">
               <a class="button is-dark is-light" @click="cancelarEnvio">Cancelar</a>
@@ -168,6 +168,11 @@ export default {
       this.mostrarComentar = []
       this.listaComentarios = []
       this.listaGenerales = []
+    },
+    enviarComentarios: function () {
+      var comentarios = this.listaComentarios.concat(this.listaGenerales)
+      this.$emit('comentar', comentarios)
+      this.limpiarCampos()
     },
     cancelarEnvio: function () {
       this.$emit('cerrar')
