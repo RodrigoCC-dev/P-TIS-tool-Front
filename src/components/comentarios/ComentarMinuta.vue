@@ -5,7 +5,7 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" @cerrar="cerrarRevision"/>
     </div>
 
   </div>
@@ -52,6 +52,9 @@ export default {
         console.log('No fue posible obtener la información de la minuta seleccionada')
         console.log(e)
       }
+    },
+    cerrarRevision: function () {
+      this.$emit('cerrar')
     }
   },
   mounted () {

@@ -43,6 +43,16 @@
     <div v-if="comentarios">
 
       <div class="columns">
+        <div class="column is-half is-offset-3">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-success" @click="agregaComentario">Agregar comentario</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
         <div class="column is-10 is-offset-1">
           <div class="content has-text-left">
             <dl>
@@ -65,7 +75,10 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="agregaComentario">Agregar comentario</a>
+              <a class="button is-link">Guardar comentarios</a>
+            </div>
+            <div class="control">
+              <a class="button is-dark is-light" @click="cancelarEnvio">Cancelar</a>
             </div>
           </div>
         </div>
@@ -150,6 +163,15 @@ export default {
     },
     removerComentario: function (comentario) {
       return Funciones.removeFromArray(this.listaGenerales, comentario)
+    },
+    limpiarCampos: function () {
+      this.mostrarComentar = []
+      this.listaComentarios = []
+      this.listaGenerales = []
+    },
+    cancelarEnvio: function () {
+      this.$emit('cerrar')
+      this.limpiarCampos()
     }
   },
   mounted () {
