@@ -1,10 +1,12 @@
 <template>
   <div>
 
-    <Informacion :proyecto="grupo" :minuta="bitacora"/>
-    <Objetivos :lista="bitacora.minuta.objetivos"/>
-    <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-    <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia"/>
+    <div v-if="mostrarMinuta">
+      <Informacion :proyecto="grupo" :minuta="bitacora"/>
+      <Objetivos :lista="bitacora.minuta.objetivos"/>
+      <Conclusiones :lista="bitacora.minuta.conclusiones"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia"/>
+    </div>
 
   </div>
 </template>
@@ -30,11 +32,16 @@ export default {
   },
   data () {
     return {
+      id: this.idBitacora,
       bitacora: {}
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo'])
+    ...mapState(['apiUrl', 'grupo']),
+
+    mostrarMinuta: function () {
+      return Object.keys(this.bitacora).length > 0
+    }
   },
   methods: {
     async obtenerMinuta (bitacoraId) {
@@ -48,7 +55,7 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinuta(this.idBitacora)
+    this.obtenerMinuta(this.id)
   }
 }
 </script>
