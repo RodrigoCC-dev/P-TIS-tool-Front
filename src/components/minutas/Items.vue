@@ -9,7 +9,7 @@
           <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
           <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
           <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
-          <th v-show="comentarios"></th>
+          <th v-if="comentarios"></th>
         </tr>
       </thead>
       <tbody>
@@ -19,15 +19,15 @@
           <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
           <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
           <td class="is-vcentered has-text-centered">{{ obtenerIniciales(item.responsables) }}</td>
-          <td v-show="comentarios">
+          <td v-if="comentarios">
             <div v-if="!this.mostrarComentar[index]">
-              <a @click="abrirComentario(index)">comentar</a>
+              <a @click="abrirComentario(index, item.id)">comentar</a>
             </div>
             <div v-else>
               <div class="card">
                 <div class="card-content">
                   <div class="content">
-                    <textarea class="textarea is-small is-extend"></textarea>
+                    <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend"></textarea>
                   </div>
                 </div>
                 <footer class="card-footer">
@@ -40,10 +40,45 @@
       </tbody>
     </table>
 
+    <div v-if="comentarios">
+
+      <div class="columns">
+        <div class="column is-10 is-offset-1">
+          <div class="content has-text-left">
+            <dl>
+              <li v-for="(comentario, index) in listaGenerales" :key="index">
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input v-model="listaGenerales[index].comentario" class="input" type="text">
+                  </p>
+                  <p class="control">
+                    <a class="button is-danger is-light" @click="removerComentario(comentario)"><strong>X</strong></a>
+                  </p>
+                </div>
+              </li>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-half is-offset-3">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-success" @click="agregaComentario">Agregar comentario</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
 <script>
+import Funciones from '@/services/funciones.js'
+
 export default {
   name: 'Item',
   props: ['lista', 'asistentes', 'comentar'],
@@ -52,7 +87,14 @@ export default {
       listaItems: this.lista,
       asistencia: this.asistentes,
       comentarios: this.comentar,
-      mostrarComentar: []
+      mostrarComentar: [],
+      listaComentarios: [],
+      listaGenerales: [],
+      comentario: {
+        comentario: '',
+        es_item: true,
+        id_item: 0
+      }
     }
   },
   computed: {
@@ -88,20 +130,30 @@ export default {
       }
       return resp.join(' / ')
     },
-    crearMostrarComentar: function () {
+    crearListas: function () {
       for (var i = 0; i < this.listaItems.length; i++) {
         this.mostrarComentar.push(false)
+        this.listaComentarios.push(Object.assign({}, this.comentario))
       }
     },
-    abrirComentario: function (index) {
+    abrirComentario: function (index, id) {
       this.mostrarComentar[index] = true
+      this.listaComentarios[index].id_item = id
     },
     cerrarComentario: function (index) {
       this.mostrarComentar[index] = false
+    },
+    agregaComentario: function () {
+      var comentario = Object.assign({}, this.comentario)
+      comentario.es_item = false
+      this.listaGenerales.push(comentario)
+    },
+    removerComentario: function (comentario) {
+      return Funciones.removeFromArray(this.listaGenerales, comentario)
     }
   },
   mounted () {
-    this.crearMostrarComentar()
+    this.crearListas()
   }
 }
 </script>
