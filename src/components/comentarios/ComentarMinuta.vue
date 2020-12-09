@@ -55,9 +55,12 @@ export default {
       }
     },
     async enviarComentarios () {
-      const comentario = this.comentarios
+      const comentarios = {
+        id: this.id,
+        comentarios: this.comentarios
+      }
       try {
-        await axios.post(this.apiUrl + '/comentarios', comentario, { headers: Auth.postHeader() })
+        await axios.post(this.apiUrl + '/comentarios', comentarios, { headers: Auth.postHeader() })
       } catch (e) {
         console.log('No fue posible enviar los comentarios')
         console.log(e)
