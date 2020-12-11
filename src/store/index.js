@@ -5,6 +5,8 @@ export default createStore({
     apiUrl: process.env.VUE_APP_API_URL,
     authenticated: false,
     usuario: {},
+    estudiante: {},
+    grupo: {},
     tipoMinutas: [],
     secciones: []
   },
@@ -20,6 +22,12 @@ export default createStore({
     },
     setSecciones (state, valor) {
       state.secciones = valor
+    },
+    setEstudiante (state, valor) {
+      state.estudiante = valor
+    },
+    setGrupo (state, valor) {
+      state.grupo = valor
     }
   },
   actions: {

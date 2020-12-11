@@ -9,30 +9,105 @@
           <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
           <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
           <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
+          <th v-if="comentarios"></th>
         </tr>
       </thead>
       <tbody>
-        <tr class="is-vcentered" v-for="item in listaOrdenada" :key="item.id">
-          <th>{{ item.correlativo }}</th>
-          <td>{{ item.tipo }}</td>
-          <td class="has-text-left">{{ item.descripcion }}</td>
-          <td>{{ fechaItem(item.fecha) }}</td>
-          <td>{{ obtenerIniciales(item.responsables) }}</td>
+        <tr v-for="(item, index) in listaOrdenada" :key="item.id">
+          <th class="is-vcentered">{{ item.correlativo }}</th>
+          <td class="is-vcentered">{{ item.tipo }}</td>
+          <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
+          <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
+          <td class="is-vcentered has-text-centered">{{ obtenerIniciales(item.responsables) }}</td>
+          <td v-if="comentarios">
+            <div v-if="!this.mostrarComentar[index]">
+              <a @click="abrirComentario(index, item.id)">comentar</a>
+            </div>
+            <div v-else>
+              <div class="card">
+                <div class="card-content">
+                  <div class="content">
+                    <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend"></textarea>
+                  </div>
+                </div>
+                <footer class="card-footer">
+                  <a class="card-footer-item" @click="cerrarComentario(index)">Cancelar</a>
+                </footer>
+              </div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
+
+    <div v-if="comentarios">
+
+      <div class="columns">
+        <div class="column is-half is-offset-3">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-success" @click="agregaComentario">Agregar comentario</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-10 is-offset-1">
+          <div class="content has-text-left">
+            <dl>
+              <li v-for="(comentario, index) in listaGenerales" :key="index">
+                <div class="field is-grouped">
+                  <p class="control is-expanded">
+                    <input v-model="listaGenerales[index].comentario" class="input" type="text">
+                  </p>
+                  <p class="control">
+                    <a class="button is-danger is-light" @click="removerComentario(comentario)"><strong>X</strong></a>
+                  </p>
+                </div>
+              </li>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-half is-offset-3">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-link" @click="enviarComentarios">Guardar comentarios</a>
+            </div>
+            <div class="control">
+              <a class="button is-dark is-light" @click="cancelarEnvio">Cancelar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 </template>
 
 <script>
+import Funciones from '@/services/funciones.js'
+
 export default {
   name: 'Item',
-  props: ['lista', 'asistentes'],
+  props: ['lista', 'asistentes', 'comentar'],
   data () {
     return {
       listaItems: this.lista,
-      asistencia: this.asistentes
+      asistencia: this.asistentes,
+      comentarios: this.comentar,
+      mostrarComentar: [],
+      listaComentarios: [],
+      listaGenerales: [],
+      comentario: {
+        comentario: '',
+        es_item: true,
+        id_item: 0
+      }
     }
   },
   computed: {
@@ -67,7 +142,45 @@ export default {
         }
       }
       return resp.join(' / ')
+    },
+    crearListas: function () {
+      this.limpiarCampos()
+      for (var i = 0; i < this.listaItems.length; i++) {
+        this.mostrarComentar.push(false)
+        this.listaComentarios.push(Object.assign({}, this.comentario))
+      }
+    },
+    abrirComentario: function (index, id) {
+      this.mostrarComentar[index] = true
+      this.listaComentarios[index].id_item = id
+    },
+    cerrarComentario: function (index) {
+      this.mostrarComentar[index] = false
+    },
+    agregaComentario: function () {
+      var comentario = Object.assign({}, this.comentario)
+      comentario.es_item = false
+      this.listaGenerales.push(comentario)
+    },
+    removerComentario: function (comentario) {
+      return Funciones.removeFromArray(this.listaGenerales, comentario)
+    },
+    limpiarCampos: function () {
+      this.mostrarComentar = []
+      this.listaComentarios = []
+      this.listaGenerales = []
+    },
+    enviarComentarios: function () {
+      var comentarios = this.listaComentarios.concat(this.listaGenerales)
+      this.$emit('comentar', comentarios)
+    },
+    cancelarEnvio: function () {
+      this.$emit('cerrar')
+      this.limpiarCampos()
     }
+  },
+  mounted () {
+    this.crearListas()
   }
 }
 </script>
