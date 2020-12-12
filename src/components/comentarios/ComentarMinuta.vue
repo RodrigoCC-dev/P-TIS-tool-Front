@@ -10,16 +10,17 @@
 
     <div v-if="mostrarAprobacion">
       <br>
+      <br>
       <div class="columns">
-        <div class="column is-8 is-offset-2">
-          <div class="field is horizontal">
-            <div class="field-label is-normal">
+        <div class="column is-7 is-offset-2">
+          <div class="field is-horizontal">
+            <div class="field-label-2c is-normal">
               <label class="label">Estado de aprobación: </label>
             </div>
             <div class="field-body">
               <div class="field has-addons has-addons-right">
-                <p class="control">
-                  <span class="select">
+                <p class="control is-expanded">
+                  <span class="select is-fullwidth">
                     <select v-model="aprobacion">
                       <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
                     </select>
@@ -41,7 +42,7 @@
 <script>
 import Auth from '@/services/auth.js'
 import axios from 'axios'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
@@ -75,8 +76,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['obtenerParaRevisar']),
-
     async obtenerAprobaciones () {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
@@ -118,7 +117,7 @@ export default {
       this.enviarComentarios()
       this.$emit('cerrar')
       this.mostrarAprobacion = false
-      this.obtenerParaRevisar()
+      this.$store.dispatch('obtenerParaRevisar')
     },
     limpiarCampos: function () {
       this.bitacora = {}
