@@ -1,8 +1,7 @@
 import axios from 'axios'
-import store from '../store'
 import Cookies from 'js-cookie'
 
-const ENDPOINT_PATH = store.state.apiUrl
+const ENDPOINT_PATH = process.env.VUE_APP_API_URL
 
 export default {
   login (email, password) {

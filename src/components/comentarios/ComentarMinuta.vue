@@ -11,7 +11,7 @@
     <div v-if="mostrarAprobacion">
       <br>
       <div class="columns">
-        <div class="column is-4 is-offset-4">
+        <div class="column is-8 is-offset-2">
           <div class="field is horizontal">
             <div class="field-label is-normal">
               <label class="label">Estado de aprobación: </label>
@@ -41,7 +41,7 @@
 <script>
 import Auth from '@/services/auth.js'
 import axios from 'axios'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
@@ -75,6 +75,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['obtenerParaRevisar']),
+
     async obtenerAprobaciones () {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
@@ -116,10 +118,11 @@ export default {
       this.enviarComentarios()
       this.$emit('cerrar')
       this.mostrarAprobacion = false
+      this.obtenerParaRevisar()
     },
     limpiarCampos: function () {
-      this.bitacora = {},
-      this.comentarios = [],
+      this.bitacora = {}
+      this.comentarios = []
       this.aprobacion = 0
     }
   },
