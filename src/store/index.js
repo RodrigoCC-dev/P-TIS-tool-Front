@@ -37,12 +37,13 @@ export default createStore({
     }
   },
   actions: {
-    async obtenerParaRevisar () {
+    async obtenerParaRevisar ({ commit }) {
       try {
         const response = await axios.get(this.state.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
-        this.$store.commit('setListaRevision', response.data)
-      } catch {
+        commit('setListaRevision', response.data)
+      } catch (e) {
         console.log('No se han podido obtener las minutas a revisar')
+        console.log(e)
       }
     }
   },
