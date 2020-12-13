@@ -8,6 +8,34 @@
       <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" @comentar="recibirComentarios" @cerrar="cerrarRevision"/>
     </div>
 
+    <div v-if="mostrarAprobacion">
+      <br>
+      <br>
+      <div class="columns">
+        <div class="column is-7 is-offset-2">
+          <div class="field is-horizontal">
+            <div class="field-label-2c is-normal">
+              <label class="label">Estado de aprobación: </label>
+            </div>
+            <div class="field-body">
+              <div class="field has-addons has-addons-right">
+                <p class="control is-expanded">
+                  <span class="select is-fullwidth">
+                    <select v-model="aprobacion">
+                      <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
+                    </select>
+                  </span>
+                </p>
+                <p class="control">
+                  <a class="button is-link" @click="establecerEstado">Establecer estado</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -34,7 +62,10 @@ export default {
     return {
       id: this.idBitacora,
       bitacora: {},
-      comentarios: []
+      comentarios: [],
+      mostrarAprobacion: false,
+      tipoAprobaciones: [],
+      aprobacion: 0
     }
   },
   computed: {
@@ -45,6 +76,14 @@ export default {
     }
   },
   methods: {
+    async obtenerAprobaciones () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
+        this.tipoAprobaciones = response.data
+      } catch (e) {
+        console.log(e)
+      }
+    },
     async obtenerMinuta (bitacoraId) {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
@@ -57,7 +96,8 @@ export default {
     async enviarComentarios () {
       const comentarios = {
         id: this.id,
-        comentarios: this.comentarios
+        comentarios: this.comentarios,
+        tipo_aprobacion_id: this.aprobacion
       }
       try {
         await axios.post(this.apiUrl + '/comentarios', comentarios, { headers: Auth.postHeader() })
@@ -68,14 +108,24 @@ export default {
     },
     recibirComentarios: function (comentarios) {
       this.comentarios = comentarios
-      this.enviarComentarios()
-      this.$emit('cerrar')
+      this.mostrarAprobacion = true
     },
     cerrarRevision: function () {
       this.$emit('cerrar')
+    },
+    establecerEstado: function () {
+      this.enviarComentarios()
+      this.$emit('cerrar')
+      this.mostrarAprobacion = false
+    },
+    limpiarCampos: function () {
+      this.bitacora = {}
+      this.comentarios = []
+      this.aprobacion = 0
     }
   },
   mounted () {
+    this.obtenerAprobaciones()
     this.obtenerMinuta(this.id)
   }
 }

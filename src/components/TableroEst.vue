@@ -302,6 +302,7 @@ const nombreTabs = {
 
 export default {
   name: 'TableroEst',
+  props: ['contador'],
   data () {
     return {
       nombreTab: 'Borradores',
@@ -314,7 +315,8 @@ export default {
       listaRespondidasCliente: [],
       listaCerradas: [],
       listaEmitidas: [],
-      listaRevision: []
+      listaRevision: [],
+      contar: this.contador
     }
   },
   computed: {
@@ -403,6 +405,8 @@ export default {
   },
   mounted () {
     this.obtenerMinutas()
+  },
+  beforeUpdate () {
     this.obtenerParaRevisar()
   }
 }

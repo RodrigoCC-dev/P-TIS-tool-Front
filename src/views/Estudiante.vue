@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero @bitacora="establecerBitacora" @revision="establecerRevision"/>
+          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision"/>
 
         </div>
 
@@ -87,7 +87,8 @@ export default {
       idBitacora: 0,
       idRevision: 0,
       crearMinuta: true,
-      verRevision: false
+      verRevision: false,
+      tableroEst: 0
     }
   },
   computed: {
@@ -154,6 +155,7 @@ export default {
       this.verRevision = false
       this.crearMinuta = true
       this.idRevision = 0
+      this.tableroEst++
     }
   },
   mounted () {
