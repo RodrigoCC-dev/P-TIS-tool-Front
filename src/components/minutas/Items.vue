@@ -27,8 +27,9 @@
               <div class="card">
                 <div class="card-content">
                   <div class="content">
-                    <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend"></textarea>
+                    <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem"></textarea>
                   </div>
+                  <p v-if="this.listaEntradas[index].error" class="is-danger help">{{ this.listaEntradas[index].mensaje }}</p>
                 </div>
                 <footer class="card-footer">
                   <a class="card-footer-item" @click="cerrarComentario(index)">Cancelar</a>
@@ -59,7 +60,7 @@
               <li v-for="(comentario, index) in listaGenerales" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
-                    <input v-model="listaGenerales[index].comentario" class="input" type="text">
+                    <input v-model="listaGenerales[index].comentario" class="input"  :class="{ 'is-danger' : this.entradas.comentarios }" type="text" @input="limpiarErrorGeneral">
                   </p>
                   <p class="control">
                     <a class="button is-danger is-light" @click="removerComentario(comentario)"><strong>X</strong></a>
@@ -67,6 +68,7 @@
                 </div>
               </li>
             </dl>
+            <p class="is-danger help" v-if="entradas.comentarios">No se han ingresado todos los comentarios</p>
           </div>
         </div>
       </div>
@@ -107,6 +109,14 @@ export default {
         comentario: '',
         es_item: true,
         id_item: 0
+      },
+      entrada: {
+        error: false,
+        mensaje: ''
+      },
+      listaEntradas: [],
+      entradas: {
+        comentarios: false
       }
     }
   },
@@ -148,6 +158,7 @@ export default {
       for (var i = 0; i < this.listaItems.length; i++) {
         this.mostrarComentar.push(false)
         this.listaComentarios.push(Object.assign({}, this.comentario))
+        this.listaEntradas.push(Object.assign({}, this.entrada))
       }
     },
     abrirComentario: function (index, id) {
@@ -157,6 +168,7 @@ export default {
     cerrarComentario: function (index) {
       this.mostrarComentar[index] = false
       this.listaComentarios[index].comentario = ''
+      this.listaEntradas[index].error = false
     },
     agregaComentario: function () {
       var comentario = Object.assign({}, this.comentario)
@@ -172,12 +184,64 @@ export default {
       this.listaGenerales = []
     },
     enviarComentarios: function () {
-      var comentarios = this.listaComentarios.concat(this.listaGenerales)
-      this.$emit('comentar', comentarios)
+      if (this.validarComentarios()) {
+        var comentarios = this.listaComentarios.concat(this.listaGenerales)
+        this.$emit('comentar', comentarios)
+      }
     },
     cancelarEnvio: function () {
       this.$emit('cerrar')
       this.limpiarCampos()
+      this.limpiarErrorGeneral()
+      for (var i = 0; i < this.listaEntradas.length; i++) {
+        this.listaEntradas[i].error = false
+        this.listaEntradas[i].mensaje = ''
+      }
+    },
+    validarComentarioItem: function (index) {
+      if (this.mostrarComentar[index]) {
+        if (this.listaComentarios[index].comentario === '' || this.listaComentarios[index].comentario === undefined) {
+          this.listaEntradas[index].error = true
+          this.listaEntradas[index].mensaje = 'Falta ingresar el comentario'
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    validarListaComentarios: function () {
+      const comentarios = this.listaComentarios
+      var validacion = true
+      for (var i = 0; i < comentarios.length; i++) {
+        validacion = validacion && this.validarComentarioItem(i)
+      }
+      return validacion
+    },
+    validarListaGenerales: function () {
+      if (this.listaGenerales.length > 0) {
+        var validar = true
+        for (var i = 0; i < this.listaGenerales.length; i++) {
+          if (this.listaGenerales[i].comentario === '') {
+            validar = false
+            this.entradas.comentarios = true
+          }
+        }
+        return validar
+      } else {
+        return true
+      }
+    },
+    validarComentarios: function () {
+      return this.validarListaComentarios() && this.validarListaGenerales()
+    },
+    limpiarErrorItem: function (index) {
+      this.listaEntradas[index].error = false
+      this.listaEntradas[index].mensaje = ''
+    },
+    limpiarErrorGeneral: function () {
+      this.entradas.comentarios = false
     }
   },
   mounted () {
