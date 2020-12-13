@@ -156,6 +156,7 @@ export default {
     },
     cerrarComentario: function (index) {
       this.mostrarComentar[index] = false
+      this.listaComentarios[index].comentario = ''
     },
     agregaComentario: function () {
       var comentario = Object.assign({}, this.comentario)

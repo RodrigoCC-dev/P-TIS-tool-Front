@@ -161,7 +161,6 @@ export default {
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
-    this.tableroEst = this.$refs.tableroEst
   }
 }
 </script>
