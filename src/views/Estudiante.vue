@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero ref="tablero" @bitacora="establecerBitacora" @revision="establecerRevision"/>
+          <Tablero ref="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision"/>
 
         </div>
 
@@ -87,7 +87,8 @@ export default {
       idBitacora: 0,
       idRevision: 0,
       crearMinuta: true,
-      verRevision: false
+      verRevision: false,
+      tableroEst: {}
     }
   },
   computed: {
@@ -154,12 +155,14 @@ export default {
       this.verRevision = false
       this.crearMinuta = true
       this.idRevision = 0
-      this.$refs.tablero.obtenerParaRevisar()
+      console.log(this.tableroEst)
+      this.tableroEst.obtenerParaRevisar()
     }
   },
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
+    this.tableroEst = this.$refs.tableroEst
   }
 }
 </script>
