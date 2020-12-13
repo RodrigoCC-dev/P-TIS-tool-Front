@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero @bitacora="establecerBitacora" @revision="establecerRevision"/>
+          <Tablero ref="tablero" @bitacora="establecerBitacora" @revision="establecerRevision"/>
 
         </div>
 
@@ -154,6 +154,7 @@ export default {
       this.verRevision = false
       this.crearMinuta = true
       this.idRevision = 0
+      this.$refs.tablero.obtenerParaRevisar()
     }
   },
   mounted () {

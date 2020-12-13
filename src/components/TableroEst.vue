@@ -313,11 +313,12 @@ export default {
       listaRespondidasGrupo: [],
       listaRespondidasCliente: [],
       listaCerradas: [],
-      listaEmitidas: []
+      listaEmitidas: [],
+      listaRevision: []
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'listaRevision']),
+    ...mapState(['apiUrl']),
 
     mostrarBorradores: function () {
       return this.listaBorradores.length > 0
@@ -388,7 +389,7 @@ export default {
     async obtenerParaRevisar () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
-        this.$store.commit('setListaRevision', response.data)
+        this.listaRevision = response.data
       } catch {
         console.log('No se han podido obtener las minutas a revisar')
       }

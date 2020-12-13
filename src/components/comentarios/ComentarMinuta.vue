@@ -117,7 +117,6 @@ export default {
       this.enviarComentarios()
       this.$emit('cerrar')
       this.mostrarAprobacion = false
-      this.$store.dispatch('obtenerParaRevisar')
     },
     limpiarCampos: function () {
       this.bitacora = {}
