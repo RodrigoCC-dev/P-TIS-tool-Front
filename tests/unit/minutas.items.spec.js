@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import Items from '@/components/minutas/Items.vue'
 
-describe('Item.vue', () => {
+describe('Items.vue', () => {
   const lista = [
     {
       id: 14635,
@@ -141,5 +141,68 @@ describe('Item.vue', () => {
       }
     })
     expect(wrapper.vm.obtenerIniciales(resp)).toEqual('BRG')
+  })
+
+  it('método crearListas funciona correctamente', () => {
+    const esperadoMostrar = [false, false]
+    const esperadoComentarios = [
+      {comentario: '', es_item: true, id_item: 0},
+      {comentario: '', es_item: true, id_item: 0}
+    ]
+    const esperadoEntradas = [
+      {error: false, mensaje: ''},
+      {error: false, mensaje: ''}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      }
+    })
+    expect(wrapper.vm.mostrarComentar).toEqual(esperadoMostrar)
+    expect(wrapper.vm.listaComentarios).toEqual(esperadoComentarios)
+    expect(wrapper.vm.listaEntradas).toEqual(esperadoEntradas)
+  })
+
+  it('método abrirComentario funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      }
+    })
+    wrapper.vm.crearListas()
+    wrapper.vm.abrirComentario(1, 36345)
+    expect(wrapper.vm.mostrarComentar[1]).toBeTruthy()
+    expect(wrapper.vm.listaComentarios[1].id_item).toEqual(36345)
+  })
+
+  it('método cerrarComentario funciona correctamente', () => {
+    const mostrar = [true, true]
+    const comentarios = [
+      {comentario: 'abc', es_item: true, id_item: 0},
+      {comentario: 'abc', es_item: true, id_item: 0}
+    ]
+    const entradas = [
+      {error: true, mensaje: ''},
+      {error: true, mensaje: ''}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      },
+      data () {
+        return {
+          mostrarComentar: mostrar,
+          listaComentarios: comentarios,
+          listaEntradas: entradas
+        }
+      }
+    })
+    wrapper.vm.cerrarComentario(1)
+    expect(wrapper.vm.mostrarComentar[1]).toBeFalsy()
+    expect(wrapper.vm.listaComentarios[1].comentario).toEqual('')
+    expect(wrapper.vm.listaEntradas[1].error).toBeFalsy()
   })
 })
