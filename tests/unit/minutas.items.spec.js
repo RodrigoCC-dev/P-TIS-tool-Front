@@ -33,6 +33,15 @@ describe('Items.vue', () => {
       descripcion: 'Presente'
     }
   ]
+  const mostrar = [true, true]
+  const comentarios = [
+    {comentario: 'abc', es_item: true, id_item: 0},
+    {comentario: 'abc', es_item: true, id_item: 0}
+  ]
+  const entradas = [
+    {error: true, mensaje: ''},
+    {error: true, mensaje: ''}
+  ]
 
   it('se asigna prop lista correctamente', () => {
     const wrapper = shallowMount(Items, {
@@ -178,15 +187,6 @@ describe('Items.vue', () => {
   })
 
   it('método cerrarComentario funciona correctamente', () => {
-    const mostrar = [true, true]
-    const comentarios = [
-      {comentario: 'abc', es_item: true, id_item: 0},
-      {comentario: 'abc', es_item: true, id_item: 0}
-    ]
-    const entradas = [
-      {error: true, mensaje: ''},
-      {error: true, mensaje: ''}
-    ]
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -204,5 +204,65 @@ describe('Items.vue', () => {
     expect(wrapper.vm.mostrarComentar[1]).toBeFalsy()
     expect(wrapper.vm.listaComentarios[1].comentario).toEqual('')
     expect(wrapper.vm.listaEntradas[1].error).toBeFalsy()
+  })
+
+  it('método agregarComentario funciona correctamente', () => {
+    const esperado = [{
+      comentario: '',
+      es_item: false,
+      id_item: 0
+    }]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      }
+    })
+    wrapper.vm.agregaComentario()
+    expect(wrapper.vm.listaGenerales).toEqual(esperado)
+  })
+
+  it('método removerComentario funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      },
+      data () {
+        return {
+          listaGenerales: [{
+            comentario: '',
+            es_item: false,
+            id_item: 0
+          }]
+        }
+      }
+    })
+    wrapper.vm.removerComentario()
+    expect(wrapper.vm.listaGenerales).toEqual([])
+  })
+
+  it('método limpiarCampos funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      },
+      data () {
+        return {
+          mostrarComentar: mostrar,
+          listaComentarios: comentarios,
+          listaGenerales: [{
+            comentario: '',
+            es_item: false,
+            id_item: 0
+          }]
+        }
+      }
+    })
+    wrapper.vm.limpiarCampos()
+    expect(wrapper.vm.mostrarComentar).toEqual([])
+    expect(wrapper.vm.listaComentarios).toEqual([])
+    expect(wrapper.vm.listaGenerales).toEqual([])
   })
 })
