@@ -206,7 +206,7 @@ describe('Items.vue', () => {
     expect(wrapper.vm.listaEntradas[1].error).toBeFalsy()
   })
 
-  it('método agregarComentario funciona correctamente', () => {
+  it('método agregaComentario funciona correctamente', () => {
     const esperado = [{
       comentario: '',
       es_item: false,
@@ -264,5 +264,43 @@ describe('Items.vue', () => {
     expect(wrapper.vm.mostrarComentar).toEqual([])
     expect(wrapper.vm.listaComentarios).toEqual([])
     expect(wrapper.vm.listaGenerales).toEqual([])
+  })
+
+  it('método limpiarErrorItem funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      },
+      data () {
+        return {
+          listaEntradas: [{
+            error: true,
+            mensaje: 'Es un error de la prueba'
+          }]
+        }
+      }
+    })
+    wrapper.vm.limpiarErrorItem(0)
+    expect(wrapper.vm.listaEntradas[0].error).toBeFalsy()
+    expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
+  })
+
+  it('método limpiarErrorGeneral funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes
+      },
+      data () {
+        return {
+          entradas: {
+            comentarios: true
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarErrorGeneral()
+    expect(wrapper.vm.entradas.comentarios).toBeFalsy()
   })
 })
