@@ -65,6 +65,24 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaRevision).toEqual([])
   })
 
+  it('se asigna props contador adecuadamente', () => {
+    const wrapper = shallowMount(TableroEst, {
+      propsData: {
+        contador: 0
+      }
+    })
+    expect(wrapper.props().contador).toEqual(0)
+  })
+
+  it('variable contar se asigna con props correctamente', () => {
+    const wrapper = shallowMount(TableroEst, {
+      propsData: {
+        contador: 0
+      }
+    })
+    expect(wrapper.vm.contar).toEqual(0)
+  })
+
   it('propiedad computada mostrarBorradores funciona correctamente con true', () => {
     const wrapper = shallowMount(TableroEst, {
       data() {
@@ -92,7 +110,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarBorradores).toBeTruthy()
   })
 
-  it('propiedad computada mostrarBorradores funciona correctamente con true', () => {
+  it('propiedad computada mostrarBorradores funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarBorradores).toBeFalsy()
   })
@@ -124,7 +142,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarEmitidas).toBeTruthy()
   })
 
-  it('propiedad computada mostrarEmitidas funciona correctamente con true', () => {
+  it('propiedad computada mostrarEmitidas funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarEmitidas).toBeFalsy()
   })
@@ -156,7 +174,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarCerradas).toBeTruthy()
   })
 
-  it('propiedad computada mostrarCerradas funciona correctamente con true', () => {
+  it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
@@ -188,7 +206,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarComentadasGrupo).toBeTruthy()
   })
 
-  it('propiedad computada mostrarComentadasGrupo funciona correctamente con true', () => {
+  it('propiedad computada mostrarComentadasGrupo funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarComentadasGrupo).toBeFalsy()
   })
@@ -220,7 +238,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarComentadasCliente).toBeTruthy()
   })
 
-  it('propiedad computada mostrarComentadasCliente funciona correctamente con true', () => {
+  it('propiedad computada mostrarComentadasCliente funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarComentadasCliente).toBeFalsy()
   })
@@ -252,7 +270,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con true', () => {
+  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
@@ -284,7 +302,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRespondidasCliente).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasCliente funciona correctamente con true', () => {
+  it('propiedad computada mostrarRespondidasCliente funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRespondidasCliente).toBeFalsy()
   })
@@ -316,7 +334,7 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRevision funciona correctamente con true', () => {
+  it('propiedad computada mostrarRevision funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
