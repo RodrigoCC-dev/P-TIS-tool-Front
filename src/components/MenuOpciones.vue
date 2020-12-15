@@ -12,7 +12,7 @@
       </div>
       <div class="dropdown-menu" id="dropdown-menu" role="menu">
         <div class="dropdown-content">
-          <a class="dropdown-item">Inicio</a>
+          <a class="dropdown-item" @click="volverInicio">Inicio</a>
           <a class="dropdown-item">Cambiar clave</a>
           <a class="dropdown-item">Cerrar sesión</a>
         </div>
@@ -34,6 +34,19 @@ export default {
   methods: {
     nombreCompleto: function (usuario) {
       return Funciones.nombreCompleto(usuario)
+    },
+    volverInicio: function () {
+      if (this.usuario.rol.rango === 1) {
+        this.$router.push('coordinador')
+      } else if (this.usuario.rol.rango === 2) {
+        this.$router.push('profesor')
+      } else if (this.usuario.rol.rango === 3) {
+        this.$router.push('estudiante')
+      } else if (this.usuario.rol.rango === 4) {
+        this.$router.push('cliente')
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 }
