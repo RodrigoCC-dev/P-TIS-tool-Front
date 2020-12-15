@@ -5,9 +5,13 @@ export default {
     return tiempo[0] + ':' + tiempo[1]
   },
   obtenerFecha (timestamp) {
-    var fecha = timestamp.split('T')
-    var separar = fecha[0].split('-')
-    return separar[2] + '-' + separar[1] + '-' + separar[0]
+    if (timestamp !== null) {
+      var fecha = timestamp.split('T')
+      var separar = fecha[0].split('-')
+      return separar[2] + '-' + separar[1] + '-' + separar[0]
+    } else {
+      return ''
+    }
   },
   removeFromArray (arr, item) {
     var i = arr.indexOf(item)

@@ -134,13 +134,7 @@ export default {
   },
   methods: {
     fechaItem: function (cadena) {
-      if (cadena !== null) {
-        var separar = cadena.split('T')
-        var fecha = separar[0].split('-')
-        return fecha[2] + '-' + fecha[1] + '-' + fecha[0]
-      } else {
-        return ''
-      }
+      return Funciones.obtenerFecha(cadena)
     },
     obtenerIniciales: function (listaResponsables) {
       var resp = []
