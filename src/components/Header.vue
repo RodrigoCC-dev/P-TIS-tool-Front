@@ -25,7 +25,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import Auth from '@/services/auth.js'
 import Menu from '@/components/MenuOpciones.vue'
 
 export default {
