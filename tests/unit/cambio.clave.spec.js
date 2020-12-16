@@ -92,4 +92,87 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.entradas.nueva.error).toBeFalsy()
     expect(wrapper.vm.entradas.nueva.mensaje).toEqual('')
   })
+
+  it('métdo "validarPass" funciona correctamente para "nueva" igual a "undefinded"', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          nueva: undefined
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeFalsy()
+    expect(wrapper.vm.entradas.nueva.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nueva.mensaje).toEqual('Falta ingresar la nueva contraseña')
+  })
+
+  it('métdo "validarPass" funciona correctamente para "repetirNueva" igual a "undefinded"', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          repetirNueva: undefined
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeFalsy()
+    expect(wrapper.vm.entradas.repetir.error).toBeTruthy()
+    expect(wrapper.vm.entradas.repetir.mensaje).toEqual('Falta reingresar la nueva contraseña')
+  })
+
+  it('métdo "validarPass" funciona correctamente para "nueva" igual a ""', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          nueva: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeFalsy()
+    expect(wrapper.vm.entradas.nueva.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nueva.mensaje).toEqual('No se ha ingresado la nueva contraseña')
+  })
+
+  it('métdo "validarPass" funciona correctamente para "repetirNueva" igual a ""', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          nueva: 'abc',
+          repetirNueva: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeFalsy()
+    expect(wrapper.vm.entradas.repetir.error).toBeTruthy()
+    expect(wrapper.vm.entradas.repetir.mensaje).toEqual('No se ha reingresado la nueva contraseña')
+  })
+
+  it('métdo "validarPass" funciona correctamente para "nueva" distinto a "repetirNueva"', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          nueva: 'abc',
+          repetirNueva: 'def'
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeFalsy()
+    expect(wrapper.vm.entradas.nueva.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nueva.mensaje).toEqual('')
+    expect(wrapper.vm.entradas.repetir.error).toBeTruthy()
+    expect(wrapper.vm.entradas.repetir.mensaje).toEqual('Las contraseñas no coinciden')
+  })
+
+  it('métdo "validarPass" funciona correctamente para "nueva" igual a "repetirNueva"', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          nueva: 'abc',
+          repetirNueva: 'abc'
+        }
+      }
+    })
+    expect(wrapper.vm.validarPass()).toBeTruthy()
+    expect(wrapper.vm.entradas.nueva.error).toBeFalsy()
+    expect(wrapper.vm.entradas.repetir.error).toBeFalsy()
+  })
 })

@@ -147,7 +147,7 @@ export default {
             }
           } else {
             this.entradas.nueva.error = true
-            this.entradas.nueva.mensjae = 'No se ha ingresado la nueva contraseña'
+            this.entradas.nueva.mensaje = 'No se ha ingresado la nueva contraseña'
             return false
           }
         } else {
