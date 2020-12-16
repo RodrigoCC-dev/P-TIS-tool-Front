@@ -10,7 +10,7 @@
         </div>
         <div class="field">
           <div class="control has-icons-left">
-            <input class="input" v-model="actual" type="password" placeholder="Contraseña actual">
+            <input class="input" v-model="actual" :class="{ 'is-danger' : entradas.actual.error }" @input="limpiarActual" type="password" placeholder="Contraseña actual">
             <span class="icon is-small is-left">
               <i class="fas fa-id-card"></i>
             </span>
@@ -23,10 +23,11 @@
         </div>
         <div class="field">
           <div class="control has-icons-left">
-            <input class="input" v-model="nueva" type="password" placeholder="Nueva contraseña">
+            <input class="input" v-model="nueva" :class="{ 'is-danger' : entradas.nueva.error }" @input="limpiarNueva" type="password" placeholder="Nueva contraseña">
             <span class="icon is-small is-left">
               <i class="fas fa-key"></i>
             </span>
+            <p class="help is-danger" v-if="entradas.nueva.error">{{ entradas.nueva.mensaje }}</p>
           </div>
         </div>
 
@@ -35,7 +36,7 @@
         </div>
         <div class="field">
           <div class="control has-icons-left">
-            <input class="input" v-model="repetirNueva" type="password" placeholder="Repita nueva contraseña">
+            <input class="input" v-model="repetirNueva" :class="{ 'is-danger' : entradas.repetir.error }" @input="limpiarRepetir" type="password" placeholder="Repita nueva contraseña">
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
             </span>
@@ -45,7 +46,7 @@
 
         <div class="field mt-6">
           <div class="control has-text-centered">
-            <button class="button is-link" type="button">Cambiar contraseña</button>
+            <button class="button is-link" type="button" @click="cambiarClave">Cambiar contraseña</button>
           </div>
         </div>
 
@@ -97,7 +98,7 @@ export default {
           return true
         } else {
           this.entradas.actual.error = true
-          this.entradas.actual.mensaje = 'No se ha ingresado la nueva clave'
+          this.entradas.actual.mensaje = 'No se ha ingresado la clave actual'
           return false
         }
       } else {
@@ -165,23 +166,64 @@ export default {
       validar = validar && this.validarActual()
       validar = validar && this.validarNueva()
       validar = validar && this.validarPass()
+      console.log(validar)
       return validar
     },
+    async autenticar () {
+      try {
+        await Auth.login(this.usuario.email, this.actual)
+        return true
+      } catch {
+        this.entradas.actual.error = true
+        this.entradas.actual.mensaje = 'La clave ingresada no es válida'
+        return false
+      }
+    },
     async cambiarClave () {
+      console.log('Inicio cambio clave...')
       if (this.validarFormulario()) {
-        const usuario = {
-          id: this.usuario.id,
-          password: this.actual,
-          usuario: {
-            password: this.nueva,
-            password_confirmation: this.repetirNueva
+        if (await this.autenticar()) {
+          const usuario = {
+            password: this.actual,
+            usuario: {
+              password: this.nueva,
+              password_confirmation: this.repetirNueva
+            }
+          }
+          try {
+            await axios.patch(this.apiUrl + '/usuarios/' + this.usuario.id, usuario, { headers: Auth.postHeader() })
+            await Auth.login(this.usuario.email, this.nueva)
+            this.redirigirUsuario()
+          } catch (e) {
+            console.log('No se ha podido cambiar la clave de acceso')
+            console.log(e)
           }
         }
-        try {
-          await axios.patch(this.apiUrl + '/usuarios/' + this.usuario.id, usuario, { headers: Auth.postHeader() })
-        } catch (e) {
-          console.log(e)
-        }
+      }
+    },
+    limpiarActual: function () {
+      this.entradas.actual.error = false
+      this.entradas.actual.mensaje = ''
+    },
+    limpiarNueva: function () {
+      this.entradas.nueva.error = false
+      this.entradas.nueva.mensaje = ''
+    },
+    limpiarRepetir: function () {
+      this.entradas.repetir.error = false
+      this.entradas.repetir.mensaje = ''
+    },
+    redirigirUsuario () {
+      if (this.usuario.rol.rango === 1) {
+        this.$router.push({ path: '/coordinador' })
+      } else if (this.usuario.rol.rango === 2) {
+        this.$router.push({ path: '/profesor' })
+      } else if (this.usuario.rol.rango === 3) {
+        this.$router.push({ path: '/estudiante' })
+      } else if (this.usuario.rol.rango === 4) {
+        this.$router.push({ path: '/cliente' })
+      } else {
+        this.$router.push({ path: '/' })
       }
     }
   }

@@ -3,7 +3,7 @@
 
     <div class="dropdown is-hoverable is-right">
       <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="verMenu">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>{{ this.nombreCompleto(this.usuario) }}</span>
           <span class="icon is-small">
             <i class="fas fa-angle-down" aria-hidden="true"></i>
