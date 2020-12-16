@@ -175,4 +175,22 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.entradas.nueva.error).toBeFalsy()
     expect(wrapper.vm.entradas.repetir.error).toBeFalsy()
   })
+
+  it('método "validarFormulario" funciona correctamente para valores iniciales', () => {
+    const wrapper = shallowMount(CambioClave)
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente para valores correctos', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          actual: 'pass',
+          nueva: 'abc',
+          repetirNueva: 'abc'
+        }
+      }
+    })
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
 })
