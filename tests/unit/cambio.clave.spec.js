@@ -193,4 +193,55 @@ describe('CambioClave.vue', () => {
     })
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
+
+  it('método "limpiarActual" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          entradas: {
+            actual: {error: true, mensaje: 'Mensaje de prueba'},
+            nueva: {error: false, mensaje: ''},
+            repetir: {error: false, mensaje: ''}
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarActual()
+    expect(wrapper.vm.entradas.actual.error).toBeFalsy()
+    expect(wrapper.vm.entradas.actual.mensaje).toEqual('')
+  })
+
+  it('método "limpiarNueva" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          entradas: {
+            actual: {error: false, mensaje: ''},
+            nueva: {error: true, mensaje: 'Mensaje de prueba'},
+            repetir: {error: false, mensaje: ''}
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarNueva()
+    expect(wrapper.vm.entradas.nueva.error).toBeFalsy()
+    expect(wrapper.vm.entradas.nueva.mensaje).toEqual('')
+  })
+
+  it('método "limpiarRepetir" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data() {
+        return {
+          entradas: {
+            actual: {error: false, mensaje: ''},
+            nueva: {error: false, mensaje: ''},
+            repetir: {error: true, mensaje: 'Mensaje de prueba'}
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarRepetir()
+    expect(wrapper.vm.entradas.repetir.error).toBeFalsy()
+    expect(wrapper.vm.entradas.repetir.mensaje).toEqual('')
+  })
 })
