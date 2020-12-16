@@ -166,7 +166,6 @@ export default {
       validar = validar && this.validarActual()
       validar = validar && this.validarNueva()
       validar = validar && this.validarPass()
-      console.log(validar)
       return validar
     },
     async autenticar () {
@@ -180,7 +179,6 @@ export default {
       }
     },
     async cambiarClave () {
-      console.log('Inicio cambio clave...')
       if (this.validarFormulario()) {
         if (await this.autenticar()) {
           const usuario = {

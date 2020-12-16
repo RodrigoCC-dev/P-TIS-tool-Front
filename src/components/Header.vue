@@ -12,7 +12,6 @@
         <template v-if="sesionIniciada">
           <div class="column is-4"></div>
           <div class="column is-4 has-text-right">
-            <button class="button is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
             <Menu/>
           </div>
         </template>
