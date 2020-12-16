@@ -50,7 +50,20 @@ const routes = [
     name: 'Stakeholder',
     component: () => import(/* webpackChunkName: "coordinador" */ '../views/Stakeholder.vue'),
     meta: { requireAuth: true },
-    breforeEnter: (to, from, next) => {
+    beforeEnter: (to, from, next) => {
+      if (existToken()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  },
+  {
+    path: '/usuario/cambio/clave',
+    name: 'CambioClave',
+    component: () => import(/* webpackChunkName: "coordinador" */ '../views/CambioClave.vue'),
+    meta: { requireAuth: true },
+    beforeEnter: (to, from, next) => {
       if (existToken()) {
         next()
       } else {

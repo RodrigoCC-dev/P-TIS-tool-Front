@@ -10,9 +10,9 @@
           <img src="../assets/images/logo_diinf.jpeg">
         </div>
         <template v-if="sesionIniciada">
-          <div class="column is-6"></div>
-          <div class="column is-2">
-            <button class="button is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
+          <div class="column is-4"></div>
+          <div class="column is-4 has-text-right">
+            <Menu/>
           </div>
         </template>
         <template v-else>
@@ -26,9 +26,13 @@
 <script>
 import { mapState } from 'vuex'
 import Auth from '@/services/auth.js'
+import Menu from '@/components/MenuOpciones.vue'
 
 export default {
   name: 'Header',
+  components: {
+    Menu
+  },
   computed: {
     ...mapState(['authenticated']),
 
