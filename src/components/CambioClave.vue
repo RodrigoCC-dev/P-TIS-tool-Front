@@ -36,10 +36,16 @@
         <div class="field">
           <div class="control has-icons-left">
             <input class="input" v-model="repetirNueva" type="password" placeholder="Repita nueva contraseña">
-            <span class="icons is-small is-left">
+            <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
             </span>
             <p class="help is-danger" v-if="entradas.repetir.error">{{ entradas.repetir.mensaje }}</p>
+          </div>
+        </div>
+
+        <div class="field mt-6">
+          <div class="control has-text-centered">
+            <button class="button is-link" type="button">Cambiar contraseña</button>
           </div>
         </div>
 
@@ -154,19 +160,28 @@ export default {
         return false
       }
     },
+    validarFormulario: function () {
+      var validar = true
+      validar = validar && this.validarActual()
+      validar = validar && this.validarNueva()
+      validar = validar && this.validarPass()
+      return validar
+    },
     async cambiarClave () {
-      const usuario = {
-        id: this.usuario.id,
-        password: this.actual,
-        usuario: {
-          password: this.nueva,
-          password_confirmation: this.repetirNueva
+      if (this.validarFormulario()) {
+        const usuario = {
+          id: this.usuario.id,
+          password: this.actual,
+          usuario: {
+            password: this.nueva,
+            password_confirmation: this.repetirNueva
+          }
         }
-      }
-      try {
-        await axios.patch(this.apiUrl + '/usuarios/' + this.usuario.id, usuario, { headers: Auth.postHeader() })
-      } catch (e) {
-        console.log(e)
+        try {
+          await axios.patch(this.apiUrl + '/usuarios/' + this.usuario.id, usuario, { headers: Auth.postHeader() })
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
   }
