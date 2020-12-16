@@ -5,8 +5,8 @@
 
       <div class="column is-6 is-offset-3">
 
-        <div class="field">
-          <label class="labe">Contraseña actual:</label>
+        <div class="field has-text-left">
+          <label class="label">Contraseña actual:</label>
         </div>
         <div class="field">
           <div class="control has-icons-left">
@@ -18,7 +18,7 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class="field has-text-left">
           <label class="label">Nueva contraseña:</label>
         </div>
         <div class="field">
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class="field has-text-left">
           <label class="label">Repita nueva contraseña:</label>
         </div>
         <div class="field">
@@ -64,7 +64,7 @@ export default {
       nueva: '',
       repetirNueva: '',
       entradas: {
-        actual : {
+        actual: {
           error: false,
           mensaje: ''
         },
@@ -153,11 +153,11 @@ export default {
         this.entradas.nueva.mensaje = 'Falta ingresar la nueva contraseña'
         return false
       }
-    }
+    },
     async cambiarClave () {
       const usuario = {
         id: this.usuario.id,
-        password: this.actual
+        password: this.actual,
         usuario: {
           password: this.nueva,
           password_confirmation: this.repetirNueva

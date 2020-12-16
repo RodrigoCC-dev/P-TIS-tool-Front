@@ -13,7 +13,7 @@
       <div class="dropdown-menu" id="dropdown-menu" role="menu" v-if="mostrarMenu">
         <div class="dropdown-content">
           <a class="dropdown-item" @click="volverInicio">Inicio</a>
-          <a class="dropdown-item" @click="cambioClave">Cambiar clave</a>
+          <a class="dropdown-item" @click="cambiarClave">Cambiar clave</a>
           <a class="dropdown-item" @click="cerrarSesion">Cerrar sesión</a>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default {
       }
     },
     cambiarClave: function () {
-      this.$router.push('usuario/cambio/clave')
+      this.$router.push({ path: '/usuario/cambio/clave' })
     },
     cerrarSesion: function () {
       localStorage.removeItem('user_tk')

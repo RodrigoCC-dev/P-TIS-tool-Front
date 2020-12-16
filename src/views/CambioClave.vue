@@ -15,7 +15,7 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import Cambio from '@/component/CambioClave.vue'
+import Cambio from '@/components/CambioClave.vue'
 
 export default {
   name: 'CambioClave',
