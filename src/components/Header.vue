@@ -25,7 +25,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import Auth from '@/services/auth.js'
 import Menu from '@/components/MenuOpciones.vue'
 
 export default {
@@ -38,15 +37,6 @@ export default {
 
     sesionIniciada: function () {
       return this.authenticated || !!localStorage.user_tk
-    }
-  },
-  methods: {
-    cerrarSesion: function () {
-      localStorage.removeItem('user_tk')
-      this.$store.commit('setAutenticacion', false)
-      this.$store.commit('setUsuario', {})
-      Auth.deleteUser('userLogged')
-      return this.$router.push('/')
     }
   }
 }

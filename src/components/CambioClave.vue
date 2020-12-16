@@ -44,9 +44,12 @@
           </div>
         </div>
 
-        <div class="field mt-6">
-          <div class="control has-text-centered">
-            <button class="button is-link" type="button" @click="cambiarClave">Cambiar contraseña</button>
+        <div class="field mt-6 is-grouped is-grouped-centered">
+          <div class="control">
+            <a class="button is-link" @click="cambiarClave">Cambiar contraseña</a>
+          </div>
+          <div class="control">
+            <a class="button is-light" @click="cancelarCambio">Cancelar</a>
           </div>
         </div>
 
@@ -147,7 +150,7 @@ export default {
             }
           } else {
             this.entradas.nueva.error = true
-            this.entradas.nueva.mensjae = 'No se ha ingresado la nueva contraseña'
+            this.entradas.nueva.mensaje = 'No se ha ingresado la nueva contraseña'
             return false
           }
         } else {
@@ -223,6 +226,15 @@ export default {
       } else {
         this.$router.push({ path: '/' })
       }
+    },
+    cancelarCambio: function () {
+      this.redirigirUsuario()
+      this.actual = ''
+      this.nueva = ''
+      this.repetirNueva = ''
+      this.limpiarActual()
+      this.limpiarNueva()
+      this.limpiarRepetir()
     }
   }
 }
