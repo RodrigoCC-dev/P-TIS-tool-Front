@@ -43,7 +43,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1}}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por}}</td>
                 <td>{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
@@ -268,9 +268,15 @@ export default {
       } catch {
         console.log('No se han obtenido las minutas a mostrar')
       }
+    },
+    revisarMinuta: function (id) {
+      this.$emit('revision', id)
     }
   },
   mounted () {
+    this.obtenerMinutas()
+  },
+  beforeUpdate () {
     this.obtenerMinutas()
   }
 }
