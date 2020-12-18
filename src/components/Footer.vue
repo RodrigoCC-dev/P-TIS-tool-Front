@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <br>
   <div>
     <footer class="footer">

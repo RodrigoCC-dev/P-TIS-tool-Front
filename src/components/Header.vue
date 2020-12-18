@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div id="header" class="is-12 mb-3">
     <div class="columns">
       <div class="header-nav-blue column is-5"></div>
