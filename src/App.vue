@@ -4,6 +4,7 @@
 
 <style lang="scss">
  @import './assets/stylesheets/bulma.css';
+ @import './assets/stylesheets/bulma.min.css';
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

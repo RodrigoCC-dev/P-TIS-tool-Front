@@ -268,7 +268,7 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th>{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
@@ -302,6 +302,7 @@ const nombreTabs = {
 
 export default {
   name: 'TableroEst',
+  props: ['contador'],
   data () {
     return {
       nombreTab: 'Borradores',
@@ -314,7 +315,8 @@ export default {
       listaRespondidasCliente: [],
       listaCerradas: [],
       listaEmitidas: [],
-      listaRevision: []
+      listaRevision: [],
+      contar: this.contador
     }
   },
   computed: {
@@ -396,10 +398,15 @@ export default {
     },
     editarBorrador: function (id) {
       this.$emit('bitacora', id)
+    },
+    revisarMinuta: function (id) {
+      this.$emit('revision', id)
     }
   },
   mounted () {
     this.obtenerMinutas()
+  },
+  beforeUpdate () {
     this.obtenerParaRevisar()
   }
 }

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div id="header" class="is-12 mb-3">
     <div class="columns">
       <div class="header-nav-blue column is-5"></div>
@@ -10,9 +10,9 @@
           <img src="../assets/images/logo_diinf.jpeg">
         </div>
         <template v-if="sesionIniciada">
-          <div class="column is-6"></div>
-          <div class="column is-2">
-            <button class="button is-link" v-on:click="cerrarSesion">Cerrar sesión</button>
+          <div class="column is-4"></div>
+          <div class="column is-4 has-text-right">
+            <Menu/>
           </div>
         </template>
         <template v-else>
@@ -25,24 +25,18 @@
 
 <script>
 import { mapState } from 'vuex'
-import Auth from '@/services/auth.js'
+import Menu from '@/components/MenuOpciones.vue'
 
 export default {
   name: 'Header',
+  components: {
+    Menu
+  },
   computed: {
     ...mapState(['authenticated']),
 
     sesionIniciada: function () {
       return this.authenticated || !!localStorage.user_tk
-    }
-  },
-  methods: {
-    cerrarSesion: function () {
-      localStorage.removeItem('user_tk')
-      this.$store.commit('setAutenticacion', false)
-      this.$store.commit('setUsuario', {})
-      Auth.deleteUser('userLogged')
-      return this.$router.push('/')
     }
   }
 }

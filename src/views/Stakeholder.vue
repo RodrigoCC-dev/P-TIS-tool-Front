@@ -1,10 +1,16 @@
-<template lang="html">
+<template>
   <div class="has-text-left">
     <Header/>
 
     <div class="container">
 
-      <Tablero/>
+      <div v-if="!verRevision">
+        <Tablero @revision="establecerRevision"/>
+      </div>
+
+      <div v-else>
+        <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero"/>
+      </div>
 
     </div>
 
@@ -16,58 +22,57 @@
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Tablero from '@/components/TableroStk.vue'
+import Comentar from '@/components/comentarios/ComentarMinuta.vue'
+
+import axios from 'axios'
+import Auth from '@/services/auth.js'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Stakeholder',
   components: {
     Header,
     Footer,
-    Tablero
+    Tablero,
+    Comentar
   },
   data () {
     return {
-      tabs: {
-        revision: 'is-active',
-        comentadas: '',
-        respondidas: '',
-        cerradas: ''
-      },
-      componentes: {
-        revision: 'inline',
-        comentadas: 'none',
-        respondidas: 'none',
-        cerradas: 'none'
-      },
-      mostrar: false
+      idRevision: 0
     }
   },
+  computed: {
+    ...mapState(['apiUrl', 'usuario'])
+  },
   methods: {
-    verRevision: function () {
-      return true
+    establecerRevision: function (id) {
+      this.idRevision = id
+      this.verRevision = true
     },
-    /*  verComentadas: function () {
-      for (var valor in this.tabs) {
-        if (valor === 'is-active') {
-          set(valor) = ''
-        }
-      }
-      this.tabs.comentadas = 'is-active'
-      for (var item in this.componentes) {
-        if (item === 'inline') {
-          this.componentes.set(item) = 'none'
-        }
-      }
-      this.componentes.comentadas = 'inline'
-      console.log(this.tabs)
-      console.log(this.componentes)
-      return true
-    }, */
-    verRespondidas: function () {
-      return true
+    mostrarTrablero: function () {
+      this.verRevision = false
+      this.idRevision = 0
     },
-    verCerradas: function () {
-      return true
+    async obtenerStakeholder () {
+      try {
+        const response = await axios.get(this.apiUrl + '/stakeholders/' + this.usuario.id, { headers: Auth.authHeader() })
+        this.$store.commit('setStakeholder', response.data)
+        this.obtenerGrupo()
+      } catch {
+        console.log('No se ha obtenido la información del Stakeholder')
+      }
+    },
+    async obtenerGrupo () {
+      try {
+        const response = await axios.get(this.apiUrl + '/grupos/' + this.stakeholder.grupo_id, { headers: Auth.authHeader() })
+        this.$store.commit('setGrupo', response.data)
+      } catch {
+        console.log('No se ha obtenido la información del grupo')
+      }
     }
+  },
+  mounted () {
+    this.obtenerStakeholder()
   }
 }
 </script>
