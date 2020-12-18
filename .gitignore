@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # Ignore .env file
 .env
+
+# Ignore directory coverage
+coverage
