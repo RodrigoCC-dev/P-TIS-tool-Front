@@ -24,7 +24,7 @@ test:
     key: ptis-tool-front
     paths:
       - dist
-      - coverage/lcov-reports
+      - coverage/lcov-report
   script:
     - npm install --progres:false
     - npm run test:unit
