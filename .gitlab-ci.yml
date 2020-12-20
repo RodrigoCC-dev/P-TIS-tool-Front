@@ -6,13 +6,13 @@ stages:
 
 image: node:10
 
-build site:
+build:
   stage: build
   script:
     - npm install --progress=false
     - npm run build
-  artifacts:
-    expire_in: 1 week
+  cache:
+    key: ptis-tool-front
     paths:
       - dist
   before_script:
@@ -20,12 +20,14 @@ build site:
 
 test:
   stage: unit test
+  cache:
+    key: ptis-tool-front
+    paths:
+      - dist
+      - coverage/lcov-reports
   script:
     - npm install --progres:false
     - npm run test:unit
-  artifacts:
-    reports:
-      cobertura: coverage/lcov-reports
 
 # e2e:
 #  image: node:10
@@ -72,6 +74,7 @@ sonarqube:
 
 to_docker:
   image: docker:latest
+  extends: build
   stage: deploy
   services:
     - docker:dind
