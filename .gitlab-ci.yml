@@ -23,7 +23,7 @@ test:
   cache:
     key: ptis-tool-front
     paths:
-      - coverage/lcov-report
+      - coverage
   script:
     - npm install --progres:false
     - npm run test:unit
