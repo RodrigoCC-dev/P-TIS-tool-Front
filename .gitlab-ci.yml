@@ -23,6 +23,9 @@ test:
   script:
     - npm install --progres:false
     - npm run test:unit
+  artifacts:
+    reports:
+      - coverage/lcov-reports
 
 # e2e:
 #  image: node:10
@@ -47,10 +50,10 @@ test:
 ##
 
 sonarqube:
+  extends: test
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
-  extends: test
   stage: static code analisys
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" #Define la ubicación del caché de análisis de Sonarqube
