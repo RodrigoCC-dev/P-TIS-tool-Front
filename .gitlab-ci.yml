@@ -25,7 +25,7 @@ test:
     - npm run test:unit
   artifacts:
     reports:
-      - coverage/lcov-reports
+      cobertura: coverage/lcov-reports
 
 # e2e:
 #  image: node:10
