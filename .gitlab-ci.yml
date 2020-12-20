@@ -62,7 +62,7 @@ sonarqube:
     SONAR_HOST: http://34.122.229.87:9000
     SONAR_TOKEN: e5fa85a498f969b770f5449cdc738fef634e7b2c
   cache:
-    key: "${CI_JOB_NAME}"
+    key: ptis-tool-front
     paths:
       - .sonar/cache
   script:
