@@ -42,21 +42,21 @@
           <p id="borradores" class="title is-5">Borradores</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarBorradores" aria-describedby="borradores">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizado por</th>
-                <th scope="col">Iniciada el</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizado por</th>
+                <th class="has-text-centered" scope="col">Iniciada el</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td><a @click="editarBorrador(bitacora.id)">{{ bitacora.minuta.codigo}}</a></td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
             </tbody>
           </table>
@@ -74,21 +74,21 @@
           <p id="emitidas" class="title is-5">Emitidas</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarEmitidas" aria-describedby="emitidas">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Emitida el</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -106,21 +106,21 @@
           <p id="comentadas" class="title is-5">Comentadas por integrantes del grupo</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasGrupo" aria-describedby="comentadas">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Comentada por</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td></td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered">{{ convertirFecha((bitacora.fecha_emision)) }}</td>
               </tr>
             </tbody>
           </table>
@@ -135,21 +135,21 @@
           <p id="cliente" class="title is-5">Comentadas por el Cliente</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadasCliente" aria-describedby="cliente">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Comentada por</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Comentada por</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td></td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered"></td>
               </tr>
             </tbody>
           </table>
@@ -166,21 +166,21 @@
           <p id="respondidas" class="title is-5">Respondidas por los integrantes del grupo</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo" aria-describedby="respondidas">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Respondida por</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Respondida por</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td></td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered"></td>
               </tr>
             </tbody>
           </table>
@@ -195,21 +195,21 @@
           <p id="resp-cliente" class="title is-5">Respondidas por el Cliente</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Respondida por</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Respondida por</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td></td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered"></td>
               </tr>
             </tbody>
           </table>
@@ -226,21 +226,21 @@
           <p id="cerradas" class="title is-5">Minutas cerradas</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerradas" aria-describedby="cerradas">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Realizada por</th>
-                <th scope="col">Cerrada el</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Cerrada el</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td></td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered"></td>
               </tr>
             </tbody>
           </table>
@@ -257,21 +257,21 @@
           <p id="revisar" class="title is-5">Minutas para revisar</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRevision" aria-describedby="revisar">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Revisión</th>
-                <th scope="col">Creada por</th>
-                <th scope="col">Creada el</th>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Revisión</th>
+                <th class="has-text-centered" scope="col">Creada por</th>
+                <th class="has-text-centered" scope="col">Creada el</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
-                <th scope="row">{{ index + 1 }}</th>
+              <tr v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td>{{ bitacora.revision }}</td>
-                <td>{{ bitacora.minuta.creada_por }}</td>
-                <td>{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
             </tbody>
           </table>
