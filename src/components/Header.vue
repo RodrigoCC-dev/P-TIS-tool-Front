@@ -7,7 +7,7 @@
     <div class="container">
       <div class="columns is-vcentered">
         <div class="column is-4">
-          <img src="../assets/images/logo_diinf.jpeg">
+          <img src="../assets/images/logo_diinf.jpeg" alt="Logo DIINF">
         </div>
         <template v-if="sesionIniciada">
           <div class="column is-4"></div>
