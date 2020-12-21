@@ -117,7 +117,7 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha((bitacora.fecha_emision)) }}</td>
@@ -401,6 +401,9 @@ export default {
     },
     revisarMinuta: function (id) {
       this.$emit('revision', id)
+    },
+    revisarComentarios: function (id) {
+      this.$emit('comentarios', id)
     }
   },
   mounted () {

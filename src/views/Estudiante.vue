@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision"/>
+          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios"/>
 
         </div>
 
@@ -51,6 +51,10 @@
 
       <div v-else-if="verRevision">
         <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="verComentarios">
+        <Responder :id-bitacora="idComentarios" @cerrar="mostrarTablero"/>
       </div>
 
     </div>
@@ -65,6 +69,7 @@ import Footer from '@/components/Footer.vue'
 import Minuta from '@/components/Minuta.vue'
 import Tablero from '@/components/TableroEst.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
+import Responder from '@/components/comentarios/ResponderMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -86,8 +91,10 @@ export default {
       seleccionarMinuta: false,
       idBitacora: 0,
       idRevision: 0,
+      idComentarios: 0,
       crearMinuta: true,
       verRevision: false,
+      verComentarios: false,
       tableroEst: 0
     }
   },
@@ -153,9 +160,15 @@ export default {
     },
     mostrarTablero: function () {
       this.verRevision = false
+      this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
       this.tableroEst++
+    },
+    revisarComentarios: function (id) {
+      this.idComentarios = id
+      this.verComentarios = true
+      this.crearMinuta = false
     }
   },
   mounted () {
