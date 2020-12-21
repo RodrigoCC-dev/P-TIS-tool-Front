@@ -182,11 +182,7 @@ export default {
       return lista
     },
     mostrarGrupos: function () {
-      if (this.gruposJornada.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.gruposJornada.length > 0
     }
   },
   methods: {

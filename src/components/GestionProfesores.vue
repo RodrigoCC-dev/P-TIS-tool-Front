@@ -323,11 +323,7 @@ export default {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
-        } else if (!regExp.test(correo)) {
-          this.entradas.correo_elec.error = true
-          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
-          return false
-        } else if (separarCorreo.length !== 2) {
+        } else if (!regExp.test(correo) || separarCorreo.length !== 2) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
           return false

@@ -332,11 +332,7 @@ export default {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.sin_correo
           return false
-        } else if (!regExp.test(correo)) {
-          this.emailEntrada.error = true
-          this.emailEntrada.mensaje = this.mensajes.correo_mal
-          return false
-        } else if (separarCorreo.length !== 2) {
+        } else if (!regExp.test(correo) || separarCorreo.length !== 2) {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.correo_mal
           return false
