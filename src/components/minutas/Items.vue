@@ -1,20 +1,20 @@
 <template>
   <div>
 
-    <table class="table is-hoverable is-fullwidth">
+    <table class="table is-hoverable is-fullwidth" summary="Items">
       <thead>
         <tr class="has-text-centered">
-          <th class="is-narrow">N°</th>
-          <th><abbr title="Tipo de actividad">Item</abbr></th>
-          <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
-          <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
-          <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
-          <th v-if="comentarios"></th>
+          <th scope="col" class="is-narrow">N°</th>
+          <th scope="col"><abbr title="Tipo de actividad">Item</abbr></th>
+          <th scope="col"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
+          <th scope="col"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
+          <th scope="col"><abbr title="Responsable de realizarla">Responsable</abbr></th>
+          <th scope="col" v-if="comentarios"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in listaOrdenada" :key="item.id">
-          <th class="is-vcentered">{{ item.correlativo }}</th>
+          <th scope="row" class="is-vcentered">{{ item.correlativo }}</th>
           <td class="is-vcentered">{{ item.tipo }}</td>
           <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
           <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
@@ -56,7 +56,7 @@
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div class="content has-text-left">
-            <dl>
+            <ul>
               <li v-for="(comentario, index) in listaGenerales" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
@@ -67,7 +67,7 @@
                   </p>
                 </div>
               </li>
-            </dl>
+            </ul>
             <p class="is-danger help" v-if="entradas.comentarios">No se han ingresado todos los comentarios</p>
           </div>
         </div>
