@@ -63,6 +63,10 @@ export default {
         console.log(e)
       }
     }
+  },
+  mounted () {
+    this.obtenerMinuta(this.id)
+    this.obtenerComentarios(this.id)
   }
 }
 </script>
