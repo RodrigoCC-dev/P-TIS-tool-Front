@@ -105,13 +105,13 @@
     <div class="columns">
       <div class="column is-11 is-offset-1">
         <br>
-        <table class="table is-fullwidth">
+        <table class="table is-fullwidth" summary="Asistencia">
           <thead>
             <tr>
-              <th>Participantes</th>
-              <th></th>
-              <th class="has-text-centered">Iniciales</th>
-              <th class="has-text-centered">Asistencia</th>
+              <th scope="col">Participantes</th>
+              <th scope="col"></th>
+              <th scope="col" class="has-text-centered">Iniciales</th>
+              <th scope="col" class="has-text-centered">Asistencia</th>
             </tr>
           </thead>
           <tbody class="has-text-centered">
