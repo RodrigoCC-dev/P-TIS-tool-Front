@@ -5,7 +5,7 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" @responder="recibirRespuestas" @cerrar="cerrarRespuestas"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" @responder="recibirRespuestas" @cerrar="cerrarRespuestas"/>
     </div>
 
   </div>
@@ -54,7 +54,7 @@ export default {
         console.log(e)
       }
     },
-    async obtenerComentarios (bitacoraId){
+    async obtenerComentarios (bitacoraId) {
       try {
         const response = await axios.get(this.apiUrl + '/comentarios/' + bitacoraId, { headers: Auth.authHeader() })
         this.comentarios = response.data
