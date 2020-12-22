@@ -106,7 +106,7 @@
     <div v-else-if="respuestas">
 
       <div class="columns is-multiline is-desktop">
-        <div class="column is-3" v-for="comentario in comentariosGenerales" :key="comentario.id">
+        <div class="column is-3" v-for="(comentario, index) in comentariosGenerales" :key="comentario.id">
             <article class="message">
               <div class="message-header">
                 <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
@@ -289,6 +289,10 @@ export default {
             this.comentariosItems.push(this.comentariosMinuta[i])
           } else {
             this.comentariosGenerales.push(this.comentariosMinuta[i])
+            thid.respuestasGenerales.push({
+              comentario_id: this.comentariosMinuta[i].id,
+              respuesta: ''
+            })
           }
         }
       }
@@ -309,11 +313,24 @@ export default {
         }
       }
       return lista
+    },
+    crearRespuestasItems: function () {
+      var lista = []
+      for (var i = 0; i < this.comentariosPorItem.length; i++) {
+        for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
+          lista.push({comentario_id: this.comentariosPorItem[i][j].id, respuesta: ''})
+        }
+        this.respuestasItems.push(lista)
+        lista = []
+      }
     }
   },
   mounted () {
     this.crearListas()
     this.categorizarComentarios()
+  },
+  beforeUpdate () {
+    this.crearRespuestasItems()
   }
 }
 </script>
