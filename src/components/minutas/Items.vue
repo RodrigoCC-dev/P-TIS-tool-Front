@@ -303,7 +303,7 @@ export default {
       var lista = []
       if (this.comentariosItems.length > 0) {
         for (var i = 0; i < this.comentariosItems.length; i++) {
-          if (this.comentariosItems[i].item_id === itemId) {
+          if (this.comentariosItems[i].id_item === itemId) {
             lista.push(this.comentariosItems[i])
           }
         }
