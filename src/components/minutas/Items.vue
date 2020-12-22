@@ -113,6 +113,21 @@
               </div>
               <div class="message-body">
                 {{ comentario.comentario }}
+                <div v-if="!verRespuestasGenerales[index]">
+                  <a @click="abrirRespuestaGeneral(index)">responder</a>
+                </div>
+                <div v-else>
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="content">
+                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend"></textarea>
+                      </div>
+                    </div>
+                    <footer class="card-footer">
+                      <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
+                    </footer>
+                  </div>
+                </div>
               </div>
             </article>
         </div>
@@ -155,7 +170,9 @@ export default {
       comentariosItems: [],
       comentariosGenerales: [],
       respuestasItems: [],
-      respuestasGenerales: []
+      respuestasGenerales: [],
+      verRespuestasItems: [],
+      verRespuestasGenerales: []
     }
   },
   computed: {
@@ -289,15 +306,16 @@ export default {
             this.comentariosItems.push(this.comentariosMinuta[i])
           } else {
             this.comentariosGenerales.push(this.comentariosMinuta[i])
-            thid.respuestasGenerales.push({
+            this.respuestasGenerales.push({
               comentario_id: this.comentariosMinuta[i].id,
               respuesta: ''
             })
+            this.verRespuestasGenerales.push(false)
           }
         }
       }
     },
-    enviarRespustas: function () {
+    enviarRespuestas: function () {
       if (this.validarRespuestas()) {
         var respuestas = this.respuestasItems.concat(this.respuestasGenerales)
         this.$emit('responder', respuestas)
@@ -316,13 +334,23 @@ export default {
     },
     crearRespuestasItems: function () {
       var lista = []
+      var respuestas = []
       for (var i = 0; i < this.comentariosPorItem.length; i++) {
         for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
-          lista.push({comentario_id: this.comentariosPorItem[i][j].id, respuesta: ''})
+          lista.push({ comentario_id: this.comentariosPorItem[i][j].id, respuesta: '' })
+          respuestas.push(false)
         }
         this.respuestasItems.push(lista)
+        this.verRespuestasItems.push(respuestas)
         lista = []
+        respuestas = []
       }
+    },
+    abrirRespuestaGeneral: function (index) {
+      this.verRespuestasGenerales[index] = true
+    },
+    cerrarRespuestaGeneral: function (index) {
+      this.verRespuestasGenerales[index] = false
     }
   },
   mounted () {
