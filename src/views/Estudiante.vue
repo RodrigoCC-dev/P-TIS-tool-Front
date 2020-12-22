@@ -82,7 +82,8 @@ export default {
     Footer,
     Minuta,
     Tablero,
-    Comentar
+    Comentar,
+    Responder
   },
   data () {
     return {
