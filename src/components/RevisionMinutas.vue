@@ -116,7 +116,7 @@
       <Informacion :proyecto="grupoSeleccionado" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="false" :lista-com="[]"/>
 
       <br>
       <div class="columns">
