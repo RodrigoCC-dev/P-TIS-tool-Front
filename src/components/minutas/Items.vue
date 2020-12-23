@@ -389,6 +389,59 @@ export default {
       this.verRespuestasItems[index][ind] = false
       this.respuestasItems[index][ind].respuesta = ''
     },
+    validarRespuestaItem: function (index, ind) {
+      if (this.verRespuestasItems[index][ind]) {
+        if (this.respuetasItems[index][ind].respuresta === '' || this.respuestaItems[index][ind] === undefined) {
+          this.responderEntradasItems[index][ind] = true
+          this.responderEntradasItems[index][ind] = 'Falta ingresar la respuesta al comentario'
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    validarListaRespuestas: function () {
+      var validacion = true
+      for (var i = 0; i < this.responderEntradasItems.length; i++) {
+        for (var j = 0; j < this.responderEntradasItems[i].length; j++) {
+          validacion = validacion && this.validarRespuestaItem(i, j)
+        }
+      }
+      return validacion
+    },
+    validarRespuestaGeneral: function (index) {
+      if (this.verRespuetasGenerales[index]) {
+        if (this.respuestasGenerales[index].respuesta === '' || this.respurestasGenerales[index].respruesta === undefined) {
+          this.responderEntradasGenerales[index].error = true
+          this.responderEntradasGenerales[index].mensaje = 'Falta ingresar la respuesta al comentario'
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    validarListaRespGenerales: function () {
+      var validacion = true
+      for (var i = 0; i < this.responderEntradasGenerales.length; i++) {
+        validacion = validacion && this.validarListaRespGenerales(i)
+      }
+      return validacion
+    },
+    validarRespuestas: function () {
+      return this.validarListaRespuestas() && this.validarListaRespGenerales()
+    },
+    limpiarErrorRespItem: function (index, ind) {
+      this.responderEntradasItems[index][ind].error = false
+      this.responderEntradasItems[index][ind].mensaje = ''
+    },
+    limpiarErrorRespGeneral: function (index) {
+      this.responderEntradasGenerales[index].error = false
+      this.responderEntradasGenerales[index].mensaje = ''
+    },
     cerrarRespuestas: function () {
       this.$emit('cerrar')
     }
