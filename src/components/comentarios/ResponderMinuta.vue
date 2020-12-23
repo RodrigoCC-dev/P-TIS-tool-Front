@@ -62,6 +62,12 @@ export default {
         console.log('No fue posible obtener los comentarios de la minuta')
         console.log(e)
       }
+    },
+    recibirRespuestas: function (respuestas) {
+      console.log(respuestas)
+    },
+    cerrarRespuestas: function () {
+      console.log('cerrar')
     }
   },
   mounted () {
