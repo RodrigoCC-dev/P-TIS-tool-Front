@@ -54,8 +54,9 @@
                       <div class="card">
                         <div class="card-content">
                           <div class="content">
-                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend"></textarea>
+                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }"></textarea>
                           </div>
+                          <p v-if="this.responderEntradasItems[index][ind].error" class="is-danger help">{{ this.responderEntradasItems[index][ind].mensaje }}</p>
                         </div>
                         <footer class="card-footer">
                           <a class="card-footer-item" @click="cerrarRespuestaItem(index, ind)">Cancelar</a>
@@ -135,8 +136,9 @@
                   <div class="card">
                     <div class="card-content">
                       <div class="content">
-                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend"></textarea>
+                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }"></textarea>
                       </div>
+                      <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
                     </div>
                     <footer class="card-footer">
                       <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
