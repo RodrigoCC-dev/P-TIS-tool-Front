@@ -46,7 +46,22 @@
                     <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
                   </div>
                   <div class="message-body">
-                    {{ comentario.comentario }}
+                    <p>{{ comentario.comentario }}</p>
+                    <div v-if="!this.verRespuestasItems[index][ind]">
+                      <a @click="abrirRespuestaItem(index, ind)"><strong>responder</strong></a>
+                    </div>
+                    <div v-else>
+                      <div class="card">
+                        <div class="card-content">
+                          <div class="content">
+                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend"></textarea>
+                          </div>
+                        </div>
+                        <footer class="card-footer">
+                          <a class="card-footer-item" @click="cerrarRespuestaItem(index, ind)">Cancelar</a>
+                        </footer>
+                      </div>
+                    </div>
                   </div>
                 </article>
               </div>
@@ -112,9 +127,9 @@
                 <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
               </div>
               <div class="message-body">
-                {{ comentario.comentario }}
-                <div v-if="!verRespuestasGenerales[index]">
-                  <a @click="abrirRespuestaGeneral(index)">responder</a>
+                <p>{{ comentario.comentario }}</p>
+                <div v-if="!this.verRespuestasGenerales[index]">
+                  <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
                 </div>
                 <div v-else>
                   <div class="card">
@@ -333,32 +348,52 @@ export default {
       return lista
     },
     crearRespuestasItems: function () {
-      var lista = []
-      var respuestas = []
-      for (var i = 0; i < this.comentariosPorItem.length; i++) {
-        for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
-          lista.push({ comentario_id: this.comentariosPorItem[i][j].id, respuesta: '' })
-          respuestas.push(false)
+      if (this.comentariosPorItem.length > this.respuestasItems.length || this.comentariosPorItem.length > this.verRespuestasItems.length) {
+        this.respuestasItems = []
+        this.verRespuestasItems = []
+        var lista = []
+        var respuestas = []
+        for (var i = 0; i < this.comentariosPorItem.length; i++) {
+          for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
+            lista.push({ comentario_id: this.comentariosPorItem[i][j].id, respuesta: '' })
+            respuestas.push(false)
+          }
+          this.respuestasItems.push(lista)
+          this.verRespuestasItems.push(respuestas)
+          lista = []
+          respuestas = []
         }
-        this.respuestasItems.push(lista)
-        this.verRespuestasItems.push(respuestas)
-        lista = []
-        respuestas = []
       }
     },
     abrirRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = true
+      console.log(this.verRespuestasGenerales)
     },
     cerrarRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = false
+      console.log(this.verRespuestasGenerales)
+    },
+    abrirRespuestaItem: function (index, ind) {
+      this.verRespuestasItems[index][ind] = true
+      console.log(this.verRespuestasItems)
+    },
+    cerrarRespuestaItem: function (index, ind) {
+      this.verRespuestasItems[index][ind] = false
+      console.log(this.verRespuestasItems)
+    },
+    cerrarRespuestas: function () {
+      this.$emit('cerrar')
     }
   },
   mounted () {
     this.crearListas()
     this.categorizarComentarios()
+    console.log(this.verRespuestasGenerales)
   },
   beforeUpdate () {
     this.crearRespuestasItems()
+    console.log(this.verRespuestasItems)
+    console.log(this.respuestasItems)
   }
 }
 </script>
