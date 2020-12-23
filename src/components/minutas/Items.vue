@@ -187,7 +187,9 @@ export default {
       respuestasItems: [],
       respuestasGenerales: [],
       verRespuestasItems: [],
-      verRespuestasGenerales: []
+      verRespuestasGenerales: [],
+      responderEntradasItem: [],
+      responderEntradasGenerales: []
     }
   },
   computed: {
@@ -326,6 +328,7 @@ export default {
               respuesta: ''
             })
             this.verRespuestasGenerales.push(false)
+            this.responderEntradasGenerales.push(Object.assign({}, this.entrada))
           }
         }
       }
@@ -351,35 +354,38 @@ export default {
       if (this.comentariosPorItem.length > this.respuestasItems.length || this.comentariosPorItem.length > this.verRespuestasItems.length) {
         this.respuestasItems = []
         this.verRespuestasItems = []
+        this.responderEntradasItems = []
         var lista = []
         var respuestas = []
+        var entradas = []
         for (var i = 0; i < this.comentariosPorItem.length; i++) {
           for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
             lista.push({ comentario_id: this.comentariosPorItem[i][j].id, respuesta: '' })
             respuestas.push(false)
+            entradas.push(Object.assign({}, this.entrada))
           }
           this.respuestasItems.push(lista)
           this.verRespuestasItems.push(respuestas)
+          this.responderEntradasItems.push(entradas)
           lista = []
           respuestas = []
+          entradas = []
         }
       }
     },
     abrirRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = true
-      console.log(this.verRespuestasGenerales)
     },
     cerrarRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = false
-      console.log(this.verRespuestasGenerales)
+      this.respuestasGenerales[index].respuesta = ''
     },
     abrirRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = true
-      console.log(this.verRespuestasItems)
     },
     cerrarRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = false
-      console.log(this.verRespuestasItems)
+      this.respuestasItems[index][ind].respuesta = ''
     },
     cerrarRespuestas: function () {
       this.$emit('cerrar')
@@ -388,12 +394,9 @@ export default {
   mounted () {
     this.crearListas()
     this.categorizarComentarios()
-    console.log(this.verRespuestasGenerales)
   },
   beforeUpdate () {
     this.crearRespuestasItems()
-    console.log(this.verRespuestasItems)
-    console.log(this.respuestasItems)
   }
 }
 </script>
