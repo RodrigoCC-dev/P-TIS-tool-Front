@@ -40,7 +40,7 @@
               </div>
             </div>
             <div v-else-if="respuestas">
-              <div v-for="(comentario, ind) in comentariosPorItem[index]" :key="ind">
+              <div v-for="(comentario, ind) in comentariosPorItem[index]" :key="comentario.id">
                 <article class="message is-small">
                   <div class="message-header">
                     <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
@@ -54,7 +54,7 @@
                       <div class="card">
                         <div class="card-content">
                           <div class="content">
-                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }"></textarea>
+                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }" @input="limpiarErrorRespItem(index, ind)"></textarea>
                           </div>
                           <p v-if="this.responderEntradasItems[index][ind].error" class="is-danger help">{{ this.responderEntradasItems[index][ind].mensaje }}</p>
                         </div>
@@ -136,7 +136,7 @@
                   <div class="card">
                     <div class="card-content">
                       <div class="content">
-                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }"></textarea>
+                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
                       </div>
                       <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
                     </div>
@@ -147,6 +147,19 @@
                 </div>
               </div>
             </article>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-half is-offset-3">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-link" @click="enviarRespuestas">Guardar respuestas</a>
+            </div>
+            <div class="control">
+              <a class="button is-dark is-light" @click="cancelarEnvioRespuestas">Cancelar</a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -257,6 +270,14 @@ export default {
       this.mostrarComentar = []
       this.listaComentarios = []
       this.listaGenerales = []
+      this.comentariosItems = []
+      this.comentariosGenerales = []
+      this.respuestasItems = []
+      this.respuestasGenerales = []
+      this.verRespuestasItems = []
+      this.verRespuestasGenerales = []
+      this.responderEntradasItem = []
+      this.responderEntradasGenerales = []
     },
     enviarComentarios: function () {
       if (this.validarComentarios()) {
@@ -341,6 +362,10 @@ export default {
         this.$emit('responder', respuestas)
       }
     },
+    cancelarEnvioRespuestas: function () {
+      this.$emit('cerrar')
+      this.limpiarCampos()
+    },
     buscarComentarios: function (itemId) {
       var lista = []
       if (this.comentariosItems.length > 0) {
@@ -377,6 +402,7 @@ export default {
     },
     abrirRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = true
+      console.log(this.verRespuestasGenerales)
     },
     cerrarRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = false
@@ -384,6 +410,7 @@ export default {
     },
     abrirRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = true
+      console.log(this.verRespuestasItems)
     },
     cerrarRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = false
@@ -391,7 +418,7 @@ export default {
     },
     validarRespuestaItem: function (index, ind) {
       if (this.verRespuestasItems[index][ind]) {
-        if (this.respuetasItems[index][ind].respuresta === '' || this.respuestaItems[index][ind] === undefined) {
+        if (this.respuestasItems[index][ind].respuesta === '' || this.respuestaItems[index][ind].respuesta === undefined) {
           this.responderEntradasItems[index][ind] = true
           this.responderEntradasItems[index][ind] = 'Falta ingresar la respuesta al comentario'
           return false
@@ -412,8 +439,8 @@ export default {
       return validacion
     },
     validarRespuestaGeneral: function (index) {
-      if (this.verRespuetasGenerales[index]) {
-        if (this.respuestasGenerales[index].respuesta === '' || this.respurestasGenerales[index].respruesta === undefined) {
+      if (this.verRespuestasGenerales[index]) {
+        if (this.respuestasGenerales[index].respuesta === '' || this.respuestasGenerales[index].respuesta === undefined) {
           this.responderEntradasGenerales[index].error = true
           this.responderEntradasGenerales[index].mensaje = 'Falta ingresar la respuesta al comentario'
           return false
@@ -452,6 +479,8 @@ export default {
   },
   beforeUpdate () {
     this.crearRespuestasItems()
+    console.log(this.verRespuestasItems)
+    console.log(this.verRespuestasGenerales)
   }
 }
 </script>
