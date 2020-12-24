@@ -1124,4 +1124,85 @@ describe('Items.vue', () => {
     expect(wrapper.vm.verRespuestasItems[0][0]).toBeFalsy()
     expect(wrapper.vm.respuestasItems[0][0].respuesta).toEqual('')
   })
+
+  it('método "validarRespuestaItem" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeTruthy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('Falta ingresar la respuesta al comentario')
+  })
+
+  it('método "validarRespuestaItem" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeTruthy()
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('')
+  })
+
+  it('método "validarRespuestaItem" funciona correctamente con "true" y respuesta', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeTruthy()
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('')
+  })
+
+  it('método "validarListaRespuestas" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    expect(wrapper.vm.validarListaRespuestas()).toBeTruthy()
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('')
+  })
+
+  it('método "validarListaRespuestas" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    expect(wrapper.vm.validarListaRespuestas()).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeTruthy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('Falta ingresar la respuesta al comentario')
+  })
 })
