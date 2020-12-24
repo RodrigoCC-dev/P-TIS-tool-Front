@@ -43,7 +43,7 @@ describe('Items.vue', () => {
     {error: true, mensaje: ''}
   ]
   const listaComentarios = [
-    {id: 236345, comentario: 'Este es un comentario de prueba', es_item: true, id_item: 263453, asistencia: {
+    {id: 236345, comentario: 'Este es un comentario de prueba', es_item: true, id_item: 46245, asistencia: {
       id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
     }},
     {id: 6923495, comentario: 'Otro comentario de prueba', es_item: false, id_item: null, asistencia: {
@@ -213,7 +213,7 @@ describe('Items.vue', () => {
       propsData: {
         lista: lista,
         asistentes: presentes,
-        comentar: false,
+        comentar: true,
         responder: false,
         listaCom: []
       }
@@ -230,7 +230,7 @@ describe('Items.vue', () => {
       propsData: {
         lista: lista,
         asistentes: presentes,
-        comentar: false,
+        comentar: true,
         responder: false,
         listaCom: []
       }
@@ -287,7 +287,7 @@ describe('Items.vue', () => {
       propsData: {
         lista: lista,
         asistentes: presentes,
-        comentar: false,
+        comentar: true,
         responder: false,
         listaCom: []
       }
@@ -322,7 +322,7 @@ describe('Items.vue', () => {
     expect(wrapper.vm.comentariosMinuta).toEqual(listaComentarios)
   })
 
-  it('variable "comentariosItems" se inicializa correctamente', () => {
+  it('variable "comentariosItems" se inicializa correctamente sin "comentarios"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -335,7 +335,25 @@ describe('Items.vue', () => {
     expect(wrapper.vm.comentariosItems).toEqual([])
   })
 
-  it('variable "comentariosGenerales" se inicializa correctamente', () => {
+  it('variable "comentariosItems" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [
+      {id: 236345, comentario: 'Este es un comentario de prueba', es_item: true, id_item: 46245, asistencia: {
+        id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
+      }}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.comentariosItems).toEqual(esperado)
+  })
+
+  it('variable "comentariosGenerales" se inicializa correctamente sin "comentarios"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -348,21 +366,42 @@ describe('Items.vue', () => {
     expect(wrapper.vm.comentariosGenerales).toEqual([])
   })
 
-  it('variable "respuestasItems" se inicializa correctamente', () => {
-    const esperado = [[], []]
+  it('variable "comentariosGenerales" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [
+      {id: 6923495, comentario: 'Otro comentario de prueba', es_item: false, id_item: null, asistencia: {
+        id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
+      }}
+    ]
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
         asistentes: presentes,
         comentar: false,
-        responder: false,
-        listaCom: []
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.comentariosGenerales).toEqual(esperado)
+  })
+
+  it('variable "respuestasItems" se inicializa correctamente', () => {
+    const esperado = [
+      [{comentario_id: 236345, respuesta: ''}],
+      []
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
       }
     })
     expect(wrapper.vm.respuestasItems).toEqual(esperado)
   })
 
-  it('variable "respuestasGenerales" se inicializa correctamente', () => {
+  it('variable "respuestasGenerales" se inicializa correctamente sin "comentarios"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -375,7 +414,23 @@ describe('Items.vue', () => {
     expect(wrapper.vm.respuestasGenerales).toEqual([])
   })
 
-  it('variable "verRespuestasItems" se inicializa correctamente', () => {
+  it('variable "respuestasGenerales" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [
+      {comentario_id: 6923495, respuesta: ''}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.respuestasGenerales).toEqual(esperado)
+  })
+
+  it('variable "verRespuestasItems" se inicializa correctamente sin "comentarios"', () => {
     const esperado = [[], []]
     const wrapper = shallowMount(Items, {
       propsData: {
@@ -389,7 +444,21 @@ describe('Items.vue', () => {
     expect(wrapper.vm.verRespuestasItems).toEqual(esperado)
   })
 
-  it('variable "verRespuestasGenerales" se inicializa correctamente', () => {
+  it('variable "verRespuestasItems" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [[false], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.verRespuestasItems).toEqual(esperado)
+  })
+
+  it('variable "verRespuestasGenerales" se inicializa correctamente sin "comentarios"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -402,7 +471,21 @@ describe('Items.vue', () => {
     expect(wrapper.vm.verRespuestasGenerales).toEqual([])
   })
 
-  it('variable "responderEntradasItems" se inicializa correctamente', () => {
+  it('variable "verRespuestasGenerales" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [false]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.verRespuestasGenerales).toEqual(esperado)
+  })
+
+  it('variable "responderEntradasItems" se inicializa correctamente sin "comentarios"', () => {
     const esperado = [[], []]
     const wrapper = shallowMount(Items, {
       propsData: {
@@ -416,7 +499,24 @@ describe('Items.vue', () => {
     expect(wrapper.vm.responderEntradasItems).toEqual(esperado)
   })
 
-  it('variable "responderEntradasGenerales" se inicializa correctamente', () => {
+  it('variable "responderEntradasItems" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [
+      [{error: false, mensaje: ''}],
+      []
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.responderEntradasItems).toEqual(esperado)
+  })
+
+  it('variable "responderEntradasGenerales" se inicializa correctamente sin "comentarios"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -427,6 +527,20 @@ describe('Items.vue', () => {
       }
     })
     expect(wrapper.vm.responderEntradasGenerales).toEqual([])
+  })
+
+  it('variable "responderEntradasGenerales" se inicializa correctamente con "comentarios"', () => {
+    const esperado = [{error: false, mensaje: ''}]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.responderEntradasGenerales).toEqual(esperado)
   })
 
   it('propiedad computada listaOrdenada funciona correctamente', () => {
