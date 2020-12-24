@@ -1093,4 +1093,35 @@ describe('Items.vue', () => {
     expect(wrapper.vm.verRespuestasGenerales[0]).toBeFalsy()
     expect(wrapper.vm.respuestasGenerales[0].respuesta).toEqual('')
   })
+
+  it('método "abrirRespuestaItem" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    expect(wrapper.vm.verRespuestasItems[0][0]).toBeTruthy()
+  })
+
+  it('método "cerrarRespuestaItem" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    wrapper.vm.cerrarRespuestaItem(0, 0)
+    expect(wrapper.vm.verRespuestasItems[0][0]).toBeFalsy()
+    expect(wrapper.vm.respuestasItems[0][0].respuesta).toEqual('')
+  })
 })
