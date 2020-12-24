@@ -1286,4 +1286,70 @@ describe('Items.vue', () => {
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeTruthy()
     expect(wrapper.vm.responderEntradasGenerales[0].mensaje).toEqual('Falta ingresar la respuesta al comentario')
   })
+
+  it('método "validarRespuestas" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    wrapper.vm.verRespuestasGenerales[0] = true
+    wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
+    expect(wrapper.vm.validarRespuestas()).toBeTruthy()
+  })
+
+  it('método "validarRespuestas" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.verRespuestasGenerales[0] = true
+    expect(wrapper.vm.validarRespuestas()).toBeFalsy()
+  })
+
+  it('método "limpiarErrorRespItem" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.responderEntradasItems[0][0].error = true
+    wrapper.vm.responderEntradasItems[0][0].mensaje = 'mensaje de error de prueba'
+    wrapper.vm.limpiarErrorRespItem(0, 0)
+    expect(wrapper.vm.responderEntradasItems[0][0].error).toBeFalsy()
+    expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('')
+  })
+
+  it('método "limpiarErrorRespGeneral" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.responderEntradasGenerales[0].error = true
+    wrapper.vm.responderEntradasGenerales[0].mensaje = 'mensaje de error de prueba'
+    wrapper.vm.limpiarErrorRespGeneral(0)
+    expect(wrapper.vm.responderEntradasGenerales[0].error).toBeFalsy()
+    expect(wrapper.vm.responderEntradasGenerales[0].mensaje).toEqual('')
+  })
 })
