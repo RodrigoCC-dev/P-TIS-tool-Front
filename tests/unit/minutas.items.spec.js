@@ -42,6 +42,14 @@ describe('Items.vue', () => {
     {error: true, mensaje: ''},
     {error: true, mensaje: ''}
   ]
+  const listaComentarios = [
+    {id: 236345, comentario: 'Este es un comentario de prueba', es_item: true, id_item: 263453, asistencia: {
+      id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
+    }},
+    {id: 6923495, comentario: 'Otro comentario de prueba', es_item: false, id_item: null, asistencia: {
+      id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
+    }}
+  ]
 
   it('se asigna prop lista correctamente', () => {
     const wrapper = shallowMount(Items, {
@@ -67,6 +75,84 @@ describe('Items.vue', () => {
       }
     })
     expect(wrapper.props().asistentes).toEqual(presentes)
+  })
+
+  it('se asigna prop "comentar" correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.props().comentar).toBeFalsy()
+  })
+
+  it('se asigna prop "comentar" correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.props().comentar).toBeTruthy()
+  })
+
+  it('se asigna prop "responder" correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.props().responder).toBeFalsy()
+  })
+
+  it('se asigna prop "responder" correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: []
+      }
+    })
+    expect(wrapper.props().responder).toBeTruthy()
+  })
+
+  it('se asigna prop "listaCom" correctamente con arreglo vacío', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.props().listaCom).toEqual([])
+  })
+
+  it('se asigna prop "listaCom" correctamente con arreglo no vacío', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.props().listaCom).toEqual(listaComentarios)
   })
 
   it('variable listaItems se inicializa correctamente', () => {
