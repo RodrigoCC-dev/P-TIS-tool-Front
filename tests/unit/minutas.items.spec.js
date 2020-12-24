@@ -47,7 +47,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.props().lista).toEqual(lista)
@@ -57,7 +60,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.props().asistentes).toEqual(presentes)
@@ -67,7 +73,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.listaItems).toEqual(lista)
@@ -77,7 +86,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.asistencia).toEqual(presentes)
@@ -110,7 +122,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.listaOrdenada).toEqual(esperado)
@@ -120,7 +135,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.fechaItem('2020-06-15T00:00:00.000Z')).toEqual('15-06-2020')
@@ -130,7 +148,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.fechaItem(null)).toEqual('')
@@ -146,7 +167,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.obtenerIniciales(resp)).toEqual('BRG')
@@ -165,7 +189,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     expect(wrapper.vm.mostrarComentar).toEqual(esperadoMostrar)
@@ -177,7 +204,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     wrapper.vm.crearListas()
@@ -190,7 +220,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       },
       data () {
         return {
@@ -215,7 +248,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       }
     })
     wrapper.vm.agregaComentario()
@@ -226,7 +262,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       },
       data () {
         return {
@@ -246,7 +285,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       },
       data () {
         return {
@@ -270,7 +312,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       },
       data () {
         return {
@@ -290,7 +335,10 @@ describe('Items.vue', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
-        asistentes: presentes
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
       },
       data () {
         return {
