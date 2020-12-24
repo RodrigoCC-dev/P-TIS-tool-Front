@@ -1011,4 +1011,49 @@ describe('Items.vue', () => {
     wrapper.vm.limpiarErrorGeneral()
     expect(wrapper.vm.entradas.comentarios).toBeFalsy()
   })
+
+  it('método "categorizarComentarios" funciona correctamente', () => {
+    const respuestas = [{comentario_id: listaComentarios[1].id, respuesta: ''}]
+    const ver = [false]
+    const entradas = [{error: false, mensaje: ''}]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          comentariosMinuta: listaComentarios
+        }
+      }
+    })
+    expect(wrapper.vm.comentariosItems).toEqual([listaComentarios[0]])
+    expect(wrapper.vm.comentariosGenerales).toEqual([listaComentarios[1]])
+    expect(wrapper.vm.respuestasGenerales).toEqual(respuestas)
+    expect(wrapper.vm.verRespuestasGenerales).toEqual(ver)
+    expect(wrapper.vm.responderEntradasGenerales).toEqual(entradas)
+  })
+
+  it('método "buscarComentarios" funciona correctamente', () => {
+    const esperado = [listaComentarios[0]]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          comentariosMinuta: listaComentarios
+        }
+      }
+    })
+    expect(wrapper.vm.buscarComentarios(46245)).toEqual(esperado)
+  })
+
 })
