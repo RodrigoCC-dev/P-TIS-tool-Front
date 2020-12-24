@@ -857,6 +857,78 @@ describe('Items.vue', () => {
     expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
   })
 
+  it('método "validarListaComentarios" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.abrirComentario(1, 4534)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    wrapper.vm.listaComentarios[1].comentario = 'Otro comentario de prueba'
+    expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
+    expect(wrapper.vm.validarComentarioItem(1)).toBeTruthy()
+    expect(wrapper.vm.validarListaComentarios()).toBeTruthy()
+  })
+
+  it('método "validarListaComentarios" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.abrirComentario(1, 4534)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
+    expect(wrapper.vm.validarComentarioItem(1)).toBeFalsy()
+    expect(wrapper.vm.listaEntradas[1].error).toBeTruthy()
+    expect(wrapper.vm.listaEntradas[1].mensaje).toEqual('Falta ingresar el comentario')
+    expect(wrapper.vm.validarListaComentarios()).toBeFalsy()
+  })
+
+  it('método "validarListaGenerales" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = 'Comentario de prueba'
+    expect(wrapper.vm.validarListaGenerales()).toBeTruthy()
+    expect(wrapper.vm.entradas.comentarios).toBeFalsy()
+  })
+
+  it('método "validarListaGenerales" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.agregaComentario()
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = 'Comentario de prueba'
+    expect(wrapper.vm.validarListaGenerales()).toBeFalsy()
+    expect(wrapper.vm.entradas.comentarios).toBeTruthy()
+  })
+
   it('método limpiarErrorItem funciona correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
