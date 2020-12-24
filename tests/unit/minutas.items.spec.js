@@ -797,6 +797,77 @@ describe('Items.vue', () => {
     expect(wrapper.vm.responderEntradasGenerales).toEqual([])
   })
 
+  it('método "validarComentarioItem" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
+    expect(wrapper.vm.listaEntradas[0].error).toBeFalsy()
+    expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
+  })
+
+  it('método "validarComentarioItem" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          listaComentarios: [
+            {comentario: '', es_item: true, id_item: 0},
+            {comentario: '', es_item: true, id_item: 0}
+          ],
+          listaEntradas: [
+            {error: false, mensaje: ''},
+            {error: false, mensaje: ''}
+          ]
+        }
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    expect(wrapper.vm.validarComentarioItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaEntradas[0].error).toBeTruthy()
+    expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('Falta ingresar el comentario')
+  })
+
+  it('método "validarComentarioItem" funciona correctamente con "true" y comentario', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          mostrarComentar: [true, false],
+          listaComentarios: [
+            {comentario: 'Comentario de prueba', es_item: true, id_item: 0},
+            {comentario: '', es_item: true, id_item: 0}
+          ],
+          listaEntradas: [
+            {error: false, mensaje: ''},
+            {error: false, mensaje: ''}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
+    expect(wrapper.vm.listaEntradas[0].error).toBeFalsy()
+    expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
+  })
+
   it('método limpiarErrorItem funciona correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
