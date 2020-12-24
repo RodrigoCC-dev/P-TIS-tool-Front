@@ -63,8 +63,18 @@ export default {
         console.log(e)
       }
     },
+    async enviarRespuestas (respuestas) {
+      var envio = { id: this.id, respuestas: respuestas }
+      try {
+        await axios.post(this.apiUrl + '/respuestas', envio, { headers: Auth.postHeader() })
+      } catch (e) {
+        console.log('No fue posible enviar las respuestas')
+        console.log(e)
+      }
+    },
     recibirRespuestas: function (respuestas) {
       console.log(respuestas)
+      this.enviarRespuestas(respuestas)
       this.$emit('cerrar')
     },
     cerrarRespuestas: function () {
