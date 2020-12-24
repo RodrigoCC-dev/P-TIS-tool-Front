@@ -123,30 +123,30 @@
 
       <div class="columns is-multiline is-desktop">
         <div class="column is-3" v-for="(comentario, index) in comentariosGenerales" :key="comentario.id">
-            <article class="message">
-              <div class="message-header">
-                <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+          <article class="message">
+            <div class="message-header">
+              <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+            </div>
+            <div class="message-body">
+              <p>{{ comentario.comentario }}</p>
+              <div v-if="!this.verRespuestasGenerales[index]">
+                <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
               </div>
-              <div class="message-body">
-                <p>{{ comentario.comentario }}</p>
-                <div v-if="!this.verRespuestasGenerales[index]">
-                  <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
-                </div>
-                <div v-else>
-                  <div class="card">
-                    <div class="card-content">
-                      <div class="content">
-                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
-                      </div>
-                      <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
+              <div v-else>
+                <div class="card">
+                  <div class="card-content">
+                    <div class="content">
+                      <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
                     </div>
-                    <footer class="card-footer">
-                      <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
-                    </footer>
+                    <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
                   </div>
+                  <footer class="card-footer">
+                    <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
+                  </footer>
                 </div>
               </div>
-            </article>
+            </div>
+          </article>
         </div>
       </div>
 
@@ -358,7 +358,13 @@ export default {
     },
     enviarRespuestas: function () {
       if (this.validarRespuestas()) {
-        var respuestas = this.respuestasItems.concat(this.respuestasGenerales)
+        var respuestas = []
+        for (var i = 0; i < this.respuestasItems.length; i++) {
+          for (var j = 0; j < this.respuestasItems[i].length; j++) {
+            respuestas.push(this.respuestasItems[i][j])
+          }
+        }
+        respuestas = respuestas.concat(this.respuestasGenerales)
         this.$emit('responder', respuestas)
       }
     },
@@ -418,9 +424,9 @@ export default {
     },
     validarRespuestaItem: function (index, ind) {
       if (this.verRespuestasItems[index][ind]) {
-        if (this.respuestasItems[index][ind].respuesta === '' || this.respuestaItems[index][ind].respuesta === undefined) {
-          this.responderEntradasItems[index][ind] = true
-          this.responderEntradasItems[index][ind] = 'Falta ingresar la respuesta al comentario'
+        if (this.respuestasItems[index][ind].respuesta === '' || this.respuestasItems[index][ind].respuesta === undefined) {
+          this.responderEntradasItems[index][ind].error = true
+          this.responderEntradasItems[index][ind].mensaje = 'Falta ingresar la respuesta al comentario'
           return false
         } else {
           return true
@@ -454,7 +460,7 @@ export default {
     validarListaRespGenerales: function () {
       var validacion = true
       for (var i = 0; i < this.responderEntradasGenerales.length; i++) {
-        validacion = validacion && this.validarListaRespGenerales(i)
+        validacion = validacion && this.validarRespuestaGeneral(i)
       }
       return validacion
     },
@@ -476,11 +482,7 @@ export default {
   mounted () {
     this.crearListas()
     this.categorizarComentarios()
-  },
-  beforeUpdate () {
     this.crearRespuestasItems()
-    console.log(this.verRespuestasItems)
-    console.log(this.verRespuestasGenerales)
   }
 }
 </script>
