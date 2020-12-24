@@ -65,9 +65,10 @@ export default {
     },
     recibirRespuestas: function (respuestas) {
       console.log(respuestas)
+      this.$emit('cerrar')
     },
     cerrarRespuestas: function () {
-      console.log('cerrar')
+      this.$emit('cerrar')
     }
   },
   mounted () {
