@@ -1022,12 +1022,7 @@ describe('Items.vue', () => {
         asistentes: presentes,
         comentar: false,
         responder: false,
-        listaCom: []
-      },
-      data () {
-        return {
-          comentariosMinuta: listaComentarios
-        }
+        listaCom: listaComentarios
       }
     })
     expect(wrapper.vm.comentariosItems).toEqual([listaComentarios[0]])
@@ -1045,15 +1040,57 @@ describe('Items.vue', () => {
         asistentes: presentes,
         comentar: false,
         responder: false,
-        listaCom: []
-      },
-      data () {
-        return {
-          comentariosMinuta: listaComentarios
-        }
+        listaCom: listaComentarios
       }
     })
     expect(wrapper.vm.buscarComentarios(46245)).toEqual(esperado)
   })
 
+  it('método "crearRespuestasItems" funciona correctamente', () => {
+    const esperado = [[{comentario_id: listaComentarios[0].id, respuesta: ''}], []]
+    const entrada = [[{error: false, mensaje: ''}], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.respuestasItems).toEqual(esperado)
+    expect(wrapper.vm.verRespuestasItems).toEqual([[false], []])
+    expect(wrapper.vm.responderEntradasItems).toEqual(entrada)
+  })
+
+  it('método "abrirRespuestaGeneral" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaGeneral(0)
+    expect(wrapper.vm.verRespuestasGenerales[0]).toBeTruthy()
+  })
+
+  it('método "cerrarRespuestaGeneral" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaGeneral(0)
+    wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
+    wrapper.vm.cerrarRespuestaGeneral(0)
+    expect(wrapper.vm.verRespuestasGenerales[0]).toBeFalsy()
+    expect(wrapper.vm.respuestasGenerales[0].respuesta).toEqual('')
+  })
 })

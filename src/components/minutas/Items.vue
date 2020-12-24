@@ -408,7 +408,6 @@ export default {
     },
     abrirRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = true
-      console.log(this.verRespuestasGenerales)
     },
     cerrarRespuestaGeneral: function (index) {
       this.verRespuestasGenerales[index] = false
@@ -416,7 +415,6 @@ export default {
     },
     abrirRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = true
-      console.log(this.verRespuestasItems)
     },
     cerrarRespuestaItem: function (index, ind) {
       this.verRespuestasItems[index][ind] = false
