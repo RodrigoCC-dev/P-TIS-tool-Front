@@ -787,6 +787,14 @@ describe('Items.vue', () => {
     expect(wrapper.vm.mostrarComentar).toEqual([])
     expect(wrapper.vm.listaComentarios).toEqual([])
     expect(wrapper.vm.listaGenerales).toEqual([])
+    expect(wrapper.vm.comentariosItems).toEqual([])
+    expect(wrapper.vm.comentariosGenerales).toEqual([])
+    expect(wrapper.vm.respuestasItems).toEqual([])
+    expect(wrapper.vm.respuestasGenerales).toEqual([])
+    expect(wrapper.vm.verRespuestasItems).toEqual([])
+    expect(wrapper.vm.verRespuestasGenerales).toEqual([])
+    expect(wrapper.vm.responderEntradasItems).toEqual([])
+    expect(wrapper.vm.responderEntradasGenerales).toEqual([])
   })
 
   it('método limpiarErrorItem funciona correctamente', () => {
