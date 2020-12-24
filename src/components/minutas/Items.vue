@@ -203,7 +203,7 @@ export default {
       respuestasGenerales: [],
       verRespuestasItems: [],
       verRespuestasGenerales: [],
-      responderEntradasItem: [],
+      responderEntradasItems: [],
       responderEntradasGenerales: []
     }
   },
@@ -276,7 +276,7 @@ export default {
       this.respuestasGenerales = []
       this.verRespuestasItems = []
       this.verRespuestasGenerales = []
-      this.responderEntradasItem = []
+      this.responderEntradasItems = []
       this.responderEntradasGenerales = []
     },
     enviarComentarios: function () {
