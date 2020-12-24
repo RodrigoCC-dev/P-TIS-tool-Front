@@ -848,21 +848,10 @@ describe('Items.vue', () => {
         comentar: true,
         responder: false,
         listaCom: []
-      },
-      data () {
-        return {
-          mostrarComentar: [true, false],
-          listaComentarios: [
-            {comentario: 'Comentario de prueba', es_item: true, id_item: 0},
-            {comentario: '', es_item: true, id_item: 0}
-          ],
-          listaEntradas: [
-            {error: false, mensaje: ''},
-            {error: false, mensaje: ''}
-          ]
-        }
       }
     })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
     expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
     expect(wrapper.vm.listaEntradas[0].error).toBeFalsy()
     expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
