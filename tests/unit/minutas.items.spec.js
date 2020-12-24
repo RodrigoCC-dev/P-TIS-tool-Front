@@ -929,6 +929,45 @@ describe('Items.vue', () => {
     expect(wrapper.vm.entradas.comentarios).toBeTruthy()
   })
 
+  it('método "validarComentarios" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = 'Otro comentario de prueba'
+    expect(wrapper.vm.validarListaGenerales()).toBeTruthy()
+    expect(wrapper.vm.validarListaComentarios()).toBeTruthy()
+    expect(wrapper.vm.validarComentarios()).toBeTruthy()
+  })
+
+  it('método "validarComentarios" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.abrirComentario(1, 4534)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = 'Otro comentario de prueba'
+    expect(wrapper.vm.validarListaComentarios()).toBeFalsy()
+    expect(wrapper.vm.validarListaGenerales()).toBeTruthy()
+    expect(wrapper.vm.validarComentarios()).toBeFalsy()
+  })
+
   it('método limpiarErrorItem funciona correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
