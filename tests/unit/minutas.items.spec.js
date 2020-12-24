@@ -579,6 +579,39 @@ describe('Items.vue', () => {
     expect(wrapper.vm.listaOrdenada).toEqual(esperado)
   })
 
+  it('propiedad computada "comentariosPorItem" funciona correctamente sin "comentarios"', () => {
+    const esperado = [[], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.comentariosPorItem).toEqual(esperado)
+  })
+
+  it('propiedad computada "comentariosPorItem" funciona correctamente con "comentarios"', () => {
+    const esperado = [
+      [{id: 236345, comentario: 'Este es un comentario de prueba', es_item: true, id_item: 46245, asistencia: {
+        id: 2463453, estudiante: {id: 462462345, iniciales: 'ABC'}
+      }}],
+      []
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: true,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.comentariosPorItem).toEqual(esperado)
+  })
+
   it('método fechaItem funciona correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
