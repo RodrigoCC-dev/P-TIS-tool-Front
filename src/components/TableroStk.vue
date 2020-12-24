@@ -29,20 +29,20 @@
     <div v-if="nombreTab === nombreTabs.revision">
       <section class="new-section">
         <div class="container">
-          <p class="title is-5">Para revisar</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRevision">
+          <p id="revision" class="title is-5">Para revisar</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRevision" aria-describedby="revision">
             <thead>
               <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Código</th>
-                <th>Revisión</th>
-                <th>Realizada por</th>
-                <th>Emitida el</th>
+                <th scope="col">N°</th>
+                <th scope="col">Código</th>
+                <th scope="col">Revisión</th>
+                <th scope="col">Realizada por</th>
+                <th scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
-                <th>{{ index + 1}}</th>
+                <th scope="row">{{ index + 1}}</th>
                 <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por}}</td>
@@ -61,20 +61,20 @@
     <div v-if="nombreTab === nombreTabs.comentadas">
       <section class="new-section">
         <div class="container">
-          <p class="title is-5">Comentadas</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadas">
+          <p id="comentadas" class="title is-5">Comentadas</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarComentadas" aria-describedby="comentadas">
             <thead>
               <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Código</th>
-                <th>Revisión</th>
-                <th>Realizada por</th>
-                <th>Emitida el</th>
+                <th scope="col">N°</th>
+                <th scope="col">Código</th>
+                <th scope="col">Revisión</th>
+                <th scope="col">Realizada por</th>
+                <th scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaComentadas" :key="bitacora.id">
-                <th>{{ index + 1 }}</th>
+                <th scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por}}</td>
@@ -93,20 +93,20 @@
     <div v-if="nombreTab === nombreTabs.respondidas">
       <section class="new-section">
         <div class="container">
-          <p class="title is-5">Respondidas por los estudiantes</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo">
+          <p id="respondidas" class="title is-5">Respondidas por los estudiantes</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo" aria-describedby="respondidas">
             <thead>
               <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Código</th>
-                <th>Revision</th>
-                <th>Realizada por</th>
-                <th>Emitida el</th>
+                <th scope="col">N°</th>
+                <th scope="col">Código</th>
+                <th scope="col">Revision</th>
+                <th scope="col">Realizada por</th>
+                <th scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
-                <th>{{ index + 1 }}</th>
+                <th scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revison }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
@@ -122,20 +122,20 @@
       <hr>
       <section class="new-section">
         <div class="container">
-          <p class="title is-5">Respondidas por el cliente</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente">
+          <p id="resp-cliente" class="title is-5">Respondidas por el cliente</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
             <thead>
               <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Código</th>
-                <th>Revisión</th>
-                <th>Realizada por</th>
-                <th>Respondida el</th>
+                <th scope="col">N°</th>
+                <th scope="col">Código</th>
+                <th scope="col">Revisión</th>
+                <th scope="col">Realizada por</th>
+                <th scope="col">Respondida el</th>
               </tr>
             </thead>
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                <th>{{ index + 1 }}</th>
+                <th scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
@@ -154,20 +154,20 @@
     <div v-if="nombreTab === nombreTabs.cerradas">
       <section class="new-section">
         <div class="container">
-          <p class="title is-5">Minutas cerradas</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerradas">
+          <p id="cerradas" class="title is-5">Minutas cerradas</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerradas" aria-describedby="cerradas">
             <thead>
               <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Código</th>
-                <th>Revisión</th>
-                <th>Realizada por</th>
-                <th>Emitida el</th>
+                <th scope="col">N°</th>
+                <th scope="col">Código</th>
+                <th scope="col">Revisión</th>
+                <th scope="col">Realizada por</th>
+                <th scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
-                <th>{{ index + 1 }}</th>
+                <th scope="row">{{ index + 1 }}</th>
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>

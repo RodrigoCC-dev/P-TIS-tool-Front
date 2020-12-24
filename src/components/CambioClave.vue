@@ -12,7 +12,7 @@
           <div class="control has-icons-left">
             <input class="input" v-model="actual" :class="{ 'is-danger' : entradas.actual.error }" @input="limpiarActual" type="password" placeholder="Contraseña actual">
             <span class="icon is-small is-left">
-              <i class="fas fa-id-card"></i>
+              <i class="fas fa-id-card" aria-hidden="true"></i>
             </span>
             <p class="help is-danger" v-if="entradas.actual.error">{{ entradas.actual.mensaje }}</p>
           </div>
@@ -25,7 +25,7 @@
           <div class="control has-icons-left">
             <input class="input" v-model="nueva" :class="{ 'is-danger' : entradas.nueva.error }" @input="limpiarNueva" type="password" placeholder="Nueva contraseña">
             <span class="icon is-small is-left">
-              <i class="fas fa-key"></i>
+              <i class="fas fa-key" aria-hidden="true"></i>
             </span>
             <p class="help is-danger" v-if="entradas.nueva.error">{{ entradas.nueva.mensaje }}</p>
           </div>
@@ -38,7 +38,7 @@
           <div class="control has-icons-left">
             <input class="input" v-model="repetirNueva" :class="{ 'is-danger' : entradas.repetir.error }" @input="limpiarRepetir" type="password" placeholder="Repita nueva contraseña">
             <span class="icon is-small is-left">
-              <i class="fas fa-lock"></i>
+              <i class="fas fa-lock" aria-hidden="true"></i>
             </span>
             <p class="help is-danger" v-if="entradas.repetir.error">{{ entradas.repetir.mensaje }}</p>
           </div>

@@ -63,24 +63,24 @@
         </div>
         <div class="column is-7 has-text-centered">
           <div class="field">
-            <label class="label">Estudiantes a asignar:</label>
+            <label id="estudiantes" class="label">Estudiantes a asignar:</label>
           </div>
           <p class="is-danger help" v-if="entradas.estudiantes.error">{{ entradas.estudiantes.mensaje }}</p>
           <br>
           <div v-if="mostrarLista">
-            <table class="table is-bordered is-narrow is-fullwidth">
+            <table class="table is-bordered is-narrow is-fullwidth" aria-decribedby="estudiantes">
               <thead>
                 <tr class="has-text-centered has-background-light">
-                  <th>N°</th>
-                  <th>R.U.N.</th>
-                  <th>Nombre estudiante</th>
-                  <th>Sección</th>
-                  <th></th>
+                  <th scope="col">N°</th>
+                  <th scope="col">R.U.N.</th>
+                  <th scope="col">Nombre estudiante</th>
+                  <th scope="col">Sección</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                  <th>{{ index + 1 }}</th>
+                  <th scope="row">{{ index + 1 }}</th>
                   <td>{{ estudiante.run_est}}</td>
                   <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
                   <td>{{ estudiante.codigo_seccion}}</td>

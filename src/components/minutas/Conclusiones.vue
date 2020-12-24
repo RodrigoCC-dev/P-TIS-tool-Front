@@ -11,11 +11,11 @@
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <div class="content has-text-left">
-          <dl>
+          <ul>
             <li v-for="conclusion in conclusiones" :key="conclusion.id">
               <input class="input is-static" type="text" :value="conclusion.descripcion">
             </li>
-          </dl>
+          </ul>
         </div>
       </div>
     </div>

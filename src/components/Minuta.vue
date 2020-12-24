@@ -101,13 +101,13 @@
       <div class="columns">
         <div class="column is-11 is-offset-1">
           <br>
-          <table class="table is-fullwidth">
+          <table class="table is-fullwidth" summary="Asistencia participantes">
             <thead>
               <tr>
-                <th>Participantes</th>
-                <th></th>
-                <th class="has-text-centered">Iniciales</th>
-                <th class="has-text-centered">Asistencia</th>
+                <th scope="col">Participantes</th>
+                <th scope="col"></th>
+                <th scope="col" class="has-text-centered">Iniciales</th>
+                <th scope="col" class="has-text-centered">Asistencia</th>
               </tr>
             </thead>
             <tbody>
@@ -210,7 +210,7 @@
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div class="content has-text-left">
-            <dl>
+            <ul>
               <li v-for="(objetivo, index) in objetivos" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
@@ -221,7 +221,7 @@
                   </p>
                 </div>
               </li>
-            </dl>
+            </ul>
             <p class="is-danger help" v-if="entradas.objetivos">No se han llenado todos los objetivos</p>
           </div>
         </div>
@@ -243,7 +243,7 @@
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div class="content has-text-left">
-            <dl>
+            <ul>
               <li v-for="(conclusion, index) in conclusiones" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
@@ -254,7 +254,7 @@
                   </p>
                 </div>
               </li>
-            </dl>
+            </ul>
             <p class="is-danger help" v-if="entradas.conclusiones">No se han ingresado todas las conclusiones</p>
           </div>
         </div>
@@ -262,20 +262,20 @@
 
       <div>
         <br>
-        <table class="table is-hoverable is-fullwidth">
+        <table class="table is-hoverable is-fullwidth" summary="Items de la minuta">
           <thead>
             <tr>
-              <th class="is-narrow has-text-centered">N°</th>
-              <th class="has-text-centered"><abbr title="Tipo de actividad">Item</abbr></th>
-              <th class="has-text-centered"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
-              <th class="has-text-centered"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
-              <th class="has-text-centered"><abbr title="Responsable de realizarla">Responsable</abbr></th>
-              <th><a class="button is-success is-small" @click="agregarItem"><strong>+</strong></a></th>
+              <th scope="col" class="is-narrow has-text-centered">N°</th>
+              <th scope="col" class="has-text-centered"><abbr title="Tipo de actividad">Item</abbr></th>
+              <th scope="col" class="has-text-centered"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
+              <th scope="col" class="has-text-centered"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
+              <th scope="col" class="has-text-centered"><abbr title="Responsable de realizarla">Responsable</abbr></th>
+              <th scope="col"><a class="button is-success is-small" @click="agregarItem"><strong>+</strong></a></th>
             </tr>
           </thead>
           <tbody>
             <tr class="is-vcentered" v-for="(item, index) in listaItems" :key="index">
-              <th>{{ index + 1 }}</th>
+              <th scope="row">{{ index + 1 }}</th>
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.tipo_item_id" @change="validarItem(index)">

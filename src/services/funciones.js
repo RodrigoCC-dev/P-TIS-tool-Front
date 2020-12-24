@@ -41,6 +41,7 @@ export default {
         return lista[i]
       }
     }
+    return {}
   },
   nombreCompleto (obj) {
     return obj.nombre + ' ' + obj.apellido_paterno + ' ' + obj.apellido_materno
