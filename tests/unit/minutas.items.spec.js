@@ -181,6 +181,254 @@ describe('Items.vue', () => {
     expect(wrapper.vm.asistencia).toEqual(presentes)
   })
 
+  it('variable "comentarios" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.comentarios).toBeFalsy()
+  })
+
+  it('variable "respuestas" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.respuestas).toBeFalsy()
+  })
+
+  it('variable "mostrarComentar" se inicializa correctamente', () => {
+    const esperado = [false, false]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.mostrarComentar).toEqual(esperado)
+  })
+
+  it('variable "listaComentarios" se inicializa correctamente', () => {
+    const esperado = [
+      {comentario: '', es_item: true, id_item: 0},
+      {comentario: '', es_item: true, id_item: 0}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.listaComentarios).toEqual(esperado)
+  })
+
+  it('variable "listaGenerales" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.listaGenerales).toEqual([])
+  })
+
+  it('variable "comentario" se inicializa correctamente', () => {
+    const esperado = {comentario: '', es_item: true, id_item: 0}
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.comentario).toEqual(esperado)
+  })
+
+  it('variable "entrada" se inicializa correctamente', () => {
+    const esperado = {error: false, mensaje: ''}
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.entrada).toEqual(esperado)
+  })
+
+  it('variable "listaEntradas" se inicializa correctamente', () => {
+    const esperado = [
+      {error: false, mensaje: ''}, {error: false, mensaje: ''}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.listaEntradas).toEqual(esperado)
+  })
+
+  it('variable "entradas" se inicializa correctamente', () => {
+    const esperado = {comentarios: false}
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.entradas).toEqual(esperado)
+  })
+
+  it('variable "comentariosMinuta" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.comentariosMinuta).toEqual(listaComentarios)
+  })
+
+  it('variable "comentariosItems" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.comentariosItems).toEqual([])
+  })
+
+  it('variable "comentariosGenerales" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.comentariosGenerales).toEqual([])
+  })
+
+  it('variable "respuestasItems" se inicializa correctamente', () => {
+    const esperado = [[], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.respuestasItems).toEqual(esperado)
+  })
+
+  it('variable "respuestasGenerales" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.respuestasGenerales).toEqual([])
+  })
+
+  it('variable "verRespuestasItems" se inicializa correctamente', () => {
+    const esperado = [[], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.verRespuestasItems).toEqual(esperado)
+  })
+
+  it('variable "verRespuestasGenerales" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.verRespuestasGenerales).toEqual([])
+  })
+
+  it('variable "responderEntradasItems" se inicializa correctamente', () => {
+    const esperado = [[], []]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.responderEntradasItems).toEqual(esperado)
+  })
+
+  it('variable "responderEntradasGenerales" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.responderEntradasGenerales).toEqual([])
+  })
+
   it('propiedad computada listaOrdenada funciona correctamente', () => {
     const esperado = [
       {
