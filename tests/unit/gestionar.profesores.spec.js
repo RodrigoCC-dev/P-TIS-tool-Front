@@ -91,7 +91,7 @@ describe('GestionProfesores.vue', () => {
     expect(wrapper.vm.mostrarProfesores).toBeTruthy()
   })
 
-  it('propiedad computada mostrarProfesores funciona correctamente con true', () => {
+  it('propiedad computada mostrarProfesores funciona correctamente con false', () => {
     const wrapper = shallowMount(GestionProfesores)
     expect(wrapper.vm.mostrarProfesores).toBeFalsy()
   })
