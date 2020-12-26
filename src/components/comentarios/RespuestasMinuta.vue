@@ -62,7 +62,8 @@ export default {
     return {
       id: this.idBitacora,
       bitacora: {},
-      comentarios: []
+      comentarios: [],
+      aprobacion: 0
     }
   },
   computed: {
@@ -99,6 +100,22 @@ export default {
         console.log('No fue posible obtener los comentarios y respuestas de la minuta')
         console.log(e)
       }
+    },
+    async enviarAprobacion () {
+      const params = {
+        id: this.id,
+        tipo_aprobacion_id: this.aprobacion
+      }
+      try {
+        await axios.put(this.apiUrl + '/aprobaciones/' + this.id, params, { headers: Auth.postHeader() })
+        this.$emit('cerrar')
+      } catch (e) {
+        console.log('No fue posible cambiar el estado de aprobación de la minuta')
+        console.log(e)
+      }
+    },
+    establecerEstado: function () {
+      this.enviarAprobacion()
     }
   },
   mounted () {
