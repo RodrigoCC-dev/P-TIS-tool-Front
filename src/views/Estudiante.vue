@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero :minutas="listaMinutas" :revision="listaRevision" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
+          <Tablero @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
 
         </div>
 
@@ -103,9 +103,7 @@ export default {
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
-      verRespuestas: false,
-      listaMinutas: [],
-      listaRevision: []
+      verRespuestas: false
     }
   },
   computed: {
@@ -159,22 +157,6 @@ export default {
         console.log('No se ha obtenido la información del grupo')
       }
     },
-    async obtenerMinutas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
-        this.listaMinutas = response.data
-      } catch {
-        console.log('No se han obtenido las minutas a mostrar')
-      }
-    },
-    async obtenerParaRevisar () {
-      try {
-        const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
-        this.listaRevision = response.data
-      } catch {
-        console.log('No se han podido obtener las minutas a revisar')
-      }
-    },
     async obtenerAprobaciones () {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
@@ -214,8 +196,6 @@ export default {
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
-    this.obtenerMinutas()
-    this.obtenerParaRevisar()
     this.obtenerAprobaciones()
   }
 }
