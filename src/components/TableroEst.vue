@@ -120,7 +120,7 @@
                 <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha((bitacora.fecha_emision)) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -140,16 +140,16 @@
                 <th class="has-text-centered" scope="col">Código</th>
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Comentada por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered"></td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -163,7 +163,7 @@
     <div v-if="nombreTab === nombreTabs.respondidas">
       <section class="new-section">
         <div class="container">
-          <p id="respondidas" class="title is-5">Respondidas por los integrantes del grupo</p>
+          <p id="respondidas" class="title is-5">Respondidas por integrantes del grupo</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo" aria-describedby="respondidas">
             <thead>
               <tr class="has-background-light">
@@ -177,7 +177,7 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="#">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered"></td>
