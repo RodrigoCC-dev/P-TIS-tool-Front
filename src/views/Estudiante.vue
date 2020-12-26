@@ -175,6 +175,14 @@ export default {
         console.log('No se han podido obtener las minutas a revisar')
       }
     },
+    async obtenerAprobaciones () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
+        this.$store.commit('setTipoAprobaciones', response.data)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
@@ -208,6 +216,7 @@ export default {
     this.obtenerEstudiante()
     this.obtenerMinutas()
     this.obtenerParaRevisar()
+    this.obtenerAprobaciones()
   }
 }
 </script>

@@ -9,7 +9,8 @@ export default createStore({
     Stakeholder: {},
     grupo: {},
     tipoMinutas: [],
-    secciones: []
+    secciones: [],
+    tipoAprobaciones: []
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -32,6 +33,9 @@ export default createStore({
     },
     setGrupo (state, valor) {
       state.grupo = valor
+    },
+    setTipoAprobaciones (state, valor) {
+      state.tipoAprobaciones = valor
     }
   },
   actions: {

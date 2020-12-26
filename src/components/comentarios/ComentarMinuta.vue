@@ -64,26 +64,17 @@ export default {
       bitacora: {},
       comentarios: [],
       mostrarAprobacion: false,
-      tipoAprobaciones: [],
       aprobacion: 0
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'tipoAprobaciones']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
     }
   },
   methods: {
-    async obtenerAprobaciones () {
-      try {
-        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
-        this.tipoAprobaciones = response.data
-      } catch (e) {
-        console.log(e)
-      }
-    },
     async obtenerMinuta (bitacoraId) {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
