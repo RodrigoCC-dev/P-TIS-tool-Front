@@ -43,24 +43,39 @@
               <div v-for="(comentario, ind) in comentariosPorItem[index]" :key="comentario.id">
                 <article class="message is-small">
                   <div class="message-header">
-                    <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+                    <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
                   </div>
                   <div class="message-body">
                     <p>{{ comentario.comentario }}</p>
-                    <div v-if="!this.verRespuestasItems[index][ind]">
-                      <a @click="abrirRespuestaItem(index, ind)"><strong>responder</strong></a>
+                    <div v-if="!verRespuestas">
+                      <div v-if="!this.verRespuestasItems[index][ind]">
+                        <a @click="abrirRespuestaItem(index, ind)"><strong>responder</strong></a>
+                      </div>
+                      <div v-else>
+                        <div class="card">
+                          <div class="card-content">
+                            <div class="content">
+                              <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }" @input="limpiarErrorRespItem(index, ind)"></textarea>
+                            </div>
+                            <p v-if="this.responderEntradasItems[index][ind].error" class="is-danger help">{{ this.responderEntradasItems[index][ind].mensaje }}</p>
+                          </div>
+                          <footer class="card-footer">
+                            <a class="card-footer-item" @click="cerrarRespuestaItem(index, ind)">Cancelar</a>
+                          </footer>
+                        </div>
+                      </div>
                     </div>
                     <div v-else>
-                      <div class="card">
-                        <div class="card-content">
-                          <div class="content">
-                            <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }" @input="limpiarErrorRespItem(index, ind)"></textarea>
+                      <br>
+                      <div v-for="respuesta in comentario.respuestas" :key="respuesta.id">
+                        <article class="message is-info is-small">
+                          <div class="message-header">
+                            <p>{{ buscarIniciales(respuesta.asistencia_id) }}</p>
                           </div>
-                          <p v-if="this.responderEntradasItems[index][ind].error" class="is-danger help">{{ this.responderEntradasItems[index][ind].mensaje }}</p>
-                        </div>
-                        <footer class="card-footer">
-                          <a class="card-footer-item" @click="cerrarRespuestaItem(index, ind)">Cancelar</a>
-                        </footer>
+                          <div class="message-body">
+                            <p>{{ respuesta.respuesta }}</p>
+                          </div>
+                        </article>
                       </div>
                     </div>
                   </div>
@@ -125,24 +140,39 @@
         <div class="column is-3" v-for="(comentario, index) in comentariosGenerales" :key="comentario.id">
           <article class="message">
             <div class="message-header">
-              <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+              <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
             </div>
             <div class="message-body">
               <p>{{ comentario.comentario }}</p>
-              <div v-if="!this.verRespuestasGenerales[index]">
-                <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
+              <div v-if="!verRespuestas">
+                <div v-if="!this.verRespuestasGenerales[index]">
+                  <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
+                </div>
+                <div v-else>
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="content">
+                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
+                      </div>
+                      <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
+                    </div>
+                    <footer class="card-footer">
+                      <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
+                    </footer>
+                  </div>
+                </div>
               </div>
               <div v-else>
-                <div class="card">
-                  <div class="card-content">
-                    <div class="content">
-                      <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
+                <br>
+                <div v-for="respuesta in comentario.respuestas" :key="respuesta.id">
+                  <article class="message is-info">
+                    <div class="message-header">
+                      <p>{{ buscarIniciales(respuesta.asistencia_id) }}</p>
                     </div>
-                    <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
-                  </div>
-                  <footer class="card-footer">
-                    <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
-                  </footer>
+                    <div class="message-body">
+                      <p>{{ respuesta.respuesta }}</p>
+                    </div>
+                  </article>
                 </div>
               </div>
             </div>
@@ -150,14 +180,16 @@
         </div>
       </div>
 
-      <div class="columns">
-        <div class="column is-half is-offset-3">
-          <div class="field is-grouped is-grouped-centered">
-            <div class="control">
-              <a class="button is-link" @click="enviarRespuestas">Guardar respuestas</a>
-            </div>
-            <div class="control">
-              <a class="button is-dark is-light" @click="cancelarEnvioRespuestas">Cancelar</a>
+      <div v-if="!verRespuestas">
+        <div class="columns">
+          <div class="column is-half is-offset-3">
+            <div class="field is-grouped is-grouped-centered">
+              <div class="control">
+                <a class="button is-link" @click="enviarRespuestas">Guardar respuestas</a>
+              </div>
+              <div class="control">
+                <a class="button is-dark is-light" @click="cancelarEnvioRespuestas">Cancelar</a>
+              </div>
             </div>
           </div>
         </div>
@@ -173,7 +205,7 @@ import Funciones from '@/services/funciones.js'
 
 export default {
   name: 'Item',
-  props: ['lista', 'asistentes', 'comentar', 'responder', 'listaCom'],
+  props: ['lista', 'asistentes', 'comentar', 'responder', 'listaCom', 'verRespuestas'],
   data () {
     return {
       listaItems: this.lista,
@@ -475,6 +507,19 @@ export default {
     },
     cerrarRespuestas: function () {
       this.$emit('cerrar')
+    },
+    buscarIniciales: function (asistenciaId) {
+      var asistente = null
+      for (var i = 0; i < this.asistencia.length; i++) {
+        if (this.asistencia[i].id === asistenciaId) {
+          asistente = this.asistencia[i]
+        }
+      }
+      if (asistente === null) {
+        return ''
+      } else {
+        return asistente.iniciales
+      }
     }
   },
   mounted () {

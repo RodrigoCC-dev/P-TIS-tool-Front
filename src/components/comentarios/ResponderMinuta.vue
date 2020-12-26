@@ -5,7 +5,7 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" @responder="recibirRespuestas" @cerrar="cerrarRespuestas"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="false" @responder="recibirRespuestas" @cerrar="cerrarRespuestas"/>
     </div>
 
   </div>
@@ -67,15 +67,14 @@ export default {
       var envio = { id: this.id, respuestas: respuestas }
       try {
         await axios.post(this.apiUrl + '/respuestas', envio, { headers: Auth.postHeader() })
+        this.$emit('cerrar')
       } catch (e) {
         console.log('No fue posible enviar las respuestas')
         console.log(e)
       }
     },
     recibirRespuestas: function (respuestas) {
-      console.log(respuestas)
       this.enviarRespuestas(respuestas)
-      this.$emit('cerrar')
     },
     cerrarRespuestas: function () {
       this.$emit('cerrar')

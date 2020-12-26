@@ -61,7 +61,6 @@
             </tbody>
           </table>
           <div v-else>
-            <br>
             <p class="subtitle is-5">No hay borradores para mostrar</p>
           </div>
         </div>
@@ -93,7 +92,6 @@
             </tbody>
           </table>
           <div v-else>
-            <br>
             <p class="subtitle is-5">No hay minutas emitidas para mostrar</p>
           </div>
         </div>
@@ -120,7 +118,7 @@
                 <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha((bitacora.fecha_emision)) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -140,16 +138,16 @@
                 <th class="has-text-centered" scope="col">Código</th>
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Comentada por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered"></td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -163,7 +161,7 @@
     <div v-if="nombreTab === nombreTabs.respondidas">
       <section class="new-section">
         <div class="container">
-          <p id="respondidas" class="title is-5">Respondidas por los integrantes del grupo</p>
+          <p id="respondidas" class="title is-5">Respondidas por integrantes del grupo</p>
           <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasGrupo" aria-describedby="respondidas">
             <thead>
               <tr class="has-background-light">
@@ -171,16 +169,16 @@
                 <th class="has-text-centered" scope="col">Código</th>
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Respondida por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarRespuestas(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered"></td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -200,16 +198,16 @@
                 <th class="has-text-centered" scope="col">Código</th>
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Respondida por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="revisarRespuestas(bitacora.id)"></a>{{ bitacora.minuta.codigo }}</td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered"></td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -367,8 +365,6 @@ export default {
             this.listaComentadasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
             this.listaComentadasCliente.push(this.listaMinutas[i])
-          } else if (this.listaMinutas[i].estado.abreviacion === 'RIG') {
-            this.listaRespondidasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
             this.listaRespondidasCliente.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
@@ -384,16 +380,29 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch {
+      } catch (e) {
         console.log('No se han obtenido las minutas a mostrar')
+        console.log(e)
       }
     },
     async obtenerParaRevisar () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
         this.listaRevision = response.data
-      } catch {
+      } catch (e) {
         console.log('No se han podido obtener las minutas a revisar')
+        console.log(e)
+      }
+    },
+    async obtenerRespondidas () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/respondidas', { headers: Auth.authHeader() })
+        this.listaRespondidasGrupo = response.data
+      } catch (e) {
+        console.log('No se ha podido obtener las minutas respondidas')
+        console.log(e)
+      } finally {
+
       }
     },
     editarBorrador: function (id) {
@@ -404,13 +413,22 @@ export default {
     },
     revisarComentarios: function (id) {
       this.$emit('comentarios', id)
+    },
+    revisarRespuestas: function (id) {
+      this.$emit('respuestas', id)
+    }
+  },
+  watch: {
+    contar: function () {
+      this.obtenerMinutas()
+      this.obtenerParaRevisar()
+      this.obtenerRespondidas()
     }
   },
   mounted () {
     this.obtenerMinutas()
-  },
-  beforeUpdate () {
     this.obtenerParaRevisar()
+    this.obtenerRespondidas()
   }
 }
 </script>

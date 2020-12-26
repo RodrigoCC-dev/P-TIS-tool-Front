@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta v-bind:tipo-minuta="tipo" v-bind:id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios"/>
+          <Tablero :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
 
         </div>
 
@@ -55,6 +55,10 @@
 
       <div v-else-if="verComentarios">
         <Responder :id-bitacora="idComentarios" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="verRespuestas">
+        <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
       </div>
 
     </div>
@@ -70,6 +74,7 @@ import Minuta from '@/components/Minuta.vue'
 import Tablero from '@/components/TableroEst.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Responder from '@/components/comentarios/ResponderMinuta.vue'
+import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -83,7 +88,8 @@ export default {
     Minuta,
     Tablero,
     Comentar,
-    Responder
+    Responder,
+    Respuestas
   },
   data () {
     return {
@@ -93,9 +99,11 @@ export default {
       idBitacora: 0,
       idRevision: 0,
       idComentarios: 0,
+      idRespuestas: 0,
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
+      verRespuestas: false,
       tableroEst: 0
     }
   },
@@ -124,6 +132,7 @@ export default {
       this.verFormulario = false
       this.tipo = 0
       this.idBitacora = 0
+      this.tableroEst++
     },
     async obtenerTipoMinutas () {
       try {
@@ -150,6 +159,14 @@ export default {
         console.log('No se ha obtenido la información del grupo')
       }
     },
+    async obtenerAprobaciones () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
+        this.$store.commit('setTipoAprobaciones', response.data)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
@@ -170,11 +187,17 @@ export default {
       this.idComentarios = id
       this.verComentarios = true
       this.crearMinuta = false
+    },
+    revisarRespuestas: function (id) {
+      this.idRespuestas = id
+      this.verRespuestas = true
+      this.crearMinuta = false
     }
   },
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
+    this.obtenerAprobaciones()
   }
 }
 </script>
