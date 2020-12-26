@@ -407,10 +407,14 @@ export default {
       this.$emit('respuestas', id)
     }
   },
+  watch: {
+    contar: function () {
+      this.obtenerMinutas()
+      this.obtenerParaRevisar()
+    }
+  },
   mounted () {
     this.obtenerMinutas()
-  },
-  beforeUpdate () {
     this.obtenerParaRevisar()
   }
 }

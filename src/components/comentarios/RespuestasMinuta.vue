@@ -74,7 +74,7 @@ export default {
     aprobacionesFiltradas: function () {
       var lista = []
       for (var i = 0; i < this.tipoAprobaciones.length; i++) {
-        if (this.tipoAprobaciones[i].identificador !== 'AC' && this.tipoAprobaciones[i].identificado !== 'RC') {
+        if (this.tipoAprobaciones[i].identificador !== 'AC' && this.tipoAprobaciones[i].identificador !== 'RC') {
           lista.push(this.tipoAprobaciones[i])
         }
       }

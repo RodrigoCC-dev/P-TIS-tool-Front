@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
+          <Tablero :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
 
         </div>
 
@@ -103,7 +103,8 @@ export default {
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
-      verRespuestas: false
+      verRespuestas: false,
+      tableroEst: 0
     }
   },
   computed: {
@@ -131,6 +132,7 @@ export default {
       this.verFormulario = false
       this.tipo = 0
       this.idBitacora = 0
+      this.tableroEst++
     },
     async obtenerTipoMinutas () {
       try {
@@ -179,8 +181,7 @@ export default {
       this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
-      this.obtenerMinutas()
-      this.obtenerParaRevisar()
+      this.tableroEst++
     },
     revisarComentarios: function (id) {
       this.idComentarios = id
