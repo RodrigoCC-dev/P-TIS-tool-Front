@@ -8,24 +8,28 @@
       <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="true"/>
     </div>
 
-    <div class="columns">
-      <div class="column is-7 is-offset-2">
-        <div class="field is-horizontal">
-          <div class="field-label-2c is-normal">
-            <label class="label">Estado de aprobación: </label>
-          </div>
-          <div class="field-body">
-            <div class="field has-addons has-addons-right">
-              <p class="control is-expanded">
-                <span class="select is-fullwidth">
-                  <select v-model="aprobacion">
-                    <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
-                  </select>
-                </span>
-              </p>
-              <p class="control">
-                <a class="button is-link" @click="establecerEstado">Establecer estado</a>
-              </p>
+    <div>
+      <br>
+      <br>
+      <div class="columns">
+        <div class="column is-7 is-offset-2">
+          <div class="field is-horizontal">
+            <div class="field-label-2c is-normal">
+              <label class="label">Estado de aprobación: </label>
+            </div>
+            <div class="field-body">
+              <div class="field has-addons has-addons-right">
+                <p class="control is-expanded">
+                  <span class="select is-fullwidth">
+                    <select v-model="aprobacion">
+                      <option v-for="(aprobacion, index) in aprobacionesFiltradas" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
+                    </select>
+                  </span>
+                </p>
+                <p class="control">
+                  <a class="button is-link" @click="establecerEstado">Establecer estado</a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -62,10 +66,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'tipoAprobaciones']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
+    },
+    aprobacionesFiltradas: function () {
+      var lista = []
+      for (var i = 0; i < this.tipoAprobaciones.length; i++) {
+        if (this.tipoAprobaciones[i].identificador !== 'AC' && this.tipoAprobaciones[i].identificado !== 'RC') {
+          lista.push(this.tipoAprobaciones[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
