@@ -284,8 +284,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Auth from '@/services/auth.js'
 import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
@@ -300,12 +298,12 @@ const nombreTabs = {
 
 export default {
   name: 'TableroEst',
-  props: ['contador'],
+  props: ['minutas', 'revision'],
   data () {
     return {
       nombreTab: 'Borradores',
       nombreTabs,
-      listaMinutas: [],
+      listaMinutas: this.minutas,
       listaBorradores: [],
       listaComentadasGrupo: [],
       listaComentadasCliente: [],
@@ -313,8 +311,7 @@ export default {
       listaRespondidasCliente: [],
       listaCerradas: [],
       listaEmitidas: [],
-      listaRevision: [],
-      contar: this.contador
+      listaRevision: this.revision
     }
   },
   computed: {
@@ -377,23 +374,6 @@ export default {
         }
       }
     },
-    async obtenerMinutas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
-        this.listaMinutas = response.data
-        this.categorizarMinutas()
-      } catch {
-        console.log('No se han obtenido las minutas a mostrar')
-      }
-    },
-    async obtenerParaRevisar () {
-      try {
-        const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
-        this.listaRevision = response.data
-      } catch {
-        console.log('No se han podido obtener las minutas a revisar')
-      }
-    },
     editarBorrador: function (id) {
       this.$emit('bitacora', id)
     },
@@ -408,10 +388,7 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinutas()
-  },
-  beforeUpdate () {
-    this.obtenerParaRevisar()
+    this.categorizarMinutas()
   }
 }
 </script>

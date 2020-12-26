@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta v-bind:tipo-minuta="tipo" v-bind:id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios"/>
+          <Tablero :minutas="listaMinutas" :revision="listaRevision" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios"/>
 
         </div>
 
@@ -96,7 +96,8 @@ export default {
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
-      tableroEst: 0
+      listaMinutas: [],
+      listaRevision: []
     }
   },
   computed: {
@@ -150,6 +151,22 @@ export default {
         console.log('No se ha obtenido la información del grupo')
       }
     },
+    async obtenerMinutas () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
+        this.listaMinutas = response.data
+      } catch {
+        console.log('No se han obtenido las minutas a mostrar')
+      }
+    },
+    async obtenerParaRevisar () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
+        this.listaRevision = response.data
+      } catch {
+        console.log('No se han podido obtener las minutas a revisar')
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
@@ -164,7 +181,8 @@ export default {
       this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
-      this.tableroEst++
+      this.obtenerMinutas()
+      this.obtenerParaRevisar()
     },
     revisarComentarios: function (id) {
       this.idComentarios = id
@@ -175,6 +193,8 @@ export default {
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
+    this.obtenerMinutas()
+    this.obtenerParaRevisar()
   }
 }
 </script>
