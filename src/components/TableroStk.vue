@@ -107,8 +107,8 @@
             <tbody>
               <tr class="has-text-centered" v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
-                <td>{{ bitacora.revison }}</td>
+                <td><a @click="revisarRespuestas(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
+                <td>{{ bitacora.revision }}</td>
                 <td>{{ bitacora.minuta.creada_por }}</td>
                 <td>{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
               </tr>
@@ -201,6 +201,7 @@ const nombreTabs = {
 
 export default {
   name: 'TableroStk',
+  props: ['contador'],
   data () {
     return {
       nombreTab: 'Revision',
@@ -210,7 +211,8 @@ export default {
       listaRespondidasGrupo: [],
       listaRespondidasCliente: [],
       listaCerradas: [],
-      nombreTabs
+      nombreTabs,
+      contar: this.contador
     }
   },
   computed: {
@@ -271,12 +273,17 @@ export default {
     },
     revisarMinuta: function (id) {
       this.$emit('revision', id)
+    },
+    revisarRespuestas: function (id) {
+      this.$emit('respuestas', id)
+    }
+  },
+  watch: {
+    contar: function () {
+      this.obtenerMinutas()
     }
   },
   mounted () {
-    this.obtenerMinutas()
-  },
-  beforeUpdate () {
     this.obtenerMinutas()
   }
 }

@@ -401,8 +401,6 @@ export default {
       } catch (e) {
         console.log('No se ha podido obtener las minutas respondidas')
         console.log(e)
-      } finally {
-
       }
     },
     editarBorrador: function (id) {

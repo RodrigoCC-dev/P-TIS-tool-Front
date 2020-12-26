@@ -5,11 +5,15 @@
     <div class="container">
 
       <div v-if="!verRevision">
-        <Tablero @revision="establecerRevision"/>
+        <Tablero :contador="tableroStk" @revision="establecerRevision" @respuestas="revisarRespuestas"/>
       </div>
 
-      <div v-else>
+      <div v-else-if="verRevision">
         <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="verRespuestas">
+        <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
       </div>
 
     </div>
@@ -23,6 +27,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Tablero from '@/components/TableroStk.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
+import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -34,11 +39,16 @@ export default {
     Header,
     Footer,
     Tablero,
-    Comentar
+    Comentar,
+    Respuestas
   },
   data () {
     return {
-      idRevision: 0
+      idRevision: 0,
+      idRespuestas: 0,
+      verRevision: false,
+      verRespuestas: false,
+      tableroStk: 0
     }
   },
   computed: {
@@ -52,22 +62,32 @@ export default {
     mostrarTrablero: function () {
       this.verRevision = false
       this.idRevision = 0
+      this.verRespuestas = false
+      this.idRespuestas = 0
+      this.tableroStk++
+    },
+    revisarRespuestas: function (id) {
+      this.verRevision = false
+      this.verRespuestas = true
+      this.idRespuestas = id
     },
     async obtenerStakeholder () {
       try {
         const response = await axios.get(this.apiUrl + '/stakeholders/' + this.usuario.id, { headers: Auth.authHeader() })
         this.$store.commit('setStakeholder', response.data)
         this.obtenerGrupo()
-      } catch {
+      } catch (e) {
         console.log('No se ha obtenido la información del Stakeholder')
+        console.log(e)
       }
     },
     async obtenerGrupo () {
       try {
         const response = await axios.get(this.apiUrl + '/grupos/' + this.stakeholder.grupo_id, { headers: Auth.authHeader() })
         this.$store.commit('setGrupo', response.data)
-      } catch {
+      } catch (e) {
         console.log('No se ha obtenido la información del grupo')
+        console.log(e)
       }
     }
   },
@@ -76,6 +96,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped>
-</style>
