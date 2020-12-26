@@ -5,7 +5,7 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" :responder="false" :lista-com="[]" @comentar="recibirComentarios" @cerrar="cerrarRevision"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" :responder="false" :lista-com="[]" :ver-respuestas="false" @comentar="recibirComentarios" @cerrar="cerrarRevision"/>
     </div>
 
     <div v-if="mostrarAprobacion">
