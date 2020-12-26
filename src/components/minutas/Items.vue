@@ -508,10 +508,10 @@ export default {
     cerrarRespuestas: function () {
       this.$emit('cerrar')
     },
-    buscarIniciales: function (asistencia_id) {
+    buscarIniciales: function (asistenciaId) {
       var asistente = null
       for (var i = 0; i < this.asistencia.length; i++) {
-        if (this.asistencia[i].id === asistencia_id) {
+        if (this.asistencia[i].id === asistenciaId) {
           asistente = this.asistencia[i]
         }
       }
