@@ -5,7 +5,31 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="false" :lista-com="[]" :lista-resp="comentarios"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="true"/>
+    </div>
+
+    <div class="columns">
+      <div class="column is-7 is-offset-2">
+        <div class="field is-horizontal">
+          <div class="field-label-2c is-normal">
+            <label class="label">Estado de aprobación: </label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons has-addons-right">
+              <p class="control is-expanded">
+                <span class="select is-fullwidth">
+                  <select v-model="aprobacion">
+                    <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <a class="button is-link" @click="establecerEstado">Establecer estado</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -43,7 +67,7 @@ export default {
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
     }
-  }
+  },
   methods: {
     async obtenerMinuta (bitacoraId) {
       try {
