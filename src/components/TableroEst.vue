@@ -365,8 +365,6 @@ export default {
             this.listaComentadasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
             this.listaComentadasCliente.push(this.listaMinutas[i])
-          } else if (this.listaMinutas[i].estado.abreviacion === 'RIG') {
-            this.listaRespondidasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
             this.listaRespondidasCliente.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
@@ -382,16 +380,29 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch {
+      } catch (e) {
         console.log('No se han obtenido las minutas a mostrar')
+        console.log(e)
       }
     },
     async obtenerParaRevisar () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
         this.listaRevision = response.data
-      } catch {
+      } catch (e) {
         console.log('No se han podido obtener las minutas a revisar')
+        console.log(e)
+      }
+    },
+    async obtenerRespondidas () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/revision/respondidas', { headers: Auth.authHeader() })
+        this.listaRespondidasGrupo = response.data
+      } catch (e) {
+        console.log('No se ha podido obtener las minutas respondidas')
+        console.log(e)
+      } finally {
+
       }
     },
     editarBorrador: function (id) {
@@ -411,11 +422,13 @@ export default {
     contar: function () {
       this.obtenerMinutas()
       this.obtenerParaRevisar()
+      this.obtenerRespondidas()
     }
   },
   mounted () {
     this.obtenerMinutas()
     this.obtenerParaRevisar()
+    this.obtenerRespondidas()
   }
 }
 </script>
