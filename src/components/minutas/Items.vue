@@ -43,7 +43,7 @@
               <div v-for="(comentario, ind) in comentariosPorItem[index]" :key="comentario.id">
                 <article class="message is-small">
                   <div class="message-header">
-                    <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+                    <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
                   </div>
                   <div class="message-body">
                     <p>{{ comentario.comentario }}</p>
@@ -140,7 +140,7 @@
         <div class="column is-3" v-for="(comentario, index) in comentariosGenerales" :key="comentario.id">
           <article class="message">
             <div class="message-header">
-              <p>{{ comentario.asistencia.estudiante.iniciales }}</p>
+              <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
             </div>
             <div class="message-body">
               <p>{{ comentario.comentario }}</p>
