@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas"/>
+          <Tablero :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
 
         </div>
 
@@ -61,6 +61,10 @@
         <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
       </div>
 
+      <div v-else-if="verEmision">
+        <Emision :id-bitacora="idEmision" @cerrar="mostrarTablero"/>
+      </div>
+
     </div>
 
     <Footer/>
@@ -75,6 +79,7 @@ import Tablero from '@/components/TableroEst.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Responder from '@/components/comentarios/ResponderMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
+import Emision from '@/components/comentarios/NuevaMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -89,7 +94,8 @@ export default {
     Tablero,
     Comentar,
     Responder,
-    Respuestas
+    Respuestas,
+    Emision
   },
   data () {
     return {
@@ -100,10 +106,12 @@ export default {
       idRevision: 0,
       idComentarios: 0,
       idRespuestas: 0,
+      idEmision: 0,
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
       verRespuestas: false,
+      verEmision: false,
       tableroEst: 0
     }
   },
@@ -191,6 +199,11 @@ export default {
     revisarRespuestas: function (id) {
       this.idRespuestas = id
       this.verRespuestas = true
+      this.crearMinuta = false
+    },
+    nuevaVersion: function (id) {
+      this.idEmision = id
+      this.verEmision = true
       this.crearMinuta = false
     }
   },

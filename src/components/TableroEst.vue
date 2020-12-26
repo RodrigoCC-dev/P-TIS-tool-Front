@@ -229,15 +229,17 @@
                 <th class="has-text-centered" scope="col">Código</th>
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
                 <th class="has-text-centered" scope="col">Cerrada el</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
+                <td><a @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
                 <td class="has-text-centered"></td>
               </tr>
             </tbody>
@@ -414,6 +416,9 @@ export default {
     },
     revisarRespuestas: function (id) {
       this.$emit('respuestas', id)
+    },
+    nuevaEmision: function (id) {
+      this.$emit('emitir', id)
     }
   },
   watch: {
