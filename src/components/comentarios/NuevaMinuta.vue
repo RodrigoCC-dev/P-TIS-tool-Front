@@ -41,6 +41,10 @@
       </div>
     </div>
 
+    <div v-if="seleccionarMotivo">
+      
+    </div>
+
   </div>
 </template>
 
@@ -67,11 +71,16 @@ export default {
     return {
       id: this.idBitacora,
       bitacora: {},
-      comentarios: []
+      comentarios: [],
+      aprobaciones: []
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl', 'grupo']),
+
+    mostrarMinuta: function () {
+      return Object.keys(this.bitacora).length > 0
+    }
   },
   methods: {
     async obtenerMinuta (bitacoraId) {
@@ -91,11 +100,21 @@ export default {
         console.log('No fue posible obtener los comentarios y respuestas de la minuta')
         console.log(e)
       }
+    },
+    async obtenerAprobaciones (bitacoraId) {
+      try {
+        const response = await axios.get(this.apiUrl + '/aprobaciones/' + bitacoraId, { headers: Auth.authHeader() })
+        this.aprobaciones = response.data
+      } catch (e) {
+        console.log('No fue posible obtener las aprobaciones de la minuta')
+        console.log(e)
+      }
     }
   },
   mounted () {
     this.obtenerMinuta()
     this.obtenerRespuestas()
+    this.obtenerAprobaciones()
   }
 }
 </script>
