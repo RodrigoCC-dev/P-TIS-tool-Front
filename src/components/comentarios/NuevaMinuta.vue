@@ -42,7 +42,7 @@
     </div>
 
     <div v-if="seleccionarMotivo">
-      
+
     </div>
 
   </div>
@@ -76,7 +76,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'motivos']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
@@ -108,6 +108,53 @@ export default {
       } catch (e) {
         console.log('No fue posible obtener las aprobaciones de la minuta')
         console.log(e)
+      }
+    },
+    obtenerNuevoMotivo: function () {
+      if (this.bitacora.identificador === 'EF') {
+        return 'EF'
+      } else {
+        var revisores = 0
+        var aprobaciones = 0
+        if (this.bitacora.minuta.tipo === 'Coordinacion') {
+          revisores = this.grupo.estudiantes.length - 1
+        } else if (this.bitacora.minuta.tipo === 'Cliente') {
+          if (this.bitacora.identificador === 'ECI') {
+            revisores = this.grupo.estudiantes.length - 1
+          } else if (this.bitacora.identificador !== 'EF') {
+            revisores = this.grupo.stakeholders.length
+          }
+        }
+        for (var i = 0; i < this.aprobaciones.length; i++) {
+          if (this.aprobaciones[i].tipo_aprobacion.identificador === 'A') {
+            aprobaciones++
+          }
+        }
+        if (aprobaciones === revisores) {
+          if (this.bitacora.minuta.tipo === 'Coordinacion') {
+            return 'EF'
+          } else if (this.bitacora.minuta.tipo === 'Cliente') {
+            if (this.bitacora.identificador === 'ECI') {
+              return 'ERC'
+            } else {
+              return 'EF'
+            }
+          } else {
+            return 'EF'
+          }
+        } else {
+          if (this.bitacora.minuta.tipo === 'Coordinacion') {
+            return 'ECI'
+          } else if (this.bitacora.minuta.tipo === 'Cliente') {
+            if (this.bitacora.identificador === 'ECI') {
+              return 'ECI'
+            } else {
+              return 'EAC'
+            }
+          } else {
+            return 'EAC'
+          }
+        }
       }
     }
   },
