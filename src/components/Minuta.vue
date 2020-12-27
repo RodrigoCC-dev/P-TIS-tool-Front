@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" :disabled="this.esBorrador">
+            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -336,7 +336,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idBitacora', 'idMotivo'],
+  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir'],
   data () {
     return {
       bitacora: this.idBitacora,
@@ -358,7 +358,7 @@ export default {
         otro: false
       },
       tema: '',
-      revision: '',
+      revision: this.letraRevision,
       asistenciaEst: [],
       asistenciaStk: [],
       objetivos: [{ id: 0, descripcion: '' }],
@@ -413,7 +413,8 @@ export default {
         clasificacion: false,
         objetivos: false,
         conclusiones: false
-      }
+      },
+      nuevaEmision = this.reEmitir
     }
   },
   computed: {
@@ -672,7 +673,9 @@ export default {
         this.clasificacion = response.data.minuta.clasificacion
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
-        this.revision = response.data.revision
+        if (!this.nuevaEmision) {
+          this.revision = response.data.revision
+        }
         this.objetivos = response.data.minuta.objetivos
         this.conclusiones = response.data.minuta.conclusiones
         this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
@@ -760,7 +763,7 @@ export default {
           asistencia: this.asistenciaEst.concat(this.asistenciaStk),
           tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
-        if (this.bitacora === 0) {
+        if (this.bitacora === 0 || this.nuevaEmision) {
           try {
             await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
             this.$emit('cerrar')

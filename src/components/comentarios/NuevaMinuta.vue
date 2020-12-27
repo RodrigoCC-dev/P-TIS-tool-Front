@@ -27,6 +27,17 @@
         <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="true"/>
       </div>
 
+      <div class="columns is-multiline">
+        <div class="column is-2 is-offset-1">
+          <div v-for="aprobacion in aprobaciones" :key="aprobacion.id">
+            <div class="tags are-medium has-addons">
+              <span class="tag">{{ buscarIniciales(aprobacion.asistencia_id) }}</span>
+              <span class="tag" :class="aprobacion.tipo_aprobacion.identificador === A ? 'is-info' : 'is-danger'">{{ aprobacion.tipo_aprobacion.descripcion }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="columns">
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
@@ -47,6 +58,7 @@
 <script>
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 import Informacion from '@/components/minutas/Informacion.vue'
@@ -109,6 +121,9 @@ export default {
         console.log(e)
       }
     },
+    buscarIniciales: function (id) {
+      return Funciones.buscarIniciales(this.bitacora.minuta.asistencia, id)
+    },
     obtenerNuevoMotivo: function () {
       if (this.bitacora.identificador === 'EF') {
         this.nuevoMotivo = 'EF'
@@ -155,7 +170,7 @@ export default {
           }
         }
       }
-    }
+    },
     establecerNuevaRevision: function () {
       if (this.nuevoMotivo === 'EF') {
         if (this.bitacora.identificador === 'EF') {
@@ -171,6 +186,7 @@ export default {
       this.obtenerNuevoMotivo()
       this.establecerNuevaRevision()
       this.$emit('cerrar', this.nuevoMotivo, this.nuevaRevision)
+      this.verAprobacion = false
     },
     revisar: function () {
       this.verAprobacion = true
@@ -178,6 +194,7 @@ export default {
     },
     cancelar: function () {
       this.$emit('cancelar')
+      this.verAprobacion = false
     }
   },
   mounted () {

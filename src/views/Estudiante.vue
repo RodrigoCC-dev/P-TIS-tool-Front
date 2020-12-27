@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="nuevaEmision" :letra-revison="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -62,7 +62,7 @@
       </div>
 
       <div v-else-if="verEmision">
-        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @cancelar="mostrarTablero"/>
+        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @revisar="revisarAprobacion" @cancelar="mostrarTablero"/>
       </div>
 
     </div>
@@ -114,6 +114,8 @@ export default {
       verRespuestas: false,
       verEmision: false,
       idMotivo: 0,
+      nuevaRevision: '',
+      nuevaEmision: false,
       tableroEst: 0
     }
   },
@@ -138,11 +140,13 @@ export default {
       this.verFormulario = true
       this.seleccionarMinuta = false
       this.idMotivo = buscarIdMotivo('ECI')
+      this.nuevaRevision = 'A'
     },
     cerrarFormulario: function () {
       this.verFormulario = false
       this.tipo = 0
       this.idBitacora = 0
+      this.nuevaEmision = false
       this.tableroEst++
     },
     async obtenerTipoMinutas () {
@@ -200,6 +204,7 @@ export default {
       this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
+      this.idEmision = 0
       this.tableroEst++
     },
     revisarComentarios: function (id) {
@@ -215,10 +220,12 @@ export default {
     nuevaVersion: function (id) {
       this.idEmision = id
       this.verEmision = true
+    },
+    revisarAprobacion: function () {
       this.crearMinuta = false
     },
     buscarIdMotivo: function (valor) {
-      return Funciones.obtenerIddeLista(this.motivos, 'identificador', valor)
+      return Funciones.obtenerIdDeLista(this.motivos, 'identificador', valor)
     },
     nuevaEmision: function (identificador, revision) {
       this.verRevision = false
@@ -226,6 +233,9 @@ export default {
       this.crearMinuta = true
       this.idRevision = 0
       this.idMotivo = buscarIdMotivo(identificador)
+      this.nuevaRevision = revision
+      this.idBitacora = this.idEmision
+      this.nuevaEmision = true
       this.tableroEst++
     }
   },
