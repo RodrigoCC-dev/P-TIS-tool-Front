@@ -6,13 +6,13 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-link">Emitir nueva versión</a>
+              <a class="button is-link" @click="emitir">Emitir nueva versión</a>
             </div>
             <div class="control">
-              <a class="button is-info">Revisar aprobación</a>
+              <a class="button is-info" @click="revisar">Revisar aprobación</a>
             </div>
             <div class="control">
-              <a class="button is-light">Cancelar</a>
+              <a class="button is-light" @click="cancelar">Cancelar</a>
             </div>
           </div>
         </div>
@@ -31,10 +31,10 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-link">Emitir nueva versión</a>
+              <a class="button is-link" @click="emitir">Emitir nueva versión</a>
             </div>
             <div class="control">
-              <a class="button is-link">Cancelar</a>
+              <a class="button is-link" @click="cancelar">Cancelar</a>
             </div>
           </div>
         </div>
@@ -72,7 +72,9 @@ export default {
       id: this.idBitacora,
       bitacora: {},
       comentarios: [],
-      aprobaciones: []
+      aprobaciones: [],
+      nuevoMotivo: '',
+      nuevaRevision: ''
     }
   },
   computed: {
@@ -112,7 +114,7 @@ export default {
     },
     obtenerNuevoMotivo: function () {
       if (this.bitacora.identificador === 'EF') {
-        return 'EF'
+        this.nuevoMotivo = 'EF'
       } else {
         var revisores = 0
         var aprobaciones = 0
@@ -132,29 +134,40 @@ export default {
         }
         if (aprobaciones === revisores) {
           if (this.bitacora.minuta.tipo === 'Coordinacion') {
-            return 'EF'
+            this.nuevoMotivo = 'EF'
           } else if (this.bitacora.minuta.tipo === 'Cliente') {
             if (this.bitacora.identificador === 'ECI') {
-              return 'ERC'
+              this.nuevoMotivo = 'ERC'
             } else {
-              return 'EF'
+              this.nuevoMotivo = 'EF'
             }
           } else {
-            return 'EF'
+            this.nuevoMotivo = 'EF'
           }
         } else {
           if (this.bitacora.minuta.tipo === 'Coordinacion') {
-            return 'ECI'
+            this.nuevoMotivo = 'ECI'
           } else if (this.bitacora.minuta.tipo === 'Cliente') {
             if (this.bitacora.identificador === 'ECI') {
-              return 'ECI'
+              this.nuevoMotivo = 'ECI'
             } else {
-              return 'EAC'
+              this.nuevoMotivo = 'EAC'
             }
           } else {
-            return 'EAC'
+            this.nuevoMotivo = 'EAC'
           }
         }
+      }
+    }
+    establecerNuevaRevision: function () {
+      if (this.nuevoMotivo === 'EF') {
+        if (this.bitacora.identificador === 'EF') {
+          this.nuevaRevision = parseInt(this.bitacora.revision) + 1
+        } else {
+          this.nuevaRevision = 0
+        }
+      } else {
+        this.nuevaRevision = this.abc.charAt(this.abc.indexOf(this.bitacora.revision) + 2)
       }
     }
   },
