@@ -62,7 +62,7 @@
       </div>
 
       <div v-else-if="verEmision">
-        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision"/>
+        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @cancelar="mostrarTablero"/>
       </div>
 
     </div>
@@ -220,7 +220,7 @@ export default {
     buscarIdMotivo: function (valor) {
       return Funciones.obtenerIddeLista(this.motivos, 'identificador', valor)
     },
-    nuevaEmision: function (identificador) {
+    nuevaEmision: function (identificador, revision) {
       this.verRevision = false
       this.verComentarios = false
       this.crearMinuta = true

@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div v-if="">
+    <div v-if="!verAprobacion">
       <div class="columns">
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
@@ -41,10 +41,6 @@
       </div>
     </div>
 
-    <div v-if="seleccionarMotivo">
-
-    </div>
-
   </div>
 </template>
 
@@ -73,6 +69,7 @@ export default {
       bitacora: {},
       comentarios: [],
       aprobaciones: [],
+      verAprobacion: false,
       nuevoMotivo: '',
       nuevaRevision: ''
     }
@@ -169,6 +166,18 @@ export default {
       } else {
         this.nuevaRevision = this.abc.charAt(this.abc.indexOf(this.bitacora.revision) + 2)
       }
+    },
+    emitir: function () {
+      this.obtenerNuevoMotivo()
+      this.establecerNuevaRevision()
+      this.$emit('cerrar', this.nuevoMotivo, this.nuevaRevision)
+    },
+    revisar: function () {
+      this.verAprobacion = true
+      this.$emit('revisar')
+    },
+    cancelar: function () {
+      this.$emit('cancelar')
     }
   },
   mounted () {
