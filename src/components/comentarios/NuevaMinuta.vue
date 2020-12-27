@@ -78,7 +78,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo', 'motivos']),
+    ...mapState(['apiUrl', 'grupo', 'motivos', 'abc']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
