@@ -336,7 +336,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idBitacora'],
+  props: ['tipoMinuta', 'idBitacora', 'idMotivo'],
   data () {
     return {
       bitacora: this.idBitacora,
@@ -376,7 +376,7 @@ export default {
           responsables: false
         }
       },
-      motivo_id: 1,
+      motivo_id: this.idMotivo,
       listaItems: [
         {
           correlativo: 1,
@@ -620,14 +620,6 @@ export default {
         this.tipo_estados = response.data
       } catch {
         console.log('No fue posible obtener los tipos de estados')
-      }
-    },
-    async obtenerMotivos () {
-      try {
-        const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
-        this.motivos = response.data
-      } catch {
-        console.log('No fue posible obtener los motivos de emisión')
       }
     },
     async obtenerInfoEstudiante () {

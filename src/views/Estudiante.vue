@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -62,7 +62,7 @@
       </div>
 
       <div v-else-if="verEmision">
-        <Emision :id-bitacora="idEmision" @cerrar="mostrarTablero"/>
+        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision"/>
       </div>
 
     </div>
@@ -83,6 +83,7 @@ import Emision from '@/components/comentarios/NuevaMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -112,11 +113,12 @@ export default {
       verComentarios: false,
       verRespuestas: false,
       verEmision: false,
+      idMotivo: 0,
       tableroEst: 0
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'tipoMinutas', 'usuario', 'estudiante', 'grupo']),
+    ...mapState(['apiUrl', 'tipoMinutas', 'usuario', 'estudiante', 'grupo', 'motivos']),
 
     minutasFiltradas: function () {
       var lista = []
@@ -135,6 +137,7 @@ export default {
     elegirTipo: function () {
       this.verFormulario = true
       this.seleccionarMinuta = false
+      this.idMotivo = buscarIdMotivo('ECI')
     },
     cerrarFormulario: function () {
       this.verFormulario = false
@@ -175,6 +178,14 @@ export default {
         console.log(e)
       }
     },
+    async obtenerMotivos () {
+      try {
+        const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
+        this.$store.commit('setMotivos', response.data)
+      } catch {
+        console.log('No fue posible obtener los motivos de emisión')
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
@@ -205,12 +216,24 @@ export default {
       this.idEmision = id
       this.verEmision = true
       this.crearMinuta = false
+    },
+    buscarIdMotivo: function (valor) {
+      return Funciones.obtenerIddeLista(this.motivos, 'identificador', valor)
+    },
+    nuevaEmision: function (identificador) {
+      this.verRevision = false
+      this.verComentarios = false
+      this.crearMinuta = true
+      this.idRevision = 0
+      this.idMotivo = buscarIdMotivo(identificador)
+      this.tableroEst++
     }
   },
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
     this.obtenerAprobaciones()
+    this.obtenerMotivos()
   }
 }
 </script>

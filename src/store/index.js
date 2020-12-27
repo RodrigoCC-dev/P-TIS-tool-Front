@@ -10,7 +10,8 @@ export default createStore({
     grupo: {},
     tipoMinutas: [],
     secciones: [],
-    tipoAprobaciones: []
+    tipoAprobaciones: [],
+    motivos: []
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -36,6 +37,9 @@ export default createStore({
     },
     setTipoAprobaciones (state, valor) {
       state.tipoAprobaciones = valor
+    },
+    setMotivos (state, valor) {
+      state.motivos = valor
     }
   },
   actions: {
