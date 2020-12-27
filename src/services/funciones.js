@@ -45,5 +45,14 @@ export default {
   },
   nombreCompleto (obj) {
     return obj.nombre + ' ' + obj.apellido_paterno + ' ' + obj.apellido_materno
+  },
+  buscarIniciales (listaAsistencia, asistenciaId) {
+    var asistente = ''
+    for (var i = 0; i < this.listaAsistencia.length; i++) {
+      if (this.listaAsistencia[i].id === asistenciaId) {
+        asistente = this.listaAsistencia[i].iniciales
+      }
+    }
+    return asistente
   }
 }

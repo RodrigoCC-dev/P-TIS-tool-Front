@@ -509,17 +509,7 @@ export default {
       this.$emit('cerrar')
     },
     buscarIniciales: function (asistenciaId) {
-      var asistente = null
-      for (var i = 0; i < this.asistencia.length; i++) {
-        if (this.asistencia[i].id === asistenciaId) {
-          asistente = this.asistencia[i]
-        }
-      }
-      if (asistente === null) {
-        return ''
-      } else {
-        return asistente.iniciales
-      }
+      return Funciones.buscarIniciales(this.asistencia, asistenciaId)
     }
   },
   mounted () {
