@@ -54,5 +54,14 @@ export default {
       }
     }
     return asistente
+  },
+  asistenciaParticipante (listaAsistencia, llave, iniciales) {
+    var asistencia = ''
+    for (var i = 0; i < listaAsistencia.length; i++) {
+      if (listaAsistencia[i].iniciales === iniciales && listaAsistencia[i][llave] !== null) {
+        asistencia = listaAsistencia[i].descripcion
+      }
+    }
+    return asistencia
   }
 }
