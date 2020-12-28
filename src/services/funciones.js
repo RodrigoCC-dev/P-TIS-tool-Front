@@ -48,9 +48,9 @@ export default {
   },
   buscarIniciales (listaAsistencia, asistenciaId) {
     var asistente = ''
-    for (var i = 0; i < this.listaAsistencia.length; i++) {
-      if (this.listaAsistencia[i].id === asistenciaId) {
-        asistente = this.listaAsistencia[i].iniciales
+    for (var i = 0; i < listaAsistencia.length; i++) {
+      if (listaAsistencia[i].id === asistenciaId) {
+        asistente = listaAsistencia[i].iniciales
       }
     }
     return asistente
