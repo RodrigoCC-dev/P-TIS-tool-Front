@@ -112,7 +112,7 @@
             </thead>
             <tbody>
               <tr v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
-                <td class="has-text-info has-text-weight-semibold">{{ nombreCompleto(estudiante) }}</td>
+                <td class="has-text-info has-text-weight-semibold">{{ nombreCompleto(estudiante.usuario) }}</td>
                 <td></td>
                 <td class="has-text-centered">{{ estudiante.iniciales }}</td>
                 <td class="has-text-centered">
@@ -124,7 +124,7 @@
                 </td>
               </tr>
               <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="minuta.tipo === 'Cliente'">
-                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente) }}</td>
+                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente.usuario) }}</td>
                 <td></td>
                 <td class="has-text-centered">{{ cliente.iniciales }}</td>
                 <td class="has-text-centered">
@@ -414,7 +414,7 @@ export default {
         objetivos: false,
         conclusiones: false
       },
-      nuevaEmision = this.reEmitir
+      nuevaEmision: this.reEmitir
     }
   },
   computed: {
@@ -505,7 +505,7 @@ export default {
     convertirAsistenciaEst: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
-        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
+        var obj = { estudiante: this.grupo.estudiantes[i].id, stakeholder: '', asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (array[j].id_estudiante !== null) {
             if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
@@ -520,7 +520,7 @@ export default {
     convertirAsistenciaStk: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.stakeholders.length; i++) {
-        var obj = { stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
+        var obj = { estudiante: '', stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (array[j].id_stakeholder !== null) {
             if (this.grupo.stakeholders[i].iniciales === array[j].iniciales) {
@@ -991,7 +991,6 @@ export default {
     this.obtenerTiposItem()
     this.obtenerTiposAsistencia()
     this.obtenerTiposEstado()
-    this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
   }

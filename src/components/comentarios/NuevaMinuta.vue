@@ -73,8 +73,8 @@ export default {
     Objetivos,
     Conclusiones,
     Items
-  }
-  props: ['idBitacora']
+  },
+  props: ['idBitacora'],
   data () {
     return {
       id: this.idBitacora,
