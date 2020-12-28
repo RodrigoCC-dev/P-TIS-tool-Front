@@ -671,9 +671,10 @@ describe('Items.vue', () => {
       propsData: {
         lista: lista,
         asistentes: presentes,
-        comentar: false,
+        comentar: true,
         responder: false,
-        listaCom: []
+        listaCom: [],
+        verRespuestas: false
       }
     })
     expect(wrapper.vm.mostrarComentar).toEqual(esperadoMostrar)

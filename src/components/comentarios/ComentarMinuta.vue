@@ -116,7 +116,6 @@ export default {
     }
   },
   mounted () {
-    this.obtenerAprobaciones()
     this.obtenerMinuta(this.id)
   }
 }

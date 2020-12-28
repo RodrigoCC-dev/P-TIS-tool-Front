@@ -29,7 +29,7 @@
                 <div class="card">
                   <div class="card-content">
                     <div class="content">
-                      <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem"></textarea>
+                      <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem(index)"></textarea>
                     </div>
                     <p v-if="this.listaEntradas[index].error" class="is-danger help">{{ this.listaEntradas[index].mensaje }}</p>
                   </div>
@@ -516,6 +516,7 @@ export default {
     this.crearListas()
     this.categorizarComentarios()
     this.crearRespuestasItems()
+    console.log(this.listaEntradas)
   }
 }
 </script>
