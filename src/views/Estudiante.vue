@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="nuevaEmision" :letra-revison="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revison="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -115,7 +115,7 @@ export default {
       verEmision: false,
       idMotivo: 0,
       nuevaRevision: '',
-      nuevaEmision: false,
+      esNuevaEmision: false,
       tableroEst: 0
     }
   },
@@ -139,14 +139,14 @@ export default {
     elegirTipo: function () {
       this.verFormulario = true
       this.seleccionarMinuta = false
-      this.idMotivo = buscarIdMotivo('ECI')
+      this.idMotivo = this.buscarIdMotivo('ECI')
       this.nuevaRevision = 'A'
     },
     cerrarFormulario: function () {
       this.verFormulario = false
       this.tipo = 0
       this.idBitacora = 0
-      this.nuevaEmision = false
+      this.esNuevaEmision = false
       this.tableroEst++
     },
     async obtenerTipoMinutas () {
@@ -232,10 +232,10 @@ export default {
       this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
-      this.idMotivo = buscarIdMotivo(identificador)
+      this.idMotivo = this.buscarIdMotivo(identificador)
       this.nuevaRevision = revision
       this.idBitacora = this.idEmision
-      this.nuevaEmision = true
+      this.esNuevaEmision = true
       this.tableroEst++
     }
   },
