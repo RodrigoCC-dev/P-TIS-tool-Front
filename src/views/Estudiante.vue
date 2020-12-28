@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revison="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
