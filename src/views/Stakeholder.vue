@@ -52,14 +52,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario'])
+    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'grupo'])
   },
   methods: {
     establecerRevision: function (id) {
       this.idRevision = id
       this.verRevision = true
     },
-    mostrarTrablero: function () {
+    mostrarTablero: function () {
       this.verRevision = false
       this.idRevision = 0
       this.verRespuestas = false
@@ -89,10 +89,19 @@ export default {
         console.log('No se ha obtenido la información del grupo')
         console.log(e)
       }
+    },
+    async obtenerAprobaciones () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
+        this.$store.commit('setTipoAprobaciones', response.data)
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   mounted () {
     this.obtenerStakeholder()
+    this.obtenerAprobaciones()
   }
 }
 </script>

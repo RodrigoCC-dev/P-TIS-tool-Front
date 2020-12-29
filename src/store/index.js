@@ -6,7 +6,7 @@ export default createStore({
     authenticated: false,
     usuario: {},
     estudiante: {},
-    Stakeholder: {},
+    stakeholder: {},
     grupo: {},
     tipoMinutas: [],
     secciones: [],
@@ -31,7 +31,7 @@ export default createStore({
       state.estudiante = valor
     },
     setStakeholder (state, valor) {
-      state.Stakeholder = valor
+      state.stakeholder = valor
     },
     setGrupo (state, valor) {
       state.grupo = valor
