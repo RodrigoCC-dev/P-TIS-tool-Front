@@ -3,7 +3,7 @@ import Minuta from '@/components/Minuta.vue'
 import { nextTick } from 'vue'
 
 describe('Minuta.vue', () => {
-  it('se asigna prop adecuadamente', () => {
+  it('se asigna prop "tipoMinuta" adecuadamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
         tipoMinuta: 2
@@ -12,13 +12,49 @@ describe('Minuta.vue', () => {
     expect(wrapper.props().tipoMinuta).toBe(2)
   })
 
-  it('se asigna prop idBitacora adecuadamente', () => {
+  it('se asigna prop "idBitacora" adecuadamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
         idBitacora: 3
       }
     })
     expect(wrapper.props().idBitacora).toBe(3)
+  })
+
+  it('se asigna prop "idMotivo" adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idMotivo: 5
+      }
+    })
+    expect(wrapper.props().idMotivo).toBe(5)
+  })
+
+  it('se asigna prop "letraRevision" adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        letraRevision: 'Q'
+      }
+    })
+    expect(wrapper.props().letraRevision).toBe('Q')
+  })
+
+  it('se asigna prop "reEmitir" adecuadamente como "true"', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        reEmitir: true
+      }
+    })
+    expect(wrapper.props().reEmitir).toBeTruthy()
+  })
+
+  it('se asigna prop "reEmitir" adecuadamente como "false"', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        reEmitir: false
+      }
+    })
+    expect(wrapper.props().reEmitir).toBeFalsy()
   })
 
   it('variable minuta se inicializa correctamente', () => {
@@ -58,8 +94,16 @@ describe('Minuta.vue', () => {
   })
 
   it('variable revision se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.revision).toEqual('')
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 1,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.revision).toEqual('A')
   })
 
   it('variable asistenciaEst se inicializa correctamente', () => {
@@ -101,8 +145,16 @@ describe('Minuta.vue', () => {
   })
 
   it('variable motivo_id se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.motivo_id).toEqual(1)
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.motivo_id).toEqual(6)
   })
 
   it('variable listaItems se inicializa correctamente', () => {
@@ -483,9 +535,10 @@ describe('Minuta.vue', () => {
       }
     ]
     const esperado = [
-      {estudiante: 5, asistencia: 3},
-      {estudiante: 6, asistencia: 1}
+      {estudiante: 5, stakeholder: '', asistencia: 3},
+      {estudiante: 6, stakeholder: '', asistencia: 1}
     ]
+    debugger
     const wrapper = shallowMount(Minuta, {
       data() {
         return {
@@ -495,9 +548,23 @@ describe('Minuta.vue', () => {
             { id: 3, tipo: 'ACA'}
           ],
           grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
             estudiantes: [
-              { id: 5, iniciales: 'CGL'},
-              { id: 6, iniciales: 'FDT'}
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
             ]
           }
         }
@@ -524,8 +591,8 @@ describe('Minuta.vue', () => {
       }
     ]
     const esperado = [
-      {stakeholder: 5, asistencia: 3},
-      {stakeholder: 6, asistencia: 1}
+      {estudiante: '', stakeholder: 5, asistencia: 3},
+      {estudiante: '', stakeholder: 6, asistencia: 1}
     ]
     const wrapper = shallowMount(Minuta, {
       data() {
@@ -536,14 +603,29 @@ describe('Minuta.vue', () => {
             { id: 3, tipo: 'ACA'}
           ],
           grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
             stakeholders: [
-              { id: 5, iniciales: 'CGL'},
-              { id: 6, iniciales: 'FDT'}
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
             ]
           }
         }
       }
     })
+    debugger
     expect(wrapper.vm.convertirAsistenciaStk(array)).toEqual(esperado)
   })
 
