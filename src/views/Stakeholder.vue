@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <div v-if="!verRevision">
+      <div v-if="verTablero">
         <Tablero :contador="tableroStk" @revision="establecerRevision" @respuestas="revisarRespuestas"/>
       </div>
 
@@ -46,6 +46,7 @@ export default {
     return {
       idRevision: 0,
       idRespuestas: 0,
+      verTablero: true,
       verRevision: false,
       verRespuestas: false,
       tableroStk: 0
@@ -58,8 +59,10 @@ export default {
     establecerRevision: function (id) {
       this.idRevision = id
       this.verRevision = true
+      this.verTablero = false
     },
     mostrarTablero: function () {
+      this.verTablero = true
       this.verRevision = false
       this.idRevision = 0
       this.verRespuestas = false
@@ -67,6 +70,7 @@ export default {
       this.tableroStk++
     },
     revisarRespuestas: function (id) {
+      this.verTablero = false
       this.verRevision = false
       this.verRespuestas = true
       this.idRespuestas = id
