@@ -516,7 +516,6 @@ export default {
     this.crearListas()
     this.categorizarComentarios()
     this.crearRespuestasItems()
-    console.log(this.asistencia)
   }
 }
 </script>

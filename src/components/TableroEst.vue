@@ -235,12 +235,12 @@
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
-                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
-                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-                <td class="has-text-centered"></td>
+                <th class="has-text-centered" scope="row" :class="{ 'is-selected' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
+                <td :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
               </tr>
             </tbody>
           </table>
@@ -302,7 +302,7 @@ const nombreTabs = {
 
 export default {
   name: 'TableroEst',
-  props: ['contador'],
+  props: ['seleccionado', 'contador'],
   data () {
     return {
       nombreTab: 'Borradores',
@@ -316,7 +316,8 @@ export default {
       listaCerradas: [],
       listaEmitidas: [],
       listaRevision: [],
-      contar: this.contador
+      contar: this.contador,
+      minutaActual: this.seleccionado
     }
   },
   computed: {
@@ -418,6 +419,7 @@ export default {
       this.$emit('respuestas', id)
     },
     nuevaEmision: function (id) {
+      this.minutaActual = id
       this.$emit('emitir', id)
     }
   },
