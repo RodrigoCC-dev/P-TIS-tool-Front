@@ -57,6 +57,15 @@ describe('Minuta.vue', () => {
     expect(wrapper.props().reEmitir).toBeFalsy()
   })
 
+  it('variable "bitacora" se inicializa correctamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idBitacora: 345
+      }
+    })
+    expect(wrapper.vm.bitacora).toEqual(345)
+  })
+
   it('variable minuta se inicializa correctamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
@@ -232,6 +241,32 @@ describe('Minuta.vue', () => {
     }
     const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.entradas).toEqual(entrada)
+  })
+
+  it('variable "nuevaEmision" se inicializa correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: true
+      }
+    })
+    expect(wrapper.vm.nuevaEmision).toBeTruthy()
+  })
+
+  it('variable "nuevaEmision" se inicializa correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.nuevaEmision).toBeFalsy()
   })
 
   it('propiedad computada esBorrador funciona correctamente con true', () => {
@@ -538,7 +573,6 @@ describe('Minuta.vue', () => {
       {estudiante: 5, stakeholder: '', asistencia: 3},
       {estudiante: 6, stakeholder: '', asistencia: 1}
     ]
-    debugger
     const wrapper = shallowMount(Minuta, {
       data() {
         return {
@@ -625,7 +659,6 @@ describe('Minuta.vue', () => {
         }
       }
     })
-    debugger
     expect(wrapper.vm.convertirAsistenciaStk(array)).toEqual(esperado)
   })
 
