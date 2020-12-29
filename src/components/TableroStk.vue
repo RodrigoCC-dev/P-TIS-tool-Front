@@ -46,7 +46,7 @@
                 <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por}}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -78,7 +78,7 @@
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por}}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -110,7 +110,7 @@
                 <td><a @click="revisarRespuestas(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>
@@ -171,7 +171,7 @@
                 <td>{{ bitacora.minuta.codigo }}</td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
             </tbody>
           </table>

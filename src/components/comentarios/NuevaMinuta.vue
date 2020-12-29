@@ -36,17 +36,18 @@
         </div>
       </div>
 
-      <div class="columns is-multiline">
-        <div class="column is-2 is-offset-1">
-          <div v-for="aprobacion in aprobaciones" :key="aprobacion.id">
-            <div class="tags are-medium has-addons">
-              <span class="tag"><strong>{{ buscarIniciales(aprobacion.asistencia_id) }}</strong></span>
-              <span class="tag" :class="aprobacion.tipo_aprobacion.identificador === 'A' ? 'is-info' : 'is-danger'">{{ aprobacion.tipo_aprobacion.descripcion }}</span>
-            </div>
+      <div class="columns is-multiline is-centered">
+        <div class="column is-1"></div>
+        <div class="column is-3" v-for="aprobacion in aprobaciones" :key="aprobacion.id">
+          <div class="tags are-medium has-addons">
+            <span class="tag"><strong>{{ buscarIniciales(aprobacion.asistencia_id) }}</strong></span>
+            <span class="tag" :class="aprobacion.tipo_aprobacion.identificador === 'A' ? 'is-info' : 'is-danger'">{{ aprobacion.tipo_aprobacion.descripcion }}</span>
           </div>
         </div>
       </div>
 
+      <br>
+      <br>
       <div class="columns">
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
