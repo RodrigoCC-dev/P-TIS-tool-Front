@@ -142,7 +142,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(bitacora, index) in listaComentadasClente" :key="bitacora.id">
+              <tr v-for="(bitacora, index) in listaComentadasCliente" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                 <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
