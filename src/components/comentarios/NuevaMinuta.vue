@@ -2,6 +2,8 @@
   <div>
 
     <div v-if="!verAprobacion">
+      <br>
+      <br>
       <div class="columns">
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
@@ -27,12 +29,19 @@
         <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="true"/>
       </div>
 
+      <br>
+      <div class="columns">
+        <div class="column is-half is-offset-3">
+          <p class="title is-4 has-text-centered">Estado de revisión de la minuta</p>
+        </div>
+      </div>
+
       <div class="columns is-multiline">
         <div class="column is-2 is-offset-1">
           <div v-for="aprobacion in aprobaciones" :key="aprobacion.id">
             <div class="tags are-medium has-addons">
-              <span class="tag">{{ buscarIniciales(aprobacion.asistencia_id) }}</span>
-              <span class="tag" :class="aprobacion.tipo_aprobacion.identificador === A ? 'is-info' : 'is-danger'">{{ aprobacion.tipo_aprobacion.descripcion }}</span>
+              <span class="tag"><strong>{{ buscarIniciales(aprobacion.asistencia_id) }}</strong></span>
+              <span class="tag" :class="aprobacion.tipo_aprobacion.identificador === 'A' ? 'is-info' : 'is-danger'">{{ aprobacion.tipo_aprobacion.descripcion }}</span>
             </div>
           </div>
         </div>
@@ -45,7 +54,7 @@
               <a class="button is-link" @click="emitir">Emitir nueva versión</a>
             </div>
             <div class="control">
-              <a class="button is-link" @click="cancelar">Cancelar</a>
+              <a class="button is-light is-hovered" @click="cancelar">Cancelar</a>
             </div>
           </div>
         </div>
@@ -198,9 +207,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinuta()
-    this.obtenerRespuestas()
-    this.obtenerAprobaciones()
+    this.obtenerMinuta(this.id)
+    this.obtenerRespuestas(this.id)
+    this.obtenerAprobaciones(this.id)
   }
 }
 </script>

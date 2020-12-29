@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
 
         </div>
 
@@ -61,7 +61,7 @@
         <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
       </div>
 
-      <div v-else-if="verEmision">
+      <div v-if="verEmision">
         <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @revisar="revisarAprobacion" @cancelar="mostrarTablero"/>
       </div>
 
@@ -116,6 +116,7 @@ export default {
       idMotivo: 0,
       nuevaRevision: '',
       esNuevaEmision: false,
+      valorActual: 0,
       tableroEst: 0
     }
   },
@@ -205,6 +206,8 @@ export default {
       this.crearMinuta = true
       this.idRevision = 0
       this.idEmision = 0
+      this.verEmision = false
+      this.valorActual = 0
       this.tableroEst++
     },
     revisarComentarios: function (id) {
@@ -223,6 +226,7 @@ export default {
     },
     revisarAprobacion: function () {
       this.crearMinuta = false
+      this.valorActual = 0
     },
     buscarIdMotivo: function (valor) {
       return Funciones.obtenerIdDeLista(this.motivos, 'identificador', valor)
@@ -230,12 +234,15 @@ export default {
     nuevaEmision: function (identificador, revision) {
       this.verRevision = false
       this.verComentarios = false
+      this.verEmision = false
       this.crearMinuta = true
+      this.verFormulario = true
       this.idRevision = 0
       this.idMotivo = this.buscarIdMotivo(identificador)
       this.nuevaRevision = revision
       this.idBitacora = this.idEmision
       this.esNuevaEmision = true
+      this.valorActual = 0
       this.tableroEst++
     }
   },
