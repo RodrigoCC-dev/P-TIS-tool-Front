@@ -983,4 +983,60 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.entradas.revision.error).toBeFalsy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
   })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: ''
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" igual a undefined', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: undefined
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" distinto a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: '642345-6345-1346'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: '2020-03-13'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeTruthy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeFalsy()
+  })
 })
