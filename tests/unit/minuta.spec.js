@@ -918,4 +918,69 @@ describe('Minuta.vue', () => {
     })
     expect(wrapper.vm.establecerCodigo()).toEqual(codigo)
   })
+
+  it('método "validarRevision" funciona correctamente para "revision" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" igual a "undefined"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: undefined
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" distinto a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Abc'
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('Sólo letras mayúsculas o números')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" con letra mayúscula', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Z'
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.error).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" con número', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 5
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.error).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
+  })
 })
