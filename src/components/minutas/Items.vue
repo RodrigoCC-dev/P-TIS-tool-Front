@@ -29,7 +29,7 @@
                 <div class="card">
                   <div class="card-content">
                     <div class="content">
-                      <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem"></textarea>
+                      <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem(index)"></textarea>
                     </div>
                     <p v-if="this.listaEntradas[index].error" class="is-danger help">{{ this.listaEntradas[index].mensaje }}</p>
                   </div>
@@ -509,17 +509,7 @@ export default {
       this.$emit('cerrar')
     },
     buscarIniciales: function (asistenciaId) {
-      var asistente = null
-      for (var i = 0; i < this.asistencia.length; i++) {
-        if (this.asistencia[i].id === asistenciaId) {
-          asistente = this.asistencia[i]
-        }
-      }
-      if (asistente === null) {
-        return ''
-      } else {
-        return asistente.iniciales
-      }
+      return Funciones.buscarIniciales(this.asistencia, asistenciaId)
     }
   },
   mounted () {

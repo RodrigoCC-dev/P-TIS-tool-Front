@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" :disabled="this.esBorrador">
+            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -112,7 +112,7 @@
             </thead>
             <tbody>
               <tr v-for="(estudiante, index) in grupo.estudiantes" :key="estudiante.id">
-                <td class="has-text-info has-text-weight-semibold">{{ nombreCompleto(estudiante) }}</td>
+                <td class="has-text-info has-text-weight-semibold">{{ nombreCompleto(estudiante.usuario) }}</td>
                 <td></td>
                 <td class="has-text-centered">{{ estudiante.iniciales }}</td>
                 <td class="has-text-centered">
@@ -124,7 +124,7 @@
                 </td>
               </tr>
               <tr v-for="(cliente, index) in grupo.stakeholders" :key="cliente.id" v-show="minuta.tipo === 'Cliente'">
-                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente) }}</td>
+                <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente.usuario) }}</td>
                 <td></td>
                 <td class="has-text-centered">{{ cliente.iniciales }}</td>
                 <td class="has-text-centered">
@@ -336,7 +336,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idBitacora'],
+  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir'],
   data () {
     return {
       bitacora: this.idBitacora,
@@ -358,7 +358,7 @@ export default {
         otro: false
       },
       tema: '',
-      revision: '',
+      revision: this.letraRevision,
       asistenciaEst: [],
       asistenciaStk: [],
       objetivos: [{ id: 0, descripcion: '' }],
@@ -376,7 +376,7 @@ export default {
           responsables: false
         }
       },
-      motivo_id: 1,
+      motivo_id: this.idMotivo,
       listaItems: [
         {
           correlativo: 1,
@@ -413,7 +413,8 @@ export default {
         clasificacion: false,
         objetivos: false,
         conclusiones: false
-      }
+      },
+      nuevaEmision: this.reEmitir
     }
   },
   computed: {
@@ -504,7 +505,7 @@ export default {
     convertirAsistenciaEst: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
-        var obj = { estudiante: this.grupo.estudiantes[i].id, asistencia: 0 }
+        var obj = { estudiante: this.grupo.estudiantes[i].id, stakeholder: '', asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (array[j].id_estudiante !== null) {
             if (this.grupo.estudiantes[i].iniciales === array[j].iniciales) {
@@ -519,7 +520,7 @@ export default {
     convertirAsistenciaStk: function (array) {
       var lista = []
       for (var i = 0; i < this.grupo.stakeholders.length; i++) {
-        var obj = { stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
+        var obj = { estudiante: '', stakeholder: this.grupo.stakeholders[i].id, asistencia: 0 }
         for (var j = 0; j < array.length; j++) {
           if (array[j].id_stakeholder !== null) {
             if (this.grupo.stakeholders[i].iniciales === array[j].iniciales) {
@@ -622,14 +623,6 @@ export default {
         console.log('No fue posible obtener los tipos de estados')
       }
     },
-    async obtenerMotivos () {
-      try {
-        const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
-        this.motivos = response.data
-      } catch {
-        console.log('No fue posible obtener los motivos de emisión')
-      }
-    },
     async obtenerInfoEstudiante () {
       try {
         const response = await axios.get(this.apiUrl + '/estudiantes/' + this.usuario.id, { headers: Auth.authHeader() })
@@ -680,7 +673,9 @@ export default {
         this.clasificacion = response.data.minuta.clasificacion
         this.listaClasificacion = this.convertirClasificacion(response.data.minuta.clasificacion)
         this.tema = response.data.minuta.tema
-        this.revision = response.data.revision
+        if (!this.nuevaEmision) {
+          this.revision = response.data.revision
+        }
         this.objetivos = response.data.minuta.objetivos
         this.conclusiones = response.data.minuta.conclusiones
         this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
@@ -768,7 +763,7 @@ export default {
           asistencia: this.asistenciaEst.concat(this.asistenciaStk),
           tipo_estado: this.buscarIdEnLista(this.tipo_estados, 'abreviacion', estado)
         }
-        if (this.bitacora === 0) {
+        if (this.bitacora === 0 || this.nuevaEmision) {
           try {
             await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
             this.$emit('cerrar')
@@ -996,7 +991,6 @@ export default {
     this.obtenerTiposItem()
     this.obtenerTiposAsistencia()
     this.obtenerTiposEstado()
-    this.obtenerMotivos()
     this.obtenerInfoEstudiante()
     this.obtenerSemestre()
   }
