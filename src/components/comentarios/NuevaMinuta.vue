@@ -93,11 +93,12 @@ export default {
       aprobaciones: [],
       verAprobacion: false,
       nuevoMotivo: '',
-      nuevaRevision: ''
+      nuevaRevision: '',
+      abc: 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo', 'motivos', 'abc']),
+    ...mapState(['apiUrl', 'grupo', 'motivos']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
