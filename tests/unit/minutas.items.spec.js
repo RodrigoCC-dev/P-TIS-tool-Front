@@ -64,7 +64,7 @@ describe('Items.vue', () => {
     expect(wrapper.props().lista).toEqual(lista)
   })
 
-  it('se asigna prop asistencia correctamente', () => {
+  it('se asigna prop asistentes correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
         lista: lista,
@@ -153,6 +153,34 @@ describe('Items.vue', () => {
       }
     })
     expect(wrapper.props().listaCom).toEqual(listaComentarios)
+  })
+
+  it('se asigna prop "verRespuestas" correctamente con "true"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios,
+        verRespuestas: true
+      }
+    })
+    expect(wrapper.props().verRespuestas).toBeTruthy()
+  })
+
+  it('se asigna prop "verRespuestas" correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios,
+        verRespuestas: false
+      }
+    })
+    expect(wrapper.props().verRespuestas).toBeFalsy()
   })
 
   it('variable listaItems se inicializa correctamente', () => {
@@ -798,6 +826,99 @@ describe('Items.vue', () => {
     expect(wrapper.vm.responderEntradasGenerales).toEqual([])
   })
 
+  it('método "enviarComentarios" funciona correctamente con "true"', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: [],
+        verRespuestas: false
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = 'Otro comentario de prueba'
+    const comentarios = wrapper.vm.listaComentarios.concat(wrapper.vm.listaGenerales)
+    wrapper.vm.enviarComentarios()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().comentar).toBeTruthy()
+    expect(wrapper.emitted().comentar.length).toEqual(1)
+    expect(wrapper.emitted().comentar[0]).toEqual([comentarios])
+  })
+
+  it('método "enviarComentarios" funciona correctamente con "false"', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: [],
+        verRespuestas: false
+      }
+    })
+    wrapper.vm.abrirComentario(0, 3453)
+    wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
+    wrapper.vm.agregaComentario()
+    wrapper.vm.listaGenerales[0].comentario = ''
+    wrapper.vm.enviarComentarios()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().comentar).toBeFalsy()
+  })
+
+  it('método "cancelarEnvio" funciona correctamente', async () => {
+    const esperado = [
+      {error: false, mensaje: ''},
+      {error: false, mensaje: ''}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          mostrarComentar: mostrar,
+          listaComentarios: comentarios,
+          listaGenerales: [{
+            comentario: '',
+            es_item: false,
+            id_item: 0
+          }],
+          entradas: {
+            comentarios: true
+          }
+        }
+      }
+    })
+    wrapper.vm.listaEntradas[0].error = true
+    wrapper.vm.listaEntradas[0].mensaje = 'Este es un mensaje de prueba'
+    wrapper.vm.cancelarEnvio()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+    expect(wrapper.vm.mostrarComentar).toEqual([])
+    expect(wrapper.vm.listaComentarios).toEqual([])
+    expect(wrapper.vm.listaGenerales).toEqual([])
+    expect(wrapper.vm.comentariosItems).toEqual([])
+    expect(wrapper.vm.comentariosGenerales).toEqual([])
+    expect(wrapper.vm.respuestasItems).toEqual([])
+    expect(wrapper.vm.respuestasGenerales).toEqual([])
+    expect(wrapper.vm.verRespuestasItems).toEqual([])
+    expect(wrapper.vm.verRespuestasGenerales).toEqual([])
+    expect(wrapper.vm.responderEntradasItems).toEqual([])
+    expect(wrapper.vm.responderEntradasGenerales).toEqual([])
+    expect(wrapper.vm.entradas.comentarios).toBeFalsy()
+    expect(wrapper.vm.listaEntradas).toEqual(esperado)
+  })
+
   it('método "validarComentarioItem" funciona correctamente con "true"', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
@@ -1031,6 +1152,90 @@ describe('Items.vue', () => {
     expect(wrapper.vm.respuestasGenerales).toEqual(respuestas)
     expect(wrapper.vm.verRespuestasGenerales).toEqual(ver)
     expect(wrapper.vm.responderEntradasGenerales).toEqual(entradas)
+  })
+
+  it('método "enviarRespuestas" funciona correctamente con "true"', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    wrapper.vm.verRespuestasGenerales[0] = true
+    wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
+    debugger
+    let esperado = []
+    esperado.push(wrapper.vm.respuestasItems[0][0])
+    esperado = esperado.concat(wrapper.vm.respuestasGenerales)
+    wrapper.vm.enviarRespuestas()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().responder).toBeTruthy()
+    expect(wrapper.emitted().responder.length).toEqual(1)
+    expect(wrapper.emitted().responder[0]).toEqual([esperado])
+  })
+
+  it('método "enviarRespuestas" funciona correctamente con "false"', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.abrirRespuestaItem(0, 0)
+    wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
+    wrapper.vm.verRespuestasGenerales[0] = true
+    wrapper.vm.respuestasGenerales[0].respuesta = ''
+    wrapper.vm.enviarRespuestas()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().responder).toBeFalsy()
+  })
+
+  it('método "cancelarEnvioRespuestas" funciona correctamente', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: []
+      },
+      data () {
+        return {
+          mostrarComentar: mostrar,
+          listaComentarios: comentarios,
+          listaGenerales: [{
+            comentario: '',
+            es_item: false,
+            id_item: 0
+          }]
+        }
+      }
+    })
+    wrapper.vm.cancelarEnvioRespuestas()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+    expect(wrapper.vm.mostrarComentar).toEqual([])
+    expect(wrapper.vm.listaComentarios).toEqual([])
+    expect(wrapper.vm.listaGenerales).toEqual([])
+    expect(wrapper.vm.comentariosItems).toEqual([])
+    expect(wrapper.vm.comentariosGenerales).toEqual([])
+    expect(wrapper.vm.respuestasItems).toEqual([])
+    expect(wrapper.vm.respuestasGenerales).toEqual([])
+    expect(wrapper.vm.verRespuestasItems).toEqual([])
+    expect(wrapper.vm.verRespuestasGenerales).toEqual([])
+    expect(wrapper.vm.responderEntradasItems).toEqual([])
+    expect(wrapper.vm.responderEntradasGenerales).toEqual([])
+    expect(wrapper.vm.entradas.comentarios).toBeFalsy()
   })
 
   it('método "buscarComentarios" funciona correctamente', () => {
@@ -1352,5 +1557,35 @@ describe('Items.vue', () => {
     wrapper.vm.limpiarErrorRespGeneral(0)
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeFalsy()
     expect(wrapper.vm.responderEntradasGenerales[0].mensaje).toEqual('')
+  })
+
+  it('método "cerrarRespuestas" funciona correctamente', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.cerrarRespuestas()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "buscarIniciales" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.buscarIniciales(43)).toEqual('BRG')
   })
 })

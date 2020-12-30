@@ -3,7 +3,7 @@ import Minuta from '@/components/Minuta.vue'
 import { nextTick } from 'vue'
 
 describe('Minuta.vue', () => {
-  it('se asigna prop adecuadamente', () => {
+  it('se asigna prop "tipoMinuta" adecuadamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
         tipoMinuta: 2
@@ -12,13 +12,58 @@ describe('Minuta.vue', () => {
     expect(wrapper.props().tipoMinuta).toBe(2)
   })
 
-  it('se asigna prop idBitacora adecuadamente', () => {
+  it('se asigna prop "idBitacora" adecuadamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
         idBitacora: 3
       }
     })
     expect(wrapper.props().idBitacora).toBe(3)
+  })
+
+  it('se asigna prop "idMotivo" adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idMotivo: 5
+      }
+    })
+    expect(wrapper.props().idMotivo).toBe(5)
+  })
+
+  it('se asigna prop "letraRevision" adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        letraRevision: 'Q'
+      }
+    })
+    expect(wrapper.props().letraRevision).toBe('Q')
+  })
+
+  it('se asigna prop "reEmitir" adecuadamente como "true"', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        reEmitir: true
+      }
+    })
+    expect(wrapper.props().reEmitir).toBeTruthy()
+  })
+
+  it('se asigna prop "reEmitir" adecuadamente como "false"', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        reEmitir: false
+      }
+    })
+    expect(wrapper.props().reEmitir).toBeFalsy()
+  })
+
+  it('variable "bitacora" se inicializa correctamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        idBitacora: 345
+      }
+    })
+    expect(wrapper.vm.bitacora).toEqual(345)
   })
 
   it('variable minuta se inicializa correctamente', () => {
@@ -58,8 +103,16 @@ describe('Minuta.vue', () => {
   })
 
   it('variable revision se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.revision).toEqual('')
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 1,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.revision).toEqual('A')
   })
 
   it('variable asistenciaEst se inicializa correctamente', () => {
@@ -101,8 +154,16 @@ describe('Minuta.vue', () => {
   })
 
   it('variable motivo_id se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
-    expect(wrapper.vm.motivo_id).toEqual(1)
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.motivo_id).toEqual(6)
   })
 
   it('variable listaItems se inicializa correctamente', () => {
@@ -180,6 +241,32 @@ describe('Minuta.vue', () => {
     }
     const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.entradas).toEqual(entrada)
+  })
+
+  it('variable "nuevaEmision" se inicializa correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: true
+      }
+    })
+    expect(wrapper.vm.nuevaEmision).toBeTruthy()
+  })
+
+  it('variable "nuevaEmision" se inicializa correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: false
+      }
+    })
+    expect(wrapper.vm.nuevaEmision).toBeFalsy()
   })
 
   it('propiedad computada esBorrador funciona correctamente con true', () => {
@@ -483,8 +570,8 @@ describe('Minuta.vue', () => {
       }
     ]
     const esperado = [
-      {estudiante: 5, asistencia: 3},
-      {estudiante: 6, asistencia: 1}
+      {estudiante: 5, stakeholder: '', asistencia: 3},
+      {estudiante: 6, stakeholder: '', asistencia: 1}
     ]
     const wrapper = shallowMount(Minuta, {
       data() {
@@ -495,9 +582,23 @@ describe('Minuta.vue', () => {
             { id: 3, tipo: 'ACA'}
           ],
           grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
             estudiantes: [
-              { id: 5, iniciales: 'CGL'},
-              { id: 6, iniciales: 'FDT'}
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
             ]
           }
         }
@@ -524,8 +625,8 @@ describe('Minuta.vue', () => {
       }
     ]
     const esperado = [
-      {stakeholder: 5, asistencia: 3},
-      {stakeholder: 6, asistencia: 1}
+      {estudiante: '', stakeholder: 5, asistencia: 3},
+      {estudiante: '', stakeholder: 6, asistencia: 1}
     ]
     const wrapper = shallowMount(Minuta, {
       data() {
@@ -536,9 +637,23 @@ describe('Minuta.vue', () => {
             { id: 3, tipo: 'ACA'}
           ],
           grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
             stakeholders: [
-              { id: 5, iniciales: 'CGL'},
-              { id: 6, iniciales: 'FDT'}
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
             ]
           }
         }
@@ -802,5 +917,819 @@ describe('Minuta.vue', () => {
       }
     })
     expect(wrapper.vm.establecerCodigo()).toEqual(codigo)
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" igual a "undefined"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: undefined
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" distinto a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Abc'
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.error).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('Sólo letras mayúsculas o números')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" con letra mayúscula', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Z'
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.error).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
+  })
+
+  it('método "validarRevision" funciona correctamente para "revision" con número', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 5
+        }
+      }
+    })
+    expect(wrapper.vm.validarRevision()).toBeTruthy()
+    expect(wrapper.vm.entradas.revision.error).toBeFalsy()
+    expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: ''
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" igual a undefined', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: undefined
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" distinto a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: '642345-6345-1346'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente para "fecha_reunion" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            fecha_reunion: '2020-03-13'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFecha()).toBeTruthy()
+    expect(wrapper.vm.entradas.fecha_reunion).toBeFalsy()
+  })
+
+  it('método "validarHora" funciona correctamente para "hora" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarHora('46345:622523')).toBeFalsy()
+  })
+
+  it('método "validarHora" funciona correctamente para "hora" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarHora('12:23')).toBeTruthy()
+  })
+
+  it('método "validarHinicio" funciona correctamente para "h_inicio" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_inicio: '46345:622523'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHinicio()).toBeFalsy()
+    expect(wrapper.vm.entradas.h_inicio).toBeTruthy()
+  })
+
+  it('método "validarHinicio" funciona correctamente para "h_inicio" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_inicio: '13:23'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHinicio()).toBeTruthy()
+    expect(wrapper.vm.entradas.h_inicio).toBeFalsy()
+  })
+
+  it('método "validarHtermino" funciona correctamente para "h_termino" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_termino: '46345:622523'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHtermino()).toBeFalsy()
+    expect(wrapper.vm.entradas.h_termino).toBeTruthy()
+  })
+
+  it('método "validarHtermino" funciona correctamente para "h_termino" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_termino: '13:23'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHtermino()).toBeTruthy()
+    expect(wrapper.vm.entradas.h_termino).toBeFalsy()
+  })
+
+  it('método "validarTema" funciona correctamente para "tema" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tema: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarTema()).toBeFalsy()
+    expect(wrapper.vm.entradas.tema).toBeTruthy()
+  })
+
+  it('método "validarTema" funciona correctamente para "tema" distinto a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tema: 'Es un tema de prueba'
+        }
+      }
+    })
+    expect(wrapper.vm.validarTema()).toBeTruthy()
+    expect(wrapper.vm.entradas.tema).toBeFalsy()
+  })
+
+  it('método "limpiarAsistencias" funciona correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: true,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarAsistencias()
+    expect(wrapper.vm.entradas.asistencias).toBeFalsy()
+  })
+
+  it('método "validarAsistencia" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarAsistencia()).toBeFalsy()
+    expect(wrapper.vm.entradas.asistencias).toBeTruthy()
+  })
+
+  it('método "validarAsistencia" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          },
+          asistenciaEst: [
+            {estudiante: 46345, stakeholder: '', asistencia: 46345},
+            {estudiante: 668694, stakeholder: '', asistencia: 161434}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarAsistencia()).toBeTruthy()
+    expect(wrapper.vm.entradas.asistencias).toBeFalsy()
+  })
+
+  it('método "limpiarClasificacion" funciona correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: true,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarClasificacion()
+    expect(wrapper.vm.entradas.clasificacion).toBeFalsy()
+  })
+
+  it('método "validarClasificacion" funciona correctamente para false', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarClasificacion()).toBeFalsy()
+    expect(wrapper.vm.entradas.clasificacion).toBeTruthy()
+  })
+
+  it('método "validarClasificacion" funciona correctamente para false', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaClasificacion: ['informativa', 'decisión'],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: true,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarClasificacion()).toBeTruthy()
+    expect(wrapper.vm.entradas.clasificacion).toBeFalsy()
+  })
+
+  it('método "validarObjetivos" funciona correctamente para largo igual a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarObjetivos()).toBeFalsy()
+    expect(wrapper.vm.entradas.objetivos).toBeTruthy()
+  })
+
+  it('método "validarObjetivos" funciona correctamente para largo igual a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          objetivos: [{id: 0, descripcion: 'Objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: true,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarObjetivos()).toBeTruthy()
+    expect(wrapper.vm.entradas.objetivos).toBeFalsy()
+  })
+
+  it('método "validarObjetivos" funciona correctamente para largo mayor a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          objetivos: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id:0, descripcion: ''}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarObjetivos()).toBeFalsy()
+    expect(wrapper.vm.entradas.objetivos).toBeTruthy()
+  })
+
+  it('método "validarObjetivos" funciona correctamente para largo mayor a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          objetivos: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id: 0, descripcion: 'Otro objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarObjetivos()).toBeTruthy()
+    expect(wrapper.vm.entradas.objetivos).toBeFalsy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo igual a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarConclusiones()).toBeFalsy()
+    expect(wrapper.vm.entradas.conclusiones).toBeTruthy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo igual a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: true
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeTruthy()
+    expect(wrapper.vm.entradas.conclusiones).toBeFalsy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo mayor a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id:0, descripcion: ''}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeFalsy()
+    expect(wrapper.vm.entradas.conclusiones).toBeTruthy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo mayor a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id: 0, descripcion: 'Otro objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeTruthy()
+    expect(wrapper.vm.entradas.conclusiones).toBeFalsy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y descripcion igual a "undefined"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: undefined,
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y fecha igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '',
+              tipo_item_id: 1,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.fecha).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y responsables igual a 0', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '',
+              tipo_item_id: 2,
+              responsables: 0,
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.responsables).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.fecha).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.responsables).toBeFalsy()
+  })
+
+  it('método "validarListaItems" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarListaItems()).toBeTruthy()
+  })
+
+  it('método "validarListaItems" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: '',
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarListaItems()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Z',
+          tema: 'Este es un tema de prueba',
+          minuta: {
+            h_inicio: '13:23',
+            h_termino: '14:00',
+            fecha_reunion: '2020-03-13'
+          },
+          listaClasificacion: ['informativa', 'decisión'],
+          objetivos: [
+            {id: 0, descripcion: 'Objetivo de prueba'},
+            {id: 0, descripcion: 'Otro objetivo de prueba'}
+          ],
+          conclusiones: [
+            {id: 0, descripcion: 'Objetivo de prueba'},
+            {id: 0, descripcion: 'Otro objetivo de prueba'}
+          ],
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          },
+          asistenciaEst: [
+            {estudiante: 46345, stakeholder: '', asistencia: 46345},
+            {estudiante: 668694, stakeholder: '', asistencia: 161434}
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
 })
