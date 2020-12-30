@@ -1105,4 +1105,53 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.validarHtermino()).toBeTruthy()
     expect(wrapper.vm.entradas.h_termino).toBeFalsy()
   })
+
+  it('método "validarTema" funciona correctamente para "tema" igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tema: ''
+        }
+      }
+    })
+    expect(wrapper.vm.validarTema()).toBeFalsy()
+    expect(wrapper.vm.entradas.tema).toBeTruthy()
+  })
+
+  it('método "validarTema" funciona correctamente para "tema" distinto a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          tema: 'Es un tema de prueba'
+        }
+      }
+    })
+    expect(wrapper.vm.validarTema()).toBeTruthy()
+    expect(wrapper.vm.entradas.tema).toBeFalsy()
+  })
+
+  it('método "limpiarAsistencias" funciona correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: true,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarAsistencias()
+    expect(wrapper.vm.entradas.asistencias).toBeFalsy()
+  })
 })
