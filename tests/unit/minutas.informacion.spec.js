@@ -21,6 +21,19 @@ describe('Informacion.vue', () => {
           email: 'gonzalo.perez@usach.cl'
         }
       }
+    ],
+    stakeholders: [
+      {
+        id: 56,
+        iniciales: 'MAC',
+        usuario: {
+          nombre: 'Macarena',
+          apellido_paterno: 'Astorga',
+          apellido_materno: 'Castro',
+          run: '12345678-9',
+          email: 'macarena.astorga@puch.cl'
+        }
+      }
     ]
   }
 
@@ -44,6 +57,10 @@ describe('Informacion.vue', () => {
       asistencia: [
         {
           iniciales: 'GER',
+          descripcion: 'Presente'
+        },
+        {
+          iniciales: 'MAC',
           descripcion: 'Presente'
         }
       ]
@@ -73,6 +90,19 @@ describe('Informacion.vue', () => {
             apellido_materno: 'Parada',
             run: '12345678-9',
             email: 'gonzalo.perez@usach.cl',
+          }
+        }
+      ],
+      stakeholders: [
+        {
+          id: 56,
+          iniciales: 'MAC',
+          usuario: {
+            nombre: 'Macarena',
+            apellido_paterno: 'Astorga',
+            apellido_materno: 'Castro',
+            run: '12345678-9',
+            email: 'macarena.astorga@puch.cl'
           }
         }
       ]
@@ -108,6 +138,10 @@ describe('Informacion.vue', () => {
           {
             iniciales: 'GER',
             descripcion: 'Presente'
+          },
+          {
+            iniciales: 'MAC',
+            descripcion: 'Presente'
           }
         ]
       }
@@ -138,6 +172,19 @@ describe('Informacion.vue', () => {
             apellido_materno: 'Parada',
             run: '12345678-9',
             email: 'gonzalo.perez@usach.cl'
+          }
+        }
+      ],
+      stakeholders: [
+        {
+          id: 56,
+          iniciales: 'MAC',
+          usuario: {
+            nombre: 'Macarena',
+            apellido_paterno: 'Astorga',
+            apellido_materno: 'Castro',
+            run: '12345678-9',
+            email: 'macarena.astorga@puch.cl'
           }
         }
       ]
@@ -172,6 +219,10 @@ describe('Informacion.vue', () => {
         asistencia: [
           {
             iniciales: 'GER',
+            descripcion: 'Presente'
+          },
+          {
+            iniciales: 'MAC',
             descripcion: 'Presente'
           }
         ]
@@ -243,5 +294,15 @@ describe('Informacion.vue', () => {
       }
     })
     expect(wrapper.vm.asistenciaEstudiante('GER')).toEqual('Presente')
+  })
+
+  it('método asistenciaStakeholder funciona correctamente', () => {
+    const wrapper = shallowMount(Informacion, {
+      propsData: {
+        proyecto: proyecto,
+        minuta: bitacora
+      }
+    })
+    expect(wrapper.vm.asistenciaStakeholder('MAC')).toEqual('Presente')
   })
 })
