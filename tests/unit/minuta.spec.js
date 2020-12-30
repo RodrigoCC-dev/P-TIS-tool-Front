@@ -1039,4 +1039,70 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.validarFecha()).toBeTruthy()
     expect(wrapper.vm.entradas.fecha_reunion).toBeFalsy()
   })
+
+  it('método "validarHora" funciona correctamente para "hora" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarHora('46345:622523')).toBeFalsy()
+  })
+
+  it('método "validarHora" funciona correctamente para "hora" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarHora('12:23')).toBeTruthy()
+  })
+
+  it('método "validarHinicio" funciona correctamente para "h_inicio" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_inicio: '46345:622523'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHinicio()).toBeFalsy()
+    expect(wrapper.vm.entradas.h_inicio).toBeTruthy()
+  })
+
+  it('método "validarHinicio" funciona correctamente para "h_inicio" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_inicio: '13:23'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHinicio()).toBeTruthy()
+    expect(wrapper.vm.entradas.h_inicio).toBeFalsy()
+  })
+
+  it('método "validarHtermino" funciona correctamente para "h_termino" distinta a regExp', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_termino: '46345:622523'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHtermino()).toBeFalsy()
+    expect(wrapper.vm.entradas.h_termino).toBeTruthy()
+  })
+
+  it('método "validarHtermino" funciona correctamente para "h_termino" con regExp correcto', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta: {
+            h_termino: '13:23'
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarHtermino()).toBeTruthy()
+    expect(wrapper.vm.entradas.h_termino).toBeFalsy()
+  })
 })
