@@ -1643,4 +1643,93 @@ describe('Minuta.vue', () => {
     })
     expect(wrapper.vm.validarListaItems()).toBeFalsy()
   })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          revision: 'Z',
+          tema: 'Este es un tema de prueba',
+          minuta: {
+            h_inicio: '13:23',
+            h_termino: '14:00',
+            fecha_reunion: '2020-03-13'
+          },
+          listaClasificacion: ['informativa', 'decisión'],
+          objetivos: [
+            {id: 0, descripcion: 'Objetivo de prueba'},
+            {id: 0, descripcion: 'Otro objetivo de prueba'}
+          ],
+          conclusiones: [
+            {id: 0, descripcion: 'Objetivo de prueba'},
+            {id: 0, descripcion: 'Otro objetivo de prueba'}
+          ],
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          },
+          asistenciaEst: [
+            {estudiante: 46345, stakeholder: '', asistencia: 46345},
+            {estudiante: 668694, stakeholder: '', asistencia: 161434}
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
 })
