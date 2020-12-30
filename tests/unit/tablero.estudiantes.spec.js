@@ -2,6 +2,24 @@ import { shallowMount } from '@vue/test-utils'
 import TableroEst from '@/components/TableroEst.vue'
 
 describe('TableroEst.vue', () => {
+  it('se asigna prop "seleccionado" correctamente', () => {
+    const wrapper = shallowMount(TableroEst, {
+      propsData: {
+        seleccionado: 4534515
+      }
+    })
+    expect(wrapper.props().seleccionado).toEqual(4534515)
+  })
+
+  it('se asigna prop "contador" correctamente', () => {
+    const wrapper = shallowMount(TableroEst, {
+      propsData: {
+        contador: 94045923
+      }
+    })
+    expect(wrapper.props().contador).toEqual(94045923)
+  })
+
   it('variable nombreTab de inicializa correctamente', () => {
     const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.nombreTab).toEqual('Borradores')
@@ -65,22 +83,22 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaRevision).toEqual([])
   })
 
-  it('se asigna props contador adecuadamente', () => {
-    const wrapper = shallowMount(TableroEst, {
-      propsData: {
-        contador: 0
-      }
-    })
-    expect(wrapper.props().contador).toEqual(0)
-  })
-
-  it('variable contar se asigna con props correctamente', () => {
+  it('variable "contar" se asigna con props correctamente', () => {
     const wrapper = shallowMount(TableroEst, {
       propsData: {
         contador: 0
       }
     })
     expect(wrapper.vm.contar).toEqual(0)
+  })
+
+  it('variable "minutaActual" se inicializa con props correctamente', () => {
+    const wrapper = shallowMount(TableroEst, {
+      propsData: {
+        seleccionado: 462345
+      }
+    })
+    expect(wrapper.vm.minutaActual).toEqual(462345)
   })
 
   it('propiedad computada mostrarBorradores funciona correctamente con true', () => {
@@ -350,6 +368,11 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.convertirFecha('2020-11-19T17:45:00.000Z')).toEqual('19-11-2020')
   })
 
+  it('método convertirFecha funciona correctamente con entrada null', () => {
+    const wrapper = shallowMount(TableroEst)
+    expect(wrapper.vm.convertirFecha(null)).toEqual('')
+  })
+
   it('método categorizarMinutas funciona correctamente' , () => {
     const wrapper = shallowMount(TableroEst, {
       data() {
@@ -470,7 +493,6 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaCerradas.length).toEqual(1)
     expect(wrapper.vm.listaComentadasGrupo.length).toEqual(1)
     expect(wrapper.vm.listaComentadasCliente.length).toEqual(1)
-    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
     expect(wrapper.vm.listaRespondidasCliente.length).toEqual(1)
   })
 })
