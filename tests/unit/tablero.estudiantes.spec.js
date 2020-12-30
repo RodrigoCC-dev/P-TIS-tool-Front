@@ -373,6 +373,11 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.convertirFecha(null)).toEqual('')
   })
 
+  it('método convertirFecha funciona correctamente con entrada undefined', () => {
+    const wrapper = shallowMount(TableroEst)
+    expect(wrapper.vm.convertirFecha(undefined)).toEqual('')
+  })
+
   it('método categorizarMinutas funciona correctamente' , () => {
     const wrapper = shallowMount(TableroEst, {
       data() {

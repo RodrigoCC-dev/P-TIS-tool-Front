@@ -2,6 +2,15 @@ import { shallowMount } from '@vue/test-utils'
 import TableroStk from '@/components/TableroStk.vue'
 
 describe('TableroStk.vue', () => {
+  it('se asigna props "contador" adecuadamente', () => {
+    const wrapper = shallowMount(TableroStk, {
+      propsData: {
+        contador: 63453
+      }
+    })
+    expect(wrapper.props().contador).toEqual(63453)
+  })
+
   it('variable nombreTab se inicializa correctamente', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.nombreTab).toEqual('Revision')
@@ -48,6 +57,15 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
 
+  it('variable "contar" se asigna con props correctamente', () => {
+    const wrapper = shallowMount(TableroStk, {
+      propsData: {
+        contador: 692345
+      }
+    })
+    expect(wrapper.vm.contar).toEqual(692345)
+  })
+
   it('propiedad computada mostrarRevision funciona correctamente con true', () => {
     const wrapper = shallowMount(TableroStk, {
       data() {
@@ -75,7 +93,7 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRevision funciona correctamente con true', () => {
+  it('propiedad computada mostrarRevision funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
@@ -107,7 +125,7 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.mostrarComentadas).toBeTruthy()
   })
 
-  it('propiedad computada mostrarComentadas funciona correctamente con true', () => {
+  it('propiedad computada mostrarComentadas funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarComentadas).toBeFalsy()
   })
@@ -139,7 +157,7 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con true', () => {
+  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
@@ -171,7 +189,7 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.mostrarRespondidasCliente).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasCliente funciona correctamente con true', () => {
+  it('propiedad computada mostrarRespondidasCliente funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRespondidasCliente).toBeFalsy()
   })
@@ -203,7 +221,7 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.mostrarCerradas).toBeTruthy()
   })
 
-  it('propiedad computada mostrarCerradas funciona correctamente con true', () => {
+  it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
     const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
