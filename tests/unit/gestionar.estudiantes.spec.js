@@ -145,4 +145,102 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.estudiante.usuario.email).toEqual('')
     expect(wrapper.vm.estudiante.seccion_id).toEqual(null)
   })
+
+  it('método "existeEstudiante" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionEstudiantes, {
+      data() {
+        return {
+          estudiante: {
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Cobarrubias',
+              apellido_materno: 'Celedón',
+              run: '1345633-9',
+              email: 'mauricio.cobarrubias@gmail.com'
+            },
+            seccion_id: 62345234
+          },
+          listaEstudiantes: [
+            {run_est: '62345345-k'},
+            {run_est: '62456624-2'},
+            {run_est: '1345633-9'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.existeEstudiante()).toBeTruthy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.run_repetido)
+  })
+
+  it('método "existeEstudiante" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionEstudiantes, {
+      data() {
+        return {
+          estudiante: {
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Cobarrubias',
+              apellido_materno: 'Celedón',
+              run: '1345633-9',
+              email: 'mauricio.cobarrubias@gmail.com'
+            },
+            seccion_id: 62345234
+          },
+          listaEstudiantes: [
+            {run_est: '62345345-k'},
+            {run_est: '62456624-2'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.existeEstudiante()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeFalsy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual('')
+  })
+
+/* método depende del 'state'
+
+  it('método "noAgregar" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes, {
+      data() {
+        return {
+          estudiante: {
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Cobarrubias',
+              apellido_materno: 'Celedón',
+              run: '1345633-9',
+              email: 'mauricio.cobarrubias@gmail.com'
+            },
+            seccion_id: 62345234
+          },
+          verFormulario: true,
+          nombreEntrada: {error: true},
+          apellidoMaternoEntrada: {error: true},
+          apellidoMaternoEntrada: {error: true},
+          runEntrada: {error: true},
+          emailEntrada: {error: true},
+          seccionEntrada: true
+        }
+      }
+    })
+    wrapper.vm.noAgregar()
+    expect(wrapper.vm.estudiante.usuario.nombre).toEqual('')
+    expect(wrapper.vm.estudiante.usuario.apellido_paterno).toEqual('')
+    expect(wrapper.vm.estudiante.usuario.apellido_materno).toEqual('')
+    expect(wrapper.vm.estudiante.usuario.run).toEqual('')
+    expect(wrapper.vm.estudiante.usuario.email).toEqual('')
+    expect(wrapper.vm.estudiante.seccion_id).toEqual(null)
+    expect(wrapper.vm.verFormulario).toBeFalsy()
+    expect(wrapper.vm.nombreEntrada.error).toBeFalsy()
+    expect(wrapper.vm.apellidoPaternoEntrada.error).toBeFalsy()
+    expect(wrapper.vm.apellidoMaternoEntrada.error).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeFalsy()
+    expect(wrapper.vm.seccionEntrada).toBeFalsy()
+  })
+
+*/
+
 })
