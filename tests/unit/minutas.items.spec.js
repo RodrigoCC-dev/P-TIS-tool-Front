@@ -1558,4 +1558,34 @@ describe('Items.vue', () => {
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeFalsy()
     expect(wrapper.vm.responderEntradasGenerales[0].mensaje).toEqual('')
   })
+
+  it('método "cerrarRespuestas" funciona correctamente', async () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    wrapper.vm.cerrarRespuestas()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "buscarIniciales" funciona correctamente', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: false,
+        responder: false,
+        listaCom: listaComentarios
+      }
+    })
+    expect(wrapper.vm.buscarIniciales(43)).toEqual('BRG')
+  })
 })
