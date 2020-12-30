@@ -2,6 +2,32 @@ import { shallowMount } from '@vue/test-utils'
 import Nueva from '@/components/comentarios/NuevaMinuta.vue'
 
 describe('NuevaMinuta.vue', () => {
+  const bitacora = {
+    id: 663462,
+    revision: 'Z',
+    minuta: {
+      id: 242345345,
+      correlativo: 6345,
+      tema: 'Esto es una prueba',
+      fecha_reunion: '2020-12-14T00:00:00.000Z',
+      h_inicio: '2020-12-14T23:00:00.000Z',
+      h_termino: '2020-12-14T23:59:00.000Z',
+      clasificacion: {
+        informativa: false,
+        avance: false,
+        decision: true,
+        coordinacion: false,
+        otro: false
+      },
+      asistencia: [
+        {
+          iniciales: 'GER',
+          descripcion: 'Presente'
+        }
+      ]
+    }
+  }
+
   it('se asigna props "idBitacora" adecuadamente', () => {
     const wrapper = shallowMount(Nueva, {
       propsData: {
@@ -48,5 +74,21 @@ describe('NuevaMinuta.vue', () => {
   it('variable "nuevaRevision" se inicializa correctamente', () => {
     const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.nuevaRevision).toEqual('')
+  })
+
+  it('propiedad computada "mostrarMinuta funciona correctamente para "false"', () => {
+    const wrapper = shallowMount(Nueva)
+    expect(wrapper.vm.mostrarMinuta).toBeFalsy()
+  })
+
+  it('propiedad computada "mostrarMinuta funciona correctamente para "true"', () => {
+    const wrapper = shallowMount(Nueva, {
+      data() {
+        return {
+          bitacora: bitacora
+        }
+      }
+    })
+    expect(wrapper.vm.mostrarMinuta).toBeTruthy()
   })
 })
