@@ -1449,4 +1449,198 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.validarConclusiones()).toBeTruthy()
     expect(wrapper.vm.entradas.conclusiones).toBeFalsy()
   })
+
+  it('método "validarItem" funciona correctamente con valor "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y descripcion igual a "undefined"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: undefined,
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y fecha igual a ""', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '',
+              tipo_item_id: 1,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.fecha).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "false" y responsables igual a 0', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '',
+              tipo_item_id: 2,
+              responsables: 0,
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.responsables).toBeTruthy()
+  })
+
+  it('método "validarItem" funciona correctamente con valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarItem(0)).toBeTruthy()
+    expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.fecha).toBeFalsy()
+    expect(wrapper.vm.listaItems[0].entradas.responsables).toBeFalsy()
+  })
+
+  it('método "validarListaItems" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: 'Item de prueba',
+              fecha: '2020-12-28',
+              tipo_item_id: 3,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarListaItems()).toBeTruthy()
+  })
+
+  it('método "validarListaItems" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          listaItems: [
+            {
+              correlativo: 1,
+              descripcion: '',
+              fecha: '',
+              tipo_item_id: 0,
+              responsables: { tipo: '', id: 0 },
+              entradas: {
+                descripcion: false,
+                fecha: false,
+                tipo_item: false,
+                responsables: false
+              }
+            }
+          ],
+          tipo_items: [
+            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarListaItems()).toBeFalsy()
+  })
 })
