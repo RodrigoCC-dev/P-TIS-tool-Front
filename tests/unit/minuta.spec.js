@@ -1154,4 +1154,95 @@ describe('Minuta.vue', () => {
     wrapper.vm.limpiarAsistencias()
     expect(wrapper.vm.entradas.asistencias).toBeFalsy()
   })
+
+  it('método "validarAsistencia" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarAsistencia()).toBeFalsy()
+    expect(wrapper.vm.entradas.asistencias).toBeTruthy()
+  })
+
+  it('método "validarAsistencia" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          grupo: {
+            id: 462353,
+            nombre: 'Proyecto de prueba',
+            proyecto: 'Pagina web de prueba',
+            correlativo: 46234543,
+            estudiantes: [
+              { id: 5, iniciales: 'CGL', usuario: {
+                nombre: 'Carlos',
+                apellido_paterno: 'Gonzalez',
+                apellido_materno: 'Lopez'
+              }
+            },
+              { id: 6, iniciales: 'FDT', usuario: {
+                nombre: 'Fernanda',
+                apellido_paterno: 'Díaz',
+                apellido_materno: 'Torres'
+              }
+            }
+            ]
+          },
+          asistenciaEst: [
+            {estudiante: 46345, stakeholder: '', asistencia: 46345},
+            {estudiante: 668694, stakeholder: '', asistencia: 161434}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarAsistencia()).toBeTruthy()
+    expect(wrapper.vm.entradas.asistencias).toBeFalsy()
+  })
+
+  it('método "limpiarClasificacion" funciona correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: true,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    wrapper.vm.limpiarClasificacion()
+    expect(wrapper.vm.entradas.clasificacion).toBeFalsy()
+  })
 })
