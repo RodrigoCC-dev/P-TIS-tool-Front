@@ -169,4 +169,20 @@ describe('NuevaMinuta.vue', () => {
     expect(wrapper.emitted().cerrar[0]).toEqual(['EF', 1])
     expect(wrapper.vm.verAprobacion).toBeFalsy()
   })
+
+  it('método "revisar" funciona correctamente', async () => {
+    const wrapper = shallowMount(Nueva, {
+      data() {
+        return {
+          bitacora: bitacora
+        }
+      }
+    })
+    wrapper.vm.revisar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verAprobacion).toBeTruthy()
+    expect(wrapper.emitted().revisar).toBeTruthy()
+    expect(wrapper.emitted().revisar.length).toEqual(1)
+    expect(wrapper.emitted().revisar[0]).toEqual([])
+  })
 })
