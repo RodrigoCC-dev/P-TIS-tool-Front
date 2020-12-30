@@ -1363,4 +1363,90 @@ describe('Minuta.vue', () => {
     expect(wrapper.vm.validarObjetivos()).toBeTruthy()
     expect(wrapper.vm.entradas.objetivos).toBeFalsy()
   })
+
+  it('método "validarConclusiones" funciona correctamente para largo igual a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta)
+    expect(wrapper.vm.validarConclusiones()).toBeFalsy()
+    expect(wrapper.vm.entradas.conclusiones).toBeTruthy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo igual a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: true
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeTruthy()
+    expect(wrapper.vm.entradas.conclusiones).toBeFalsy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo mayor a 1 y valor "false"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id:0, descripcion: ''}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeFalsy()
+    expect(wrapper.vm.entradas.conclusiones).toBeTruthy()
+  })
+
+  it('método "validarConclusiones" funciona correctamente para largo mayor a 1 y valor "true"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          conclusiones: [{id: 0, descripcion: 'Objetivo de prueba'},
+        {id: 0, descripcion: 'Otro objetivo de prueba'}],
+          entradas: {
+            revision: {
+              error: false,
+              mensaje: ''
+            },
+            fecha_reunion: false,
+            tema: false,
+            h_inicio: false,
+            h_termino: false,
+            asistencias: false,
+            clasificacion: false,
+            objetivos: false,
+            conclusiones: false
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.validarConclusiones()).toBeTruthy()
+    expect(wrapper.vm.entradas.conclusiones).toBeFalsy()
+  })
 })
