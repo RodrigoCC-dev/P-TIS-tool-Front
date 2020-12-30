@@ -1,5 +1,4 @@
 import { shallowMount } from '@vue/test-utils'
-import Vuex from 'vuex'
 import Comentarios from '@/components/comentarios/ComentarMinuta.vue'
 
 describe('ComentarMinuta.vue', () => {
