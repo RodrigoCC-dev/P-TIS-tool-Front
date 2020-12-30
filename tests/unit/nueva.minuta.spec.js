@@ -82,6 +82,12 @@ describe('NuevaMinuta.vue', () => {
     expect(wrapper.vm.nuevaRevision).toEqual('')
   })
 
+  it('variable "abc" se inicializa correctamente', () => {
+    const esperado = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'
+    const wrapper = shallowMount(Nueva)
+    expect(wrapper.vm.abc).toEqual(esperado)
+  })
+
   it('propiedad computada "mostrarMinuta funciona correctamente para "false"', () => {
     const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.mostrarMinuta).toBeFalsy()
@@ -184,5 +190,21 @@ describe('NuevaMinuta.vue', () => {
     expect(wrapper.emitted().revisar).toBeTruthy()
     expect(wrapper.emitted().revisar.length).toEqual(1)
     expect(wrapper.emitted().revisar[0]).toEqual([])
+  })
+
+  it('método "cancelar" funciona correctamente', async () => {
+    const wrapper = shallowMount(Nueva, {
+      data() {
+        return {
+          bitacora: bitacora
+        }
+      }
+    })
+    wrapper.vm.cancelar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verAprobacion).toBeFalsy()
+    expect(wrapper.emitted().cancelar).toBeTruthy()
+    expect(wrapper.emitted().cancelar.length).toEqual(1)
+    expect(wrapper.emitted().cancelar[0]).toEqual([])
   })
 })
