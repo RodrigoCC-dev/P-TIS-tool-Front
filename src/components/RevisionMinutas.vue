@@ -121,10 +121,20 @@
       <br>
       <div class="columns">
         <div class="column is-4 is-offset-4">
-          <div class="control">
-            <button class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</button>
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <a class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</a>
+            </div>
+            <div class="control">
+              <a class="button is-dark is-fullwidth" @click="verRegistros">Ver registro</a>
+            </div>
           </div>
         </div>
+      </div>
+
+      <br>
+      <div v-if="mostrarRegistros">
+        <Registros :id-bitacora="bitacora.id" @cerrar="cerrarRegistros"/>
       </div>
 
     </div>
@@ -142,6 +152,7 @@ import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
 import Conclusiones from '@/components/minutas/Conclusiones.vue'
 import Items from '@/components/minutas/Items.vue'
+import Registros from '@/components/RegistroMinuta.vue'
 
 const nombreTabs = {
   diurna: 'Diurna',
@@ -154,7 +165,8 @@ export default {
     Informacion,
     Objetivos,
     Conclusiones,
-    Items
+    Items,
+    Registros
   },
   data () {
     return {
@@ -164,6 +176,7 @@ export default {
       mostrarFormulario: false,
       mostrarJornadas: false,
       mostrarMinutas: false,
+      mostrarRegistros: false,
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
@@ -255,6 +268,12 @@ export default {
     },
     cerrarFormulario: function () {
       this.mostrarFormulario = false
+    },
+    verRegistros: function () {
+      this.mostrarRegistros = true
+    },
+    cerrarRegistros: function () {
+      this.mostrarRegistros = false
     }
   },
   mounted () {

@@ -101,8 +101,8 @@
             <th scope="col">Jornada</th>
           </tr>
         </thead>
-        <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
-          <tr>
+        <tbody>
+          <tr v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
             <th scope="row">{{ index + 1 }}</th>
             <td>{{ estudiante.run_est }}</td>
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
