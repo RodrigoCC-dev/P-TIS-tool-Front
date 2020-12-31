@@ -110,4 +110,17 @@ describe('RegistroMinuta.vue', () => {
     })
     expect(wrapper.vm.obtenerHora(registros[0].created_at)).toEqual('21:56')
   })
+
+  it('método "cerrar" funciona correctamente', async () => {
+    const wrapper = shallowMount(Registro, {
+      propsData: {
+        idBitacora: 6
+      }
+    })
+    wrapper.vm.cerrar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
 })
