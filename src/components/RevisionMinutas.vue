@@ -83,19 +83,19 @@
               <div >
                 <table class="table is-bordered is-fullwidth is-narrow" aria-describedby="minutas">
                   <thead>
-                    <tr class="has-text-centered has-background-light">
-                      <th scope="col">N°</th>
-                      <th scope="col">Código minuta</th>
-                      <th scope="col">Revisión</th>
-                      <th scope="col">Creada por</th>
+                    <tr class="has-background-light">
+                      <th scope="col" class="has-text-centered">N°</th>
+                      <th scope="col" class="has-text-centered">Código minuta</th>
+                      <th scope="col" class="has-text-centered">Revisión</th>
+                      <th scope="col" class="has-text-centered">Creada por</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
-                      <th scope="row">{{ index + 1 }}</th>
+                      <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
                       <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                      <td>{{ bitacora.revision }}</td>
-                      <td>{{ bitacora.minuta.creada_por }}</td>
+                      <td class="has-text-centered">{{ bitacora.revision }}</td>
+                      <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -120,11 +120,25 @@
 
       <br>
       <div class="columns">
-        <div class="column is-4 is-offset-4">
-          <div class="control">
-            <button class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</button>
+        <div class="column is-4 is-offset-2">
+          <div class="field">
+            <div class="control">
+              <a class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</a>
+            </div>
           </div>
         </div>
+        <div class="column is-4">
+          <div class="field">
+            <div class="control">
+              <a class="button is-dark is-fullwidth" @click="verRegistros">Ver registro</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <div v-if="mostrarRegistros">
+        <Registros :id-bitacora="bitacora.id" @cerrar="cerrarRegistros"/>
       </div>
 
     </div>
@@ -142,6 +156,7 @@ import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
 import Conclusiones from '@/components/minutas/Conclusiones.vue'
 import Items from '@/components/minutas/Items.vue'
+import Registros from '@/components/RegistroMinuta.vue'
 
 const nombreTabs = {
   diurna: 'Diurna',
@@ -154,7 +169,8 @@ export default {
     Informacion,
     Objetivos,
     Conclusiones,
-    Items
+    Items,
+    Registros
   },
   data () {
     return {
@@ -164,6 +180,7 @@ export default {
       mostrarFormulario: false,
       mostrarJornadas: false,
       mostrarMinutas: false,
+      mostrarRegistros: false,
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
@@ -255,6 +272,13 @@ export default {
     },
     cerrarFormulario: function () {
       this.mostrarFormulario = false
+      this.mostrarRegistros = false
+    },
+    verRegistros: function () {
+      this.mostrarRegistros = true
+    },
+    cerrarRegistros: function () {
+      this.mostrarRegistros = false
     }
   },
   mounted () {

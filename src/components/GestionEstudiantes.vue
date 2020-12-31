@@ -93,21 +93,21 @@
     <div v-if="mostrarLista">
       <table class="table is-bordered is-narrow is-fullwidth" summary="Estudiantes">
         <thead>
-          <tr class="has-text-centered has-background-light">
-            <th scope="col">N°</th>
-            <th scope="col">R.U.N.</th>
-            <th scope="col">Nombre estudiante</th>
-            <th scope="col">Sección</th>
-            <th scope="col">Jornada</th>
+          <tr class="has-background-light">
+            <th scope="col" class="has-text-centered">N°</th>
+            <th scope="col" class="has-text-centered">R.U.N.</th>
+            <th scope="col" class="has-text-centered">Nombre estudiante</th>
+            <th scope="col" class="has-text-centered">Sección</th>
+            <th scope="col" class="has-text-centered">Jornada</th>
           </tr>
         </thead>
-        <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
-          <tr>
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ estudiante.run_est }}</td>
+        <tbody>
+          <tr v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
+            <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
+            <td class="has-text-centered">{{ estudiante.run_est }}</td>
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
-            <td>{{ estudiante.codigo_seccion }}</td>
-            <td>{{ estudiante.jornada }}</td>
+            <td class="has-text-centered">{{ estudiante.codigo_seccion }}</td>
+            <td class="has-text-centered">{{ estudiante.jornada }}</td>
           </tr>
         </tbody>
       </table>
