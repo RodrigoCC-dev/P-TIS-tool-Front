@@ -6,7 +6,7 @@ stages:
 
 image: node:10
 
-build site:
+build:
   stage: build
   script:
     - npm install --progress=false
@@ -18,28 +18,12 @@ build site:
   before_script:
     - echo "VUE_APP_API_URL='http://34.122.229.87:8080'" > .env
 
-sonarqube:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  stage: static code analisys
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" #Define la ubicación del caché de análisis de Sonarqube
-    GIT_DEPTH: "0" #Tell git to fetch all branches of the project, required by the analisys task
-    SONAR_HOST: http://34.122.229.87:9000
-    SONAR_TOKEN: e5fa85a498f969b770f5449cdc738fef634e7b2c
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
-  script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true
-  allow_failure: true
-  only:
-    - master
-
 test:
   stage: unit test
+  cache:
+    key: ptis-tool-front
+    paths:
+      - coverage
   script:
     - npm install --progres:false
     - npm run test:unit
@@ -66,8 +50,30 @@ test:
 #    - apt-get install -y firefox-esr
 ##
 
+sonarqube:
+  extends: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: static code analisys
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" #Define la ubicación del caché de análisis de Sonarqube
+    GIT_DEPTH: "0" #Tell git to fetch all branches of the project, required by the analisys task
+    SONAR_HOST: http://34.122.229.87:9000
+    SONAR_TOKEN: e5fa85a498f969b770f5449cdc738fef634e7b2c
+  cache:
+    key: ptis-tool-front
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true
+  allow_failure: true
+  only:
+    - master
+
 to_docker:
   image: docker:latest
+  extends: build
   stage: deploy
   services:
     - docker:dind

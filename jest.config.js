@@ -6,5 +6,5 @@ module.exports = {
   collectCoverage: true,
 	collectCoverageFrom: ['src/**/*.{js,vue}', '!**/node_modules/**'],
 	coverageDirectory: './coverage',
-	coverageReporters: ['html', 'text', 'text-summary']
+	coverageReporters: ['html', 'text', 'text-summary', 'lcov']
 }
