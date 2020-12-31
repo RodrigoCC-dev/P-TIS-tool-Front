@@ -9,6 +9,7 @@
             <th scope="col" class="has-text-centered">Realizada por</th>
             <th scope="col" class="has-text-centered">Actividad</th>
             <th scope="col" class="has-text-centered">Realizada el</th>
+            <th scope="col" class="has-text-centered">Hora</th>
           </tr>
         </thead>
         <tbody>
@@ -17,6 +18,7 @@
             <td class="has-text-centered">{{ registro.usuario.iniciales }}</td>
             <td>{{ registro.tipo_actividad.descripcion }}</td>
             <td class="has-text-centered">{{ obtenerFecha(registro.created_at) }}</td>
+            <td class="has-text-centered">{{ obtenerHora(registro.created_at) }}</td>
           </tr>
         </tbody>
       </table>
@@ -62,6 +64,9 @@ export default {
   methods: {
     obtenerFecha: function (fecha) {
       return Funciones.obtenerFecha(fecha)
+    },
+    obtenerHora: function (timestamp) {
+      return Funciones.obtenerHora(timestamp)
     },
     async obtenerRegistros () {
       try {
