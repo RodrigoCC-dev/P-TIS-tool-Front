@@ -84,23 +84,23 @@
           <div v-if="mostrarLista">
             <table class="table is-bordered is-narrow is-fullwidth" aria-describedby="secciones">
               <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th scope="col">N°</th>
-                  <th scope="col">Código</th>
-                  <th scope="col">Curso</th>
-                  <th scope="col">Sección</th>
-                  <th scope="col">Jornada</th>
+                <tr class="has-background-light">
+                  <th scope="col" class="has-text-centered">N°</th>
+                  <th scope="col" class="has-text-centered">Código</th>
+                  <th scope="col" class="has-text-centered">Curso</th>
+                  <th scope="col" class="has-text-centered">Sección</th>
+                  <th scope="col" class="has-text-centered">Jornada</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(seccion, index) in secciones" :key="seccion.id">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ seccion.curso.codigo }}</td>
+                  <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
+                  <td class="has-text-centered">{{ seccion.curso.codigo }}</td>
                   <td class="has-text-left">{{ seccion.curso.nombre }}</td>
-                  <td>{{ seccion.codigo }}</td>
-                  <td>{{ seccion.jornada.nombre }}</td>
-                  <td><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
+                  <td class="has-text-centered">{{ seccion.codigo }}</td>
+                  <td class="has-text-centered">{{ seccion.jornada.nombre }}</td>
+                  <td class="has-text-centered"><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -119,19 +119,19 @@
         <div class="column is-full">
           <table class="table is-bordered is-narrow is-fullwidth" summary="Profesores">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th scope="col">N°</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Correo Electrónico</th>
-                <th scope="col">Secciones</th>
-                <th socpe="col">Jornada</th>
+              <tr class="has-background-light">
+                <th scope="col" class="has-text-centered">N°</th>
+                <th scope="col" class="has-text-centered">Nombre</th>
+                <th scope="col" class="has-text-centered">Correo Electrónico</th>
+                <th scope="col" class="has-text-centered">Secciones</th>
+                <th socpe="col" class="has-text-centered">Jornada</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(profesor, index) in listaProfesores" :key="profesor.id">
-                <th scope="row" class="is-vcentered">{{ index + 1 }}</th>
+                <th scope="row" class="has-text-centered is-vcentered">{{ index + 1 }}</th>
                 <td class="is-vcentered">{{ nombreCompleto(profesor.usuario) }}</td>
-                <td class="is-vcentered">{{ profesor.usuario.email }}</td>
+                <td class="is-vcentered has-text-centered">{{ profesor.usuario.email }}</td>
                 <td>
                   <div v-for="seccion in profesor.secciones" :key="seccion.id">
                     <p class="has-text-centered">{{ seccion.codigo }}</p>
