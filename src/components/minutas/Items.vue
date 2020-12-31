@@ -1,39 +1,85 @@
 <template>
   <div>
 
-    <table class="table is-hoverable is-fullwidth">
+    <table class="table is-hoverable is-fullwidth" summary="Items">
       <thead>
         <tr class="has-text-centered">
-          <th class="is-narrow">N°</th>
-          <th><abbr title="Tipo de actividad">Item</abbr></th>
-          <th><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
-          <th><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
-          <th><abbr title="Responsable de realizarla">Responsable</abbr></th>
-          <th v-if="comentarios"></th>
+          <th scope="col" class="is-narrow">N°</th>
+          <th scope="col"><abbr title="Tipo de actividad">Item</abbr></th>
+          <th scope="col"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
+          <th scope="col"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
+          <th scope="col"><abbr title="Responsable de realizarla">Responsable</abbr></th>
+          <th scope="col" v-if="comentarios"></th>
+          <th scope="col" v-else-if="respuestas"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in listaOrdenada" :key="item.id">
-          <th class="is-vcentered">{{ item.correlativo }}</th>
+          <th scope="row" class="is-vcentered">{{ item.correlativo }}</th>
           <td class="is-vcentered">{{ item.tipo }}</td>
           <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
           <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
           <td class="is-vcentered has-text-centered">{{ obtenerIniciales(item.responsables) }}</td>
-          <td v-if="comentarios">
-            <div v-if="!this.mostrarComentar[index]">
-              <a @click="abrirComentario(index, item.id)">comentar</a>
-            </div>
-            <div v-else>
-              <div class="card">
-                <div class="card-content">
-                  <div class="content">
-                    <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem"></textarea>
+          <td>
+            <div v-if="comentarios">
+              <div v-if="!this.mostrarComentar[index]">
+                <a @click="abrirComentario(index, item.id)">comentar</a>
+              </div>
+              <div v-else>
+                <div class="card">
+                  <div class="card-content">
+                    <div class="content">
+                      <textarea v-model="this.listaComentarios[index].comentario" class="textarea is-small is-extend" :class="{ 'is-danger' : this.listaEntradas[index].error }" @input="limpiarErrorItem(index)"></textarea>
+                    </div>
+                    <p v-if="this.listaEntradas[index].error" class="is-danger help">{{ this.listaEntradas[index].mensaje }}</p>
                   </div>
-                  <p v-if="this.listaEntradas[index].error" class="is-danger help">{{ this.listaEntradas[index].mensaje }}</p>
+                  <footer class="card-footer">
+                    <a class="card-footer-item" @click="cerrarComentario(index)">Cancelar</a>
+                  </footer>
                 </div>
-                <footer class="card-footer">
-                  <a class="card-footer-item" @click="cerrarComentario(index)">Cancelar</a>
-                </footer>
+              </div>
+            </div>
+            <div v-else-if="respuestas">
+              <div v-for="(comentario, ind) in comentariosPorItem[index]" :key="comentario.id">
+                <article class="message is-small">
+                  <div class="message-header">
+                    <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
+                  </div>
+                  <div class="message-body">
+                    <p>{{ comentario.comentario }}</p>
+                    <div v-if="!verRespuestas">
+                      <div v-if="!this.verRespuestasItems[index][ind]">
+                        <a @click="abrirRespuestaItem(index, ind)"><strong>responder</strong></a>
+                      </div>
+                      <div v-else>
+                        <div class="card">
+                          <div class="card-content">
+                            <div class="content">
+                              <textarea v-model="this.respuestasItems[index][ind].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasItems[index][ind].error }" @input="limpiarErrorRespItem(index, ind)"></textarea>
+                            </div>
+                            <p v-if="this.responderEntradasItems[index][ind].error" class="is-danger help">{{ this.responderEntradasItems[index][ind].mensaje }}</p>
+                          </div>
+                          <footer class="card-footer">
+                            <a class="card-footer-item" @click="cerrarRespuestaItem(index, ind)">Cancelar</a>
+                          </footer>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <br>
+                      <div v-for="respuesta in comentario.respuestas" :key="respuesta.id">
+                        <article class="message is-info is-small">
+                          <div class="message-header">
+                            <p>{{ buscarIniciales(respuesta.asistencia_id) }}</p>
+                          </div>
+                          <div class="message-body">
+                            <p>{{ respuesta.respuesta }}</p>
+                          </div>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </article>
               </div>
             </div>
           </td>
@@ -56,7 +102,7 @@
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div class="content has-text-left">
-            <dl>
+            <ul>
               <li v-for="(comentario, index) in listaGenerales" :key="index">
                 <div class="field is-grouped">
                   <p class="control is-expanded">
@@ -67,7 +113,7 @@
                   </p>
                 </div>
               </li>
-            </dl>
+            </ul>
             <p class="is-danger help" v-if="entradas.comentarios">No se han ingresado todos los comentarios</p>
           </div>
         </div>
@@ -88,6 +134,69 @@
 
     </div>
 
+    <div v-else-if="respuestas">
+
+      <div class="columns is-multiline is-desktop">
+        <div class="column is-3" v-for="(comentario, index) in comentariosGenerales" :key="comentario.id">
+          <article class="message">
+            <div class="message-header">
+              <p>{{ buscarIniciales(comentario.asistencia_id) }}</p>
+            </div>
+            <div class="message-body">
+              <p>{{ comentario.comentario }}</p>
+              <div v-if="!verRespuestas">
+                <div v-if="!this.verRespuestasGenerales[index]">
+                  <a @click="abrirRespuestaGeneral(index)"><strong>responder</strong></a>
+                </div>
+                <div v-else>
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="content">
+                        <textarea v-model="this.respuestasGenerales[index].respuesta" class="textarea is-small is-extend" :class="{ 'is-danger' : this.responderEntradasGenerales[index].error }" @input="limpiarErrorRespGeneral(index)"></textarea>
+                      </div>
+                      <p v-if="this.responderEntradasGenerales[index].error" class="is-danger help">{{ this.responderEntradasGenerales[index].mensaje }}</p>
+                    </div>
+                    <footer class="card-footer">
+                      <a class="card-footer-item" @click="cerrarRespuestaGeneral(index)">Cancelar</a>
+                    </footer>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <br>
+                <div v-for="respuesta in comentario.respuestas" :key="respuesta.id">
+                  <article class="message is-info">
+                    <div class="message-header">
+                      <p>{{ buscarIniciales(respuesta.asistencia_id) }}</p>
+                    </div>
+                    <div class="message-body">
+                      <p>{{ respuesta.respuesta }}</p>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div v-if="!verRespuestas">
+        <div class="columns">
+          <div class="column is-half is-offset-3">
+            <div class="field is-grouped is-grouped-centered">
+              <div class="control">
+                <a class="button is-link" @click="enviarRespuestas">Guardar respuestas</a>
+              </div>
+              <div class="control">
+                <a class="button is-dark is-light" @click="cancelarEnvioRespuestas">Cancelar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -96,12 +205,13 @@ import Funciones from '@/services/funciones.js'
 
 export default {
   name: 'Item',
-  props: ['lista', 'asistentes', 'comentar'],
+  props: ['lista', 'asistentes', 'comentar', 'responder', 'listaCom', 'verRespuestas'],
   data () {
     return {
       listaItems: this.lista,
       asistencia: this.asistentes,
       comentarios: this.comentar,
+      respuestas: this.responder,
       mostrarComentar: [],
       listaComentarios: [],
       listaGenerales: [],
@@ -117,7 +227,16 @@ export default {
       listaEntradas: [],
       entradas: {
         comentarios: false
-      }
+      },
+      comentariosMinuta: this.listaCom,
+      comentariosItems: [],
+      comentariosGenerales: [],
+      respuestasItems: [],
+      respuestasGenerales: [],
+      verRespuestasItems: [],
+      verRespuestasGenerales: [],
+      responderEntradasItems: [],
+      responderEntradasGenerales: []
     }
   },
   computed: {
@@ -130,6 +249,13 @@ export default {
           return 1
         }
       })
+    },
+    comentariosPorItem: function () {
+      var lista = []
+      for (var i = 0; i < this.listaOrdenada.length; i++) {
+        lista.push(this.buscarComentarios(this.listaOrdenada[i].id))
+      }
+      return lista
     }
   },
   methods: {
@@ -176,6 +302,14 @@ export default {
       this.mostrarComentar = []
       this.listaComentarios = []
       this.listaGenerales = []
+      this.comentariosItems = []
+      this.comentariosGenerales = []
+      this.respuestasItems = []
+      this.respuestasGenerales = []
+      this.verRespuestasItems = []
+      this.verRespuestasGenerales = []
+      this.responderEntradasItems = []
+      this.responderEntradasGenerales = []
     },
     enviarComentarios: function () {
       if (this.validarComentarios()) {
@@ -236,10 +370,152 @@ export default {
     },
     limpiarErrorGeneral: function () {
       this.entradas.comentarios = false
+    },
+    categorizarComentarios: function () {
+      if (this.comentariosMinuta.length > 0) {
+        for (var i = 0; i < this.comentariosMinuta.length; i++) {
+          if (this.comentariosMinuta[i].es_item) {
+            this.comentariosItems.push(this.comentariosMinuta[i])
+          } else {
+            this.comentariosGenerales.push(this.comentariosMinuta[i])
+            this.respuestasGenerales.push({
+              comentario_id: this.comentariosMinuta[i].id,
+              respuesta: ''
+            })
+            this.verRespuestasGenerales.push(false)
+            this.responderEntradasGenerales.push(Object.assign({}, this.entrada))
+          }
+        }
+      }
+    },
+    enviarRespuestas: function () {
+      if (this.validarRespuestas()) {
+        var respuestas = []
+        for (var i = 0; i < this.respuestasItems.length; i++) {
+          for (var j = 0; j < this.respuestasItems[i].length; j++) {
+            respuestas.push(this.respuestasItems[i][j])
+          }
+        }
+        respuestas = respuestas.concat(this.respuestasGenerales)
+        this.$emit('responder', respuestas)
+      }
+    },
+    cancelarEnvioRespuestas: function () {
+      this.$emit('cerrar')
+      this.limpiarCampos()
+    },
+    buscarComentarios: function (itemId) {
+      var lista = []
+      if (this.comentariosItems.length > 0) {
+        for (var i = 0; i < this.comentariosItems.length; i++) {
+          if (this.comentariosItems[i].id_item === itemId) {
+            lista.push(this.comentariosItems[i])
+          }
+        }
+      }
+      return lista
+    },
+    crearRespuestasItems: function () {
+      if (this.comentariosPorItem.length > this.respuestasItems.length || this.comentariosPorItem.length > this.verRespuestasItems.length) {
+        this.respuestasItems = []
+        this.verRespuestasItems = []
+        this.responderEntradasItems = []
+        var lista = []
+        var respuestas = []
+        var entradas = []
+        for (var i = 0; i < this.comentariosPorItem.length; i++) {
+          for (var j = 0; j < this.comentariosPorItem[i].length; j++) {
+            lista.push({ comentario_id: this.comentariosPorItem[i][j].id, respuesta: '' })
+            respuestas.push(false)
+            entradas.push(Object.assign({}, this.entrada))
+          }
+          this.respuestasItems.push(lista)
+          this.verRespuestasItems.push(respuestas)
+          this.responderEntradasItems.push(entradas)
+          lista = []
+          respuestas = []
+          entradas = []
+        }
+      }
+    },
+    abrirRespuestaGeneral: function (index) {
+      this.verRespuestasGenerales[index] = true
+    },
+    cerrarRespuestaGeneral: function (index) {
+      this.verRespuestasGenerales[index] = false
+      this.respuestasGenerales[index].respuesta = ''
+    },
+    abrirRespuestaItem: function (index, ind) {
+      this.verRespuestasItems[index][ind] = true
+    },
+    cerrarRespuestaItem: function (index, ind) {
+      this.verRespuestasItems[index][ind] = false
+      this.respuestasItems[index][ind].respuesta = ''
+    },
+    validarRespuestaItem: function (index, ind) {
+      if (this.verRespuestasItems[index][ind]) {
+        if (this.respuestasItems[index][ind].respuesta === '' || this.respuestasItems[index][ind].respuesta === undefined) {
+          this.responderEntradasItems[index][ind].error = true
+          this.responderEntradasItems[index][ind].mensaje = 'Falta ingresar la respuesta al comentario'
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    validarListaRespuestas: function () {
+      var validacion = true
+      for (var i = 0; i < this.responderEntradasItems.length; i++) {
+        for (var j = 0; j < this.responderEntradasItems[i].length; j++) {
+          validacion = validacion && this.validarRespuestaItem(i, j)
+        }
+      }
+      return validacion
+    },
+    validarRespuestaGeneral: function (index) {
+      if (this.verRespuestasGenerales[index]) {
+        if (this.respuestasGenerales[index].respuesta === '' || this.respuestasGenerales[index].respuesta === undefined) {
+          this.responderEntradasGenerales[index].error = true
+          this.responderEntradasGenerales[index].mensaje = 'Falta ingresar la respuesta al comentario'
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    validarListaRespGenerales: function () {
+      var validacion = true
+      for (var i = 0; i < this.responderEntradasGenerales.length; i++) {
+        validacion = validacion && this.validarRespuestaGeneral(i)
+      }
+      return validacion
+    },
+    validarRespuestas: function () {
+      return this.validarListaRespuestas() && this.validarListaRespGenerales()
+    },
+    limpiarErrorRespItem: function (index, ind) {
+      this.responderEntradasItems[index][ind].error = false
+      this.responderEntradasItems[index][ind].mensaje = ''
+    },
+    limpiarErrorRespGeneral: function (index) {
+      this.responderEntradasGenerales[index].error = false
+      this.responderEntradasGenerales[index].mensaje = ''
+    },
+    cerrarRespuestas: function () {
+      this.$emit('cerrar')
+    },
+    buscarIniciales: function (asistenciaId) {
+      return Funciones.buscarIniciales(this.asistencia, asistenciaId)
     }
   },
   mounted () {
     this.crearListas()
+    this.categorizarComentarios()
+    this.crearRespuestasItems()
   }
 }
 </script>

@@ -77,30 +77,30 @@
 
         <div class="column is-7 has-text-centered">
           <div class="field">
-            <label class="label">Secciones a asignar:</label>
+            <label id="secciones" class="label">Secciones a asignar:</label>
           </div>
           <p class="is-danger help" v-if="entradas.secciones">No se ha seleccionado sección a asignar</p>
           <br>
           <div v-if="mostrarLista">
-            <table class="table is-bordered is-narrow is-fullwidth">
+            <table class="table is-bordered is-narrow is-fullwidth" aria-describedby="secciones">
               <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th>N°</th>
-                  <th>Código</th>
-                  <th>Curso</th>
-                  <th>Sección</th>
-                  <th>Jornada</th>
-                  <th></th>
+                <tr class="has-background-light">
+                  <th scope="col" class="has-text-centered">N°</th>
+                  <th scope="col" class="has-text-centered">Código</th>
+                  <th scope="col" class="has-text-centered">Curso</th>
+                  <th scope="col" class="has-text-centered">Sección</th>
+                  <th scope="col" class="has-text-centered">Jornada</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(seccion, index) in secciones" :key="seccion.id">
-                  <th>{{ index + 1 }}</th>
-                  <td>{{ seccion.curso.codigo }}</td>
+                  <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
+                  <td class="has-text-centered">{{ seccion.curso.codigo }}</td>
                   <td class="has-text-left">{{ seccion.curso.nombre }}</td>
-                  <td>{{ seccion.codigo }}</td>
-                  <td>{{ seccion.jornada.nombre }}</td>
-                  <td><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
+                  <td class="has-text-centered">{{ seccion.codigo }}</td>
+                  <td class="has-text-centered">{{ seccion.jornada.nombre }}</td>
+                  <td class="has-text-centered"><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -117,21 +117,21 @@
     <div v-if="mostrarProfesores">
       <div class="columns">
         <div class="column is-full">
-          <table class="table is-bordered is-narrow is-fullwidth">
+          <table class="table is-bordered is-narrow is-fullwidth" summary="Profesores">
             <thead>
-              <tr class="has-text-centered has-background-light">
-                <th>N°</th>
-                <th>Nombre</th>
-                <th>Correo Electrónico</th>
-                <th>Secciones</th>
-                <th>Jornada</th>
+              <tr class="has-background-light">
+                <th scope="col" class="has-text-centered">N°</th>
+                <th scope="col" class="has-text-centered">Nombre</th>
+                <th scope="col" class="has-text-centered">Correo Electrónico</th>
+                <th scope="col" class="has-text-centered">Secciones</th>
+                <th socpe="col" class="has-text-centered">Jornada</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(profesor, index) in listaProfesores" :key="profesor.id">
-                <th class="is-vcentered">{{ index + 1 }}</th>
+                <th scope="row" class="has-text-centered is-vcentered">{{ index + 1 }}</th>
                 <td class="is-vcentered">{{ nombreCompleto(profesor.usuario) }}</td>
-                <td class="is-vcentered">{{ profesor.usuario.email }}</td>
+                <td class="is-vcentered has-text-centered">{{ profesor.usuario.email }}</td>
                 <td>
                   <div v-for="seccion in profesor.secciones" :key="seccion.id">
                     <p class="has-text-centered">{{ seccion.codigo }}</p>
@@ -323,11 +323,7 @@ export default {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
-        } else if (!regExp.test(correo)) {
-          this.entradas.correo_elec.error = true
-          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
-          return false
-        } else if (separarCorreo.length !== 2) {
+        } else if (!regExp.test(correo) || separarCorreo.length !== 2) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
           return false

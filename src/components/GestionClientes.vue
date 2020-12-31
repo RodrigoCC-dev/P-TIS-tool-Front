@@ -89,19 +89,19 @@
 
     <br>
     <div v-if="mostrarLista">
-      <table class="table is-bordered is-narrow is-fullwidth">
+      <table class="table is-bordered is-narrow is-fullwidth" summary="Lista Clientes">
         <thead>
-          <tr class="has-text-centered has-background-light">
-            <th>N°</th>
-            <th>Nombre cliente</th>
-            <th>Grupo</th>
+          <tr class="has-background-light">
+            <th scope="col" class="has-text-centered">N°</th>
+            <th scope="col" class="has-text-centered">Nombre cliente</th>
+            <th scope="col" class="has-text-centered">Grupo</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
-            <th>{{ index + 1 }}</th>
+            <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
             <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
-            <td>{{ stakeholder.grupo.nombre }}</td>
+            <td class="has-text-centered">{{ stakeholder.grupo.nombre }}</td>
           </tr>
         </tbody>
       </table>
@@ -311,11 +311,7 @@ export default {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
-        } else if (!regExp.test(correo)) {
-          this.entradas.correo_elec.error = true
-          this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
-          return false
-        } else if (separarCorreo.length !== 2) {
+        } else if (!regExp.test(correo) || separarCorreo.length !== 2) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.correo_mal
           return false

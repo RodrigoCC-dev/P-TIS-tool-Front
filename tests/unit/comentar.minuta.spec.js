@@ -73,15 +73,6 @@ describe('ComentarMinuta.vue', () => {
     expect(wrapper.vm.mostrarAprobacion).toBeFalsy()
   })
 
-  it('variable tipoAprobaciones se inicializa correctamente', () => {
-    const wrapper = shallowMount(Comentarios, {
-      propsData: {
-        idBitacora: 1353
-      }
-    })
-    expect(wrapper.vm.tipoAprobaciones).toEqual([])
-  })
-
   it('variable aprobacion se inicializa correctamente', () => {
     const wrapper = shallowMount(Comentarios, {
       propsData: {
@@ -90,6 +81,32 @@ describe('ComentarMinuta.vue', () => {
     })
     expect(wrapper.vm.aprobacion).toEqual(0)
   })
+
+  it('propiedad computada "mostrarMinuta" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Comentarios, {
+      propsData: {
+        idBitacora: 1353
+      }
+    })
+    expect(wrapper.vm.mostrarMinuta).toBeFalsy()
+  })
+
+/*  "mostrarMinuta" con "true" depende del "state"
+
+  it('propiedad computada "mostrarMinuta" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Comentarios, {
+      propsData: {
+        idBitacora: 1353
+      },
+      data() {
+        return {
+          bitacora: bitacora
+        }
+      }
+    })
+    expect(wrapper.vm.mostrarMinuta).toBeTruthy()
+  })
+*/
 
   it('método recibirComentarios funciona correctamente', () => {
     const comentarios = [
@@ -104,5 +121,43 @@ describe('ComentarMinuta.vue', () => {
     wrapper.vm.recibirComentarios(comentarios)
     expect(wrapper.vm.comentarios).toEqual(comentarios)
     expect(wrapper.vm.mostrarAprobacion).toBeTruthy()
+  })
+
+/*   método "limpiarCampos" depende del "state"
+
+  it('método "limpiarCampos" funciona correctamente', () => {
+    const wrapper = shallowMount(Comentarios, {
+      propsData: {
+        idBitacora: 1353
+      },
+      data() {
+        return {
+          bitacora: bitacora,
+          comentarios: [
+            {comentario: 'comentario de item', es_item: true, id_item: 6345},
+            {comentario: 'comentario general', es_item: false, id_item: 0}
+          ],
+          aprobacion: 62345
+        }
+      }
+    })
+    wrapper.vm.limpiarCampos()
+    expect(wrapper.vm.bitacora).toEqual({})
+    expect(wrapper.vm.comentarios).toEqual([])
+    expect(wrapper.vm.aprobacion).toEqual(0)
+  })
+*/
+
+  it('método "cerrarRevision" funciona correctamente', async () => {
+    const wrapper = shallowMount(Comentarios, {
+      propsData: {
+        idBitacora: 1353
+      }
+    })
+    wrapper.vm.cerrarRevision()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toBe(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
   })
 })

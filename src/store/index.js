@@ -6,10 +6,12 @@ export default createStore({
     authenticated: false,
     usuario: {},
     estudiante: {},
-    Stakeholder: {},
+    stakeholder: {},
     grupo: {},
     tipoMinutas: [],
-    secciones: []
+    secciones: [],
+    tipoAprobaciones: [],
+    motivos: []
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -28,10 +30,16 @@ export default createStore({
       state.estudiante = valor
     },
     setStakeholder (state, valor) {
-      state.Stakeholder = valor
+      state.stakeholder = valor
     },
     setGrupo (state, valor) {
       state.grupo = valor
+    },
+    setTipoAprobaciones (state, valor) {
+      state.tipoAprobaciones = valor
+    },
+    setMotivos (state, valor) {
+      state.motivos = valor
     }
   },
   actions: {

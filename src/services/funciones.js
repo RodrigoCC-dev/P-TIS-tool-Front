@@ -41,8 +41,27 @@ export default {
         return lista[i]
       }
     }
+    return {}
   },
   nombreCompleto (obj) {
     return obj.nombre + ' ' + obj.apellido_paterno + ' ' + obj.apellido_materno
+  },
+  buscarIniciales (listaAsistencia, asistenciaId) {
+    var asistente = ''
+    for (var i = 0; i < listaAsistencia.length; i++) {
+      if (listaAsistencia[i].id === asistenciaId) {
+        asistente = listaAsistencia[i].iniciales
+      }
+    }
+    return asistente
+  },
+  asistenciaParticipante (listaAsistencia, llave, iniciales) {
+    var asistencia = ''
+    for (var i = 0; i < listaAsistencia.length; i++) {
+      if (listaAsistencia[i].iniciales === iniciales && listaAsistencia[i][llave] !== null) {
+        asistencia = listaAsistencia[i].descripcion
+      }
+    }
+    return asistencia
   }
 }

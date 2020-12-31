@@ -6,7 +6,7 @@
 
       <div v-if="crearMinuta">
 
-        <Minuta v-bind:tipo-minuta="tipo" v-bind:id-bitacora="idBitacora" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+        <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else>
 
@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
 
         </div>
 
@@ -51,6 +51,18 @@
 
       <div v-else-if="verRevision">
         <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="verComentarios">
+        <Responder :id-bitacora="idComentarios" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="verRespuestas">
+        <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
+      </div>
+
+      <div v-if="verEmision">
+        <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @revisar="revisarAprobacion" @cancelar="mostrarTablero"/>
       </div>
 
     </div>
@@ -65,9 +77,13 @@ import Footer from '@/components/Footer.vue'
 import Minuta from '@/components/Minuta.vue'
 import Tablero from '@/components/TableroEst.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
+import Responder from '@/components/comentarios/ResponderMinuta.vue'
+import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
+import Emision from '@/components/comentarios/NuevaMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -77,7 +93,10 @@ export default {
     Footer,
     Minuta,
     Tablero,
-    Comentar
+    Comentar,
+    Responder,
+    Respuestas,
+    Emision
   },
   data () {
     return {
@@ -86,13 +105,23 @@ export default {
       seleccionarMinuta: false,
       idBitacora: 0,
       idRevision: 0,
+      idComentarios: 0,
+      idRespuestas: 0,
+      idEmision: 0,
       crearMinuta: true,
       verRevision: false,
+      verComentarios: false,
+      verRespuestas: false,
+      verEmision: false,
+      idMotivo: 0,
+      nuevaRevision: '',
+      esNuevaEmision: false,
+      valorActual: 0,
       tableroEst: 0
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'tipoMinutas', 'usuario', 'estudiante', 'grupo']),
+    ...mapState(['apiUrl', 'tipoMinutas', 'usuario', 'estudiante', 'grupo', 'motivos']),
 
     minutasFiltradas: function () {
       var lista = []
@@ -111,11 +140,15 @@ export default {
     elegirTipo: function () {
       this.verFormulario = true
       this.seleccionarMinuta = false
+      this.idMotivo = this.buscarIdMotivo('ECI')
+      this.nuevaRevision = 'A'
     },
     cerrarFormulario: function () {
       this.verFormulario = false
       this.tipo = 0
       this.idBitacora = 0
+      this.esNuevaEmision = false
+      this.tableroEst++
     },
     async obtenerTipoMinutas () {
       try {
@@ -142,6 +175,22 @@ export default {
         console.log('No se ha obtenido la información del grupo')
       }
     },
+    async obtenerAprobaciones () {
+      try {
+        const response = await axios.get(this.apiUrl + '/tipo_aprobaciones', { headers: Auth.authHeader() })
+        this.$store.commit('setTipoAprobaciones', response.data)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async obtenerMotivos () {
+      try {
+        const response = await axios.get(this.apiUrl + '/motivos', { headers: Auth.authHeader() })
+        this.$store.commit('setMotivos', response.data)
+      } catch {
+        console.log('No fue posible obtener los motivos de emisión')
+      }
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
@@ -153,14 +202,55 @@ export default {
     },
     mostrarTablero: function () {
       this.verRevision = false
+      this.verComentarios = false
       this.crearMinuta = true
       this.idRevision = 0
+      this.idEmision = 0
+      this.verEmision = false
+      this.valorActual = 0
+      this.tableroEst++
+    },
+    revisarComentarios: function (id) {
+      this.idComentarios = id
+      this.verComentarios = true
+      this.crearMinuta = false
+    },
+    revisarRespuestas: function (id) {
+      this.idRespuestas = id
+      this.verRespuestas = true
+      this.crearMinuta = false
+    },
+    nuevaVersion: function (id) {
+      this.idEmision = id
+      this.verEmision = true
+    },
+    revisarAprobacion: function () {
+      this.crearMinuta = false
+      this.valorActual = 0
+    },
+    buscarIdMotivo: function (valor) {
+      return Funciones.obtenerIdDeLista(this.motivos, 'identificador', valor)
+    },
+    nuevaEmision: function (identificador, revision) {
+      this.verRevision = false
+      this.verComentarios = false
+      this.verEmision = false
+      this.crearMinuta = true
+      this.verFormulario = true
+      this.idRevision = 0
+      this.idMotivo = this.buscarIdMotivo(identificador)
+      this.nuevaRevision = revision
+      this.idBitacora = this.idEmision
+      this.esNuevaEmision = true
+      this.valorActual = 0
       this.tableroEst++
     }
   },
   mounted () {
     this.obtenerTipoMinutas()
     this.obtenerEstudiante()
+    this.obtenerAprobaciones()
+    this.obtenerMotivos()
   }
 }
 </script>

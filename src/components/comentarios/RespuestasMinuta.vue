@@ -5,10 +5,10 @@
       <Informacion :proyecto="grupo" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="true" :responder="false" :lista-com="[]" :ver-respuestas="false" @comentar="recibirComentarios" @cerrar="cerrarRevision"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="true" :lista-com="comentarios" :ver-respuestas="true"/>
     </div>
 
-    <div v-if="mostrarAprobacion">
+    <div>
       <br>
       <br>
       <div class="columns">
@@ -22,7 +22,7 @@
                 <p class="control is-expanded">
                   <span class="select is-fullwidth">
                     <select v-model="aprobacion">
-                      <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
+                      <option v-for="(aprobacion, index) in aprobacionesFiltradas" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
                     </select>
                   </span>
                 </p>
@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import Auth from '@/services/auth.js'
 import axios from 'axios'
+import Auth from '@/services/auth.js'
 import { mapState } from 'vuex'
 
 import Informacion from '@/components/minutas/Informacion.vue'
@@ -50,7 +50,7 @@ import Conclusiones from '@/components/minutas/Conclusiones.vue'
 import Items from '@/components/minutas/Items.vue'
 
 export default {
-  name: 'ComentarMinuta',
+  name: 'RespuestasMinuta',
   props: ['idBitacora'],
   components: {
     Informacion,
@@ -63,7 +63,6 @@ export default {
       id: this.idBitacora,
       bitacora: {},
       comentarios: [],
-      mostrarAprobacion: false,
       aprobacion: 0
     }
   },
@@ -72,6 +71,15 @@ export default {
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
+    },
+    aprobacionesFiltradas: function () {
+      var lista = []
+      for (var i = 0; i < this.tipoAprobaciones.length; i++) {
+        if (this.tipoAprobaciones[i].identificador !== 'AC' && this.tipoAprobaciones[i].identificador !== 'RC') {
+          lista.push(this.tipoAprobaciones[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
@@ -84,39 +92,35 @@ export default {
         console.log(e)
       }
     },
-    async enviarComentarios () {
-      const comentarios = {
-        id: this.id,
-        comentarios: this.comentarios,
-        tipo_aprobacion_id: this.aprobacion
-      }
+    async obtenerRespuestas (bitacoraId) {
       try {
-        await axios.post(this.apiUrl + '/comentarios', comentarios, { headers: Auth.postHeader() })
+        const response = await axios.get(this.apiUrl + '/respuestas/' + bitacoraId, { headers: Auth.authHeader() })
+        this.comentarios = response.data
       } catch (e) {
-        console.log('No fue posible enviar los comentarios')
+        console.log('No fue posible obtener los comentarios y respuestas de la minuta')
         console.log(e)
       }
     },
-    recibirComentarios: function (comentarios) {
-      this.comentarios = comentarios
-      this.mostrarAprobacion = true
-    },
-    cerrarRevision: function () {
-      this.$emit('cerrar')
+    async enviarAprobacion () {
+      const params = {
+        id: this.id,
+        tipo_aprobacion_id: this.aprobacion
+      }
+      try {
+        await axios.put(this.apiUrl + '/aprobaciones/' + this.id, params, { headers: Auth.postHeader() })
+        this.$emit('cerrar')
+      } catch (e) {
+        console.log('No fue posible cambiar el estado de aprobación de la minuta')
+        console.log(e)
+      }
     },
     establecerEstado: function () {
-      this.enviarComentarios()
-      this.$emit('cerrar')
-      this.mostrarAprobacion = false
-    },
-    limpiarCampos: function () {
-      this.bitacora = {}
-      this.comentarios = []
-      this.aprobacion = 0
+      this.enviarAprobacion()
     }
   },
   mounted () {
     this.obtenerMinuta(this.id)
+    this.obtenerRespuestas(this.id)
   }
 }
 </script>

@@ -105,21 +105,27 @@
     <div class="columns">
       <div class="column is-11 is-offset-1">
         <br>
-        <table class="table is-fullwidth">
+        <table class="table is-fullwidth" summary="Asistencia">
           <thead>
             <tr>
-              <th>Participantes</th>
-              <th></th>
-              <th class="has-text-centered">Iniciales</th>
-              <th class="has-text-centered">Asistencia</th>
+              <th scope="col">Participantes</th>
+              <th scope="col"></th>
+              <th scope="col" class="has-text-centered">Iniciales</th>
+              <th scope="col" class="has-text-centered">Asistencia</th>
             </tr>
           </thead>
           <tbody class="has-text-centered">
             <tr v-for="estudiante in grupo.estudiantes" :key="estudiante.id">
               <td class="has-text-left has-text-info has-text-wight-semibold">{{ nombreCompleto(estudiante.usuario) }}</td>
               <td></td>
-              <td>{{ estudiante.iniciales }}</td>
-              <td>{{ asistenciaEstudiante(estudiante.iniciales) }}</td>
+              <td class="has-text-centered">{{ estudiante.iniciales }}</td>
+              <td class="has-text-centered">{{ asistenciaEstudiante(estudiante.iniciales) }}</td>
+            </tr>
+            <tr v-for="cliente in grupo.stakeholders" :key="cliente.id" v-show="bitacora.minuta.tipo === 'Cliente'">
+              <td class="has-text-link has-text-weight-semibold">{{ nombreCompleto(cliente.usuario) }}</td>
+              <td></td>
+              <td class="has-text-centered">{{ cliente.iniciales }}</td>
+              <td class="has-text-centered">{{ asistenciaStakeholder(cliente.iniciales) }}</td>
             </tr>
           </tbody>
         </table>
@@ -203,11 +209,10 @@ export default {
       return tiempo[0] + ':' + tiempo[1]
     },
     asistenciaEstudiante: function (iniciales) {
-      for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
-        if (this.bitacora.minuta.asistencia[i].iniciales === iniciales) {
-          return this.bitacora.minuta.asistencia[i].descripcion
-        }
-      }
+      return Funciones.asistenciaParticipante(this.bitacora.minuta.asistencia, 'id_estudiante', iniciales)
+    },
+    asistenciaStakeholder: function (iniciales) {
+      return Funciones.asistenciaParticipante(this.bitacora.minuta.asistencia, 'id_stakeholder', iniciales)
     }
   }
 }

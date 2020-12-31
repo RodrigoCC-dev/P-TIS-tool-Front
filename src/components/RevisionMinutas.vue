@@ -21,20 +21,20 @@
           <div v-if="mostrarGrupos">
             <div class="field">
               <div class="control">
-                <label class="label">Listado de grupos</label>
+                <label id="grupos" class="label">Listado de grupos</label>
               </div>
             </div>
-            <table class="table is-fullwidth">
+            <table class="table is-fullwidth" aria-describedby="grupos">
               <thead>
                 <tr>
-                  <th>N°</th>
-                  <th>Grupo</th>
-                  <th>Proyecto</th>
+                  <th scope="col">N°</th>
+                  <th scope="col">Grupo</th>
+                  <th scope="col">Proyecto</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
-                  <th :class="{ 'is-selected' : grupoActual === grupo.id}">{{ index + 1 }}</th>
+                  <th scope="row" :class="{ 'is-selected' : grupoActual === grupo.id}">{{ index + 1 }}</th>
                   <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
                   <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
                 </tr>
@@ -47,15 +47,15 @@
           <div v-if="grupoActual !== 0">
             <div class="field">
               <div class="control">
-                <label class="label">Estudiantes</label>
+                <label id="estudiantes" class="label">Estudiantes</label>
               </div>
             </div>
             <div >
-              <table class="table is-fullwidth">
+              <table class="table is-fullwidth" aria-describedby="estudiantes">
                 <thead>
                   <tr>
-                    <th>R.U.N.</th>
-                    <th>Nombre</th>
+                    <th scope="col">R.U.N.</th>
+                    <th scope="col">Nombre</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,30 +74,32 @@
         <br>
         <div class="columns">
           <div class="column is-10 is-offset-1">
-            <div class="field">
-              <div class="control">
-                <label class="label">Minutas</label>
-              </div>
-            </div>
             <div v-if="listaMinutas.length > 0">
-              <table class="table is-bordered is-fullwidth is-narrow">
-                <thead>
-                  <tr class="has-text-centered has-background-light">
-                    <th>N°</th>
-                    <th>Código minuta</th>
-                    <th>Revisión</th>
-                    <th>Creada por</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
-                    <th>{{ index + 1 }}</th>
-                    <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                    <td>{{ bitacora.revision }}</td>
-                    <td>{{ bitacora.minuta.creada_por }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="field">
+                <div class="control">
+                  <label id="minutas" class="label">Minutas</label>
+                </div>
+              </div>
+              <div >
+                <table class="table is-bordered is-fullwidth is-narrow" aria-describedby="minutas">
+                  <thead>
+                    <tr class="has-background-light">
+                      <th scope="col" class="has-text-centered">N°</th>
+                      <th scope="col" class="has-text-centered">Código minuta</th>
+                      <th scope="col" class="has-text-centered">Revisión</th>
+                      <th scope="col" class="has-text-centered">Creada por</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
+                      <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
+                      <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
+                      <td class="has-text-centered">{{ bitacora.revision }}</td>
+                      <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div v-else>
               <br>
@@ -114,15 +116,29 @@
       <Informacion :proyecto="grupoSeleccionado" :minuta="bitacora"/>
       <Objetivos :lista="bitacora.minuta.objetivos"/>
       <Conclusiones :lista="bitacora.minuta.conclusiones"/>
-      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false"/>
+      <Items :lista="bitacora.minuta.items" :asistentes="bitacora.minuta.asistencia" :comentar="false" :responder="false" :lista-com="[]" :ver-respuestas="false"/>
 
       <br>
       <div class="columns">
-        <div class="column is-4 is-offset-4">
-          <div class="control">
-            <button class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</button>
+        <div class="column is-4 is-offset-2">
+          <div class="field">
+            <div class="control">
+              <a class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</a>
+            </div>
           </div>
         </div>
+        <div class="column is-4">
+          <div class="field">
+            <div class="control">
+              <a class="button is-dark is-fullwidth" @click="verRegistros">Ver registro</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <div v-if="mostrarRegistros">
+        <Registros :id-bitacora="bitacora.id" @cerrar="cerrarRegistros"/>
       </div>
 
     </div>
@@ -140,6 +156,7 @@ import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
 import Conclusiones from '@/components/minutas/Conclusiones.vue'
 import Items from '@/components/minutas/Items.vue'
+import Registros from '@/components/RegistroMinuta.vue'
 
 const nombreTabs = {
   diurna: 'Diurna',
@@ -152,7 +169,8 @@ export default {
     Informacion,
     Objetivos,
     Conclusiones,
-    Items
+    Items,
+    Registros
   },
   data () {
     return {
@@ -162,6 +180,7 @@ export default {
       mostrarFormulario: false,
       mostrarJornadas: false,
       mostrarMinutas: false,
+      mostrarRegistros: false,
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
@@ -182,11 +201,7 @@ export default {
       return lista
     },
     mostrarGrupos: function () {
-      if (this.gruposJornada.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.gruposJornada.length > 0
     }
   },
   methods: {
@@ -257,6 +272,13 @@ export default {
     },
     cerrarFormulario: function () {
       this.mostrarFormulario = false
+      this.mostrarRegistros = false
+    },
+    verRegistros: function () {
+      this.mostrarRegistros = true
+    },
+    cerrarRegistros: function () {
+      this.mostrarRegistros = false
     }
   },
   mounted () {
