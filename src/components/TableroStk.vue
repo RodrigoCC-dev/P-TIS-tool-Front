@@ -3,22 +3,22 @@
 
     <div class="tabs is-centered is-toggle is-toggle-rounded">
       <ul>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.revision }">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.revision }">
           <a @click="elegirTab(nombreTabs.revision)">
             <span>Para revisión</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.comentadas }">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.comentadas }">
           <a @click="elegirTab(nombreTabs.comentadas)">
             <span>Comentadas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.respondidas }">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.respondidas }">
           <a @click="elegirTab(nombreTabs.respondidas)">
             <span>Respondidas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.cerradas }">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.cerradas }">
           <a @click="elegirTab(nombreTabs.cerradas)">
             <span>Cerradas</span>
           </a>

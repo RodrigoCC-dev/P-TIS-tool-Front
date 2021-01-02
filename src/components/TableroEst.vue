@@ -3,32 +3,32 @@
 
     <div class="tabs is-centered is-toggle is-toggle-rounded">
       <ul>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.borradores}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.borradores}">
           <a @click="elegirTab(nombreTabs.borradores)">
             <span>Borradores</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.emitidas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.emitidas}">
           <a @click="elegirTab(nombreTabs.emitidas)">
             <span>Emitidas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.revision}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.revision}">
           <a @click="elegirTab(nombreTabs.revision)">
             <span>Para revisar</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.comentadas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.comentadas}">
           <a @click="elegirTab(nombreTabs.comentadas)">
             <span>Comentadas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.respondidas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.respondidas}">
           <a @click="elegirTab(nombreTabs.respondidas)">
             <span>Respondidas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.cerradas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.cerradas}">
           <a @click="elegirTab(nombreTabs.cerradas)">
             <span>Cerradas</span>
           </a>
