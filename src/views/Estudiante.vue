@@ -13,7 +13,7 @@
           <div class="columns">
             <div class="column is-10"></div>
             <div class="column is-2">
-              <button class="button is-success" @click="nuevaMinuta">Nueva Minuta</button>
+              <button class="button is-info-usach" @click="nuevaMinuta">Nueva Minuta</button>
             </div>
           </div>
           <div v-if="seleccionarMinuta">
