@@ -6888,6 +6888,11 @@ label.panel-block:hover {
   color: #3273dc;
 }
 
+.tabs li.is-active-usach a {
+  border-bottom-color: #002f6c;
+  color: #002f6c;
+}
+
 .tabs ul {
   align-items: center;
   border-bottom-color: #dbdbdb;
@@ -6983,6 +6988,13 @@ label.panel-block:hover {
 .tabs.is-toggle li.is-active a {
   background-color: #3273dc;
   border-color: #3273dc;
+  color: #fff;
+  z-index: 1;
+}
+
+.tabs.is-toggle li.is-active-usach a {
+  background-color: #002f6c;
+  border-color: #002f6c;
   color: #fff;
   z-index: 1;
 }

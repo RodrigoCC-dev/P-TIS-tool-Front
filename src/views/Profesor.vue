@@ -6,10 +6,10 @@
       <nav>
         <div class="tabs">
           <ul>
-            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Estudiantes }" v-on:click="elegirTab(nombreTabs.Estudiantes)"><a><strong>Estudiantes</strong></a></li>
-            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Grupos }" v-on:click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
-            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Stakeholders}" v-on:click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
-            <li v-bind:class="{ 'is-active' : nombreTabActiva === nombreTabs.Minutas}" v-on:click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
+            <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Estudiantes }" v-on:click="elegirTab(nombreTabs.Estudiantes)"><a><strong>Estudiantes</strong></a></li>
+            <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Grupos }" v-on:click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
+            <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Stakeholders}" v-on:click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
+            <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Minutas}" v-on:click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
           </ul>
         </div>
       </nav>
