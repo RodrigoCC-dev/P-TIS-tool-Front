@@ -2729,6 +2729,19 @@ fieldset[disabled] .button {
   color: currentColor;
 }
 
+.table td.is-selected-usach,
+.table th.is-selected-usach {
+  background-color: #ea7600;
+  color: #fff;
+}
+
+.table td.is-selected-usach a,
+.table td.is-selected-usach strong,
+.table th.is-selected-usach a,
+.table th.is-selected-usach strong {
+  color: currentColor;
+}
+
 .table td.is-vcentered,
 .table th.is-vcentered {
   vertical-align: middle;
@@ -2754,6 +2767,22 @@ fieldset[disabled] .button {
 
 .table tr.is-selected td,
 .table tr.is-selected th {
+  border-color: #fff;
+  color: currentColor;
+}
+
+.table tr.is-selected-usach {
+  background-color: #ea7600;
+  color: #fff;
+}
+
+.table tr.is-selected-usach a,
+.table tr.is-selected-usach strong {
+  color: currentColor;
+}
+
+.table tr.is-selected-usach td,
+.table tr.is-selected-usach th {
   border-color: #fff;
   color: currentColor;
 }
@@ -2813,12 +2842,28 @@ fieldset[disabled] .button {
   background-color: whitesmoke;
 }
 
+.table.is-hoverable tbody tr:not(.is-selected-usach):hover {
+  background-color: #fafafa;
+}
+
+.table.is-hoverable.is-striped tbody tr:not(.is-selected-usach):hover {
+  background-color: #fafafa;
+}
+
+.table.is-hoverable.is-striped tbody tr:not(.is-selected-usach):hover:nth-child(even) {
+  background-color: whitesmoke;
+}
+
 .table.is-narrow td,
 .table.is-narrow th {
   padding: 0.25em 0.5em;
 }
 
 .table.is-striped tbody tr:not(.is-selected):nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table.is-striped tbody tr:not(.is-selected-usach):nth-child(even) {
   background-color: #fafafa;
 }
 

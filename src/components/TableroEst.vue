@@ -235,12 +235,12 @@
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
-                <th class="has-text-centered" scope="row" :class="{ 'is-selected' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
-                <td :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
+                <th class="has-text-centered" scope="row" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
+                <td :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
               </tr>
             </tbody>
           </table>
