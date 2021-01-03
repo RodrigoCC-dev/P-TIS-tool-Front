@@ -89,8 +89,10 @@
       </form>
       <hr>
     </div>
+
     <br>
     <div v-if="mostrarLista">
+
       <table class="table is-bordered is-narrow is-fullwidth" summary="Estudiantes">
         <thead>
           <tr class="has-text-centered has-background-light">
@@ -99,6 +101,7 @@
             <th scope="col">Nombre estudiante</th>
             <th scope="col">Sección</th>
             <th scope="col">Jornada</th>
+            <th scope="col"><input type="checkbox" @click="seleccionarTodos"></th>
           </tr>
         </thead>
         <tbody v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
@@ -108,9 +111,24 @@
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
             <td>{{ estudiante.codigo_seccion }}</td>
             <td>{{ estudiante.jornada }}</td>
+            <td><input type="checkbox" v-model="eliminados" :value="estudiante.id"></td>
           </tr>
         </tbody>
       </table>
+
+      <div v-if="mostrarEliminar">
+        <br>
+        <div class="columns">
+          <div class="column is-half is-offset-3">
+            <div class="field">
+              <div class="control">
+                <button class="button is-link is-fullwidth" @click="eliminarEstudiantes">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <br>
   </div>
@@ -170,11 +188,16 @@ export default {
         sin_run: 'No se ha ingresado R.U.N. del estudiante',
         run_error: 'No es un R.U.N. válido',
         run_repetido: 'Usuario ya se encuentra en el sistema'
-      }
+      },
+      eliminados: []
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'secciones'])
+    ...mapState(['apiUrl', 'secciones']),
+
+    mostrarEliminar: function () {
+      return this.eliminados.length > 0
+    }
   },
   methods: {
     async obtenerSecciones () {
@@ -409,6 +432,20 @@ export default {
       esvalido = esvalido && this.validarSeccion()
       esvalido = esvalido && !this.existeEstudiante()
       return esvalido
+    },
+    seleccionarTodos: function () {
+      if (this.eliminados.length === this.listaEstudiantes.length) {
+        this.eliminados = []
+      } else {
+        this.eliminados = []
+        for (var i = 0; i < this.listaEstudiantes.length; i++) {
+          this.eliminados.push(this.listaEstudiantes[i].id)
+        }
+      }
+      console.log('seleccionados')
+    },
+    eliminarEstudiantes: function () {
+      console.log(this.eliminados)
     }
   },
   mounted () {
