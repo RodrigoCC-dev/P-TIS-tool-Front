@@ -351,6 +351,8 @@ export default {
   methods: {
     elegirTab: function (nombreTab) {
       this.nombreTab = nombreTab
+      this.minutaActual = 0
+      this.$emit('cambiar')
     },
     convertirFecha: function (timestamp) {
       if (timestamp === null || timestamp === undefined) {

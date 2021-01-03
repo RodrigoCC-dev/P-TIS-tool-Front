@@ -43,7 +43,7 @@
             <br>
           </div>
 
-          <Tablero :seleccionado="valorActual" :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
 
         </div>
 
@@ -191,14 +191,19 @@ export default {
         console.log('No fue posible obtener los motivos de emisión')
       }
     },
+    cambiarTab: function () {
+      this.verEmision = false
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
+      this.verEmision = false
     },
     establecerRevision: function (id) {
       this.idRevision = id
       this.verRevision = true
       this.crearMinuta = false
+      this.verEmision = false
     },
     mostrarTablero: function () {
       this.verRevision = false
@@ -219,6 +224,7 @@ export default {
       this.idRespuestas = id
       this.verRespuestas = true
       this.crearMinuta = false
+      this.verEmision = false
     },
     nuevaVersion: function (id) {
       this.idEmision = id

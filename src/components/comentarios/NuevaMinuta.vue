@@ -8,13 +8,13 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-link" @click="emitir">Emitir nueva versión</a>
+              <a class="button is-primary-usach" @click="emitir">Emitir nueva versión</a>
             </div>
             <div class="control">
-              <a class="button is-info" @click="revisar">Revisar aprobación</a>
+              <a class="button is-secondary-usach" @click="revisar">Revisar aprobación</a>
             </div>
             <div class="control">
-              <a class="button is-light" @click="cancelar">Cancelar</a>
+              <a class="button is-light-usach" @click="cancelar">Cancelar</a>
             </div>
           </div>
         </div>
