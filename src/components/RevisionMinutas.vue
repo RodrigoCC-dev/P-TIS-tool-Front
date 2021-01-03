@@ -8,8 +8,8 @@
         <section>
           <div class="tabs is-toggle is-toggle-rounded is-centered">
             <ul>
-              <li :class="{ 'is-active' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-              <li :class="{ 'is-active' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
+              <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
+              <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
             </ul>
           </div>
         </section>
@@ -34,9 +34,9 @@
               </thead>
               <tbody>
                 <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
-                  <th scope="row" :class="{ 'is-selected' : grupoActual === grupo.id}">{{ index + 1 }}</th>
-                  <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
-                  <td :class="{ 'is-selected' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
+                  <th scope="row" :class="{ 'is-selected-usach' : grupoActual === grupo.id}">{{ index + 1 }}</th>
+                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
+                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
                 </tr>
               </tbody>
             </table>
@@ -123,7 +123,7 @@
         <div class="column is-4 is-offset-2">
           <div class="field">
             <div class="control">
-              <a class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</a>
+              <a class="button is-primary-usach is-fullwidth" @click="cerrarFormulario">Volver</a>
             </div>
           </div>
         </div>

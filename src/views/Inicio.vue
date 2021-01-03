@@ -36,7 +36,7 @@
             <div class="column is-6">
               <div class="field">
                 <div class="control">
-                  <button class="button is-link is-fullwidth" v-on:click="disteClick">Acceder</button>
+                  <button class="button is-primary-usach is-fullwidth" v-on:click="disteClick">Acceder</button>
                 </div>
               </div>
             </div>

@@ -6,8 +6,8 @@
       <section>
         <div class="tabs is-toggle is-toggle-rounded is-centered">
           <ul>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
+            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
+            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
           </ul>
         </div>
       </section>
@@ -17,7 +17,7 @@
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
       <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarGrupo">Agregar Grupo</button>
+        <button class="button is-info-usach" @click="agregarGrupo">Agregar Grupo</button>
       </div>
     </div>
 
@@ -51,10 +51,10 @@
               <div class="column is-12">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <a class="button is-link" @click="agregar">Crear grupo</a>
+                    <a class="button is-primary-usach" @click="agregar">Crear grupo</a>
                   </div>
                   <div class="control">
-                    <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
+                    <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
                   </div>
                 </div>
               </div>

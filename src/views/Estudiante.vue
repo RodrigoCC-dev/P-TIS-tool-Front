@@ -13,18 +13,18 @@
           <div class="columns">
             <div class="column is-10"></div>
             <div class="column is-2">
-              <button class="button is-success" @click="nuevaMinuta">Nueva Minuta</button>
+              <button class="button is-info-usach" @click="nuevaMinuta">Nueva Minuta</button>
             </div>
           </div>
           <div v-if="seleccionarMinuta">
             <div class="columns">
-              <div class="column is-half is-offset-3">
+              <div class="column is-8 is-offset-1">
                 <div class="field is-horizontal">
-                  <div class="field-label-2c">
+                  <div class="field-label-2c is-normal">
                     <label class="label">Elegir tipo minuta:</label>
                   </div>
                   <div class="field-body">
-                    <div class="field has-addons has-addons-right">
+                    <div class="field is-grouped">
                       <div class="control is-expanded">
                         <div class="select is-fullwidth">
                           <select v-model="tipo">
@@ -33,7 +33,10 @@
                         </div>
                       </div>
                       <div class="control">
-                        <a class="button is-info" @click="elegirTipo">Elegir</a>
+                        <a class="button is-info-usach" @click="elegirTipo">Elegir</a>
+                      </div>
+                      <div class="control">
+                        <a class="button is-light-usach" @click="cancelarMinuta">Cancelar</a>
                       </div>
                     </div>
                   </div>
@@ -43,7 +46,7 @@
             <br>
           </div>
 
-          <Tablero :seleccionado="valorActual" :contador="tableroEst" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
 
         </div>
 
@@ -137,6 +140,10 @@ export default {
     nuevaMinuta: function () {
       this.seleccionarMinuta = true
     },
+    cancelarMinuta: function () {
+      this.seleccionarMinuta = false
+      this.tipo = 0
+    },
     elegirTipo: function () {
       this.verFormulario = true
       this.seleccionarMinuta = false
@@ -191,14 +198,19 @@ export default {
         console.log('No fue posible obtener los motivos de emisión')
       }
     },
+    cambiarTab: function () {
+      this.verEmision = false
+    },
     establecerBitacora: function (id) {
       this.idBitacora = id
       this.verFormulario = true
+      this.verEmision = false
     },
     establecerRevision: function (id) {
       this.idRevision = id
       this.verRevision = true
       this.crearMinuta = false
+      this.verEmision = false
     },
     mostrarTablero: function () {
       this.verRevision = false
@@ -219,6 +231,7 @@ export default {
       this.idRespuestas = id
       this.verRespuestas = true
       this.crearMinuta = false
+      this.verEmision = false
     },
     nuevaVersion: function (id) {
       this.idEmision = id

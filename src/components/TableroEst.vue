@@ -3,32 +3,32 @@
 
     <div class="tabs is-centered is-toggle is-toggle-rounded">
       <ul>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.borradores}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.borradores}">
           <a @click="elegirTab(nombreTabs.borradores)">
             <span>Borradores</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.emitidas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.emitidas}">
           <a @click="elegirTab(nombreTabs.emitidas)">
             <span>Emitidas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.revision}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.revision}">
           <a @click="elegirTab(nombreTabs.revision)">
             <span>Para revisar</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.comentadas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.comentadas}">
           <a @click="elegirTab(nombreTabs.comentadas)">
             <span>Comentadas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.respondidas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.respondidas}">
           <a @click="elegirTab(nombreTabs.respondidas)">
             <span>Respondidas</span>
           </a>
         </li>
-        <li :class="{ 'is-active' : nombreTab === nombreTabs.cerradas}">
+        <li :class="{ 'is-active-usach' : nombreTab === nombreTabs.cerradas}">
           <a @click="elegirTab(nombreTabs.cerradas)">
             <span>Cerradas</span>
           </a>
@@ -235,12 +235,12 @@
             </thead>
             <tbody>
               <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
-                <th class="has-text-centered" scope="row" :class="{ 'is-selected' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
-                <td :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
+                <th class="has-text-centered" scope="row" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
+                <td :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
               </tr>
             </tbody>
           </table>
@@ -351,6 +351,8 @@ export default {
   methods: {
     elegirTab: function (nombreTab) {
       this.nombreTab = nombreTab
+      this.minutaActual = 0
+      this.$emit('cambiar')
     },
     convertirFecha: function (timestamp) {
       if (timestamp === null || timestamp === undefined) {
