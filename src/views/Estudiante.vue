@@ -18,13 +18,13 @@
           </div>
           <div v-if="seleccionarMinuta">
             <div class="columns">
-              <div class="column is-half is-offset-3">
+              <div class="column is-8 is-offset-1">
                 <div class="field is-horizontal">
-                  <div class="field-label-2c">
+                  <div class="field-label-2c is-normal">
                     <label class="label">Elegir tipo minuta:</label>
                   </div>
                   <div class="field-body">
-                    <div class="field has-addons has-addons-right">
+                    <div class="field is-grouped">
                       <div class="control is-expanded">
                         <div class="select is-fullwidth">
                           <select v-model="tipo">
@@ -33,7 +33,10 @@
                         </div>
                       </div>
                       <div class="control">
-                        <a class="button is-info" @click="elegirTipo">Elegir</a>
+                        <a class="button is-info-usach" @click="elegirTipo">Elegir</a>
+                      </div>
+                      <div class="control">
+                        <a class="button is-light-usach" @click="cancelarMinuta">Cancelar</a>
                       </div>
                     </div>
                   </div>
@@ -136,6 +139,10 @@ export default {
   methods: {
     nuevaMinuta: function () {
       this.seleccionarMinuta = true
+    },
+    cancelarMinuta: function () {
+      this.seleccionarMinuta = false
+      this.tipo = 0
     },
     elegirTipo: function () {
       this.verFormulario = true
