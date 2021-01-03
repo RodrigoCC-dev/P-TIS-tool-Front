@@ -5704,6 +5704,34 @@ button.dropdown-item.is-active {
   color: #cc0f35;
 }
 
+.message.is-secondary-usach {
+  background-color: #eef6fc;
+}
+
+.message.is-secondary-usach .message-header {
+  background-color: #3298dc;
+  color: #fff;
+}
+
+.message.is-secondary-usach .message-body {
+  border-color: #3298dc;
+  color: #1d72aa;
+}
+
+.message.is-info-usach {
+  background-color: #eef6fc;
+}
+
+.message.is-info-usach .message-header {
+  background-color: #3298dc;
+  color: #fff;
+}
+
+.message.is-info-usach .message-body {
+  border-color: #3298dc;
+  color: #1d72aa;
+}
+
 .message-header {
   align-items: center;
   background-color: #4a4a4a;
