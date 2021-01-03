@@ -93,7 +93,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="agregaComentario">Agregar comentario</a>
+              <a class="button is-info-usach" @click="agregaComentario">Agregar comentario</a>
             </div>
           </div>
         </div>
@@ -105,11 +105,11 @@
             <ul>
               <li v-for="(comentario, index) in listaGenerales" :key="index">
                 <div class="field is-grouped">
-                  <p class="control is-expanded">
+                  <p class="control is-expanded has-icons-right">
                     <input v-model="listaGenerales[index].comentario" class="input"  :class="{ 'is-danger' : this.entradas.comentarios }" type="text" @input="limpiarErrorGeneral">
-                  </p>
-                  <p class="control">
-                    <a class="button is-danger is-light" @click="removerComentario(comentario)"><strong>X</strong></a>
+                    <span class="icon is-right">
+                      <button class="delete" @click="removerComentario(comentario)"></button>
+                    </span>
                   </p>
                 </div>
               </li>
@@ -123,10 +123,10 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-link" @click="enviarComentarios">Guardar comentarios</a>
+              <a class="button is-primary-usach" @click="enviarComentarios">Guardar comentarios</a>
             </div>
             <div class="control">
-              <a class="button is-dark is-light" @click="cancelarEnvio">Cancelar</a>
+              <a class="button is-light-usach" @click="cancelarEnvio"><strong>Cancelar</strong></a>
             </div>
           </div>
         </div>
@@ -185,10 +185,10 @@
           <div class="column is-half is-offset-3">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-link" @click="enviarRespuestas">Guardar respuestas</a>
+                <a class="button is-primary-usach" @click="enviarRespuestas">Guardar respuestas</a>
               </div>
               <div class="control">
-                <a class="button is-dark is-light" @click="cancelarEnvioRespuestas">Cancelar</a>
+                <a class="button is-light-usach" @click="cancelarEnvioRespuestas">Cancelar</a>
               </div>
             </div>
           </div>

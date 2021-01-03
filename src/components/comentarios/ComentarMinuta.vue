@@ -27,7 +27,7 @@
                   </span>
                 </p>
                 <p class="control">
-                  <a class="button is-link" @click="establecerEstado">Establecer estado</a>
+                  <a class="button is-secondary-usach" @click="establecerEstado">Establecer estado</a>
                 </p>
               </div>
             </div>
