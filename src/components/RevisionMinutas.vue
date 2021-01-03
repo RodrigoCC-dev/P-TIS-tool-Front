@@ -123,7 +123,7 @@
         <div class="column is-4 is-offset-2">
           <div class="field">
             <div class="control">
-              <a class="button is-link is-fullwidth" @click="cerrarFormulario">Volver</a>
+              <a class="button is-primary-usach is-fullwidth" @click="cerrarFormulario">Volver</a>
             </div>
           </div>
         </div>

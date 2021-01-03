@@ -30,7 +30,7 @@
       <div class="column is-4 is-offset-4">
         <div class="field">
           <div class="control">
-            <a class="button is-link is-fullwidth" @click="cerrar">Cerrar registro</a>
+            <a class="button is-info-usach is-fullwidth" @click="cerrar">Cerrar registro</a>
           </div>
         </div>
       </div>

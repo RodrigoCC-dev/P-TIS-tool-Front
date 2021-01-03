@@ -8,7 +8,7 @@
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
       <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarCliente">Agregar Cliente</button>
+        <button class="button is-info-usach" @click="agregarCliente">Agregar Cliente</button>
       </div>
     </div>
 
@@ -75,10 +75,10 @@
           <div class="column is-12">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-link" @click="agregar">Agregar</a>
+                <a class="button is-primary-usach" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
+                <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
           </div>
