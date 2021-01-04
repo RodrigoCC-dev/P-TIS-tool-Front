@@ -100,16 +100,22 @@ export default {
       return true
     },
     redirigirUsuario () {
-      if (this.usuario.rol.rango === 1) {
-        this.$router.push('coordinador')
-      } else if (this.usuario.rol.rango === 2) {
-        this.$router.push('profesor')
-      } else if (this.usuario.rol.rango === 3) {
-        this.$router.push('estudiante')
-      } else if (this.usuario.rol.rango === 4) {
-        this.$router.push('cliente')
+      if (!this.usuario.borrado) {
+        if (this.usuario.rol.rango === 1) {
+          this.$router.push('coordinador')
+        } else if (this.usuario.rol.rango === 2) {
+          this.$router.push('profesor')
+        } else if (this.usuario.rol.rango === 3) {
+          this.$router.push('estudiante')
+        } else if (this.usuario.rol.rango === 4) {
+          this.$router.push('cliente')
+        } else {
+          this.$router.push('/')
+        }
       } else {
         this.$router.push('/')
+        this.passError = true
+        this.mostrarError()
       }
     },
 

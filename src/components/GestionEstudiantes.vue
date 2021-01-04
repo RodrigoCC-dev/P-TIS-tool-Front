@@ -490,7 +490,11 @@ export default {
       const estudiante = { eliminados: this.eliminados }
       try {
         await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
+        this.notificar = false
+        this.obtenerEstudiantes()
+        this.eliminados = []
       } catch (e) {
+        this.notificar = false
         console.log('No fue posible eliminar los estudiantes seleccioandos')
         console.log(e)
       }
