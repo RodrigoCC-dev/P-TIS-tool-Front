@@ -127,6 +127,38 @@
             </div>
           </div>
         </div>
+
+        <div class="modal" :class="{ 'is-active ' : notificar }">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+
+            <div class="box">
+              <div class="columns">
+                <div class="column is-full">
+                  <p class="title is-5">¿Confirma la eliminación de {{ numeroEst }} estudiantes?</p>
+                  <div class="columns is-centered">
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-link is-rounded" @click="confirmarEliminacion">Aceptar</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-1"></div>
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-dark is-rounded" @click="cancelarEliminacion">Cancelar</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
 
     </div>
@@ -189,7 +221,8 @@ export default {
         run_error: 'No es un R.U.N. válido',
         run_repetido: 'Usuario ya se encuentra en el sistema'
       },
-      eliminados: []
+      eliminados: [],
+      notificar: false
     }
   },
   computed: {
@@ -197,6 +230,9 @@ export default {
 
     mostrarEliminar: function () {
       return this.eliminados.length > 0
+    },
+    numeroEst: function () {
+      return this.eliminados.length
     }
   },
   methods: {
@@ -442,10 +478,22 @@ export default {
           this.eliminados.push(this.listaEstudiantes[i].id)
         }
       }
-      console.log('seleccionados')
     },
     eliminarEstudiantes: function () {
+      this.notificar = true
+    },
+    cancelarEliminacion: function () {
+      this.notificar = false
+    },
+    async confirmarEliminacion () {
       console.log(this.eliminados)
+      const estudiante = { eliminados: this.eliminados }
+      try {
+        await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
+      } catch (e) {
+        console.log('No fue posible eliminar los estudiantes seleccioandos')
+        console.log(e)
+      }
     }
   },
   mounted () {
