@@ -69,7 +69,7 @@ export default {
   data () {
     return {
       grupoActual: 0,
-      grupoSeleccionado: [],
+      grupoSeleccionado: {},
       listaGrupos: []
     }
   },
@@ -106,8 +106,8 @@ export default {
     },
     seleccionarGrupo: function (id) {
       this.grupoActual = id
-      const grupo = this.buscarPorId(this.listaGrupos, id)
-      this.$emit('eleccion', grupo)
+      this.grupoSeleccionado = this.buscarPorId(this.listaGrupos, id)
+      this.$emit('eleccion', this.grupoSeleccionado)
     }
   },
   mounted () {
