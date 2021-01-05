@@ -5,10 +5,17 @@
     <SelectorJornada @jornada="cambiarJornada"/>
 
     <div class="columns">
-      <div class="column is-10"></div>
-      <div class="column is-2" v-if="verFormulario"></div>
-      <div class="column is-2" v-else>
-        <button class="button is-info-usach" @click="agregarCliente">Agregar Cliente</button>
+      <div class="column is-8"></div>
+      <div class="column is-4" v-if="verFormulario"></div>
+      <div class="column is-4" v-else>
+        <div class="field is-grouped is-grouped-right">
+          <div class="control">
+            <button class="button is-info-usach" @click="agregarCliente">Agregar Cliente</button>
+          </div>
+          <div class="control" v-if="mostrarLista">
+            <button class="button is-secondary-usach">Asignar a grupo</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -113,6 +120,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 import SelectorJornada from '@/components/SelectorJornada.vue'
@@ -196,7 +204,7 @@ export default {
       this.jornadaActual = nuevaJornada
     },
     nombreCompleto (estudiante) {
-      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+      return Funciones.nombreCompleto(estudiante)
     },
     agregarCliente: function () {
       this.verFormulario = true
