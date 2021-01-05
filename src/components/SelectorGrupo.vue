@@ -74,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     gruposJornada: function () {
       var lista = []
