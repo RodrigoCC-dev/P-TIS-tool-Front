@@ -14,7 +14,7 @@
               <button class="button is-info-usach" @click="agregarCliente">Agregar Cliente</button>
             </div>
             <div class="control" v-if="mostrarLista">
-              <button class="button is-secondary-usach" @click="editarAsignaciones">Asignar a grupo</button>
+              <button class="button is-secondary-usach" @click="editarAsignaciones">Editar asignaciones</button>
             </div>
           </div>
         </div>

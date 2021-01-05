@@ -39,12 +39,21 @@
             <br>
             <div class="columns is-centered">
               <div class="column is-half" v-if="mostrarAsignar">
-                <div class="field is-grouped is-grouped-centered">
-                  <div class="control">
-                    <button class="button is-secondary-usach" @click="cambiarAsignacion">Asignar</button>
+                <div class="columns">
+                  <div class="column is-5 is-offset-1">
+                    <div class="field">
+                      <div class="control">
+                        <button class="button is-secondary-usach is-fullwidth" @click="cambiarAsignacion">Asignar</button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="control">
-                    <button class="button is-info-usach" @click="cerrar">Volver</button>
+                  <div class="column is-1"></div>
+                  <div class="column is-5">
+                    <div class="field">
+                      <div class="control">
+                        <button class="button is-info-usach is-fullwidth" @click="cerrar">Volver</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
