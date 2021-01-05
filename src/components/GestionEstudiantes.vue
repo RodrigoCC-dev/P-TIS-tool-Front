@@ -486,7 +486,6 @@ export default {
       this.notificar = false
     },
     async confirmarEliminacion () {
-      console.log(this.eliminados)
       const estudiante = { eliminados: this.eliminados }
       try {
         await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
