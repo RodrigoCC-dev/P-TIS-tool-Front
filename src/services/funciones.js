@@ -63,5 +63,14 @@ export default {
       }
     }
     return asistencia
+  },
+  obtenerListaSegunTipo (listaFuente, llave, tipo) {
+    var lista = []
+    for (var i = 0; i < listaFuente.length; i++) {
+      if (listaFuente[i][llave] === tipo) {
+        lista.push(listaFuente[i])
+      }
+    }
+    return lista
   }
 }

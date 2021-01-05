@@ -93,6 +93,9 @@ export default {
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
     },
+    buscarPorId: function (lista, id) {
+      return Funciones.busquedaPorId(lista, id)
+    },
     async obtenerGrupos () {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
@@ -103,8 +106,12 @@ export default {
     },
     seleccionarGrupo: function (id) {
       this.grupoActual = id
-      this.$emit('eleccion', id)
+      const grupo = this.buscarPorId(this.listaGrupos, id)
+      this.$emit('eleccion', grupo)
     }
+  },
+  mounted () {
+    this.obtenerGrupos()
   }
 }
 </script>

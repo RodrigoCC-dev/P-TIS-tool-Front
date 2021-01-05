@@ -8,11 +8,13 @@
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div v-if="mostrarTabla">
+
             <div class="field">
               <div class="control">
                 <label id="stakeholders" class="label">Clientes</label>
               </div>
             </div>
+
             <div>
               <table class="table is-bordered is-fullwidth" aria-describedby="stakeholders">
                 <thead>
@@ -31,6 +33,20 @@
                 </tbody>
               </table>
             </div>
+
+            <div v-if="mostrarAsignar">
+              <br>
+              <div class="columns">
+                <div class="column is-half is-offset-3">
+                  <div class="field">
+                    <div class="control">
+                      <button class="button is-secondary-usach is-fullwidth" @click="cambiarAsignacion">Asignar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -55,7 +71,7 @@ export default {
   },
   data () {
     return {
-      grupoActual: 0,
+      grupoSeleccionado: {},
       mostrarStakeholders: false,
       asignados: [],
       jornadaActual: this.jornada
@@ -66,18 +82,15 @@ export default {
     ...mapstate(['apiUrl']),
 
     stakeholdersPorJornada: function () {
-      var lista = []
-      for (var i = 0; i < this.listaStakeholders.length; i++) {
-        if (this.listaStakeholders[i].jornada === this.jornadaActual) {
-          lista.push(this.listaStakeholders[i])
-        }
-      }
-      return lista
+      return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
     },
+    mostrarTabla: function () {
+      return this.stakeholdersPorJornada.length > 0
+    }
   },
   methods: {
-    seleccionarGrupo: function (id) {
-      this.grupoActual = id
+    seleccionarGrupo: function (grupo) {
+      this.grupoSeleccionado = grupo
       this.mostrarStakeholders = true
     },
     nombreCompleto: function (cliente) {
