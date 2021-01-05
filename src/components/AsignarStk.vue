@@ -17,7 +17,7 @@
             </div>
 
             <div>
-              <table class="table is-bordered is-fullwidth" aria-describedby="stakeholders">
+              <table class="table is-bordered is-fullwidth is-narrow" aria-describedby="stakeholders">
                 <thead>
                   <tr class="has-background-light">
                     <th scope="col" class="has-text-centered">N°</th>
@@ -36,12 +36,19 @@
             </div>
 
             <br>
-            <div class="columns">
-              <div class="column is-half is-offset-3">
-                <div class="field is-grouped is-grouped centered">
-                  <div class="control"  v-if="mostrarAsignar">
-                    <button class="button is-secondary-usach is-fullwidth" @click="cambiarAsignacion">Asignar</button>
+            <div class="columns is-centered">
+              <div class="column is-half" v-if="mostrarAsignar">
+                <div class="field is-grouped is-grouped-centered">
+                  <div class="control">
+                    <button class="button is-secondary-usach" @click="cambiarAsignacion">Asignar</button>
                   </div>
+                  <div class="control">
+                    <button class="button is-info-usach" @click="cerrar">Volver</button>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-half" v-else>
+                <div class="field">
                   <div class="control">
                     <button class="button is-info-usach is-fullwidth" @click="cerrar">Volver</button>
                   </div>
@@ -87,6 +94,9 @@ export default {
     },
     mostrarTabla: function () {
       return this.stakeholdersPorJornada.length > 0
+    },
+    mostrarAsignar: function () {
+      return this.asignados.length > 0
     }
   },
   methods: {
