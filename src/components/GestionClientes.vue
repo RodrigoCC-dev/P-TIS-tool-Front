@@ -117,7 +117,7 @@
     </div>
 
     <div v-else>
-      <AsignarStk :jornada="jornadaActual" :clientes="listaStakeholders" @cerrar="cerrarAsignaciones"/>
+      <AsignarStk :clientes="listaStakeholders" @cerrar="cerrarAsignaciones"/>
     </div>
     <br>
 

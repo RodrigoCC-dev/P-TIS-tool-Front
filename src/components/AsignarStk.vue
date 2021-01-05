@@ -5,6 +5,7 @@
 
     <div v-if="mostrarStakeholders">
       <br>
+      <br>
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div v-if="mostrarTabla">
@@ -25,7 +26,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(stakeholder, index) in stakehodlersPorJornada" :key="stakeholder.id">
+                  <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
                     <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
                     <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
                     <td class="has-text-centered"><input type="checkbox" v-model="asignados" :value="stakeholder.id"></td>
@@ -66,7 +67,7 @@ import SelectorGrupo from '@/components/SelectorGrupo.vue'
 
 export default {
   name: 'AsignarStk',
-  props: ['jornada', 'clientes'],
+  props: ['clientes'],
   components: {
     SelectorGrupo
   },
@@ -75,12 +76,11 @@ export default {
       grupoSeleccionado: {},
       mostrarStakeholders: false,
       asignados: [],
-      jornadaActual: this.jornada,
       listaStakeholders: this.clientes
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     stakeholdersPorJornada: function () {
       return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
