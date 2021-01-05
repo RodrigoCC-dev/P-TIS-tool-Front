@@ -34,14 +34,15 @@
               </table>
             </div>
 
-            <div v-if="mostrarAsignar">
-              <br>
-              <div class="columns">
-                <div class="column is-half is-offset-3">
-                  <div class="field">
-                    <div class="control">
-                      <button class="button is-secondary-usach is-fullwidth" @click="cambiarAsignacion">Asignar</button>
-                    </div>
+            <br>
+            <div class="columns">
+              <div class="column is-half is-offset-3">
+                <div class="field is-grouped is-grouped centered">
+                  <div class="control"  v-if="mostrarAsignar">
+                    <button class="button is-secondary-usach is-fullwidth" @click="cambiarAsignacion">Asignar</button>
+                  </div>
+                  <div class="control">
+                    <button class="button is-info-usach is-fullwidth" @click="cerrar">Volver</button>
                   </div>
                 </div>
               </div>
@@ -56,9 +57,9 @@
 </template>
 
 <script>
-import Auth from '@/services/auth.js'
+// import Auth from '@/services/auth.js'
 import Funciones from '@/services/funciones.js'
-import axios from 'axios'
+// import axios from 'axios'
 import { mapState } from 'vuex'
 
 import SelectorGrupo from '@/components/SelectorGrupo.vue'
@@ -74,12 +75,12 @@ export default {
       grupoSeleccionado: {},
       mostrarStakeholders: false,
       asignados: [],
-      jornadaActual: this.jornada
+      jornadaActual: this.jornada,
       listaStakeholders: this.clientes
     }
   },
   computed: {
-    ...mapstate(['apiUrl']),
+    ...mapState(['apiUrl']),
 
     stakeholdersPorJornada: function () {
       return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
@@ -95,6 +96,12 @@ export default {
     },
     nombreCompleto: function (cliente) {
       return Funciones.nombreCompleto(cliente)
+    },
+    cambiarAsignacion: function () {
+      console.log('Se cambia asignación')
+    },
+    cerrar: function () {
+      this.$emit('cerrar')
     }
   }
 }
