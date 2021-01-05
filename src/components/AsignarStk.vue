@@ -36,6 +36,7 @@
             </div>
 
             <br>
+            <br>
             <div class="columns is-centered">
               <div class="column is-half" v-if="mostrarAsignar">
                 <div class="field is-grouped is-grouped-centered">
@@ -103,9 +104,24 @@ export default {
     seleccionarGrupo: function (grupo) {
       this.grupoSeleccionado = grupo
       this.mostrarStakeholders = true
+      this.stakeholdersAsignados()
     },
     nombreCompleto: function (cliente) {
       return Funciones.nombreCompleto(cliente)
+    },
+    buscarIndex: function (lista, id) {
+      return Funciones.buscarIndexPorId(lista, id)
+    },
+    stakeholdersAsignados: function () {
+      var aux = 0
+      this.asignados = []
+      var lista = this.grupoSeleccionado.stakeholders
+      for (var i = 0; i < lista.length; i++) {
+        aux = this.buscarIndex(this.stakeholdersPorJornada, lista[i].id)
+        if (aux !== -1) {
+          this.asignados[aux] = lista[i].id
+        }
+      }
     },
     cambiarAsignacion: function () {
       console.log('Se cambia asignación')
