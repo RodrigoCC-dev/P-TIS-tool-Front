@@ -65,7 +65,7 @@ export default {
     },
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab
-      this.$emit('jornada', nombreTab)
+      this.$store.commit('setJornadaActual', this.jornadaActual)
     }
   },
   mounted () {
