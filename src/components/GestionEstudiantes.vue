@@ -89,8 +89,10 @@
       </form>
       <hr>
     </div>
+
     <br>
     <div v-if="mostrarLista">
+
       <table class="table is-bordered is-narrow is-fullwidth" summary="Estudiantes">
         <thead>
           <tr class="has-background-light">
@@ -99,6 +101,7 @@
             <th scope="col" class="has-text-centered">Nombre estudiante</th>
             <th scope="col" class="has-text-centered">Sección</th>
             <th scope="col" class="has-text-centered">Jornada</th>
+            <th scope="col" class="has-text-centered"><input type="checkbox" @click="seleccionarTodos"></th>
           </tr>
         </thead>
         <tbody>
@@ -108,9 +111,56 @@
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
             <td class="has-text-centered">{{ estudiante.codigo_seccion }}</td>
             <td class="has-text-centered">{{ estudiante.jornada }}</td>
+            <td class="has-text-centered"><input type="checkbox" v-model="eliminados" :value="estudiante.id"></td>
           </tr>
         </tbody>
       </table>
+
+      <div v-if="mostrarEliminar">
+        <br>
+        <div class="columns">
+          <div class="column is-half is-offset-3">
+            <div class="field">
+              <div class="control">
+                <button class="button is-link is-fullwidth" @click="eliminarEstudiantes">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" :class="{ 'is-active ' : notificar }">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+
+            <div class="box">
+              <div class="columns">
+                <div class="column is-full">
+                  <p class="title is-5">¿Confirma la eliminación de {{ numeroEst }} estudiantes?</p>
+                  <div class="columns is-centered">
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-link is-rounded" @click="confirmarEliminacion">Aceptar</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-1"></div>
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-dark is-rounded" @click="cancelarEliminacion">Cancelar</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
     <br>
   </div>
@@ -170,11 +220,20 @@ export default {
         sin_run: 'No se ha ingresado R.U.N. del estudiante',
         run_error: 'No es un R.U.N. válido',
         run_repetido: 'Usuario ya se encuentra en el sistema'
-      }
+      },
+      eliminados: [],
+      notificar: false
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'secciones'])
+    ...mapState(['apiUrl', 'secciones']),
+
+    mostrarEliminar: function () {
+      return this.eliminados.length > 0
+    },
+    numeroEst: function () {
+      return this.eliminados.length
+    }
   },
   methods: {
     async obtenerSecciones () {
@@ -409,6 +468,35 @@ export default {
       esvalido = esvalido && this.validarSeccion()
       esvalido = esvalido && !this.existeEstudiante()
       return esvalido
+    },
+    seleccionarTodos: function () {
+      if (this.eliminados.length === this.listaEstudiantes.length) {
+        this.eliminados = []
+      } else {
+        this.eliminados = []
+        for (var i = 0; i < this.listaEstudiantes.length; i++) {
+          this.eliminados.push(this.listaEstudiantes[i].id)
+        }
+      }
+    },
+    eliminarEstudiantes: function () {
+      this.notificar = true
+    },
+    cancelarEliminacion: function () {
+      this.notificar = false
+    },
+    async confirmarEliminacion () {
+      const estudiante = { eliminados: this.eliminados }
+      try {
+        await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
+        this.notificar = false
+        this.obtenerEstudiantes()
+        this.eliminados = []
+      } catch (e) {
+        this.notificar = false
+        console.log('No fue posible eliminar los estudiantes seleccioandos')
+        console.log(e)
+      }
     }
   },
   mounted () {
