@@ -22,13 +22,15 @@
                   <tr class="has-background-light">
                     <th scope="col" class="has-text-centered">N°</th>
                     <th scope="col" class="has-text-centered">Nombre cliente</th>
+                    <th scope="col" class="has-text-centered">Correo electrónico</th>
                     <th scope="col" class="has-text-centered"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
+                  <tr v-for="(stakeholder, index) in listaStakeholders" :key="stakeholder.id">
                     <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                    <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+                    <td class="has-text-left">{{ nombreCompleto(stakeholder.usuario) }}</td>
+                    <td class="has-text-centered">{{ stakeholder.usuario.email }}</td>
                     <td class="has-text-centered"><input type="checkbox" v-model="asignados" :value="stakeholder.id"></td>
                   </tr>
                 </tbody>
@@ -84,7 +86,6 @@ import SelectorGrupo from '@/components/SelectorGrupo.vue'
 
 export default {
   name: 'AsignarStk',
-  props: ['clientes'],
   components: {
     SelectorGrupo
   },
@@ -93,17 +94,14 @@ export default {
       grupoSeleccionado: {},
       mostrarStakeholders: false,
       asignados: [],
-      listaStakeholders: this.clientes
+      listaStakeholders: []
     }
   },
   computed: {
     ...mapState(['apiUrl', 'jornadaActual']),
 
-    stakeholdersPorJornada: function () {
-      return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
-    },
     mostrarTabla: function () {
-      return this.stakeholdersPorJornada.length > 0
+      return this.listaStakeholders.length > 0
     },
     mostrarAsignar: function () {
       return this.asignados.length > 0
@@ -126,18 +124,27 @@ export default {
       this.asignados = []
       var lista = this.grupoSeleccionado.stakeholders
       for (var i = 0; i < lista.length; i++) {
-        aux = this.buscarIndex(this.stakeholdersPorJornada, lista[i].id)
+        aux = this.buscarIndex(this.listaStakeholders, lista[i].id)
         if (aux !== -1) {
           this.asignados[aux] = lista[i].id
         }
       }
     },
-    cambiarAsignacion: function () {
+    async obtenerStakeholders () {
+      try {
+        const response = await axios.get(this.apiUrl + '/stakeholders', { headers: Auth.authHeader() })
+        this.listaStakeholders = response.data
+      } catch (e) {
+        console.log('No fue posible obtener el listado de stakeholders del sistema')
+        console.log(e)
+      }
+    },
+    async cambiarAsignacion () {
       const asignacion = {
         stakeholders: this.asignados
       }
       try {
-        axios.put(this.apiUrl + '/stakeholders/' + this.grupoSeleccionado.id, asignacion, { headers: Auth.postHeader() })
+        await axios.put(this.apiUrl + '/stakeholders/' + this.grupoSeleccionado.id, asignacion, { headers: Auth.postHeader() })
         this.$emit('actualizar')
       } catch (e) {
         console.log('No fue posible actualizar la asignación de clientes al grupo seleccionado')
@@ -147,6 +154,9 @@ export default {
     cerrar: function () {
       this.$emit('cerrar')
     }
+  },
+  mounted () {
+    this.obtenerStakeholders()
   }
 }
 </script>

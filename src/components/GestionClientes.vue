@@ -121,7 +121,7 @@
     </div>
 
     <div v-else>
-      <AsignarStk :clientes="listaStakeholders" @actualizar="actualizarAsignaciones" @cerrar="cerrarAsignaciones"/>
+      <AsignarStk @actualizar="actualizarAsignaciones" @cerrar="cerrarAsignaciones"/>
     </div>
     <br>
 
@@ -200,13 +200,7 @@ export default {
       return lista
     },
     stakeholdersPorJornada: function () {
-      var lista = []
-      for (var i = 0; i < this.listaStakeholders.length; i++) {
-        if (this.listaStakeholders[i].jornada === this.jornadaActual) {
-          lista.push(this.listaStakeholders[i])
-        }
-      }
-      return lista
+      return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
     },
     mostrarLista: function () {
       return this.stakeholdersPorJornada.length > 0
@@ -232,7 +226,7 @@ export default {
     },
     async obtenerStakeholders () {
       try {
-        const response = await axios.get(this.apiUrl + '/stakeholders', { headers: Auth.authHeader() })
+        const response = await axios.get(this.apiUrl + '/stakeholders/asignacion/grupos', { headers: Auth.authHeader() })
         this.listaStakeholders = response.data
       } catch {
         console.log('No fue posible obtener la lista de Clientes')
@@ -391,6 +385,7 @@ export default {
     actualizarAsignaciones: function () {
       this.verAsignaciones = false
       this.obtenerGrupos()
+      this.obtenerStakeholders()
     }
   },
   mounted () {
