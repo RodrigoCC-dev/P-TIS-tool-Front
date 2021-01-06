@@ -200,7 +200,30 @@ export default {
       return lista
     },
     stakeholdersPorJornada: function () {
-      return Funciones.obtenerListaSegunTipo(this.listaStakeholders, 'jornada', this.jornadaActual)
+      var lista = []
+      var grupos = []
+      var cliente = {}
+      for (var i = 0; i < this.listaStakeholders.length; i++) {
+        grupos = []
+        cliente = {}
+        for (var j = 0; j < this.listaStakeholders[i].grupos.length; j++) {
+          if (this.listaStakeholders[i].grupos[j].jornada === this.jornadaActual) {
+            grupos.push(this.listaStakeholders[i].grupos[j])
+          }
+        }
+        if (grupos.length > 0) {
+          cliente = {
+            id: this.listaStakeholders[i].id,
+            nombre: this.listaStakeholders[i].nombre,
+            apellido_paterno: this.listaStakeholders[i].apellido_paterno,
+            apellido_materno: this.listaStakeholders[i].apellido_materno,
+            email: this.listaStakeholders[i].email,
+            grupos: grupos
+          }
+          lista.push(cliente)
+        }
+      }
+      return lista
     },
     mostrarLista: function () {
       return this.stakeholdersPorJornada.length > 0
