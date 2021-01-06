@@ -107,9 +107,13 @@
           </thead>
           <tbody>
             <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
-              <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-              <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
-              <td class="has-text-centered">{{ stakeholder.grupo.nombre }}</td>
+              <th scope="row" class="is-vcentered has-text-centered">{{ index + 1 }}</th>
+              <td class="is-vcentered has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+              <td>
+                <div v-for="grupo in stakeholder.grupos" :key="grupo.id">
+                  <p class="has-text-centered">{{ grupo.nombre }}</p>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
