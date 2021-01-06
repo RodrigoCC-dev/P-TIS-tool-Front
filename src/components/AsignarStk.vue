@@ -75,9 +75,9 @@
 </template>
 
 <script>
-// import Auth from '@/services/auth.js'
+import Auth from '@/services/auth.js'
 import Funciones from '@/services/funciones.js'
-// import axios from 'axios'
+import axios from 'axios'
 import { mapState } from 'vuex'
 
 import SelectorGrupo from '@/components/SelectorGrupo.vue'
@@ -133,7 +133,16 @@ export default {
       }
     },
     cambiarAsignacion: function () {
-      console.log('Se cambia asignación')
+      const asignacion = {
+        stakeholders: this.asignados
+      }
+      try {
+        axios.put(this.apiUrl + '/stakeholders/' + this.grupoSeleccionado.id, asignacion, { headers: Auth.postHeader() })
+        this.$emit('actualizar')
+      } catch (e) {
+        console.log('No fue posible actualizar la asignación de clientes al grupo seleccionado')
+        console.log(e)
+      }
     },
     cerrar: function () {
       this.$emit('cerrar')

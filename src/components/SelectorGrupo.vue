@@ -100,8 +100,9 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
-      } catch {
+      } catch (e) {
         console.log('No se han obtenido los grupos')
+        console.log(e)
       }
     },
     seleccionarGrupo: function (id) {

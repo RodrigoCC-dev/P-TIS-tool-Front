@@ -74,7 +74,7 @@ export default {
     return lista
   },
   buscarIndexPorId (listaFuente, id) {
-    var indice = 0
+    var indice = -1
     for (var i = 0; i < listaFuente.length; i++) {
       if (listaFuente[i].id === id) {
         indice = i

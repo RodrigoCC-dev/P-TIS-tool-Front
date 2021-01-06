@@ -117,7 +117,7 @@
     </div>
 
     <div v-else>
-      <AsignarStk :clientes="listaStakeholders" @cerrar="cerrarAsignaciones"/>
+      <AsignarStk :clientes="listaStakeholders" @actualizar="actualizarAsignaciones" @cerrar="cerrarAsignaciones"/>
     </div>
     <br>
 
@@ -238,8 +238,10 @@ export default {
       if (this.validarFormulario()) {
         const nuevo = {
           stakeholder: {
-            grupo_id: this.stakeholder.grupo_id,
             usuario_attributes: this.stakeholder.usuario
+          },
+          grupo: {
+            id: this.stakeholder.grupo_id
           }
         }
         try {
@@ -381,6 +383,10 @@ export default {
     },
     cerrarAsignaciones: function () {
       this.verAsignaciones = false
+    },
+    actualizarAsignaciones: function () {
+      this.verAsignaciones = false
+      this.obtenerGrupos()
     }
   },
   mounted () {
