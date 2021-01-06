@@ -122,7 +122,7 @@
           <div class="column is-half is-offset-3">
             <div class="field">
               <div class="control">
-                <button class="button is-link is-fullwidth" @click="eliminarEstudiantes">Eliminar</button>
+                <button class="button is-secondary-usach is-fullwidth" @click="eliminarEstudiantes">Eliminar</button>
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@
                     <div class="column is-3">
                       <div class="field is-grouped is-grouped-centered">
                         <div class="control">
-                          <a class="button is-link is-rounded" @click="confirmarEliminacion">Aceptar</a>
+                          <a class="button is-info-usach is-rounded" @click="confirmarEliminacion">Aceptar</a>
                         </div>
                       </div>
                     </div>
@@ -148,7 +148,7 @@
                     <div class="column is-3">
                       <div class="field is-grouped is-grouped-centered">
                         <div class="control">
-                          <a class="button is-dark is-rounded" @click="cancelarEliminacion">Cancelar</a>
+                          <a class="button is-light-usach is-rounded" @click="cancelarEliminacion">Cancelar</a>
                         </div>
                       </div>
                     </div>

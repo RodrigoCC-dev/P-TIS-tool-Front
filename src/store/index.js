@@ -11,7 +11,8 @@ export default createStore({
     tipoMinutas: [],
     secciones: [],
     tipoAprobaciones: [],
-    motivos: []
+    motivos: [],
+    jornadaActual: 'Diurna'
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -40,6 +41,9 @@ export default createStore({
     },
     setMotivos (state, valor) {
       state.motivos = valor
+    },
+    setJornadaActual (state, valor) {
+      state.jornadaActual = valor
     }
   },
   actions: {

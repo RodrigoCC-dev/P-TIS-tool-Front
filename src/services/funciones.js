@@ -63,5 +63,23 @@ export default {
       }
     }
     return asistencia
+  },
+  obtenerListaSegunTipo (listaFuente, llave, tipo) {
+    var lista = []
+    for (var i = 0; i < listaFuente.length; i++) {
+      if (listaFuente[i][llave] === tipo) {
+        lista.push(listaFuente[i])
+      }
+    }
+    return lista
+  },
+  buscarIndexPorId (listaFuente, id) {
+    var indice = -1
+    for (var i = 0; i < listaFuente.length; i++) {
+      if (listaFuente[i].id === id) {
+        indice = i
+      }
+    }
+    return indice
   }
 }
