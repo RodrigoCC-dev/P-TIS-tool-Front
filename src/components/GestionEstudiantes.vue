@@ -317,7 +317,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.estudiante.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre === '' || nombre.length === 0) {
           this.nombreEntrada.error = true
           this.nombreEntrada.mensaje = this.mensajes.sin_nombre
           return false
@@ -340,7 +340,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_paterno
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           this.apellidoPaternoEntrada.error = true
           this.apellidoPaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
@@ -363,7 +363,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_materno
       try {
-        if (apellido === undefined || apellido.length === 0 || apellido === '' || apellido === null) {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           this.apellidoMaternoEntrada.error = true
           this.apellidoMaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
