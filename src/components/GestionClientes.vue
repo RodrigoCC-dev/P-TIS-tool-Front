@@ -2,7 +2,7 @@
   <div>
     <br>
 
-    <SelectorJornada @jornada="cambiarJornada"/>
+    <SelectorJornada/>
 
     <div v-if="!verAsignaciones">
       <div class="columns">
@@ -230,9 +230,6 @@ export default {
     }
   },
   methods: {
-    cambiarJornada: function (nuevaJornada) {
-      this.jornadaActual = nuevaJornada
-    },
     nombreCompleto (estudiante) {
       return Funciones.nombreCompleto(estudiante)
     },
