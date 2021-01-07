@@ -380,4 +380,107 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.apellidoMaternoEntrada.mensaje).toEqual('')
   })
 
+  it('método "validarEmail" funciona correctamente con email igual a "null"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = null
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = undefined
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email igual a ""', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = ''
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email distinto a "regExp"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = '&3kasti,6ka0ds9gaib9asr.b9as025'
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
+  })
+
+  it('método "validarEmail" funciona correctamente con email con dos "@"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = 'sebastian@ingenieria.cl@usach.com'
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
+  })
+
+  it('método "validarEmail" funciona correctamente con email sin "@usach.cl"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = 'gonzalo.dominguez@gmail.com'
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.error).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_usach)
+  })
+
+  it('método "validarEmail" funciona correctamente con email con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.email = 'gonzalo.dominguez@usach.cl'
+    expect(wrapper.vm.validarEmail()).toBeTruthy()
+    expect(wrapper.vm.emailEntrada.error).toBeFalsy()
+    expect(wrapper.vm.emailEntrada.mensaje).toEqual('')
+  })
+
+  it('método "validarRun" funciona correctamente con run igual a "null"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = null
+    expect(wrapper.vm.validarRun()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_run)
+  })
+
+  it('método "validarRun" funciona correctamente con run igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = undefined
+    expect(wrapper.vm.validarRun()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_run)
+  })
+
+  it('método "validarRun" funciona correctamente con run igual a ""', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = ''
+    expect(wrapper.vm.validarRun()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.sin_run)
+  })
+
+  it('método "validarRun" funciona correctamente con run distinto a "regExp"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = '19sler0-9345'
+    expect(wrapper.vm.validarRun()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.run_error)
+  })
+
+  it('método "validarRun" funciona correctamente con run con dígito verificador erróneo', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = '11223344-8'
+    expect(wrapper.vm.validarRun()).toBeFalsy()
+    expect(wrapper.vm.runEntrada.error).toBeTruthy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual(wrapper.vm.mensajes.run_error)
+  })
+
+  it('método "validarRun" funciona correctamente con run con dígito verificador correcto', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.usuario.run = '11223344-K'
+    expect(wrapper.vm.validarRun()).toBeTruthy()
+    expect(wrapper.vm.runEntrada.error).toBeFalsy()
+    expect(wrapper.vm.runEntrada.mensaje).toEqual('')
+  })
 })

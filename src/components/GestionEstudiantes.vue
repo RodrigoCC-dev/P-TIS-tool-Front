@@ -385,9 +385,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.estudiante.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.sin_correo
           return false
@@ -413,7 +416,7 @@ export default {
     validarRun: function () {
       const regExp = /(\d{7,8})-(\d|K)/i
       const run = this.estudiante.usuario.run
-      if (run === undefined || run.length === 0 || run === '' || run === null) {
+      if (run === null || run === undefined || run === '' || run.length === 0) {
         this.runEntrada.error = true
         this.runEntrada.mensaje = this.mensajes.sin_run
         return false

@@ -342,10 +342,9 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.stakeholder.usuario.email
+      var separarCorreo = []
       if (correo !== null && correo !== undefined) {
-        var separarCorreo = correo.split('@')
-      } else {
-        var separarCorreo = []
+        separarCorreo = correo.split('@')
       }
       try {
         if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
