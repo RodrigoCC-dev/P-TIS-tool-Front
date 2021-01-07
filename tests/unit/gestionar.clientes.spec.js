@@ -19,6 +19,11 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
+  it('variable verAsignaciones se inicializa en false', () => {
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.verAsignaciones).toBeFalsy()
+  })
+
   it('variable stakeholder se inicializa correctamente', () => {
     const esperado = {
       usuario: {
@@ -249,6 +254,46 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.apellido_materno.error).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeFalsy()
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre "null"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.nombre = null
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre ""', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.nombre = ''
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre "undefined"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.nombre = undefined
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre distinto de "regExp"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.nombre = 'Carolina14963##&$'
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.nombre = 'Fernanda'
+    expect(wrapper.vm.validarNombre()).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual('')
   })
 
   it('método existeStakeholder funciona correctamente con true', () => {
