@@ -359,6 +359,38 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.apellido_paterno = undefined
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a ""', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.apellido_paterno = ''
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno distinto de "regExp"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.apellido_paterno = 'C@stro#45'
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.apellido_paterno = 'Castro'
+    expect(wrapper.vm.validarApellidoP()).toBeTruthy()
+    expect(wrapper.vm.entradas.apellido_paterno.error).toBeFalsy()
+    expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual('')
+  })
+
   it('método existeStakeholder funciona correctamente con true', () => {
     const cliente = {
       usuario: {
