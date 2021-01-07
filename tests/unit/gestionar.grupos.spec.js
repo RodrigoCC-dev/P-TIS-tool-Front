@@ -2,6 +2,12 @@ import { shallowMount } from '@vue/test-utils'
 import GestionGrupos from '@/components/GestionGrupos.vue'
 
 describe('GestionGrupos.vue', () => {
+  const listaEstudiantes = [
+    {id: 29353, jornada: 'Diurna'},
+    {id: 9534, jornada: 'Diurna'},
+    {id: 926364, jornada: 'Vespertina'}
+  ]
+
   it('variable verFormulario se inicializa en false', () => {
     const wrapper = shallowMount(GestionGrupos)
     expect(wrapper.vm.verFormulario).toBeFalsy()
@@ -59,11 +65,34 @@ describe('GestionGrupos.vue', () => {
 
   it('variable listaEstudiantes se inicializa vacía', () => {
     const wrapper = shallowMount(GestionGrupos)
-    expect(wrapper.vm.listaEstudiantes).toEqual({})
+    expect(wrapper.vm.listaEstudiantes).toEqual([])
   })
 
   it('variable listaGrupos se inicializa vacía', () => {
     const wrapper = shallowMount(GestionGrupos)
     expect(wrapper.vm.listaGrupos).toEqual([])
+  })
+
+  it('propiedad computada "sinAsignar" funciona correctamente', () => {
+    const esperado = [
+      {id: 29353, jornada: 'Diurna'},
+      {id: 9534, jornada: 'Diurna'}
+    ]
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    wrapper.vm.jornadaActual = 'Diurna'
+    expect(wrapper.vm.sinAsignar).toEqual(esperado)
+  })
+
+  it('propiedad computada "mostrarLista" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    wrapper.vm.jornadaActual = 'Diurna'
+    expect(wrapper.vm.mostrarLista).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarLista" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    expect(wrapper.vm.mostrarLista).toBeFalsy()
   })
 })

@@ -156,7 +156,7 @@ export default {
         proyecto: '',
         correlativo: 0
       },
-      listaEstudiantes: {},
+      listaEstudiantes: [],
       listaGrupos: [],
       nombreTabs
     }
