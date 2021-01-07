@@ -13,11 +13,6 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
-  it('variable mostrarLista se inicializa en false', () => {
-    const wrapper = shallowMount(GestionGrupos)
-    expect(wrapper.vm.mostrarLista).toBeFalsy()
-  })
-
   it('variable jornadasProfesor se inicializa vacía', () => {
     const wrapper = shallowMount(GestionGrupos)
     expect(wrapper.vm.jornadasProfesor).toEqual([])
@@ -94,5 +89,31 @@ describe('GestionGrupos.vue', () => {
   it('propiedad computada "mostrarLista" funciona correctamente con "false"', () => {
     const wrapper = shallowMount(GestionGrupos)
     expect(wrapper.vm.mostrarLista).toBeFalsy()
+  })
+
+  it('método "nombreCompleto" funciona correctamente', () => {
+    const estudiante = {
+      nombre: 'Mateo',
+      apellido_paterno: 'Iglesias',
+      apellido_materno: 'Del Campo'
+    }
+    const wrapper = shallowMount(GestionGrupos)
+    expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Mateo Iglesias Del Campo')
+  })
+
+  it('método "mostrarClientes" funciona correctamente con "true"', () => {
+    const grupo = {
+      stakeholders: [{id: 962354}, {id: 6235345}, {id: 63453}]
+    }
+    const wrapper = shallowMount(GestionGrupos)
+    expect(wrapper.vm.mostrarClientes(grupo)).toBeTruthy()
+  })
+
+  it('método "mostrarClientes" funciona correctamente con "true"', () => {
+    const grupo = {
+      stakeholders: []
+    }
+    const wrapper = shallowMount(GestionGrupos)
+    expect(wrapper.vm.mostrarClientes(grupo)).toBeFalsy()
   })
 })
