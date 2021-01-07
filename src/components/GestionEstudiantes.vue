@@ -453,7 +453,7 @@ export default {
     },
     validarSeccion: function () {
       const seleccion = this.estudiante.seccion_id
-      if (seleccion === null || seleccion === '' || seleccion === 0) {
+      if (seleccion === null || seleccion === undefined || seleccion === '' || seleccion === 0) {
         this.seccionEntrada = true
         return false
       } else {

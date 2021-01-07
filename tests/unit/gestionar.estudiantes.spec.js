@@ -483,4 +483,87 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.runEntrada.error).toBeFalsy()
     expect(wrapper.vm.runEntrada.mensaje).toEqual('')
   })
+
+  it('método "validarSeccion" funciona correctamente con seccion igual a "null"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.seccion_id = null
+    expect(wrapper.vm.validarSeccion()).toBeFalsy()
+    expect(wrapper.vm.seccionEntrada).toBeTruthy()
+  })
+
+  it('método "validarSeccion" funciona correctamente con seccion igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.seccion_id = undefined
+    expect(wrapper.vm.validarSeccion()).toBeFalsy()
+    expect(wrapper.vm.seccionEntrada).toBeTruthy()
+  })
+
+  it('método "validarSeccion" funciona correctamente con seccion igual a ""', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.seccion_id = ''
+    expect(wrapper.vm.validarSeccion()).toBeFalsy()
+    expect(wrapper.vm.seccionEntrada).toBeTruthy()
+  })
+
+  it('método "validarSeccion" funciona correctamente con seccion igual a cero', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.seccion_id = 0
+    expect(wrapper.vm.validarSeccion()).toBeFalsy()
+    expect(wrapper.vm.seccionEntrada).toBeTruthy()
+  })
+
+  it('método "validarSeccion" funciona correctamente con seccion mayor a cero', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.estudiante.seccion_id = 92453
+    expect(wrapper.vm.validarSeccion()).toBeTruthy()
+    expect(wrapper.vm.seccionEntrada).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(GestionEstudiantes, {
+      data() {
+        return {
+          estudiante: {
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Cobarrubias',
+              apellido_materno: 'Celedón',
+              run: '1345633-9',
+              email: 'mauricio.cobarrubias@gmail.com'
+            },
+            seccion_id: 62345234
+          },
+          listaEstudiantes: [
+            {run_est: '62345345-k'},
+            {run_est: '62456624-2'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionEstudiantes, {
+      data() {
+        return {
+          estudiante: {
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Cobarrubias',
+              apellido_materno: 'Celedón',
+              run: '13456334-6',
+              email: 'mauricio.cobarrubias@usach.cl'
+            },
+            seccion_id: 62345234
+          },
+          listaEstudiantes: [
+            {run_est: '62345345-k'},
+            {run_est: '62456624-2'}
+          ]
+        }
+      }
+    })
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
 })
