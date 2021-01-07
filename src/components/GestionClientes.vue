@@ -369,7 +369,7 @@ export default {
     },
     validarGrupo: function () {
       const seleccion = this.stakeholder.grupo_id
-      if (seleccion === null || seleccion === '' || seleccion === 0 || seleccion === undefined) {
+      if (seleccion === null || seleccion === undefined || seleccion === '' || seleccion === 0) {
         this.entradas.grupo = true
         return false
       } else {

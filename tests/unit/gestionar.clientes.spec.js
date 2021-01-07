@@ -479,6 +479,41 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual('')
   })
 
+  it('método "validarGrupo" funciona correctamente para valor "null"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.grupo_id = null
+    expect(wrapper.vm.validarGrupo()).toBeFalsy()
+    expect(wrapper.vm.entradas.grupo).toBeTruthy()
+  })
+
+  it('método "validarGrupo" funciona correctamente para valor "undefined"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.grupo_id = undefined
+    expect(wrapper.vm.validarGrupo()).toBeFalsy()
+    expect(wrapper.vm.entradas.grupo).toBeTruthy()
+  })
+
+  it('método "validarGrupo" funciona correctamente para valor ""', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.grupo_id = ''
+    expect(wrapper.vm.validarGrupo()).toBeFalsy()
+    expect(wrapper.vm.entradas.grupo).toBeTruthy()
+  })
+
+  it('método "validarGrupo" funciona correctamente para valor igual a "0"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.grupo_id = 0
+    expect(wrapper.vm.validarGrupo()).toBeFalsy()
+    expect(wrapper.vm.entradas.grupo).toBeTruthy()
+  })
+
+  it('método "validarGrupo" funciona correctamente para valor correcto', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.grupo_id = 64245
+    expect(wrapper.vm.validarGrupo()).toBeTruthy()
+    expect(wrapper.vm.entradas.grupo).toBeFalsy()
+  })
+
   it('método existeStakeholder funciona correctamente con true', () => {
     const cliente = {
       usuario: {
@@ -501,6 +536,28 @@ describe('GestionClientes.vue', () => {
     wrapper.vm.listaStakeholders = listaStakeholders
     wrapper.vm.stakeholder = cliente
     expect(wrapper.vm.existeStakeholder()).toBeFalsy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.listaStakeholders = listaStakeholders
+    wrapper.vm.stakeholder.usuario.nombre = 'Mateo'
+    wrapper.vm.stakeholder.usuario.apellido_paterno = 'Concha'
+    wrapper.vm.stakeholder.usuario.apellido_materno = 'Díaz'
+    wrapper.vm.stakeholder.usuario.email = 'mateo.concha@udech.cl'
+    wrapper.vm.stakeholder.grupo_id = 9534
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.listaStakeholders = listaStakeholders
+    wrapper.vm.stakeholder.usuario.nombre = 'Mateo'
+    wrapper.vm.stakeholder.usuario.apellido_paterno = undefined
+    wrapper.vm.stakeholder.usuario.apellido_materno = 'Díaz'
+    wrapper.vm.stakeholder.usuario.email = 'mateo.concha@udech.cl'
+    wrapper.vm.stakeholder.grupo_id = 9534
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
   })
 
 })
