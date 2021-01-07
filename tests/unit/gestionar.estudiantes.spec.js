@@ -83,6 +83,23 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.mensajes).toEqual(esperado)
   })
 
+  it('propiedad computada "mostrarEliminar" funciona correctamente con true', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.eliminados = [2453, 938534]
+    expect(wrapper.vm.mostrarEliminar).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarEliminar" funciona correctamente con false', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.mostrarEliminar).toBeFalsy()
+  })
+
+  it('propiedad computada "numeroEst" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.eliminados = [2453, 938534]
+    expect(wrapper.vm.numeroEst).toEqual(2)
+  })
+
   it('método "nombreCompleto" funciona correctamente', () => {
     const estudiante = {
       nombre_est: 'Mauricio',
