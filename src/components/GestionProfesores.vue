@@ -267,7 +267,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre === '' || nombre.length === 0) {
           this.entradas.nombre.error = true
           this.entradas.nombre.mensaje = this.mensajes.sin_nombre
           return false

@@ -133,4 +133,61 @@ describe('GestionProfesores.vue', () => {
     expect(wrapper.vm.usuario.email).toEqual('')
     expect(wrapper.vm.seccionesAsignadas).toEqual([])
   })
+
+  it('método "noAgregar" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.verFormulario = true
+    wrapper.vm.entradas.nombre.error = true
+    wrapper.vm.entradas.apellidoPaterno.error = true
+    wrapper.vm.entradas.apellidoMaterno.error = true
+    wrapper.vm.entradas.correo_elec.error = true
+    wrapper.vm.entradas.secciones = true
+    wrapper.vm.noAgregar()
+    expect(wrapper.vm.verFormulario).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoMaterno.error).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
+    expect(wrapper.vm.entradas.secciones).toBeFalsy()
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre igual a "null"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.nombre = null
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre ""', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.nombre = ''
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre "undefined"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.nombre = undefined
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre distinto de "regExp"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.nombre = 'Carolina14963##&$'
+    expect(wrapper.vm.validarNombre()).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.nombre = 'Fernanda'
+    expect(wrapper.vm.validarNombre()).toBeTruthy()
+    expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
+    expect(wrapper.vm.entradas.nombre.mensaje).toEqual('')
+  })
 })
