@@ -560,4 +560,24 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.validarFormulario()).toBeFalsy()
   })
 
+  it('método "editarAsignaciones" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.verAsignaciones = false
+    wrapper.vm.editarAsignaciones()
+    expect(wrapper.vm.verAsignaciones).toBeTruthy()
+  })
+
+  it('método "cerrarAsignaciones" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.verAsignaciones = true
+    wrapper.vm.cerrarAsignaciones()
+    expect(wrapper.vm.verAsignaciones).toBeFalsy()
+  })
+
+  it('método "actualizarAsignaciones" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.verAsignaciones = true
+    wrapper.vm.actualizarAsignaciones()
+    expect(wrapper.vm.verAsignaciones).toBeFalsy()
+  })
 })
