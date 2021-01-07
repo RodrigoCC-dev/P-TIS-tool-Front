@@ -190,4 +190,99 @@ describe('GestionProfesores.vue', () => {
     expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual('')
   })
+
+  it('método "validarApellido" funciona correctamente con apellido "null"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.validarApellido(null, entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido "undefined"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.validarApellido(undefined, entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido igual a ""', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.validarApellido('', entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido distinto de "regExp"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.validarApellido('#b@r$Tolomeo', entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido con "regExp" correcto', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    expect(wrapper.vm.validarApellido('Faundez', entradas)).toBeTruthy()
+    expect(entradas.error).toBeFalsy()
+    expect(entradas.mensaje).toEqual('')
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "null"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.apellido_paterno = null
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellidoPaterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.apellido_paterno = undefined
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellidoPaterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a ""', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.apellido_paterno = ''
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellidoPaterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno distinto de "regExp"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.apellido_paterno = 'C@stro#45'
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellidoPaterno.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.usuario.apellido_paterno = 'Castro'
+    expect(wrapper.vm.validarApellidoP()).toBeTruthy()
+    expect(wrapper.vm.entradas.apellidoPaterno.error).toBeFalsy()
+    expect(wrapper.vm.entradas.apellidoPaterno.mensaje).toEqual('')
+  })
 })
