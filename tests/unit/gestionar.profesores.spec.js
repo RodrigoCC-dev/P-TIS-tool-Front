@@ -418,4 +418,26 @@ describe('GestionProfesores.vue', () => {
     wrapper.vm.usuario = usuario
     expect(wrapper.vm.existeProfesor()).toBeFalsy()
   })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.listaProfesores = listaProfesores
+    wrapper.vm.usuario.nombre = 'Mateo'
+    wrapper.vm.usuario.apellido_paterno = 'Concha'
+    wrapper.vm.usuario.apellido_materno = 'Díaz'
+    wrapper.vm.usuario.email = 'mateo.concha@udech.cl'
+    wrapper.vm.seccionesAsignadas = [9534, 25633, 493046, 91363]
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.listaProfesores = listaProfesores
+    wrapper.vm.usuario.nombre = 'Mateo'
+    wrapper.vm.usuario.apellido_paterno = undefined
+    wrapper.vm.usuario.apellido_materno = 'Díaz'
+    wrapper.vm.usuario.email = 'mateo.concha@udech.cl'
+    wrapper.vm.seccionesAsignadas = []
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
+  })
 })
