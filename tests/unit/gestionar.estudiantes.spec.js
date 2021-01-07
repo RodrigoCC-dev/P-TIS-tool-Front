@@ -586,4 +586,18 @@ describe('GestionEstudiantes.vue', () => {
     wrapper.vm.seleccionarTodos()
     expect(wrapper.vm.eliminados).toEqual([])
   })
+
+  it('método "eliminarEstudiantes" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.notificar = null
+    wrapper.vm.eliminarEstudiantes()
+    expect(wrapper.vm.notificar).toBeTruthy()
+  })
+
+  it('método "cancelarEliminacion" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.notificar = null
+    wrapper.vm.cancelarEliminacion()
+    expect(wrapper.vm.notificar).toBeFalsy()
+  })
 })
