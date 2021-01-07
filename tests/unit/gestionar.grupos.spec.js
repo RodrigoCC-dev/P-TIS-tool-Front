@@ -193,4 +193,34 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('')
   })
+
+  it('método "validarAsignacion" funciona correctamente para "true"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
+    expect(wrapper.vm.validarAsignacion()).toBeTruthy()
+    expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
+    expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('')
+  })
+
+  it('método "validarAsignacion" funciona correctamente para "false"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.estudiantes = []
+    expect(wrapper.vm.validarAsignacion()).toBeFalsy()
+    expect(wrapper.vm.entradas.estudiantes.error).toBeTruthy()
+    expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('No se han asignado estudiantes al grupo')
+  })
+
+  it('método "validarDatos" funciona correctamente para "true"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
+    wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
+    expect(wrapper.vm.validarDatos()).toBeTruthy()
+  })
+
+  it('método "validarDatos" funciona correctamente para "false"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = undefined
+    wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
+    expect(wrapper.vm.validarDatos()).toBeFalsy()
+  })
 })
