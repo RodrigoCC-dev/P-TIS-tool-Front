@@ -2,6 +2,17 @@ import { shallowMount } from '@vue/test-utils'
 import GestionProfesores from '@/components/GestionProfesores.vue'
 
 describe('GestionProfesores.vue', () => {
+  const listaProfesores = [
+    {
+      id: 62345,
+      email: 'jose.venegas@algo.com'
+    },
+    {
+      id: 6234534,
+      email: 'daniel.castro@algo.com'
+    }
+  ]
+
   it('variable verFormulario se inicializa correctamente', () => {
     const wrapper = shallowMount(GestionProfesores)
     expect(wrapper.vm.verFormulario).toBeFalsy()
@@ -372,5 +383,39 @@ describe('GestionProfesores.vue', () => {
     expect(wrapper.vm.validarEmail()).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual('')
+  })
+
+  it('método "validarSecciones" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.seccionesAsignadas = [9603453, 69353945, 6943963, 92934534]
+    expect(wrapper.vm.validarSecciones()).toBeTruthy()
+    expect(wrapper.vm.entradas.secciones).toBeFalsy()
+  })
+
+  it('método "validarSecciones" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.seccionesAsignadas = []
+    expect(wrapper.vm.validarSecciones()).toBeFalsy()
+    expect(wrapper.vm.entradas.secciones).toBeTruthy()
+  })
+
+  it('método "existeProfesor" funciona correctamente con true', () => {
+    const usuario = {
+      email: 'jose.venegas@algo.com'
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.listaProfesores = listaProfesores
+    wrapper.vm.usuario = usuario
+    expect(wrapper.vm.existeProfesor()).toBeTruthy()
+  })
+
+  it('método "existeProfesor" funciona correctamente con false', () => {
+    const usuario = {
+      email: 'maria.maldonado@algo.com'
+    }
+    const wrapper = shallowMount(GestionProfesores)
+    wrapper.vm.listaProfesores = listaProfesores
+    wrapper.vm.usuario = usuario
+    expect(wrapper.vm.existeProfesor()).toBeFalsy()
   })
 })
