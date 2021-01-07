@@ -314,7 +314,7 @@ export default {
     validarApellido: function (apellido, entradas) {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           entradas.error = true
           entradas.mensaje = this.mensajes.sin_apellido
           return false

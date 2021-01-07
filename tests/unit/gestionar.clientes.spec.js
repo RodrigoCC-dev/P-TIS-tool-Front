@@ -296,6 +296,69 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual('')
   })
 
+  it('método "validarApellido" funciona correctamente con apellido "null"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.validarApellido(null, entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido "undefined"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.validarApellido(undefined, entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido igual a ""', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.validarApellido('', entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido distinto de "regExp"', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.validarApellido('#b@r$Tolomeo', entradas)).toBeFalsy()
+    expect(entradas.error).toBeTruthy()
+    expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
+  })
+
+  it('método "validarApellido" funciona correctamente con apellido con "regExp" correcto', () => {
+    var entradas = {
+      error: null,
+      mensaje: null
+    }
+    const wrapper = shallowMount(GestionClientes)
+    expect(wrapper.vm.validarApellido('Faundez', entradas)).toBeTruthy()
+    expect(entradas.error).toBeFalsy()
+    expect(entradas.mensaje).toEqual('')
+  })
+
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "null"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.apellido_paterno = null
+    expect(wrapper.vm.validarApellidoP()).toBeFalsy()
+    expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
+    expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
+  })
+
   it('método existeStakeholder funciona correctamente con true', () => {
     const cliente = {
       usuario: {
