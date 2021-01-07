@@ -52,7 +52,7 @@ describe('SelectorGrupo.vue', () => {
     expect(wrapper.vm.buscarPorId(lista, 2)).toEqual(esperado)
   })
 
-  it('método "seleccionarGrupo" funciona correctamente', () => {
+  it('método "seleccionarGrupo" funciona correctamente', async () => {
     const listaGrupos = [
       {id: 1, nombre: 'G01'}, {id: 2, nombre: 'G02'}, {id: 3, nombre: 'G03'}
     ]
@@ -60,6 +60,7 @@ describe('SelectorGrupo.vue', () => {
     const wrapper = shallowMount(SelectorGrupo)
     wrapper.vm.listaGrupos = listaGrupos
     wrapper.vm.seleccionarGrupo(2)
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupoActual).toEqual(2)
     expect(wrapper.vm.grupoSeleccionado).toEqual(esperado)
     expect(wrapper.emitted().eleccion).toBeTruthy()
