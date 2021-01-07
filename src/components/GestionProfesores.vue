@@ -317,9 +317,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
