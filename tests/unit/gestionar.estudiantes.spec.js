@@ -566,4 +566,24 @@ describe('GestionEstudiantes.vue', () => {
     })
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
+
+  const listaEstudiantes = [
+    {id: 29353}, {id: 9534}, {id: 926364}
+  ]
+
+  it('método "seleccionarTodos" funciona correctamente con "selección de todos"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    wrapper.vm.eliminados = [9534]
+    wrapper.vm.seleccionarTodos()
+    expect(wrapper.vm.eliminados).toEqual([29353, 9534, 926364])
+  })
+
+  it('método "seleccionarTodos" funciona correctamente con "deselección"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    wrapper.vm.eliminados = [29353, 9534, 926364]
+    wrapper.vm.seleccionarTodos()
+    expect(wrapper.vm.eliminados).toEqual([])
+  })
 })
