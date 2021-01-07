@@ -116,4 +116,28 @@ describe('GestionGrupos.vue', () => {
     const wrapper = shallowMount(GestionGrupos)
     expect(wrapper.vm.mostrarClientes(grupo)).toBeFalsy()
   })
+
+  it('método "elegirTab" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.elegirTab('Vespertina')
+    expect(wrapper.vm.jornadaActual).toEqual('Vespertina')
+  })
+
+  it('método "agregarGrupo" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.verFormulario = false
+    wrapper.vm.agregarGrupo()
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+  })
+
+  it('método "noAgregar" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.verFormulario = true
+    wrapper.vm.entradas.proyecto.error = true
+    wrapper.vm.entradas.estudiantes.error = true
+    wrapper.vm.noAgregar()
+    expect(wrapper.vm.verFormulario).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
+    expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
+  })
 })
