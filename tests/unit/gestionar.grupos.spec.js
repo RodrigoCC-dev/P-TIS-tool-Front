@@ -140,4 +140,57 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
   })
+
+  it('método "nuevoGrupo" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.nombre = 'Grupo de prueba'
+    wrapper.vm.grupo.proyecto = 'Pruebas de código'
+    wrapper.vm.grupo.correlativo = 623534
+    wrapper.vm.estudiantes = [{id: 962345}, {id: 9629353}]
+    wrapper.vm.nuevoGrupo()
+    expect(wrapper.vm.grupo.nombre).toEqual('')
+    expect(wrapper.vm.grupo.proyecto).toEqual('')
+    expect(wrapper.vm.grupo.correlativo).toEqual(0)
+    expect(wrapper.vm.estudiantes).toEqual([])
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto igual a "null"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = null
+    expect(wrapper.vm.validarProyecto()).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = undefined
+    expect(wrapper.vm.validarProyecto()).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto igual a ""', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = ''
+    expect(wrapper.vm.validarProyecto()).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto distinto a "regExp"', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = 'Gistdc,ast346#&#adis'
+    expect(wrapper.vm.validarProyecto()).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Sólo se admiten letras. Verificar que no tenga caracteres especiales')
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionGrupos)
+    wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
+    expect(wrapper.vm.validarProyecto()).toBeTruthy()
+    expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('')
+  })
 })
