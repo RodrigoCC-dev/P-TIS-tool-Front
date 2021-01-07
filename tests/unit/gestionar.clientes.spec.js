@@ -431,6 +431,54 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual('')
   })
 
+  it('método "validarEmail" funciona correctamente con email igual a "null"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = null
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = undefined
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email igual a ""', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = ''
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
+  })
+
+  it('método "validarEmail" funciona correctamente con email distinto a "regExp"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = '&3kasti,6ka0ds9gaib9asr.b9as025'
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
+  })
+
+  it('método "validarEmail" funciona correctamente con email con dos "@"', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = 'sebastian@ingenieria.cl@usach.com'
+    expect(wrapper.vm.validarEmail()).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
+  })
+
+  it('método "validarEmail" funciona correctamente con email con "regExp" correcto', () => {
+    const wrapper = shallowMount(GestionClientes)
+    wrapper.vm.stakeholder.usuario.email = 'gonzalo.dominguez@gmail.com'
+    expect(wrapper.vm.validarEmail()).toBeTruthy()
+    expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
+    expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual('')
+  })
+
   it('método existeStakeholder funciona correctamente con true', () => {
     const cliente = {
       usuario: {
