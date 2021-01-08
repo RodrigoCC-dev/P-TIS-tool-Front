@@ -8,6 +8,10 @@
 
         <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
+        <div v-else-if="verSemanal">
+          <Semanal/>
+        </div>
+
         <div v-else>
 
           <div class="columns">
@@ -28,7 +32,7 @@
                       <div class="control is-expanded">
                         <div class="select is-fullwidth">
                           <select v-model="tipo">
-                            <option v-for="item in minutasFiltradas" :key="item.id" :value="item.id">{{ item.tipo }}</option>
+                            <option v-for="item in tipoMinutas" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                           </select>
                         </div>
                       </div>
@@ -83,6 +87,7 @@ import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Responder from '@/components/comentarios/ResponderMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import Emision from '@/components/comentarios/NuevaMinuta.vue'
+import Semanal from '@/components/Semanal.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -99,7 +104,8 @@ export default {
     Comentar,
     Responder,
     Respuestas,
-    Emision
+    Emision,
+    Semanal
   },
   data () {
     return {
@@ -116,6 +122,7 @@ export default {
       verComentarios: false,
       verRespuestas: false,
       verEmision: false,
+      verSemanal: false,
       idMotivo: 0,
       nuevaRevision: '',
       esNuevaEmision: false,
@@ -145,10 +152,15 @@ export default {
       this.tipo = 0
     },
     elegirTipo: function () {
-      this.verFormulario = true
-      this.seleccionarMinuta = false
-      this.idMotivo = this.buscarIdMotivo('ECI')
-      this.nuevaRevision = 'A'
+      if (this.tipo === this.buscarIdTipoMinuta('Semanal')) {
+        this.verSemanal = true
+        this.seleccionarMinuta = false
+      } else {
+        this.verFormulario = true
+        this.seleccionarMinuta = false
+        this.idMotivo = this.buscarIdMotivo('ECI')
+        this.nuevaRevision = 'A'
+      }
     },
     cerrarFormulario: function () {
       this.verFormulario = false
@@ -243,6 +255,9 @@ export default {
     },
     buscarIdMotivo: function (valor) {
       return Funciones.obtenerIdDeLista(this.motivos, 'identificador', valor)
+    },
+    buscarIdTipoMinuta: function (valor) {
+      return Funciones.obtenerIdDeLista(this.tipoMinutas, 'tipo', valor)
     },
     nuevaEmision: function (identificador, revision) {
       this.verRevision = false
