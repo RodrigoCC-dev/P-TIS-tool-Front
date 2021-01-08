@@ -2,7 +2,7 @@
   <div>
     <br>
 
-    <SelectorJornada @jornada="cambiarJornada"/>
+    <SelectorJornada/>
 
     <div v-if="!verAsignaciones">
       <div class="columns">
@@ -230,9 +230,6 @@ export default {
     }
   },
   methods: {
-    cambiarJornada: function (nuevaJornada) {
-      this.jornadaActual = nuevaJornada
-    },
     nombreCompleto (estudiante) {
       return Funciones.nombreCompleto(estudiante)
     },
@@ -295,7 +292,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.stakeholder.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre.length === 0 || nombre === '') {
           this.entradas.nombre.error = true
           this.entradas.nombre.mensaje = this.mensajes.sin_nombre
           return false
@@ -317,7 +314,7 @@ export default {
     validarApellido: function (apellido, entradas) {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           entradas.error = true
           entradas.mensaje = this.mensajes.sin_apellido
           return false
@@ -345,9 +342,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.stakeholder.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
@@ -368,7 +368,7 @@ export default {
     },
     validarGrupo: function () {
       const seleccion = this.stakeholder.grupo_id
-      if (seleccion === null || seleccion === '' || seleccion === 0 || seleccion === undefined) {
+      if (seleccion === null || seleccion === undefined || seleccion === '' || seleccion === 0) {
         this.entradas.grupo = true
         return false
       } else {
