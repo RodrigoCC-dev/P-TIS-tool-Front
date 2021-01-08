@@ -81,15 +81,37 @@
                 <a class="button is-primary-usach" @click="agregar">Agregar</a>
               </div>
               <div class="control">
+                <a class="button is-secondary-usach">Desde nómina</a>
+              </div>
+              <div class="control">
                 <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
           </div>
         </div>
       </form>
-      <hr>
     </div>
 
+    <div v-if="mostrarNomina">
+      <div class="file is-centered has-name">
+        <label class="file-label">
+          <input class="file-input" type="file">
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
+            </span>
+            <span class="file-label">
+              Subir nómina
+            </span>
+          </span>
+          <span class="file-name">
+            No se ha subido el archivo
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <hr>
     <br>
     <div v-if="mostrarLista">
 
@@ -222,7 +244,8 @@ export default {
         run_repetido: 'Usuario ya se encuentra en el sistema'
       },
       eliminados: [],
-      notificar: false
+      notificar: false,
+      mostrarNomina: true
     }
   },
   computed: {
