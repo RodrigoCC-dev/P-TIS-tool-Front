@@ -9,7 +9,7 @@
         <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else-if="verSemanal">
-          <Semanal/>
+          <Semanal  @cerrar="cerrarSemanal"/>
         </div>
 
         <div v-else>
@@ -272,6 +272,10 @@ export default {
       this.esNuevaEmision = true
       this.valorActual = 0
       this.tableroEst++
+    },
+    cerrarSemanal: function () {
+      this.verSemanal = false
+      this.mostrarTablero()
     }
   },
   mounted () {
