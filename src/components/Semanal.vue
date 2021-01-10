@@ -47,7 +47,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="numeroSprint" class="input has-text-centered" type="text">
+            <input v-model="numeroSprint" class="input has-text-centered" :class="{ 'is-danger' : this.entradas.numeroSprint.error }" type="text" @input="validarSprint">
           </p>
         </div>
         <p class="is-danger help" v-if="entradas.numeroSprint.error">{{ entradas.numeroSprint.mensaje }}</p>
@@ -58,7 +58,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="minuta.fechaAvance" class="input has-text-centered" type="date">
+            <input v-model="minuta.fechaAvance" class="input has-text-centered" :class="{ 'is-danger' : this.entradas.fechaAvance }" type="date" @input="validarFecha">
           </p>
         </div>
         <p class="is-danger help" v-if="entradas.fechaAvance">No se ha ingresado la fecha del avance</p>
@@ -89,7 +89,7 @@
             <li v-for="(logro, index) in logros" :key="index">
               <div class="field is-grouepd">
                 <p class="control is-expanded has-icons-right">
-                  <input v-model="logros[index].descripcion" class="input is-normal" type="text">
+                  <input v-model="logros[index].descripcion" class="input is-normal" :class="{ 'is-danger' : this.entradas.logros }" type="text" @input="validarLogros">
                   <span class="icon is-right">
                     <button class="delete" @click="removerLogro(logro)"></button>
                   </span>
@@ -126,7 +126,7 @@
             <li v-for="(meta, index) in metas" :key="index">
               <div class="field is-grouped">
                 <p class="control is-expanded has-icons-right">
-                  <input v-model="metas[index].descripcion" class="input is-normal" type="text">
+                  <input v-model="metas[index].descripcion" class="input is-normal" :class="{ 'is-danger' : this.entradas.metas }" type="text" @input="validarMetas">
                   <span class="icon is-right">
                     <button class="delete" @click="removerMeta(meta)"></button>
                   </span>
@@ -167,7 +167,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Semanal',
-  props: [],
+  props: ['idBitacora'],
   data () {
     return {
       minuta: {
@@ -210,6 +210,9 @@ export default {
         this.removeFromArray(this.metas, meta)
       }
     },
+    establecerId: function () {
+      this.minuta.estudiante_id = this.estudiante.id
+    },
     establecerCodigo: function () {
       var codigo = 'AVANCE_'
       var correlativo = ''
@@ -225,12 +228,25 @@ export default {
         sprint = this.numeroSprint
       }
       var fecha = this.minuta.fechaAvance.split('-')
-      codigo += this.grupo.nombre + '_' + correlativo + '_S' + sprint + fecha[1] + fecha[2]
+      codigo += this.grupo.nombre + '_' + correlativo + '_S' + sprint + '_' + fecha[1] + fecha[2]
       return codigo
+    },
+    async obtenerCorrelativo () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/correlativo/semanal/' + this.grupo.id, { headers: Auth.authHeader() })
+        this.minuta.correlativo = response.data
+      } catch (e) {
+        console.log('No fue posible obtener el correlativo de la minuta')
+        console.log(e)
+      }
     },
     async guardar () {
       if (this.validarFormulario()) {
+        this.establecerId()
+        this.minuta.codigo = this.establecerCodigo()
         const items = {
+          minuta: this.minuta,
+          numero_sprint: this.numeroSprint,
           logros: this.logros,
           metas: this.metas
         }
@@ -273,7 +289,7 @@ export default {
     },
     validarFecha: function () {
       const regExp = /^(\d{4})-(\d{2})-(\d{2})$/
-      const fecha = this.minuta.fechAvance
+      const fecha = this.minuta.fechaAvance
       if (fecha === '' || fecha === undefined || !regExp.test(fecha)) {
         this.entradas.fechaAvance = true
         return false
@@ -293,11 +309,14 @@ export default {
         }
       } else {
         var validar = true
-        for (var i = 0; i < lista.lenght; i++) {
+        for (var i = 0; i < lista.length; i++) {
           if (lista[i].descripcion === '') {
             validar = false
             entrada[llave] = true
           }
+        }
+        if (validar) {
+          entrada[llave] = false
         }
         return validar
       }
@@ -316,6 +335,9 @@ export default {
       validar = validar && this.validarMetas()
       return validar
     }
+  },
+  mounted () {
+    this.obtenerCorrelativo()
   }
 }
 </script>
