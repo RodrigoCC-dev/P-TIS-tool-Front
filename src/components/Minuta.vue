@@ -279,7 +279,7 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.tipo_item_id" @change="validarItem(index)">
-                    <option v-for="item in tipo_items" :key="item.id" :value="item.id">{{ item.tipo }}</option>
+                    <option v-for="item in tipoItemsFiltrada" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.tipo_item">No se ha ingresado el tipo de ítem</p>
@@ -424,6 +424,15 @@ export default {
 
     esBorrador: function () {
       return this.bitacora !== 0
+    },
+    tipoItemsFiltrada: function () {
+      var lista = []
+      for (var i = 0; i < this.tipo_items.length; i++) {
+        if (this.tipo_items[i].rango === 1) {
+          lista.push(this.tipo_items[i])
+        }
+      }
+      return lista
     }
   },
   methods: {

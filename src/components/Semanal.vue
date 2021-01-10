@@ -1,0 +1,355 @@
+<template>
+  <div>
+
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <p class="title is-4 has-text-centered">MINUTA DE AVANCE SEMANAL</p>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Proyecto:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input v-model="grupo.proyecto" class="input" type="text" disabled>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label-2c is-normal">
+        <label class="label">Grupo:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input v-model="grupo.correlativo" class="input has-text-centered" type="text" disabled>
+          </p>
+        </div>
+      </div>
+      <div class="field-label-2c is-normal">
+        <label class="label">N° de avance:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input v-model="minuta.correlativo" class="input has-text-centered" type="text" disabled>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label-2c is-normal">
+        <label class="label">N° de Sprint:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input v-model="numeroSprint" class="input has-text-centered" :class="{ 'is-danger' : entradas.numeroSprint.error }" type="text" @input="validarSprint">
+          </p>
+        </div>
+        <p class="is-danger help" v-if="entradas.numeroSprint.error">{{ entradas.numeroSprint.mensaje }}</p>
+      </div>
+      <div class="field-label-2c is-normal">
+        <label class="label">Fecha avance:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input v-model="minuta.fecha_avance" class="input has-text-centered" :class="{ 'is-danger' : entradas.fechaAvance }" type="date" @input="validarFecha">
+          </p>
+        </div>
+        <p class="is-danger help" v-if="entradas.fechaAvance">No se ha ingresado la fecha del avance</p>
+      </div>
+    </div>
+
+    <br>
+    <div class="columns">
+      <div class="column is-8 is-offset-2">
+        <p class="title is-5 has-text-centered">Logros de la semana anterior</p>
+      </div>
+      <div class="column">
+        <div class="columns">
+          <div class="column is-2 is-offset-3">
+            <a class="button is-small is-info-usach is-rounded" @click="agregarLogro">
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="content has-text-left">
+          <ul>
+            <li v-for="(logro, index) in logros" :key="index">
+              <div class="field is-grouepd">
+                <p class="control is-expanded has-icons-right">
+                  <input v-model="logros[index].descripcion" class="input is-normal" :class="{ 'is-danger' : entradas.logros }" type="text" @input="validarLogros">
+                  <span class="icon is-right">
+                    <button class="delete" @click="removerLogro(logro)"></button>
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+          <p class="is-danger help" v-if="entradas.logros">No se han llenado todos los logros</p>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div class="columns">
+      <div class="column is-8 is-offset-2">
+        <p class="title is-5 has-text-centered">Metas para la nueva semana</p>
+      </div>
+      <div class="column">
+        <div class="columns">
+          <div class="column is-2 is-offset-3">
+            <a class="button is-small is-info-usach is-rounded" @click="agregarMeta">
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-10 is-offset-1">
+        <div class="content has-text-left">
+          <ul>
+            <li v-for="(meta, index) in metas" :key="index">
+              <div class="field is-grouped">
+                <p class="control is-expanded has-icons-right">
+                  <input v-model="metas[index].descripcion" class="input is-normal" :class="{ 'is-danger' : entradas.metas }" type="text" @input="validarMetas">
+                  <span class="icon is-right">
+                    <button class="delete" @click="removerMeta(meta)"></button>
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+          <p class="is-danger help" v-if="entradas.metas">No se han agregado todas las metas</p>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <br>
+    <div class="columns is-centered">
+      <div class="column is-3">
+        <div class="field">
+          <div class="control">
+            <a class="button is-primary-usach is-fullwidth" @click="guardar">Guardar</a>
+          </div>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="control">
+          <a class="button is-light-usach is-fullwidth" @click="cerrar">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
+import axios from 'axios'
+import { mapState } from 'vuex'
+
+export default {
+  name: 'Semanal',
+  props: ['idBitacora', 'tipoMinuta'],
+  data () {
+    return {
+      minuta: {
+        estudiante_id: 0,
+        codigo: '',
+        correlativo: '',
+        fecha_avance: '',
+        tipo_minuta_id: this.tipoMinuta
+      },
+      numeroSprint: '',
+      logros: [{ id: 0, descripcion: '', correlativo: 1 }],
+      metas: [{ id: 0, descripcion: '', correlativo: 1 }],
+      semestre: {},
+      entradas: {
+        numeroSprint: { error: false, mensaje: '' },
+        fechaAvance: false,
+        logros: false,
+        metas: false
+      }
+    }
+  },
+  computed: {
+    ...mapState(['apiUrl', 'estudiante', 'grupo'])
+  },
+  methods: {
+    removeFromArray: function (arreglo, item) {
+      return Funciones.removeFromArray(arreglo, item)
+    },
+    agregarLogro: function () {
+      var nuevoLogro = { id: 0, descripcion: '', correlativo: 0 }
+      const anterior = this.logros[this.logros.length - 1].correlativo
+      nuevoLogro.correlativo = anterior + 1
+      this.logros.push(nuevoLogro)
+    },
+    removerLogro: function (logro) {
+      if (this.logros.length > 1) {
+        this.removeFromArray(this.logros, logro)
+      }
+    },
+    agregarMeta: function () {
+      var nuevaMeta = { id: 0, descripcion: '', correlativo: 0 }
+      const anterior = this.metas[this.metas.length - 1].correlativo
+      nuevaMeta.correlativo = anterior + 1
+      this.metas.push(nuevaMeta)
+    },
+    removerMeta: function (meta) {
+      if (this.metas.length > 1) {
+        this.removeFromArray(this.metas, meta)
+      }
+    },
+    establecerId: function () {
+      this.minuta.estudiante_id = this.estudiante.id
+    },
+    establecerCodigo: function () {
+      var codigo = 'MINUTA_'
+      var correlativo = ''
+      if (this.minuta.correlativo < 10) {
+        correlativo = '0' + this.minuta.correlativo
+      } else {
+        correlativo = this.minuta.correlativo
+      }
+      var semestre = this.semestre.agno + '-' + this.semestre.numero
+      var fecha = this.minuta.fecha_avance.split('-')
+      codigo += this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[1] + fecha[2]
+      return codigo
+    },
+    async obtenerCorrelativo () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/correlativo/semanal/' + this.grupo.id, { headers: Auth.authHeader() })
+        this.minuta.correlativo = response.data
+      } catch (e) {
+        console.log('No fue posible obtener el correlativo de la minuta')
+        console.log(e)
+      }
+    },
+    async obtenerSemestre () {
+      try {
+        const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
+        this.semestre = response.data
+      } catch {
+        console.log('No se obtuvo la información del semestre')
+      }
+    },
+    async guardar () {
+      if (this.validarFormulario()) {
+        this.establecerId()
+        this.minuta.codigo = this.establecerCodigo()
+        const items = {
+          minuta: this.minuta,
+          numero_sprint: this.numeroSprint,
+          logros: this.logros,
+          metas: this.metas
+        }
+        try {
+          await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
+          this.$emit('cerrar')
+        } catch (e) {
+          console.log('No fue posible guardar los logros y metas de la semana')
+          console.log(e)
+        }
+      }
+    },
+    cerrar: function () {
+      this.$emit('cerrar')
+    },
+    validarSprint: function () {
+      const numero = this.numeroSprint
+      if (numero === null || numero === undefined || numero === '') {
+        this.entradas.numeroSprint.error = true
+        this.entradas.numeroSprint.mensaje = 'No se ha ingresado el núermo del Sprint'
+        return false
+      } else {
+        if (isNaN(parseInt(numero))) {
+          this.entradas.numeroSprint = true
+          this.entradas.numeroSprint = 'Error de entrada. Por favor, sólo números enteros.'
+          return false
+        } else {
+          this.numeroSprint = parseInt(numero)
+          if (numero < 0) {
+            this.entradas.numeroSprint.error = true
+            this.entradas.numeroSprint.mensaje = 'No se aceptan valores menores a cero'
+            return false
+          } else {
+            this.entradas.numeroSprint.error = false
+            this.entradas.numeroSprint.mensaje = ''
+            return true
+          }
+        }
+      }
+    },
+    validarFecha: function () {
+      const regExp = /^(\d{4})-(\d{2})-(\d{2})$/
+      const fecha = this.minuta.fecha_avance
+      if (fecha === '' || fecha === undefined || !regExp.test(fecha)) {
+        this.entradas.fechaAvance = true
+        return false
+      } else {
+        this.entradas.fechaAvance = false
+        return true
+      }
+    },
+    validarLista: function (lista, llave, entrada) {
+      if (lista.length === 1) {
+        if (lista[0].descripcion === '') {
+          entrada[llave] = true
+          return false
+        } else {
+          entrada[llave] = false
+          return true
+        }
+      } else {
+        var validar = true
+        for (var i = 0; i < lista.length; i++) {
+          if (lista[i].descripcion === '') {
+            validar = false
+            entrada[llave] = true
+          }
+        }
+        if (validar) {
+          entrada[llave] = false
+        }
+        return validar
+      }
+    },
+    validarLogros: function () {
+      return this.validarLista(this.logros, 'logros', this.entradas)
+    },
+    validarMetas: function () {
+      return this.validarLista(this.metas, 'metas', this.entradas)
+    },
+    validarFormulario: function () {
+      var validar = true
+      validar = validar && this.validarSprint()
+      validar = validar && this.validarFecha()
+      validar = validar && this.validarLogros()
+      validar = validar && this.validarMetas()
+      return validar
+    }
+  },
+  mounted () {
+    this.obtenerCorrelativo()
+    this.obtenerSemestre()
+  }
+}
+</script>
