@@ -9,7 +9,7 @@
         <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else-if="verSemanal">
-          <Semanal  @cerrar="cerrarSemanal"/>
+          <Semanal :tipo-minuta="tipo"  @cerrar="cerrarSemanal"/>
         </div>
 
         <div v-else>

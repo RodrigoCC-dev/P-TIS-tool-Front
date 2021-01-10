@@ -47,7 +47,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="numeroSprint" class="input has-text-centered" :class="{ 'is-danger' : this.entradas.numeroSprint.error }" type="text" @input="validarSprint">
+            <input v-model="numeroSprint" class="input has-text-centered" :class="{ 'is-danger' : entradas.numeroSprint.error }" type="text" @input="validarSprint">
           </p>
         </div>
         <p class="is-danger help" v-if="entradas.numeroSprint.error">{{ entradas.numeroSprint.mensaje }}</p>
@@ -58,7 +58,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="minuta.fechaAvance" class="input has-text-centered" :class="{ 'is-danger' : this.entradas.fechaAvance }" type="date" @input="validarFecha">
+            <input v-model="minuta.fecha_avance" class="input has-text-centered" :class="{ 'is-danger' : entradas.fechaAvance }" type="date" @input="validarFecha">
           </p>
         </div>
         <p class="is-danger help" v-if="entradas.fechaAvance">No se ha ingresado la fecha del avance</p>
@@ -89,7 +89,7 @@
             <li v-for="(logro, index) in logros" :key="index">
               <div class="field is-grouepd">
                 <p class="control is-expanded has-icons-right">
-                  <input v-model="logros[index].descripcion" class="input is-normal" :class="{ 'is-danger' : this.entradas.logros }" type="text" @input="validarLogros">
+                  <input v-model="logros[index].descripcion" class="input is-normal" :class="{ 'is-danger' : entradas.logros }" type="text" @input="validarLogros">
                   <span class="icon is-right">
                     <button class="delete" @click="removerLogro(logro)"></button>
                   </span>
@@ -126,7 +126,7 @@
             <li v-for="(meta, index) in metas" :key="index">
               <div class="field is-grouped">
                 <p class="control is-expanded has-icons-right">
-                  <input v-model="metas[index].descripcion" class="input is-normal" :class="{ 'is-danger' : this.entradas.metas }" type="text" @input="validarMetas">
+                  <input v-model="metas[index].descripcion" class="input is-normal" :class="{ 'is-danger' : entradas.metas }" type="text" @input="validarMetas">
                   <span class="icon is-right">
                     <button class="delete" @click="removerMeta(meta)"></button>
                   </span>
@@ -167,18 +167,20 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Semanal',
-  props: ['idBitacora'],
+  props: ['idBitacora', 'tipoMinuta'],
   data () {
     return {
       minuta: {
         estudiante_id: 0,
         codigo: '',
         correlativo: '',
-        fechaAvance: ''
+        fecha_avance: '',
+        tipo_minuta_id: this.tipoMinuta
       },
       numeroSprint: '',
-      logros: [{ id: 0, descripcion: '' }],
-      metas: [{ id: 0, descripcion: '' }],
+      logros: [{ id: 0, descripcion: '', correlativo: 1 }],
+      metas: [{ id: 0, descripcion: '', correlativo: 1 }],
+      semestre: {},
       entradas: {
         numeroSprint: { error: false, mensaje: '' },
         fechaAvance: false,
@@ -195,7 +197,10 @@ export default {
       return Funciones.removeFromArray(arreglo, item)
     },
     agregarLogro: function () {
-      this.logros.push({ id: 0, descripcion: '' })
+      var nuevoLogro = { id: 0, descripcion: '', correlativo: 0 }
+      const anterior = this.logros[this.logros.length - 1].correlativo
+      nuevoLogro.correlativo = anterior + 1
+      this.logros.push(nuevoLogro)
     },
     removerLogro: function (logro) {
       if (this.logros.length > 1) {
@@ -203,7 +208,10 @@ export default {
       }
     },
     agregarMeta: function () {
-      this.metas.push({ id: 0, descripcion: '' })
+      var nuevaMeta = { id: 0, descripcion: '', correlativo: 0 }
+      const anterior = this.metas[this.metas.length - 1].correlativo
+      nuevaMeta.correlativo = anterior + 1
+      this.metas.push(nuevaMeta)
     },
     removerMeta: function (meta) {
       if (this.metas.length > 1) {
@@ -214,21 +222,16 @@ export default {
       this.minuta.estudiante_id = this.estudiante.id
     },
     establecerCodigo: function () {
-      var codigo = 'AVANCE_'
+      var codigo = 'MINUTA_'
       var correlativo = ''
       if (this.minuta.correlativo < 10) {
         correlativo = '0' + this.minuta.correlativo
       } else {
         correlativo = this.minuta.correlativo
       }
-      var sprint = ''
-      if (this.numeroSprint < 10) {
-        sprint = '0' + this.numeroSprint
-      } else {
-        sprint = this.numeroSprint
-      }
-      var fecha = this.minuta.fechaAvance.split('-')
-      codigo += this.grupo.nombre + '_' + correlativo + '_S' + sprint + '_' + fecha[1] + fecha[2]
+      var semestre = this.semestre.agno + '-' + this.semestre.numero
+      var fecha = this.minuta.fecha_avance.split('-')
+      codigo += this.grupo.nombre + '_' + correlativo + '_' + semestre + '_' + fecha[1] + fecha[2]
       return codigo
     },
     async obtenerCorrelativo () {
@@ -238,6 +241,14 @@ export default {
       } catch (e) {
         console.log('No fue posible obtener el correlativo de la minuta')
         console.log(e)
+      }
+    },
+    async obtenerSemestre () {
+      try {
+        const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
+        this.semestre = response.data
+      } catch {
+        console.log('No se obtuvo la información del semestre')
       }
     },
     async guardar () {
@@ -289,7 +300,7 @@ export default {
     },
     validarFecha: function () {
       const regExp = /^(\d{4})-(\d{2})-(\d{2})$/
-      const fecha = this.minuta.fechaAvance
+      const fecha = this.minuta.fecha_avance
       if (fecha === '' || fecha === undefined || !regExp.test(fecha)) {
         this.entradas.fechaAvance = true
         return false
@@ -338,6 +349,7 @@ export default {
   },
   mounted () {
     this.obtenerCorrelativo()
+    this.obtenerSemestre()
   }
 }
 </script>
