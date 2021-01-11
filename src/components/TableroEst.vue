@@ -65,6 +65,33 @@
           </div>
         </div>
       </section>
+      <hr>
+      <section class="new-section">
+        <div class="container">
+          <p id="avances" class="title is-5">Borradores avances semanales</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarBorrAvances" aria-describedby="avances">
+            <thead>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Sprint</th>
+                <th class="has-text-centered" scope="col">Iniciada el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(bitacora, index) in borradoresAvances" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1}}</th>
+                <td><a @click="editarAvance(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay borradores de avance semanal para mostrar</p>
+          </div>
+        </div>
+      </section>
     </div>
 
     <div v-if="nombreTab === nombreTabs.emitidas">
@@ -316,12 +343,15 @@ export default {
       listaCerradas: [],
       listaEmitidas: [],
       listaRevision: [],
+      listaAvances: [],
+      borradoresAvances: [],
+      cerradasAvances: [],
       contar: this.contador,
       minutaActual: this.seleccionado
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'grupo']),
 
     mostrarBorradores: function () {
       return this.listaBorradores.length > 0
@@ -346,6 +376,12 @@ export default {
     },
     mostrarRevision: function () {
       return this.listaRevision.length > 0
+    },
+    mostrarBorrAvances: function () {
+      return this.borradoresAvances.length > 0
+    },
+    mostrarCerrAvances: function () {
+      return this.cerradasAvances.length > 0
     }
   },
   methods: {
@@ -380,6 +416,19 @@ export default {
         }
       }
     },
+    categorizarAvances: function () {
+      if (this.listaAvances.length > 0) {
+        this.borradoresAvances = []
+        this.cerradasAvances = []
+        for (var i = 0; i < this.listaAvances.length; i++) {
+          if (this.listaAvances[i].minuta.bitacora_estado.tipo_estado.abreviacion === 'BOR') {
+            this.borradoresAvances.push(this.listaAvances[i])
+          } else if (this.listaAvances[i].minuta.bitacora_estado.tipo_estado.abreviacion === 'CER') {
+            this.cerradasAvances.push(this.listaAvances[i])
+          }
+        }
+      }
+    },
     async obtenerMinutas () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
@@ -408,6 +457,16 @@ export default {
         console.log(e)
       }
     },
+    async obtenerAvances () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/avances/semanales/grupo/' + await this.grupo.id, { headers: Auth.authHeader() })
+        this.listaAvances = response.data
+        this.categorizarAvances()
+      } catch (e) {
+        console.log('No se han obtenido las minutas de avance semanal')
+        console.log(e)
+      }
+    },
     editarBorrador: function (id) {
       this.$emit('bitacora', id)
     },
@@ -430,6 +489,9 @@ export default {
       this.obtenerMinutas()
       this.obtenerParaRevisar()
       this.obtenerRespondidas()
+    },
+    grupo: function () {
+      this.obtenerAvances()
     }
   },
   mounted () {
