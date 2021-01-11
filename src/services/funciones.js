@@ -81,5 +81,9 @@ export default {
       }
     }
     return indice
+  },
+  convertirFecha (timestamp) {
+    var fecha = timestamp.split('T')
+    return fecha[0]
   }
 }

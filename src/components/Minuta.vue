@@ -444,8 +444,7 @@ export default {
       return Funciones.nombreCompleto(estudiante)
     },
     convertirFecha: function (timestamp) {
-      var fecha = timestamp.split('T')
-      return fecha[0]
+      return Funciones.convertirFecha(timestamp)
     },
     buscarIdEnLista: function (array, llave, busqueda) {
       return Funciones.obtenerIdDeLista(array, llave, busqueda)
