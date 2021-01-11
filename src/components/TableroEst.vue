@@ -214,35 +214,6 @@
           </div>
         </div>
       </section>
-      <hr>
-      <section class="new-section">
-        <div class="container">
-          <p id="resp-cliente" class="title is-5">Respondidas por el Cliente</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
-            <thead>
-              <tr class="has-background-light">
-                <th class="has-text-centered" scope="col">N°</th>
-                <th class="has-text-centered" scope="col">Código</th>
-                <th class="has-text-centered" scope="col">Revisión</th>
-                <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Emitida el</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarRespuestas(bitacora.id)"></a>{{ bitacora.minuta.codigo }}</td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
-                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-else>
-            <p class="subtitle is-5">No hay minutas respondidas por el Cliente para mostrar</p>
-          </div>
-        </div>
-      </section>
     </div>
 
     <div v-if="nombreTab === nombreTabs.cerradas">
@@ -339,7 +310,6 @@ export default {
       listaComentadasGrupo: [],
       listaComentadasCliente: [],
       listaRespondidasGrupo: [],
-      listaRespondidasCliente: [],
       listaCerradas: [],
       listaEmitidas: [],
       listaRevision: [],
@@ -370,9 +340,6 @@ export default {
     },
     mostrarRespondidasGrupo: function () {
       return this.listaRespondidasGrupo.length > 0
-    },
-    mostrarRespondidasCliente: function () {
-      return this.listaRespondidasCliente.length > 0
     },
     mostrarRevision: function () {
       return this.listaRevision.length > 0
@@ -406,8 +373,6 @@ export default {
             this.listaComentadasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
             this.listaComentadasCliente.push(this.listaMinutas[i])
-          } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
-            this.listaRespondidasCliente.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
             this.listaCerradas.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'EMI') {
