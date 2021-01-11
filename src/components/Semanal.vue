@@ -261,21 +261,41 @@ export default {
     },
     async guardar () {
       if (this.validarFormulario()) {
-        this.establecerId()
-        this.minuta.codigo = this.establecerCodigo()
-        const items = {
-          minuta: this.minuta,
-          numero_sprint: this.numeroSprint,
-          logros: this.logros,
-          metas: this.metas
+        if (!this.actualizarAvance) {
+          this.establecerId()
+          this.minuta.codigo = this.establecerCodigo()
+          const items = {
+            minuta: this.minuta,
+            numero_sprint: this.numeroSprint,
+            logros: this.logros,
+            metas: this.metas
+          }
+          try {
+            await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+          } catch (e) {
+            console.log('No fue posible guardar los logros y metas de la semana')
+            console.log(e)
+          }
+        } else {
+          this.actualizar()
         }
-        try {
-          await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
-          this.$emit('cerrar')
-        } catch (e) {
-          console.log('No fue posible guardar los logros y metas de la semana')
-          console.log(e)
-        }
+      }
+    },
+    async actualizar () {
+      const items = {
+        id: this.bitacora.id,
+        minuta: this.minuta,
+        numero_sprint: this.numeroSprint,
+        logros: this.logros,
+        metas: this.metas
+      }
+      try {
+        await axios.post(this.apiUrl + '/minutas/actualizar/avance/semanal', items, { headers: Auth.postHeader() })
+        this.$emit('cerrar')
+      } catch (e) {
+        console.log('No fue posible actualizar los logros y metas de la semana')
+        console.log(e)
       }
     },
     cerrar: function () {

@@ -457,6 +457,7 @@ export default {
       this.obtenerMinutas()
       this.obtenerParaRevisar()
       this.obtenerRespondidas()
+      this.obtenerAvances()
     },
     grupo: function () {
       this.obtenerAvances()
@@ -466,6 +467,9 @@ export default {
     this.obtenerMinutas()
     this.obtenerParaRevisar()
     this.obtenerRespondidas()
+    if (Object.keys(this.grupo).length > 0) {
+      this.obtenerAvances()
+    }
   }
 }
 </script>
