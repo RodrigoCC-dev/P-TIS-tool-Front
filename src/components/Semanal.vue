@@ -167,9 +167,11 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Semanal',
-  props: ['idBitacora', 'tipoMinuta'],
+  props: ['avance', 'tipoMinuta'],
   data () {
     return {
+      id: 0,
+      bitacora: this.avance,
       minuta: {
         estudiante_id: 0,
         codigo: '',
@@ -186,11 +188,17 @@ export default {
         fechaAvance: false,
         logros: false,
         metas: false
-      }
+      },
+      itemsLogros: [],
+      itemsMetas: []
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'estudiante', 'grupo'])
+    ...mapState(['apiUrl', 'estudiante', 'grupo']),
+
+    actualizarAvance: function () {
+      return Object.keys(this.bitacora).length > 0
+    }
   },
   methods: {
     removeFromArray: function (arreglo, item) {
@@ -273,6 +281,77 @@ export default {
     cerrar: function () {
       this.$emit('cerrar')
     },
+    convertirFecha: function (timestamp) {
+      return Funciones.convertirFecha(timestamp)
+    },
+    separarItems: function (listaItems) {
+      for (var i = 0; i < listaItems.length; i++) {
+        if (listaItems[i].tipo_item.tipo === 'Logro') {
+          this.itemsLogros.push(listaItems[i])
+        } else if (listaItems[i].tipo_item.tipo === 'Meta') {
+          this.itemsMetas.push(listaItems[i])
+        }
+      }
+    },
+    buscarIdAsistencia: function (idEstudiante) {
+      if (this.actualizarAvance) {
+        for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
+          if (this.bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
+            return this.bitacora.minuta.asistencia[i].id
+          }
+        }
+      }
+    },
+    separarPorEstudiante: function (listaFuente, idEstudiante) {
+      var lista = []
+      const idAsistencia = this.buscarIdAsistencia(idEstudiante)
+      for (var i = 0; i < listaFuente.length; i++) {
+        if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
+          lista.push(listaFuente[i])
+        }
+      }
+      return lista
+    },
+    logrosPorEstudiante: function (idEstudiante) {
+      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
+    },
+    metasPorEstudiante: function (idEstudiante) {
+      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+    },
+    convertirItems: function (listaAconvertir) {
+      const listaItems = listaAconvertir
+      var lista = []
+      const obj = { id: 0, descripcion: '', correlativo: 1 }
+      var aux = {}
+      for (var i = 0; i < listaItems.length; i++) {
+        aux = Object.assign({}, obj)
+        aux.id = listaItems[i].id
+        aux.descripcion = listaItems[i].descripcion
+        aux.correlativo = listaItems[i].correlativo
+        lista.push(aux)
+      }
+      return lista
+    },
+    convertirLogros: function () {
+      return this.convertirItems(this.logrosPorEstudiante(this.estudiante.id))
+    },
+    convertirMetas: function () {
+      return this.convertirItems(this.metasPorEstudiante(this.estudiante.id))
+    },
+    convertirBitacora: function () {
+      if (this.actualizarAvance) {
+        this.separarItems(this.bitacora.minuta.items)
+        if (this.bitacora.minuta.estudiante_id === this.estudiante.id) {
+          this.minuta.estudiante_id = this.bitacora.minuta.estudiante_id
+          this.minuta.codigo = this.bitacora.minuta.codigo
+          this.minuta.correlativo = this.bitacora.minuta.correlativo
+          this.minuta.fecha_avance = this.convertirFecha(this.bitacora.minuta.fecha_reunion)
+          this.numeroSprint = this.bitacora.minuta.numero_sprint
+          this.logros = this.convertirLogros()
+          this.metas = this.convertirMetas()
+        }
+      }
+    },
     validarSprint: function () {
       const numero = this.numeroSprint
       if (numero === null || numero === undefined || numero === '') {
@@ -350,6 +429,7 @@ export default {
   mounted () {
     this.obtenerCorrelativo()
     this.obtenerSemestre()
+    this.convertirBitacora()
   }
 }
 </script>

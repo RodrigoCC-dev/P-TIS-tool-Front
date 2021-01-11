@@ -9,7 +9,7 @@
         <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
         <div v-else-if="verSemanal">
-          <Semanal :tipo-minuta="tipo"  @cerrar="cerrarSemanal"/>
+          <Semanal :avance="bitacoraAvance" :tipo-minuta="tipo"  @cerrar="cerrarSemanal"/>
         </div>
 
         <div v-else>
@@ -50,7 +50,7 @@
             <br>
           </div>
 
-          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion" @avance="editarAvance"/>
 
         </div>
 
@@ -127,7 +127,8 @@ export default {
       nuevaRevision: '',
       esNuevaEmision: false,
       valorActual: 0,
-      tableroEst: 0
+      tableroEst: 0,
+      bitacoraAvance: {}
     }
   },
   computed: {
@@ -276,6 +277,11 @@ export default {
     cerrarSemanal: function () {
       this.verSemanal = false
       this.mostrarTablero()
+    },
+    editarAvance: function (bitacora) {
+      this.bitacoraAvance = bitacora
+      this.verSemanal = true
+      this.seleccionarMinuta = false
     }
   },
   mounted () {

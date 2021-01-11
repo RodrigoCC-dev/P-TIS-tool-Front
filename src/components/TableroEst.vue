@@ -81,7 +81,7 @@
             <tbody>
               <tr v-for="(bitacora, index) in borradoresAvances" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1}}</th>
-                <td><a @click="editarAvance(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
+                <td><a @click="editarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
                 <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -447,6 +447,9 @@ export default {
     nuevaEmision: function (id) {
       this.minutaActual = id
       this.$emit('emitir', id)
+    },
+    editarAvance: function (bitacora) {
+      this.$emit('avance', bitacora)
     }
   },
   watch: {
