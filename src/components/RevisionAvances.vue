@@ -47,7 +47,10 @@
     </div>
 
     <div v-else>
-
+      <InfoAvance :minuta="bitacora"/>
+      <div>
+        <VisorEstudiante/>
+      </div>
     </div>
 
   </div>
@@ -61,18 +64,23 @@ import { mapState } from 'vuex'
 
 import SelectorJornada from '@/components/SelectorJornada.vue'
 import SelectorGrupo from '@/components/SelectorGrupo.vue'
+import InfoAvance from '@/components/semanal/InfoAvance.vue'
+import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
 
 export default {
   name: 'RevisionAvances',
   components: {
     SelectorJornada,
-    SelectorGrupo
+    SelectorGrupo,
+    InfoAvance,
+    VisorEstudiante
   },
   data () {
     return {
       grupoSeleccionado: {},
       listaAvances: [],
-      revisarMinuta: false
+      revisarMinuta: false,
+      bitacora: {}
     }
   },
   computed: {
@@ -107,6 +115,10 @@ export default {
         console.log('No se han obtenido las minutas de avance del grupo seleccionado')
         console.log(e)
       }
+    },
+    revisarAvance: function (bitacora) {
+      this.bitacora = bitacora
+      this.revisarMinuta = true
     }
   }
 }
