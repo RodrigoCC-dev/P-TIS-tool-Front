@@ -9,6 +9,7 @@
       <SelectorGrupo @eleccion="seleccionarGrupo"/>
 
       <br>
+      <br>
       <div class="columns">
         <div class="column is-10 is-offset-1">
           <div v-if="mostrarMinutas">
@@ -29,7 +30,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(bitacora, index) in listaAvances" :key="bitacora.id">
+                  <tr v-for="(bitacora, index) in listaFiltrada" :key="bitacora.id">
                     <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                     <td><a @click="revisarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
                     <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
@@ -79,6 +80,15 @@ export default {
 
     mostrarMinutas: function () {
       return this.listaAvances.length > 0
+    },
+    listaFiltrada: function () {
+      var lista = []
+      for (var i = 0; i < this.listaAvances.length; i++) {
+        if (this.listaAvances[i].minuta.bitacora_estado.tipo_estado.abreviacion === 'CER') {
+          lista.push(this.listaAvances[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
