@@ -149,10 +149,25 @@
           </div>
         </div>
       </div>
+      <div class="column is-3" v-if="mostrarEmitir">
+        <div class="field">
+          <div class="control">
+            <a class="button is-secondary-usach is-fullwidth" @click="emitirMinuta">Emitir</a>
+          </div>
+        </div>
+      </div>
       <div class="column is-3">
         <div class="control">
           <a class="button is-light-usach is-fullwidth" @click="cerrar">Cancelar</a>
         </div>
+      </div>
+    </div>
+
+    <br>
+    <hr>
+    <div v-if="actualizarAvance">
+      <div v-for="estudiante in compañerosGrupo" :key="estudiante.id">
+        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
       </div>
     </div>
 
@@ -165,11 +180,18 @@ import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
+import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
+
 export default {
   name: 'Semanal',
-  props: ['idBitacora', 'tipoMinuta'],
+  components: {
+    VisorEstudiante
+  },
+  props: ['avance', 'tipoMinuta'],
   data () {
     return {
+      id: 0,
+      bitacora: this.avance,
       minuta: {
         estudiante_id: 0,
         codigo: '',
@@ -186,11 +208,38 @@ export default {
         fechaAvance: false,
         logros: false,
         metas: false
-      }
+      },
+      itemsLogros: [],
+      itemsMetas: [],
+      emitir: false
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'estudiante', 'grupo'])
+    ...mapState(['apiUrl', 'estudiante', 'grupo']),
+
+    actualizarAvance: function () {
+      return Object.keys(this.bitacora).length > 0
+    },
+    compañerosGrupo: function () {
+      var lista = []
+      for (var i = 0; i < this.grupo.estudiantes.length; i++) {
+        if (this.grupo.estudiantes[i].id !== this.estudiante.id) {
+          lista.push(this.grupo.estudiantes[i])
+        }
+      }
+      return lista
+    },
+    mostrarEmitir: function () {
+      if (this.actualizarAvance) {
+        if (this.bitacora.minuta.estudiante_id === this.estudiante.id) {
+          return this.bitacora.minuta.asistencia.length === this.grupo.estudiantes.length
+        } else {
+          return this.bitacora.minuta.asistencia.length >= this.grupo.estudiantes.length - 1
+        }
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     removeFromArray: function (arreglo, item) {
@@ -253,25 +302,126 @@ export default {
     },
     async guardar () {
       if (this.validarFormulario()) {
-        this.establecerId()
-        this.minuta.codigo = this.establecerCodigo()
-        const items = {
-          minuta: this.minuta,
-          numero_sprint: this.numeroSprint,
-          logros: this.logros,
-          metas: this.metas
-        }
-        try {
-          await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
-          this.$emit('cerrar')
-        } catch (e) {
-          console.log('No fue posible guardar los logros y metas de la semana')
-          console.log(e)
+        if (!this.actualizarAvance) {
+          this.establecerId()
+          this.minuta.codigo = this.establecerCodigo()
+          const items = {
+            minuta: this.minuta,
+            numero_sprint: this.numeroSprint,
+            logros: this.logros,
+            metas: this.metas
+          }
+          try {
+            await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
+            this.$emit('cerrar')
+          } catch (e) {
+            console.log('No fue posible guardar los logros y metas de la semana')
+            console.log(e)
+          }
+        } else {
+          this.actualizar()
         }
       }
     },
+    async actualizar () {
+      const items = {
+        id: this.bitacora.id,
+        minuta: this.minuta,
+        numero_sprint: this.numeroSprint,
+        logros: this.logros,
+        metas: this.metas,
+        emitir: this.emitir
+      }
+      try {
+        await axios.post(this.apiUrl + '/minutas/actualizar/avance/semanal', items, { headers: Auth.postHeader() })
+        this.$emit('cerrar')
+      } catch (e) {
+        console.log('No fue posible actualizar los logros y metas de la semana')
+        console.log(e)
+      }
+    },
+    emitirMinuta: function () {
+      this.emitir = true
+      this.guardar()
+    },
     cerrar: function () {
       this.$emit('cerrar')
+    },
+    convertirFecha: function (timestamp) {
+      return Funciones.convertirFecha(timestamp)
+    },
+    separarItems: function (listaItems) {
+      for (var i = 0; i < listaItems.length; i++) {
+        if (listaItems[i].tipo_item.tipo === 'Logro') {
+          this.itemsLogros.push(listaItems[i])
+        } else if (listaItems[i].tipo_item.tipo === 'Meta') {
+          this.itemsMetas.push(listaItems[i])
+        }
+      }
+    },
+    buscarIdAsistencia: function (idEstudiante) {
+      if (this.actualizarAvance) {
+        for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
+          if (this.bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
+            return this.bitacora.minuta.asistencia[i].id
+          }
+        }
+      }
+    },
+    separarPorEstudiante: function (listaFuente, idEstudiante) {
+      var lista = []
+      const idAsistencia = this.buscarIdAsistencia(idEstudiante)
+      for (var i = 0; i < listaFuente.length; i++) {
+        if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
+          lista.push(listaFuente[i])
+        }
+      }
+      return lista
+    },
+    logrosPorEstudiante: function (idEstudiante) {
+      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
+    },
+    metasPorEstudiante: function (idEstudiante) {
+      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+    },
+    mostrarAvance: function (idEstudiante) {
+      return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0
+    },
+    convertirItems: function (listaAconvertir) {
+      const listaItems = listaAconvertir
+      var lista = []
+      const obj = { id: 0, descripcion: '', correlativo: 1 }
+      var aux = {}
+      if (listaAconvertir.length > 0) {
+        for (var i = 0; i < listaItems.length; i++) {
+          aux = Object.assign({}, obj)
+          aux.id = listaItems[i].id
+          aux.descripcion = listaItems[i].descripcion
+          aux.correlativo = listaItems[i].correlativo
+          lista.push(aux)
+        }
+      } else {
+        lista.push(obj)
+      }
+      return lista
+    },
+    convertirLogros: function () {
+      return this.convertirItems(this.logrosPorEstudiante(this.estudiante.id))
+    },
+    convertirMetas: function () {
+      return this.convertirItems(this.metasPorEstudiante(this.estudiante.id))
+    },
+    convertirBitacora: function () {
+      if (this.actualizarAvance) {
+        this.separarItems(this.bitacora.minuta.items)
+        this.minuta.estudiante_id = this.bitacora.minuta.estudiante_id
+        this.minuta.codigo = this.bitacora.minuta.codigo
+        this.minuta.correlativo = this.bitacora.minuta.correlativo
+        this.minuta.fecha_avance = this.convertirFecha(this.bitacora.minuta.fecha_reunion)
+        this.numeroSprint = this.bitacora.minuta.numero_sprint
+        this.logros = this.convertirLogros()
+        this.metas = this.convertirMetas()
+      }
     },
     validarSprint: function () {
       const numero = this.numeroSprint
@@ -348,8 +498,11 @@ export default {
     }
   },
   mounted () {
-    this.obtenerCorrelativo()
-    this.obtenerSemestre()
+    if (!this.actualizarAvance) {
+      this.obtenerCorrelativo()
+      this.obtenerSemestre()
+    }
+    this.convertirBitacora()
   }
 }
 </script>

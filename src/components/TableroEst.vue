@@ -65,6 +65,33 @@
           </div>
         </div>
       </section>
+      <hr>
+      <section class="new-section">
+        <div class="container">
+          <p id="avances" class="title is-5">Borradores avances semanales</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarBorrAvances" aria-describedby="avances">
+            <thead>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Sprint</th>
+                <th class="has-text-centered" scope="col">Iniciada el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(bitacora, index) in borradoresAvances" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1}}</th>
+                <td><a @click="editarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay borradores de avance semanal para mostrar</p>
+          </div>
+        </div>
+      </section>
     </div>
 
     <div v-if="nombreTab === nombreTabs.emitidas">
@@ -187,35 +214,6 @@
           </div>
         </div>
       </section>
-      <hr>
-      <section class="new-section">
-        <div class="container">
-          <p id="resp-cliente" class="title is-5">Respondidas por el Cliente</p>
-          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
-            <thead>
-              <tr class="has-background-light">
-                <th class="has-text-centered" scope="col">N°</th>
-                <th class="has-text-centered" scope="col">Código</th>
-                <th class="has-text-centered" scope="col">Revisión</th>
-                <th class="has-text-centered" scope="col">Realizada por</th>
-                <th class="has-text-centered" scope="col">Emitida el</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarRespuestas(bitacora.id)"></a>{{ bitacora.minuta.codigo }}</td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
-                <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-else>
-            <p class="subtitle is-5">No hay minutas respondidas por el Cliente para mostrar</p>
-          </div>
-        </div>
-      </section>
     </div>
 
     <div v-if="nombreTab === nombreTabs.cerradas">
@@ -312,16 +310,18 @@ export default {
       listaComentadasGrupo: [],
       listaComentadasCliente: [],
       listaRespondidasGrupo: [],
-      listaRespondidasCliente: [],
       listaCerradas: [],
       listaEmitidas: [],
       listaRevision: [],
+      listaAvances: [],
+      borradoresAvances: [],
+      cerradasAvances: [],
       contar: this.contador,
       minutaActual: this.seleccionado
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'grupo']),
 
     mostrarBorradores: function () {
       return this.listaBorradores.length > 0
@@ -341,11 +341,14 @@ export default {
     mostrarRespondidasGrupo: function () {
       return this.listaRespondidasGrupo.length > 0
     },
-    mostrarRespondidasCliente: function () {
-      return this.listaRespondidasCliente.length > 0
-    },
     mostrarRevision: function () {
       return this.listaRevision.length > 0
+    },
+    mostrarBorrAvances: function () {
+      return this.borradoresAvances.length > 0
+    },
+    mostrarCerrAvances: function () {
+      return this.cerradasAvances.length > 0
     }
   },
   methods: {
@@ -370,12 +373,23 @@ export default {
             this.listaComentadasGrupo.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
             this.listaComentadasCliente.push(this.listaMinutas[i])
-          } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
-            this.listaRespondidasCliente.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
             this.listaCerradas.push(this.listaMinutas[i])
           } else if (this.listaMinutas[i].estado.abreviacion === 'EMI') {
             this.listaEmitidas.push(this.listaMinutas[i])
+          }
+        }
+      }
+    },
+    categorizarAvances: function () {
+      if (this.listaAvances.length > 0) {
+        this.borradoresAvances = []
+        this.cerradasAvances = []
+        for (var i = 0; i < this.listaAvances.length; i++) {
+          if (this.listaAvances[i].minuta.bitacora_estado.tipo_estado.abreviacion === 'BOR') {
+            this.borradoresAvances.push(this.listaAvances[i])
+          } else if (this.listaAvances[i].minuta.bitacora_estado.tipo_estado.abreviacion === 'CER') {
+            this.cerradasAvances.push(this.listaAvances[i])
           }
         }
       }
@@ -408,6 +422,16 @@ export default {
         console.log(e)
       }
     },
+    async obtenerAvances () {
+      try {
+        const response = await axios.get(this.apiUrl + '/minutas/avances/semanales/grupo/' + await this.grupo.id, { headers: Auth.authHeader() })
+        this.listaAvances = response.data
+        this.categorizarAvances()
+      } catch (e) {
+        console.log('No se han obtenido las minutas de avance semanal')
+        console.log(e)
+      }
+    },
     editarBorrador: function (id) {
       this.$emit('bitacora', id)
     },
@@ -423,6 +447,9 @@ export default {
     nuevaEmision: function (id) {
       this.minutaActual = id
       this.$emit('emitir', id)
+    },
+    editarAvance: function (bitacora) {
+      this.$emit('avance', bitacora)
     }
   },
   watch: {
@@ -430,12 +457,19 @@ export default {
       this.obtenerMinutas()
       this.obtenerParaRevisar()
       this.obtenerRespondidas()
+      this.obtenerAvances()
+    },
+    grupo: function () {
+      this.obtenerAvances()
     }
   },
   mounted () {
     this.obtenerMinutas()
     this.obtenerParaRevisar()
     this.obtenerRespondidas()
+    if (Object.keys(this.grupo).length > 0) {
+      this.obtenerAvances()
+    }
   }
 }
 </script>

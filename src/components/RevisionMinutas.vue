@@ -36,7 +36,7 @@
                 <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
                   <th scope="row" :class="{ 'is-selected-usach' : grupoActual === grupo.id}">{{ index + 1 }}</th>
                   <td :class="{ 'is-selected-usach' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
-                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)">{{ grupo.proyecto }}</td>
+                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id}" @click="seleccionarGrupo(grupo.id)"><a>{{ grupo.proyecto }}</a></td>
                 </tr>
               </tbody>
             </table>
