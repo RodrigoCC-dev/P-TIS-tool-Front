@@ -80,7 +80,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'InfoAvance',
-  props: ['minuta']
+  props: ['minuta'],
   data () {
     return {
       bitacora: this.minuta
