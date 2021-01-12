@@ -87,7 +87,7 @@ import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Responder from '@/components/comentarios/ResponderMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import Emision from '@/components/comentarios/NuevaMinuta.vue'
-import Semanal from '@/components/Semanal.vue'
+import Semanal from '@/components/semanal/Semanal.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'

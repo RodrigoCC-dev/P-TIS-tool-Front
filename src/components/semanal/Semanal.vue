@@ -156,6 +156,14 @@
       </div>
     </div>
 
+    <br>
+    <hr>
+    <div v-if="actualizarAvance">
+      <div v-for="estudiante in compañerosGrupo" :key="estudiante.id">
+        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)"/>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -165,8 +173,13 @@ import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
+import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
+
 export default {
   name: 'Semanal',
+  components: {
+    VisorEstudiante
+  },
   props: ['avance', 'tipoMinuta'],
   data () {
     return {
@@ -198,6 +211,15 @@ export default {
 
     actualizarAvance: function () {
       return Object.keys(this.bitacora).length > 0
+    },
+    compañerosGrupo: function () {
+      var lista = []
+      for (var i = 0; i < this.grupo.estudiantes.length; i++) {
+        if (this.grupo.estudiantes[i].id !== this.estudiante.id) {
+          lista.push(this.grupo.estudiantes[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
