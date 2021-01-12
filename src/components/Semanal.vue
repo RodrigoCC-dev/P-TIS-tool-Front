@@ -343,12 +343,16 @@ export default {
       var lista = []
       const obj = { id: 0, descripcion: '', correlativo: 1 }
       var aux = {}
-      for (var i = 0; i < listaItems.length; i++) {
-        aux = Object.assign({}, obj)
-        aux.id = listaItems[i].id
-        aux.descripcion = listaItems[i].descripcion
-        aux.correlativo = listaItems[i].correlativo
-        lista.push(aux)
+      if (listaAconvertir.length > 0) {
+        for (var i = 0; i < listaItems.length; i++) {
+          aux = Object.assign({}, obj)
+          aux.id = listaItems[i].id
+          aux.descripcion = listaItems[i].descripcion
+          aux.correlativo = listaItems[i].correlativo
+          lista.push(aux)
+        }
+      } else {
+        lista.push(obj)
       }
       return lista
     },
@@ -361,15 +365,13 @@ export default {
     convertirBitacora: function () {
       if (this.actualizarAvance) {
         this.separarItems(this.bitacora.minuta.items)
-        if (this.bitacora.minuta.estudiante_id === this.estudiante.id) {
-          this.minuta.estudiante_id = this.bitacora.minuta.estudiante_id
-          this.minuta.codigo = this.bitacora.minuta.codigo
-          this.minuta.correlativo = this.bitacora.minuta.correlativo
-          this.minuta.fecha_avance = this.convertirFecha(this.bitacora.minuta.fecha_reunion)
-          this.numeroSprint = this.bitacora.minuta.numero_sprint
-          this.logros = this.convertirLogros()
-          this.metas = this.convertirMetas()
-        }
+        this.minuta.estudiante_id = this.bitacora.minuta.estudiante_id
+        this.minuta.codigo = this.bitacora.minuta.codigo
+        this.minuta.correlativo = this.bitacora.minuta.correlativo
+        this.minuta.fecha_avance = this.convertirFecha(this.bitacora.minuta.fecha_reunion)
+        this.numeroSprint = this.bitacora.minuta.numero_sprint
+        this.logros = this.convertirLogros()
+        this.metas = this.convertirMetas()
       }
     },
     validarSprint: function () {
@@ -447,8 +449,10 @@ export default {
     }
   },
   mounted () {
-    this.obtenerCorrelativo()
-    this.obtenerSemestre()
+    if (!this.actualizarAvance) {
+      this.obtenerCorrelativo()
+      this.obtenerSemestre()
+    }
     this.convertirBitacora()
   }
 }
