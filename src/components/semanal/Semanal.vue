@@ -149,6 +149,13 @@
           </div>
         </div>
       </div>
+      <div class="column is-3" v-if="mostrarEmitir">
+        <div class="field">
+          <div class="control">
+            <a class="button is-secondary-usach is-fullwidth" @click="emitirMinuta">Emitir</a>
+          </div>
+        </div>
+      </div>
       <div class="column is-3">
         <div class="control">
           <a class="button is-light-usach is-fullwidth" @click="cerrar">Cancelar</a>
@@ -160,7 +167,7 @@
     <hr>
     <div v-if="actualizarAvance">
       <div v-for="estudiante in compañerosGrupo" :key="estudiante.id">
-        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)"/>
+        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
       </div>
     </div>
 
@@ -203,7 +210,8 @@ export default {
         metas: false
       },
       itemsLogros: [],
-      itemsMetas: []
+      itemsMetas: [],
+      emitir: false
     }
   },
   computed: {
@@ -220,6 +228,17 @@ export default {
         }
       }
       return lista
+    },
+    mostrarEmitir: function () {
+      if (this.actualizarAvance) {
+        if (this.bitacora.minuta.estudiante_id === this.estudiante.id) {
+          return this.bitacora.minuta.asistencia.length === this.grupo.estudiantes.length
+        } else {
+          return this.bitacora.minuta.asistencia.length >= this.grupo.estudiantes.length - 1
+        }
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -310,7 +329,8 @@ export default {
         minuta: this.minuta,
         numero_sprint: this.numeroSprint,
         logros: this.logros,
-        metas: this.metas
+        metas: this.metas,
+        emitir: this.emitir
       }
       try {
         await axios.post(this.apiUrl + '/minutas/actualizar/avance/semanal', items, { headers: Auth.postHeader() })
@@ -319,6 +339,10 @@ export default {
         console.log('No fue posible actualizar los logros y metas de la semana')
         console.log(e)
       }
+    },
+    emitirMinuta: function () {
+      this.emitir = true
+      this.guardar()
     },
     cerrar: function () {
       this.$emit('cerrar')
@@ -359,6 +383,9 @@ export default {
     },
     metasPorEstudiante: function (idEstudiante) {
       return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+    },
+    mostrarAvance: function (idEstudiante) {
+      return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0
     },
     convertirItems: function (listaAconvertir) {
       const listaItems = listaAconvertir
