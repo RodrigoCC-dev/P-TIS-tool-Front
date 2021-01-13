@@ -247,6 +247,32 @@
           </div>
         </div>
       </section>
+      <hr>
+      <section class="new-section">
+        <div class="container">
+          <p id="semanales" class="title is-5">Avances semanales cerrados</p>
+          <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarCerrAvances">
+            <thead>
+              <tr class="has-background-light">
+                <th class="has-text-centered" scope="col">N°</th>
+                <th class="has-text-centered" scope="col">Código</th>
+                <th class="has-text-centered" scope="col">Sprint</th>
+                <th class="has-text-centered" scope="col">Iniciada el</th>
+                <th class="has-text-centered" scope="col">Emitida el</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(bitacora, index) in cerradasAvances" :key="bitacora.id">
+                <th class="has-text-centered" scope="row">{{ index + 1}}</th>
+                <td><a @click="revisarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
+                <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el)}}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision )}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
 
     <div v-if="nombreTab === nombreTabs.revision">
@@ -450,6 +476,9 @@ export default {
     },
     editarAvance: function (bitacora) {
       this.$emit('avance', bitacora)
+    },
+    revisarAvance: function (bitacora) {
+      this.$emit('revisar-avance', bitacora)
     }
   },
   watch: {
