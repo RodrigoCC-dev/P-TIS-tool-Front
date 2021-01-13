@@ -46,10 +46,10 @@
 
         <div class="field mt-6 is-grouped is-grouped-centered">
           <div class="control">
-            <a class="button is-link" @click="cambiarClave">Cambiar contraseña</a>
+            <a class="button is-primary-usach" @click="cambiarClave">Cambiar contraseña</a>
           </div>
           <div class="control">
-            <a class="button is-light" @click="cancelarCambio">Cancelar</a>
+            <a class="button is-light-usach" @click="cancelarCambio">Cancelar</a>
           </div>
         </div>
 
