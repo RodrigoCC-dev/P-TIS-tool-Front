@@ -10,6 +10,7 @@
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Grupos }" @click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Stakeholders }" @click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Minutas}" @click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
+            <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Avances}" @click="elegirTab(nombreTabs.Avances)"><a><strong>Revisar Avances</strong></a></li>
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Profesores }" @click="elegirTab(nombreTabs.Profesores)"><a><strong>Profesores</strong></a></li>
           </ul>
         </div>
@@ -17,6 +18,7 @@
       <GestionEstudiantes v-if="nombreTabActiva === nombreTabs.Estudiantes"/>
       <GestionGrupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
       <RevisionMinutas v-else-if="nombreTabActiva === nombreTabs.Minutas"/>
+      <RevisionAvances v-else-if="nombreTabActiva === nombreTabs.Avances"/>
       <GestionClientes v-else-if="nombreTabActiva === nombreTabs.Stakeholders"/>
       <GestionProfesores v-else-if="nombreTabActiva === nombreTabs.Profesores"/>
     </div>
@@ -33,13 +35,15 @@ import GestionGrupos from '@/components/GestionGrupos.vue'
 import RevisionMinutas from '@/components/RevisionMinutas.vue'
 import GestionClientes from '@/components/GestionClientes.vue'
 import GestionProfesores from '@/components/GestionProfesores.vue'
+import RevisionAvances from '@/components/RevisionAvances.vue'
 
 const nombreTabs = {
   Estudiantes: 'estudiantes',
   Grupos: 'grupos',
   Minutas: 'minutas',
   Stakeholders: 'clientes',
-  Profesores: 'profesores'
+  Profesores: 'profesores',
+  Avances: 'avances'
 }
 
 export default {
@@ -51,7 +55,8 @@ export default {
     GestionGrupos,
     RevisionMinutas,
     GestionClientes,
-    GestionProfesores
+    GestionProfesores,
+    RevisionAvances
   },
   data () {
     return {

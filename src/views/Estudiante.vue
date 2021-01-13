@@ -50,7 +50,7 @@
             <br>
           </div>
 
-          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion" @avance="editarAvance"/>
+          <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion" @avance="editarAvance" @revisar-avance="revisarAvance"/>
 
         </div>
 
@@ -68,8 +68,23 @@
         <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
       </div>
 
-      <div v-if="verEmision">
+      <div v-else-if="verEmision">
         <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @revisar="revisarAprobacion" @cancelar="mostrarTablero"/>
+      </div>
+
+      <div v-else-if="revisarSemanal">
+        <RevisionSemanal :grupo="grupo" :minuta="bitacoraAvance"/>
+
+        <br>
+        <div class="columns is-centered">
+          <div class="column is-5">
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary-usach is-fullwidth" @click="cerrarAvance">Volver</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -88,6 +103,7 @@ import Responder from '@/components/comentarios/ResponderMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import Emision from '@/components/comentarios/NuevaMinuta.vue'
 import Semanal from '@/components/semanal/Semanal.vue'
+import RevisionSemanal from '@/components/semanal/RevisionSemanal.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -105,7 +121,8 @@ export default {
     Responder,
     Respuestas,
     Emision,
-    Semanal
+    Semanal,
+    RevisionSemanal
   },
   data () {
     return {
@@ -123,6 +140,7 @@ export default {
       verRespuestas: false,
       verEmision: false,
       verSemanal: false,
+      revisarSemanal: false,
       idMotivo: 0,
       nuevaRevision: '',
       esNuevaEmision: false,
@@ -282,6 +300,15 @@ export default {
       this.bitacoraAvance = bitacora
       this.verSemanal = true
       this.seleccionarMinuta = false
+    },
+    revisarAvance: function (bitacora) {
+      this.bitacoraAvance = bitacora
+      this.revisarSemanal = true
+      this.crearMinuta = false
+    },
+    cerrarAvance: function () {
+      this.revisarSemanal = false
+      this.mostrarTablero()
     }
   },
   mounted () {

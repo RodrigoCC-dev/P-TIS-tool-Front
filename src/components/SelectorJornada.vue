@@ -55,6 +55,7 @@ export default {
           } else if (aux === 1) {
             this.jornadaActual = this.jornadasProfesor[0]
             this.$emit('jornada', this.jornadaActual)
+            this.$store.commit('setJornadaActual', this.jornadaActual)
           } else {
             this.mostrarJornadas = false
           }
