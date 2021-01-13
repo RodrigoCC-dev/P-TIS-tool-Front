@@ -2,16 +2,7 @@
   <div class="">
     <br>
 
-    <div v-if="mostrarJornadas">
-      <section>
-        <div class="tabs is-toggle is-toggle-rounded is-centered">
-          <ul>
-            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
-          </ul>
-        </div>
-      </section>
-    </div>
+    <SelectorJornada/>
 
     <div class="columns">
       <div class="column is-10"></div>
@@ -127,19 +118,16 @@ import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
-const nombreTabs = {
-  diurna: 'Diurna',
-  vespertina: 'Vespertina'
-}
+import SelectorJornada from '@/components/SelectorJornada.vue'
 
 export default {
   name: 'GestionGrupos',
+  components: {
+    SelectorJornada
+  },
   data () {
     return {
       verFormulario: false,
-      jornadasProfesor: [],
-      mostrarJornadas: false,
-      jornadaActual: 'Diurna',
       estudiantes: [],
       entradas: {
         proyecto: {
@@ -157,12 +145,11 @@ export default {
         correlativo: 0
       },
       listaEstudiantes: [],
-      listaGrupos: [],
-      nombreTabs
+      listaGrupos: []
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     sinAsignar: function () {
       var lista = []
@@ -187,10 +174,6 @@ export default {
     mostrarClientes: function (grupo) {
       return grupo.stakeholders.length > 0
     },
-    elegirTab: function (nombreTab) {
-      this.jornadaActual = nombreTab
-      this.obtenerCorrelativo(this.jornadaActual)
-    },
     agregarGrupo: function () {
       this.verFormulario = true
       this.nuevoGrupo()
@@ -205,29 +188,6 @@ export default {
         }
       } catch (error) {
         console.log(error)
-      }
-    },
-    async obtenerJornadas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
-        var datos = response.data
-        if (Object.keys(datos).length > 0) {
-          var aux = 0
-          for (var i = 0; i < Object.keys(datos).length; i++) {
-            if (this.jornadasProfesor.indexOf(datos[i].nombre) === -1) {
-              aux = this.jornadasProfesor.push(datos[i].nombre)
-            }
-          }
-          if (aux === 2) {
-            this.mostrarJornadas = true
-          } else if (aux === 1) {
-            this.jornadaActual = this.jornadasProfesor[0]
-          } else {
-            this.mostrarJornadas = false
-          }
-        }
-      } catch {
-        console.log('No fue posible obtener las jornadas del profesor')
       }
     },
     async obtenerGrupos () {
@@ -321,9 +281,13 @@ export default {
       return esvalido
     }
   },
+  watch: {
+    jornadaActual: function () {
+      this.obtenerCorrelativo(this.jornadaActual)
+    }
+  },
   mounted () {
     this.obtenerEstudiantes()
-    this.obtenerJornadas()
     this.obtenerGrupos()
   }
 }
