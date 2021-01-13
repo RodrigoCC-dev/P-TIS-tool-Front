@@ -70,21 +70,21 @@
           <div v-if="mostrarLista">
             <table class="table is-bordered is-narrow is-fullwidth" aria-decribedby="estudiantes">
               <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th scope="col">N°</th>
-                  <th scope="col">R.U.N.</th>
-                  <th scope="col">Nombre estudiante</th>
-                  <th scope="col">Sección</th>
+                <tr class="has-background-light">
+                  <th scope="col" class="has-text-centered">N°</th>
+                  <th scope="col" class="has-text-centered">R.U.N.</th>
+                  <th scope="col" class="has-text-centered">Nombre estudiante</th>
+                  <th scope="col" class="has-text-centered">Sección</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ estudiante.run_est}}</td>
-                  <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
-                  <td>{{ estudiante.codigo_seccion}}</td>
-                  <td><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
+                  <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
+                  <td class="has-text-centered">{{ estudiante.run_est}}</td>
+                  <td class="has-text-left">{{ concatenarNombre(estudiante) }}</td>
+                  <td class="has-text-centered">{{ estudiante.codigo_seccion}}</td>
+                  <td class="has-text-centered"><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -97,7 +97,7 @@
       <hr>
     </div>
 
-    <div class="columns">
+    <div class="columns is-multiline">
       <div v-for="grupo in listaGrupos" :key="grupo.id">
         <div class="column is-narrow" v-if="grupo.jornada === jornadaActual">
           <article class="message is-info">
@@ -178,6 +178,9 @@ export default {
     }
   },
   methods: {
+    concatenarNombre: function (estudiante) {
+      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
     },
