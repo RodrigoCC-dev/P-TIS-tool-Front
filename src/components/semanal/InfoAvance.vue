@@ -4,11 +4,7 @@
     <div class="columns is-centered">
       <div class="column is-half">
         <p class="title is-4 has-text-centered">MINUTA DE AVANCE SEMANAL</p>
-      </div>
-    </div>
-    <div class="columns is-centered">
-      <div class="column is-half">
-        <p class="title is-4 has-text-centered">{{ bitacora.minuta.codigo }}</p>
+        <p class="subtitle is-6 has-text-centered">{{ bitacora.minuta.codigo }}</p>
       </div>
     </div>
 
@@ -19,7 +15,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="grupo.proyecto" class="input is-static" type="text">
+            <input v-model="grupoSeleccionado.proyecto" class="input is-static" type="text">
           </p>
         </div>
       </div>
@@ -32,7 +28,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input v-model="grupo.correlativo" class="input has-text-centered is-static" type="text">
+            <input v-model="grupoSeleccionado.correlativo" class="input has-text-centered is-static" type="text">
           </p>
         </div>
       </div>
@@ -65,7 +61,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input has-text-centered is-static" type="date" :value="extraerFecha(bitacora.minuta.fecha_reunion)">
+            <input class="input has-text-centered is-static" type="text" :value="extraerFecha(bitacora.minuta.fecha_reunion)">
           </p>
         </div>
       </div>
@@ -76,22 +72,19 @@
 
 <script>
 import Funciones from '@/services/funciones.js'
-import { mapState } from 'vuex'
 
 export default {
   name: 'InfoAvance',
-  props: ['minuta'],
+  props: ['grupo', 'minuta'],
   data () {
     return {
-      bitacora: this.minuta
+      bitacora: this.minuta,
+      grupoSeleccionado: this.grupo
     }
-  },
-  computed: {
-    ...mapState(['grupo'])
   },
   methods: {
     extraerFecha: function (timestamp) {
-      return Funciones.convertirFecha(timestamp)
+      return Funciones.obtenerFecha(timestamp)
     }
   }
 }

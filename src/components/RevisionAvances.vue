@@ -47,10 +47,20 @@
     </div>
 
     <div v-else>
-      <InfoAvance :minuta="bitacora"/>
-      <div>
-        <VisorEstudiante/>
+
+      <br>
+      <RevisionSemanal :grupo="grupoSeleccionado" :minuta="bitacora"/>
+
+      <div class="columns is-centered">
+        <div class="column is-5">
+          <div class="field">
+            <div class="control">
+              <button class="button is-primary-usach is-fullwidth" @click="cerrarRevision">Volver</button>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
 
   </div>
@@ -64,16 +74,14 @@ import { mapState } from 'vuex'
 
 import SelectorJornada from '@/components/SelectorJornada.vue'
 import SelectorGrupo from '@/components/SelectorGrupo.vue'
-import InfoAvance from '@/components/semanal/InfoAvance.vue'
-import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
+import RevisionSemanal from '@/components/semanal/RevisionSemanal.vue'
 
 export default {
   name: 'RevisionAvances',
   components: {
     SelectorJornada,
     SelectorGrupo,
-    InfoAvance,
-    VisorEstudiante
+    RevisionSemanal
   },
   data () {
     return {
@@ -119,6 +127,12 @@ export default {
     revisarAvance: function (bitacora) {
       this.bitacora = bitacora
       this.revisarMinuta = true
+    },
+    cerrarRevision: function () {
+      this.revisarMinuta = false
+      this.grupoSeleccionado = {}
+      this.listaAvances = []
+      this.bitacora = {}
     }
   }
 }

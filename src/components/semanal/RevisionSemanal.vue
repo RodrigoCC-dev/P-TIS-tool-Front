@@ -1,10 +1,11 @@
 <template>
   <div>
 
-    <InfoAvance :minuta="bitacora"/>
+    <br>
+    <InfoAvance :grupo="grupoSeleccionado" :minuta="bitacora"/>
     <br>
 
-    <div v-for="estudiante in grupo.estudiantes" :key="estudiante.id">
+    <div v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
       <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)"/>
       <br>
     </div>
@@ -13,8 +14,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import InfoAvance from '@/components/semanal/InfoAvance.vue'
 import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
 
@@ -24,17 +23,16 @@ export default {
     InfoAvance,
     VisorEstudiante
   },
-  props: ['minuta'],
+  props: ['grupo', 'minuta'],
   data () {
     return {
+      grupoSeleccionado: this.grupo,
       bitacora: this.minuta,
       itemsLogros: [],
       itemsMetas: []
     }
   },
   computed: {
-    ...mapState(['grupo']),
-
     mostrarBitacora: function () {
       return Object.keys(this.bitacora).length > 0
     }
@@ -73,7 +71,7 @@ export default {
     },
     metasPorEstudiante: function (idEstudiante) {
       return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
-    },
+    }
   },
   mounted () {
     if (this.mostrarBitacora) {
