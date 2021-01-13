@@ -10,6 +10,7 @@
             <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Grupos }" v-on:click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
             <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Stakeholders}" v-on:click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
             <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Minutas}" v-on:click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
+            <li v-bind:class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Avances}" v-on:click="elegirTab(nombreTabs.Avances)"><a><strong>Revisar Avances</strong></a></li>
           </ul>
         </div>
       </nav>
@@ -17,6 +18,7 @@
       <GestionGrupos v-else-if="nombreTabActiva === nombreTabs.Grupos"/>
       <RevisionMinutas v-else-if="nombreTabActiva === nombreTabs.Minutas"/>
       <GestionClientes v-else-if="nombreTabActiva === nombreTabs.Stakeholders"/>
+      <RevisionAvances v-else-if="nombreTabActiva === nombreTabs.Avances"/>
       <br>
     </div>
 
@@ -31,12 +33,14 @@ import GestionEstudiantes from '@/components/GestionEstudiantes.vue'
 import GestionGrupos from '@/components/GestionGrupos.vue'
 import RevisionMinutas from '@/components/RevisionMinutas.vue'
 import GestionClientes from '@/components/GestionClientes.vue'
+import RevisionAvances from '@/components/RevisionAvances.vue'
 
 const nombreTabs = {
   Estudiantes: 'estudiantes',
   Grupos: 'grupos',
   Minutas: 'minutas',
-  Stakeholders: 'clientes'
+  Stakeholders: 'clientes',
+  Avances: 'avances'
 }
 
 export default {
@@ -47,7 +51,8 @@ export default {
     GestionEstudiantes,
     GestionGrupos,
     RevisionMinutas,
-    GestionClientes
+    GestionClientes,
+    RevisionAvances
   },
   data () {
     return {
@@ -62,6 +67,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped>
-</style>

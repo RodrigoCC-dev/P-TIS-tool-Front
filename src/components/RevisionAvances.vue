@@ -10,35 +10,41 @@
 
       <br>
       <br>
-      <div class="columns">
-        <div class="column is-10 is-offset-1">
-          <div v-if="mostrarMinutas">
-            <div class="field">
-              <div class="control">
-                <label id="avances" class="label">Minutas de avance semanal</label>
+      <div v-if="grupoElegido">
+        <div class="columns">
+          <div class="column is-10 is-offset-1">
+            <div v-if="mostrarMinutas">
+              <div class="field">
+                <div class="control">
+                  <label id="avances" class="label">Minutas de avance semanal</label>
+                </div>
+              </div>
+              <div>
+                <table class="table is-bordered is-fullwidth is-narrow" aria-describedby="avances">
+                  <thead>
+                    <tr class="has-background-light">
+                      <th scope="col" class="has-text-centered">N°</th>
+                      <th scope="col" class="has-text-centered">Código minuta</th>
+                      <th scope="col" class="has-text-centered">Sprint</th>
+                      <th scope="col" class="has-text-centered">Creada el</th>
+                      <th scope="col" class="has-text-centered">Emitida el</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(bitacora, index) in listaFiltrada" :key="bitacora.id">
+                      <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
+                      <td><a @click="revisarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
+                      <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
+                      <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
+                      <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div>
-              <table class="table is-bordered is-fullwidth is-narrow" aria-describedby="avances">
-                <thead>
-                  <tr class="has-background-light">
-                    <th scope="col" class="has-text-centered">N°</th>
-                    <th scope="col" class="has-text-centered">Código minuta</th>
-                    <th scope="col" class="has-text-centered">Sprint</th>
-                    <th scope="col" class="has-text-centered">Creada el</th>
-                    <th scope="col" class="has-text-centered">Emitida el</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(bitacora, index) in listaFiltrada" :key="bitacora.id">
-                    <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                    <td><a @click="revisarAvance(bitacora)">{{ bitacora.minuta.codigo }}</a></td>
-                    <td class="has-text-centered">{{ bitacora.minuta.numero_sprint }}</td>
-                    <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
-                    <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div v-else>
+              <br>
+              <p class="subtitle is-5 has-text-centered">No hay minutas de avance semanal para revisar en este grupo</p>
             </div>
           </div>
         </div>
@@ -94,8 +100,11 @@ export default {
   computed: {
     ...mapState(['apiUrl']),
 
+    grupoElegido: function () {
+      return Object.keys(this.grupoSeleccionado).length > 0
+    },
     mostrarMinutas: function () {
-      return this.listaAvances.length > 0
+      return this.listaFiltrada.length > 0
     },
     listaFiltrada: function () {
       var lista = []

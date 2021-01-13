@@ -4,7 +4,7 @@
 
     <div class="container">
       <nav>
-        <div class="tabs is-boxed">
+        <div class="tabs">
           <ul>
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Estudiantes }" @click="elegirTab(nombreTabs.Estudiantes)"><a><strong>Estudiantes</strong></a></li>
             <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Grupos }" @click="elegirTab(nombreTabs.Grupos)"><a><strong>Grupos</strong></a></li>
