@@ -1,4 +1,4 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
 import RevisionMinutas from '@/components/RevisionMinutas.vue'
 
@@ -36,33 +36,9 @@ describe('RevisionMinutas.vue', () => {
     })
   })
 
-/*
-  it('variable jornadaActual se inicializa correctamente', () => {
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.jornadaActual).toEqual('Diurna')
-  })
-
-  it('variable jornadasProfesor se inicializa correctamente', () => {
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.jornadasProfesor).toEqual([])
-  })
-
-  it('vairable listaGrupos se inicializa correctamente', () => {
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.listaGrupos).toEqual([])
-  })
-*/
-
   it('variable mostrarFormulario se inicializa correctamente', () => {
     expect(wrapper.vm.mostrarFormulario).toBeFalsy()
   })
-
-/*
-  it('variable mostrarJornadas se inicializa correctamente', () => {
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.mostrarJornadas).toBeFalsy()
-  })
-*/
 
   it('variable mostrarMinutas se inicializa correctamente', () => {
     expect(wrapper.vm.mostrarMinutas).toBeFalsy()
@@ -71,13 +47,6 @@ describe('RevisionMinutas.vue', () => {
   it('variable "mostrarRegistros" se inicializa correctamente', () => {
     expect(wrapper.vm.mostrarRegistros).toBeFalsy()
   })
-
-/*
-  it('variable grupoActual se inicializa correctamente', () => {
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.grupoActual).toEqual(0)
-  })
-*/
 
   it('variable grupoSeleccionado se inicializa correctamente', () => {
     expect(wrapper.vm.grupoSeleccionado).toEqual({})
@@ -92,15 +61,6 @@ describe('RevisionMinutas.vue', () => {
   })
 
 /*
-  it('variable nombreTabs se inicializa correctamente', () => {
-    const tabs = {
-      diurna: 'Diurna',
-      vespertina: 'Vespertina'
-    }
-    const wrapper = shallowMount(RevisionMinutas)
-    expect(wrapper.vm.nombreTabs).toEqual(tabs)
-  })
-
   it('propiedad computada gruposJornada funciona correctamente', () => {
     const esperado = [
       {

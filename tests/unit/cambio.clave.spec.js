@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import CambioClave from '@/components/CambioClave.vue'
+import CambioClave from '@/components/views/CambioClave.vue'
 
 describe('CambioClave.vue', () => {
   it('variable "actual" se inicializa correctamente', () => {
