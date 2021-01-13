@@ -98,7 +98,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     grupoElegido: function () {
       return Object.keys(this.grupoSeleccionado).length > 0
@@ -142,6 +142,11 @@ export default {
       this.grupoSeleccionado = {}
       this.listaAvances = []
       this.bitacora = {}
+    }
+  },
+  watch: {
+    jornadaActual: function () {
+      this.grupoSeleccionado = {}
     }
   }
 }
