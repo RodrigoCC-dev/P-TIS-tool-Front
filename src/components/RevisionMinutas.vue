@@ -4,17 +4,7 @@
 
     <div v-if="!mostrarFormulario">
 
-      <div v-if="mostrarJornadas">
-        <section>
-          <div class="tabs is-toggle is-toggle-rounded is-centered">
-            <ul>
-              <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-              <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
-            </ul>
-          </div>
-        </section>
-        <br>
-      </div>
+      <SelectorJornada/>
 
       <div class="columns">
         <div class="column is-three-fifths">
@@ -152,20 +142,17 @@ import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
+import SelectorJornada from '@/components/SelectorJornada.vue'
 import Informacion from '@/components/minutas/Informacion.vue'
 import Objetivos from '@/components/minutas/Objetivos.vue'
 import Conclusiones from '@/components/minutas/Conclusiones.vue'
 import Items from '@/components/minutas/Items.vue'
 import Registros from '@/components/RegistroMinuta.vue'
 
-const nombreTabs = {
-  diurna: 'Diurna',
-  vespertina: 'Vespertina'
-}
-
 export default {
   name: 'RevisionMinutas',
   components: {
+    SelectorJornada,
     Informacion,
     Objetivos,
     Conclusiones,
@@ -174,22 +161,18 @@ export default {
   },
   data () {
     return {
-      jornadaActual: 'Diurna',
-      jornadasProfesor: [],
       listaGrupos: [],
       mostrarFormulario: false,
-      mostrarJornadas: false,
       mostrarMinutas: false,
       mostrarRegistros: false,
       grupoActual: 0,
       grupoSeleccionado: {},
       listaMinutas: [],
-      bitacora: {},
-      nombreTabs
+      bitacora: {}
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     gruposJornada: function () {
       var lista = []
@@ -205,11 +188,6 @@ export default {
     }
   },
   methods: {
-    elegirTab: function (nombreTab) {
-      this.jornadaActual = nombreTab
-      this.grupoActual = 0
-      this.mostrarMinutas = false
-    },
     buscarPorId: function (lista, id) {
       return Funciones.busquedaPorId(lista, id)
     },
@@ -228,29 +206,6 @@ export default {
         this.listaGrupos = response.data
       } catch {
         console.log('No se han obtenido los grupos')
-      }
-    },
-    async obtenerJornadas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
-        var datos = response.data
-        if (Object.keys(datos).length > 0) {
-          var aux = 0
-          for (var i = 0; i < Object.keys(datos).length; i++) {
-            if (this.jornadasProfesor.indexOf(datos[i].nombre) === -1) {
-              aux = this.jornadasProfesor.push(datos[i].nombre)
-            }
-          }
-          if (aux === 2) {
-            this.mostrarJornadas = true
-          } else if (aux === 1) {
-            this.jornadaActual = this.jornadasProfesor[0]
-          } else {
-            this.mostrarJornadas = false
-          }
-        }
-      } catch {
-        console.log('No fue posible obtener las jornadas del profesor')
       }
     },
     async obtenerMinutas (grupoId) {
@@ -283,7 +238,6 @@ export default {
   },
   mounted () {
     this.obtenerGrupos()
-    this.obtenerJornadas()
   }
 }
 
