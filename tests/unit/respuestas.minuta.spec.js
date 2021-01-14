@@ -161,5 +161,17 @@ describe('RespuestasMinuta.vue', () => {
     ]
     expect(wrapper.vm.aprobacionesFiltradas).toEqual(esperado)
   })
-  
+
+  it('método "obtenerMinuta" funciona correctamente', async () => {
+    wrapper.vm.obtenerMinuta(495)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.bitacora).toEqual(bitacora)
+  })
+
+  it('método "obtenerRespuestas" funciona correctamente', async () => {
+    wrapper.vm.obtenerRespuestas(495)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.comentarios).toEqual(comentarios)
+  })
+
 })
