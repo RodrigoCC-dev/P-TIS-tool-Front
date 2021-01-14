@@ -22,6 +22,22 @@ describe('RevisionAvances.vue', () => {
     })
   })
 
+  const avances = [
+    {
+      id: 5345,
+      minuta: {
+        id: 63453,
+        bitacora_estado: {
+          id: 9643,
+          tipo_estado: {
+            id: 6435,
+            abreviacion: 'CER'
+          }
+        }
+      }
+    }
+  ]
+
   it('variable "grupoSeleccionado" se inicializa correctamente', () => {
     expect(wrapper.vm.grupoSeleccionado).toEqual({})
   })
@@ -36,5 +52,29 @@ describe('RevisionAvances.vue', () => {
 
   it('variable "bitacora" se inicializa correctamente', () => {
     expect(wrapper.vm.bitacora).toEqual({})
+  })
+
+  it('propiedad computada "grupoElegido" funciona correctamente con "true"', () => {
+    wrapper.vm.grupoSeleccionado = {id: 96345, nombre: 'Grupo de prueba'}
+    expect(wrapper.vm.grupoElegido).toBeTruthy()
+  })
+
+  it('propiedad computada "grupoElegido" funciona correctamente con "false"', () => {
+    expect(wrapper.vm.grupoElegido).toBeFalsy()
+  })
+
+  it('propiedad computada "mostrarMinutas" funciona correctamente con "true"', () => {
+    wrapper.vm.listaAvances = avances
+    expect(wrapper.vm.mostrarMinutas).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarMinutas" funciona correctamente con "false"', () => {
+    expect(wrapper.vm.mostrarMinutas).toBeFalsy()
+  })
+
+  it('propiedad computada "listaFiltrada" funciona correctamente', () => {
+    wrapper.vm.listaAvances = avances
+    expect(wrapper.vm.listaFiltrada).toEqual(avances)
+    expect(wrapper.vm.listaFiltrada.length).toEqual(1)
   })
 })
