@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
+import axios from 'axios'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 
 const store = createStore({
@@ -30,6 +31,70 @@ const store = createStore({
         {id: 235, identificador: 'RC', descripcion: 'Rechazada con comentarios', rango: 4}
       ]
     }
+  }
+})
+
+const bitacora = {
+  id: 9454,
+  revision: 'A',
+  motivo: 'Emitido para prueba',
+  identificador: 'ECI',
+  minuta: {
+    id: 39453,
+    codigo: 'MINUTA_G04_03_2020-2_1121',
+    correlativo: 3,
+    tema: 'Esta es una prueba',
+    creada_por: 'ABC',
+    creada_el: '2020-03-04T09:23:34.454Z',
+    tipo: 'Coordinacion',
+    fecha_reunion: '2020-03-02T00:00:00.345Z',
+    h_inicio: '2000-01-01T11:30:00.000Z',
+    h_termino: '2000-01-01T12:30:00.000Z',
+    clasificacion: {
+      informativa: false,
+      avance: true,
+      coordinacion: false,
+      decision: true,
+      otro:false
+    },
+    objetivos: [],
+    conclusiones: [],
+    asistencia: [],
+    items: []
+  }
+}
+
+const comentarios = [
+  {
+    id: 94534,
+    comentario: 'Este es un comentario de prueba',
+    es_item: true,
+    id_item: 3454,
+    asistencia_id: 34,
+    bitacora_revision_id: 9454,
+    respuestas: [
+      {
+        id: 4543,
+        respuesta: 'Respuesta al comentario de prueba',
+        comentario_id: 94534,
+        assitencia_id: 23495
+      }
+    ]
+  }
+]
+
+jest.mock('axios')
+
+const apiUrl = '127.0.0.1:3000'
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/minutas/495':
+      return Promise.resolve({data: bitacora})
+    case apiUrl + '/respuestas/495':
+      return Promise.resolve({data: comentarios})
+    default:
+      return Promise.reject(new Error('not found'))
   }
 })
 
