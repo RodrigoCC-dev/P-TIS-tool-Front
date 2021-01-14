@@ -37,6 +37,8 @@ describe('RevisionAvances.vue', () => {
       }
     }
   ]
+  const grupo = {id: 9453, nombre: 'Grupo de prueba'}
+  const bitacora = {id: 9543, minuta: {id: 64353, codigo: 'MINUTA_G02_04_2020'}}
 
   it('variable "grupoSeleccionado" se inicializa correctamente', () => {
     expect(wrapper.vm.grupoSeleccionado).toEqual({})
@@ -76,5 +78,32 @@ describe('RevisionAvances.vue', () => {
     wrapper.vm.listaAvances = avances
     expect(wrapper.vm.listaFiltrada).toEqual(avances)
     expect(wrapper.vm.listaFiltrada.length).toEqual(1)
+  })
+
+  it('método "convertirFecha" funciona correctamente', () => {
+    expect(wrapper.vm.convertirFecha('2021-01-15')).toEqual('15-01-2021')
+  })
+
+  it('método "seleccionarGrupo" funciona correctamente', () => {
+    wrapper.vm.seleccionarGrupo(grupo)
+    expect(wrapper.vm.grupoSeleccionado).toEqual(grupo)
+  })
+
+  it('método "revisarAvance" funciona correctamente', () => {
+    wrapper.vm.revisarAvance(bitacora)
+    expect(wrapper.vm.bitacora).toEqual(bitacora)
+    expect(wrapper.vm.revisarMinuta).toBeTruthy()
+  })
+
+  it('método "cerrarRevision" funciona correctamente', () => {
+    wrapper.vm.revisarMinuta = true
+    wrapper.vm.grupoSeleccionado = grupo
+    wrapper.vm.listaAvances = avances
+    wrapper.vm.bitacora = bitacora
+    wrapper.vm.cerrarRevision()
+    expect(wrapper.vm.revisarMinuta).toBeFalsy()
+    expect(wrapper.vm.grupoSeleccionado).toEqual({})
+    expect(wrapper.vm.listaAvances).toEqual([])
+    expect(wrapper.vm.bitacora).toEqual({})
   })
 })
