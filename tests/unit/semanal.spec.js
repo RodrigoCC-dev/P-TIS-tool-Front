@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
+import axios from 'axios'
 import Semanal from '@/components/semanal/Semanal.vue'
 
 const estudiante = {
@@ -60,6 +61,28 @@ const store = createStore({
       estudiante: estudiante,
       grupo: grupo
     }
+  }
+})
+
+const semestre = {
+  id: 24538,
+  numero: 1,
+  agno: 2021,
+  activo: true,
+  inicio: '2021-03-05T00:00:00.000Z',
+  fin: '2021-07-15T00:00:00.000Z'
+}
+
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case '127.0.0.1:3000/minutas/correlativo/semanal/94534':
+      return Promise.resolve({data: 2945})
+    case '127.0.0.1:3000/semestres':
+      return Promise.resolve({data: semestre})
+    default:
+      return Promise.reject(new Error('not found'))
   }
 })
 
@@ -331,5 +354,57 @@ describe('Semanal.vue', () => {
 
   it('variable "emitir" se inicializa correctamente', () => {
     expect(wrapper.vm.emitir).toBeFalsy()
+  })
+
+  it('propiedad computada "actualizarAvance" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.actualizarAvance).toBeTruthy()
+  })
+
+  it('propiedad computada "actualizarAvance" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.actualizarAvance).toBeFalsy()
+  })
+
+  it('propiedad computada "compagnerosGrupo" funciona correctamente', () => {
+    const esperado = [
+      {
+        id: 45334,
+        iniciales: 'LMN',
+        usuario: {
+          id: 79435,
+          nombre: 'Luisa',
+          apellido_paterno: 'Martinez',
+          apellido_materno: 'Norambuena',
+          run: '11111111-1',
+          email: 'luisa.martinez@algo.com'
+        }
+      }
+    ]
+    expect(wrapper.vm.compagnerosGrupo).toEqual(esperado)
+  })
+
+  it('propiedad computada "mostrarEmitir" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.mostrarEmitir).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarEmitir" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.mostrarEmitir).toBeFalsy()
   })
 })

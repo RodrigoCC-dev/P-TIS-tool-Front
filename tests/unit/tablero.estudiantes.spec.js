@@ -7,6 +7,7 @@ import TableroEst from '@/components/TableroEst.vue'
 const store = createStore({
   state() {
     return {
+      apiUrl: '127.0.0.1:3000',
       grupo: {
         id: 93453,
         nombre: 'G01',
@@ -111,13 +112,13 @@ const grupo = [
 
 axios.get.mockImplementation((url) => {
   switch (url) {
-    case '/minutas/revision/estados':
+    case '127.0.0.1:3000/minutas/revision/estados':
       return Promise.resolve({ data: estados})
-    case '/minutas/revision/grupo':
+    case '127.0.0.1:3000/minutas/revision/grupo':
       return Promise.resolve({ data: []})
-    case '/minutas/revision/respondidas':
+    case '127.0.0.1:3000/minutas/revision/respondidas':
       return Promise.resolve({ data: []})
-    case '/minutas/avances/semanales/grupo/93453':
+    case '127.0.0.1:3000/minutas/avances/semanales/grupo/93453':
       return Promise.resolve({ data: grupo})
     default:
       return Promise.reject(new Error('not found'))

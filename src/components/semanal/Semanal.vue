@@ -166,7 +166,7 @@
     <br>
     <hr>
     <div v-if="actualizarAvance">
-      <div v-for="estudiante in compañerosGrupo" :key="estudiante.id">
+      <div v-for="estudiante in compagnerosGrupo" :key="estudiante.id">
         <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
       </div>
     </div>
@@ -220,7 +220,7 @@ export default {
     actualizarAvance: function () {
       return Object.keys(this.bitacora).length > 0
     },
-    compañerosGrupo: function () {
+    compagnerosGrupo: function () {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
         if (this.grupo.estudiantes[i].id !== this.estudiante.id) {
