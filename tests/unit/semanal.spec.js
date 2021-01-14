@@ -270,7 +270,6 @@ describe('Semanal.vue', () => {
       descripcion: 'Otro item para la prueba',
       correlativo: 23534
     }]
-    debugger
     expect(wrapper.vm.metas).toEqual(esperado)
   })
 
@@ -407,4 +406,129 @@ describe('Semanal.vue', () => {
     })
     expect(wrapper.vm.mostrarEmitir).toBeFalsy()
   })
+
+  it('método "removeFromArray" funciona correctamente', () => {
+    const array = ['Papa', 'Manzana', 'Naranja']
+    const resultado = ['Manzana', 'Naranja']
+    wrapper.vm.removeFromArray(array, 'Papa')
+    expect(array).toEqual(resultado)
+  })
+
+  it('método "agregarLogro" funciona correctamente', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.agregarLogro()
+    expect(wrapper.vm.logros.length).toEqual(2)
+    expect(wrapper.vm.logros[0]).toEqual(item[0])
+    expect(wrapper.vm.logros[1]).toEqual({id: 0, descripcion: '', correlativo: 2})
+  })
+
+  it('método "removerLogro" funciona correctamente con largo "logros" igual a uno', () => {
+    const esperado = [
+      {id: 0, descripcion: '', correlativo: 1},
+      {id: 0, descripcion: '', correlativo: 3}
+    ]
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.agregarLogro()
+    wrapper.vm.agregarLogro()
+    wrapper.vm.removerLogro(wrapper.vm.logros[1])
+    expect(wrapper.vm.logros).toEqual(esperado)
+  })
+
+  it('método "agregarMeta" funciona correctamente', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.agregarMeta()
+    expect(wrapper.vm.metas.length).toEqual(2)
+    expect(wrapper.vm.metas[0]).toEqual(item[0])
+    expect(wrapper.vm.metas[1]).toEqual({id: 0, descripcion: '', correlativo: 2})
+  })
+
+  it('método "removerMeta" funciona correctamente con largo "logros" igual a uno', () => {
+    const esperado = [
+      {id: 0, descripcion: '', correlativo: 1},
+      {id: 0, descripcion: '', correlativo: 3}
+    ]
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.agregarMeta()
+    wrapper.vm.agregarMeta()
+    wrapper.vm.removerMeta(wrapper.vm.metas[1])
+    expect(wrapper.vm.metas).toEqual(esperado)
+  })
+
+  it('método "establecerId" funciona correctamente', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.establecerId()
+    expect(wrapper.vm.minuta.estudiante_id).toEqual(94534)
+  })
+
+  it('método "establecerCodigo" funciona correctamente', async () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    debugger
+    await wrapper.vm.$nextTick()
+    wrapper.vm.minuta.correlativo = 9
+    wrapper.vm.minuta.fecha_avance = '2021-01-14'
+    expect(wrapper.vm.establecerCodigo()).toEqual('MINUTA_G08_09_2021-1_0114')
+  })
+
+  it('método "obtenerSemestre" funciona correctamente', async () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.semestre).toEqual(semestre)
+  })
+
 })
