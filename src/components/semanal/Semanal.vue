@@ -392,7 +392,7 @@ export default {
       var lista = []
       const obj = { id: 0, descripcion: '', correlativo: 1 }
       var aux = {}
-      if (listaAconvertir.length > 0) {
+      if (listaItems.length > 0) {
         for (var i = 0; i < listaItems.length; i++) {
           aux = Object.assign({}, obj)
           aux.id = listaItems[i].id
