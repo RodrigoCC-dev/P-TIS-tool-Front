@@ -32,89 +32,93 @@ const store = createStore({
 
 jest.mock('axios')
 
+const estados = [
+  {
+    id: 96345,
+    motivo: 'Emitida para pruebas',
+    revision: '0',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 913453,
+      codigo: 'MINUTA_G02_04_2020',
+      correlativo: 9,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Cliente',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 194534,
+      abreviacion: 'CER',
+      descripcion: 'Cerrada'
+    }
+  },
+  {
+    id: 13534,
+    motivo: 'Emitida para pruebas',
+    revision: 'A',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 34593,
+      codigo: 'MINUTA_G02_05_2020',
+      correlativo: 10,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Coordinacion',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 23543,
+      abreviacion: 'BOR',
+      descripcion: 'Borrador'
+    }
+  }
+]
+
+const grupo = [
+  {
+    id: 72534,
+    emitida: true,
+    activa: true,
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 13459343,
+      estudiante_id: 9435,
+      codigo: 'MINUTA_G02_04_2020',
+      correlativo: 13,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      numero_sprint: 3,
+      creada_el: '2021-01-22T04:23:53.945Z',
+      asistencia: [
+        {
+          id: 9453,
+          id_estudiante: 643
+        },
+        {
+          id: 2345,
+          id_estudiante: 345
+        }
+      ],
+      items: []
+    },
+    estado: {
+      id: 194534,
+      abreviacion: 'CER',
+      descripcion: 'Cerrada'
+    }
+  }
+]
+
 axios.get.mockImplementation((url) => {
   switch (url) {
     case '/minutas/revision/estados':
-      return Promise.resolve({ data: [
-        {
-          id: 96345,
-          motivo: 'Emitida para pruebas',
-          revision: '0',
-          fecha_emision: '2020-01-18T03:53:34.394Z',
-          minuta: {
-            id: 913453,
-            codigo: 'MINUTA_G02_04_2020',
-            correlativo: 9,
-            fecha_reunion: '2021-01-12T00:00:00.000Z',
-            tipo_minuta: 'Cliente',
-            creada_por: 'ABC',
-            creada_el: '2021-01-22T04:23:53.945Z'
-          },
-          estado: {
-            id: 194534,
-            abreviacion: 'CER',
-            descripcion: 'Cerrada'
-          }
-        },
-        {
-          id: 13534,
-          motivo: 'Emitida para pruebas',
-          revision: 'A',
-          fecha_emision: '2020-01-18T03:53:34.394Z',
-          minuta: {
-            id: 34593,
-            codigo: 'MINUTA_G02_05_2020',
-            correlativo: 10,
-            fecha_reunion: '2021-01-12T00:00:00.000Z',
-            tipo_minuta: 'Coordinacion',
-            creada_por: 'ABC',
-            creada_el: '2021-01-22T04:23:53.945Z'
-          },
-          estado: {
-            id: 23543,
-            abreviacion: 'BOR',
-            descripcion: 'Borrador'
-          }
-        }
-      ]})
+      return Promise.resolve({ data: estados})
     case '/minutas/revision/grupo':
       return Promise.resolve({ data: []})
     case '/minutas/revision/respondidas':
       return Promise.resolve({ data: []})
     case '/minutas/avances/semanales/grupo/93453':
-      return Promise.resolve({ data: [
-        {
-          id: 72534,
-          emitida: true,
-          activa: true,
-          fecha_emision: '2020-01-18T03:53:34.394Z',
-          minuta: {
-            id: 13459343,
-            estudiante_id: 9435,
-            codigo: 'MINUTA_G02_04_2020',
-            correlativo: 13,
-            fecha_reunion: '2021-01-12T00:00:00.000Z',
-            numero_sprint: 3,
-            creada_el: '2021-01-22T04:23:53.945Z',
-            asistencia: [
-              {
-                id: 9453,
-                id_estudiante: 643
-              },
-              {
-                id: 2345,
-                id_estudiante: 345
-              }
-            ],
-            items: []
-          },
-          estado: {
-            id: 194534,
-            abreviacion: 'CER',
-            descripcion: 'Cerrada'
-          }
-        }
-      ]})
+      return Promise.resolve({ data: grupo})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -201,6 +205,18 @@ describe('TableroEst.vue', () => {
 
   it('variable listaRevision se inicializa correctamente', () => {
     expect(wrapper.vm.listaRevision).toEqual([])
+  })
+
+  it('variable "listaAvances" se inicializa correctamente', () => {
+    expect(wrapper.vm.listaAvances).toEqual([])
+  })
+
+  it('variable "borradoresAvances" se inicializa correctamente', () => {
+    expect(wrapper.vm.borradoresAvances).toEqual([])
+  })
+
+  it('variable "cerradasAvances" se inicializa correctamente', () => {
+    expect(wrapper.vm.cerradasAvances).toEqual([])
   })
 
   it('variable "contar" se asigna con props correctamente', () => {
@@ -465,6 +481,86 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
+  it('propiedad computada "mostrarBorrAvances" funciona correctamente con true', () => {
+    wrapper.vm.borradoresAvances = [
+      {
+        id: 72534,
+        emitida: true,
+        activa: true,
+        fecha_emision: '2020-01-18T03:53:34.394Z',
+        minuta: {
+          id: 13459343,
+          estudiante_id: 9435,
+          codigo: 'MINUTA_G02_04_2020',
+          correlativo: 13,
+          fecha_reunion: '2021-01-12T00:00:00.000Z',
+          numero_sprint: 3,
+          creada_el: '2021-01-22T04:23:53.945Z',
+          asistencia: [
+            {
+              id: 9453,
+              id_estudiante: 643
+            },
+            {
+              id: 2345,
+              id_estudiante: 345
+            }
+          ],
+          items: []
+        },
+        estado: {
+          id: 194534,
+          abreviacion: 'BOR',
+          descripcion: 'Borrador'
+        }
+      }
+    ]
+  })
+
+  it('propiedad computada "mostrarBorrAvances" funciona correctamente con false', () => {
+    expect(wrapper.vm.mostrarBorrAvances).toBeFalsy()
+  })
+
+  it('propiedad computada "mostrarCerrAvances" funciona correctamente con true', () => {
+    wrapper.vm.cerradasAvances = [
+      {
+        id: 72534,
+        emitida: true,
+        activa: true,
+        fecha_emision: '2020-01-18T03:53:34.394Z',
+        minuta: {
+          id: 13459343,
+          estudiante_id: 9435,
+          codigo: 'MINUTA_G02_04_2020',
+          correlativo: 13,
+          fecha_reunion: '2021-01-12T00:00:00.000Z',
+          numero_sprint: 3,
+          creada_el: '2021-01-22T04:23:53.945Z',
+          asistencia: [
+            {
+              id: 9453,
+              id_estudiante: 643
+            },
+            {
+              id: 2345,
+              id_estudiante: 345
+            }
+          ],
+          items: []
+        },
+        estado: {
+          id: 194534,
+          abreviacion: 'CER',
+          descripcion: 'Cerrada'
+        }
+      }
+    ]
+  })
+
+  it('propiedad computada "mostrarCerrAvances" funciona correctamente con false', () => {
+    expect(wrapper.vm.mostrarCerrAvances).toBeFalsy()
+  })
+
   it('método elegirTab funciona correctamente', () => {
     wrapper.vm.elegirTab('Revision')
     expect(wrapper.vm.nombreTab).toEqual('Revision')
@@ -606,5 +702,139 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaComentadasGrupo.length).toEqual(1)
     expect(wrapper.vm.listaComentadasCliente.length).toEqual(1)
     expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(0)
+  })
+
+  it('método "categorizarAvances" funciona correctamente', () => {
+    wrapper.vm.listaAvances = [
+      {
+        id: 93453,
+        emitida: true,
+        activa: true,
+        fecha_emision: '2020-01-18T03:53:34.394Z',
+        minuta: {
+          id: 23453,
+          estudiante_id: 9435,
+          codigo: 'MINUTA_G02_04_2020',
+          correlativo: 13,
+          fecha_reunion: '2021-01-12T00:00:00.000Z',
+          numero_sprint: 3,
+          creada_el: '2021-01-22T04:23:53.945Z',
+          asistencia: [
+            {
+              id: 9453,
+              id_estudiante: 643
+            },
+            {
+              id: 2345,
+              id_estudiante: 345
+            }
+          ],
+          items: [],
+          bitacora_estado: {
+            id: 942345,
+            tipo_estado: {
+              id: 1,
+              abreviacion: 'BOR',
+              descripcion: 'Borrador'
+            }
+          }
+        }
+      },
+      {
+        id: 72534,
+        emitida: true,
+        activa: true,
+        fecha_emision: '2020-01-18T03:53:34.394Z',
+        minuta: {
+          id: 13459343,
+          estudiante_id: 9435,
+          codigo: 'MINUTA_G02_04_2020',
+          correlativo: 13,
+          fecha_reunion: '2021-01-12T00:00:00.000Z',
+          numero_sprint: 3,
+          creada_el: '2021-01-22T04:23:53.945Z',
+          asistencia: [
+            {
+              id: 9453,
+              id_estudiante: 643
+            },
+            {
+              id: 2345,
+              id_estudiante: 345
+            }
+          ],
+          items: [],
+          bitacora_estado: {
+            id: 194534,
+            tipo_estado: {
+              id: 3453,
+              abreviacion: 'CER',
+              descripcion: 'Cerrada'
+            }
+          }
+        }
+      }
+    ]
+    wrapper.vm.categorizarAvances()
+    expect(wrapper.vm.borradoresAvances.length).toEqual(1)
+    expect(wrapper.vm.cerradasAvances.length).toEqual(1)
+  })
+
+  it('método "editarBorrador" funciona correctamente', async () => {
+    wrapper.vm.editarBorrador(3459)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().bitacora).toBeTruthy()
+    expect(wrapper.emitted().bitacora.length).toEqual(1)
+    expect(wrapper.emitted().bitacora[0]).toEqual([3459])
+  })
+
+  it('método "revisarMinuta" funciona correctamente', async () => {
+    wrapper.vm.revisarMinuta(94353)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().revision).toBeTruthy()
+    expect(wrapper.emitted().revision.length).toEqual(1)
+    expect(wrapper.emitted().revision[0]).toEqual([94353])
+  })
+
+  it('método "revisarComentarios" funciona correctamente', async () => {
+    wrapper.vm.revisarComentarios(9453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().comentarios).toBeTruthy()
+    expect(wrapper.emitted().comentarios.length).toEqual(1)
+    expect(wrapper.emitted().comentarios[0]).toEqual([9453])
+  })
+
+  it('método "revisarRespuestas" funciona correctamente', async () => {
+    wrapper.vm.revisarRespuestas(9453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().respuestas).toBeTruthy()
+    expect(wrapper.emitted().respuestas.length).toEqual(1)
+    expect(wrapper.emitted().respuestas[0]).toEqual([9453])
+  })
+
+  it('método "nuevaEmision" funciona correctamente', async () => {
+    wrapper.vm.nuevaEmision(9453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minutaActual).toEqual(9453)
+    expect(wrapper.emitted().emitir).toBeTruthy()
+    expect(wrapper.emitted().emitir.length).toEqual(1)
+    expect(wrapper.emitted().emitir[0]).toEqual([9453])
+  })
+
+  it('método "editarAvance" funciona correctamente', async () => {
+    wrapper.vm.editarAvance(9453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().avance).toBeTruthy()
+    expect(wrapper.emitted().avance.length).toEqual(1)
+    expect(wrapper.emitted().avance[0]).toEqual([9453])
+  })
+
+  it('método "revisarAvance" funciona correctamente', async () => {
+    wrapper.vm.revisarAvance(9453)
+    await wrapper.vm.$nextTick()
+    debugger
+    expect(wrapper.emitted()['revisar-avance']).toBeTruthy()
+    expect(wrapper.emitted()['revisar-avance'].length).toEqual(1)
+    expect(wrapper.emitted()['revisar-avance'][0]).toEqual([9453])
   })
 })
