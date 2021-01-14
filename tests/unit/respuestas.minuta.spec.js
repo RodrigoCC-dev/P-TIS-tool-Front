@@ -133,39 +133,33 @@ describe('RespuestasMinuta.vue', () => {
     expect(wrapper.vm.id).toEqual(5)
   })
 
-  it('vairable "bitacora" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Respuestas, {
-      propsData: {
-        idBitacora: 5
-      },
-      global: {
-        plugins: [store]
-      }
-    })
+  it('variable "bitacora" se inicializa correctamente', () => {
     expect(wrapper.vm.bitacora).toEqual({})
   })
 
-  it('vairable "comentarios" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Respuestas, {
-      propsData: {
-        idBitacora: 5
-      },
-      global: {
-        plugins: [store]
-      }
-    })
+  it('variable "comentarios" se inicializa correctamente', () => {
     expect(wrapper.vm.comentarios).toEqual([])
   })
 
-  it('vairable "aprobacion" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Respuestas, {
-      propsData: {
-        idBitacora: 5
-      },
-      global: {
-        plugins: [store]
-      }
-    })
+  it('variable "aprobacion" se inicializa correctamente', () => {
     expect(wrapper.vm.aprobacion).toEqual(0)
   })
+
+  it('propiedad computada "mostrarMinuta" funciona correctamente con "true"', () => {
+    wrapper.vm.bitacora = bitacora
+    expect(wrapper.vm.mostrarMinuta).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarMinuta" funciona correctamente con "false"', () => {
+    expect(wrapper.vm.mostrarMinuta).toBeFalsy()
+  })
+
+  it('propiedad computada "aprobacionesFiltradas" funciona correctamente', () => {
+    const esperado = [
+      {id: 4353, identificador: 'A', descripcion: 'Aprobada', rango: 1},
+      {id: 9454, identificador: 'R', descripcion: 'Rechazada', rango: 3}
+    ]
+    expect(wrapper.vm.aprobacionesFiltradas).toEqual(esperado)
+  })
+  
 })
