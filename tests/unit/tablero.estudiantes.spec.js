@@ -1,11 +1,143 @@
 import { shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
+import flushPromises from 'flush-promises'
+import axios from 'axios'
 import TableroEst from '@/components/TableroEst.vue'
 
+const store = createStore({
+  state() {
+    return {
+      grupo: {
+        id: 93453,
+        nombre: 'G01',
+        proyecto: 'Proyecto de prueba unitario',
+        correlativo: 34,
+        jornada: 'Diurna',
+        estudiantes: [{
+          id: 92345,
+          iniciales: 'ABC',
+          usuario: {
+            nombre: 'Alberto',
+            apellido_paterno: 'Becerra',
+            apellido_materno: 'Castro',
+            run: '11111111-1',
+            email: 'alberto.becerra@algo.com'
+          }
+        }],
+        stakeholders: []
+      }
+    }
+  }
+})
+
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case '/minutas/revision/estados':
+      return Promise.resolve({ data: [
+        {
+          id: 96345,
+          motivo: 'Emitida para pruebas',
+          revision: '0',
+          fecha_emision: '2020-01-18T03:53:34.394Z',
+          minuta: {
+            id: 913453,
+            codigo: 'MINUTA_G02_04_2020',
+            correlativo: 9,
+            fecha_reunion: '2021-01-12T00:00:00.000Z',
+            tipo_minuta: 'Cliente',
+            creada_por: 'ABC',
+            creada_el: '2021-01-22T04:23:53.945Z'
+          },
+          estado: {
+            id: 194534,
+            abreviacion: 'CER',
+            descripcion: 'Cerrada'
+          }
+        },
+        {
+          id: 13534,
+          motivo: 'Emitida para pruebas',
+          revision: 'A',
+          fecha_emision: '2020-01-18T03:53:34.394Z',
+          minuta: {
+            id: 34593,
+            codigo: 'MINUTA_G02_05_2020',
+            correlativo: 10,
+            fecha_reunion: '2021-01-12T00:00:00.000Z',
+            tipo_minuta: 'Coordinacion',
+            creada_por: 'ABC',
+            creada_el: '2021-01-22T04:23:53.945Z'
+          },
+          estado: {
+            id: 23543,
+            abreviacion: 'BOR',
+            descripcion: 'Borrador'
+          }
+        }
+      ]})
+    case '/minutas/revision/grupo':
+      return Promise.resolve({ data: []})
+    case '/minutas/revision/respondidas':
+      return Promise.resolve({ data: []})
+    case '/minutas/avances/semanales/grupo/93453':
+      return Promise.resolve({ data: [
+        {
+          id: 72534,
+          emitida: true,
+          activa: true,
+          fecha_emision: '2020-01-18T03:53:34.394Z',
+          minuta: {
+            id: 13459343,
+            estudiante_id: 9435,
+            codigo: 'MINUTA_G02_04_2020',
+            correlativo: 13,
+            fecha_reunion: '2021-01-12T00:00:00.000Z',
+            numero_sprint: 3,
+            creada_el: '2021-01-22T04:23:53.945Z',
+            asistencia: [
+              {
+                id: 9453,
+                id_estudiante: 643
+              },
+              {
+                id: 2345,
+                id_estudiante: 345
+              }
+            ],
+            items: []
+          },
+          estado: {
+            id: 194534,
+            abreviacion: 'CER',
+            descripcion: 'Cerrada'
+          }
+        }
+      ]})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
 describe('TableroEst.vue', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = shallowMount(TableroEst, {
+      global: {
+        plugins: [store]
+      }
+    })
+  })
+
   it('se asigna prop "seleccionado" correctamente', () => {
     const wrapper = shallowMount(TableroEst, {
       propsData: {
         seleccionado: 4534515
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().seleccionado).toEqual(4534515)
@@ -15,13 +147,15 @@ describe('TableroEst.vue', () => {
     const wrapper = shallowMount(TableroEst, {
       propsData: {
         contador: 94045923
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().contador).toEqual(94045923)
   })
 
   it('variable nombreTab de inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.nombreTab).toEqual('Borradores')
   })
 
@@ -34,52 +168,38 @@ describe('TableroEst.vue', () => {
       respondidas: 'Respondidas',
       cerradas: 'Cerradas'
     }
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
 
   it('variable listaMinutas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaMinutas).toEqual([])
   })
 
   it('variable listaBorradores se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaBorradores).toEqual([])
   })
 
   it('variable listaComentadasGrupo se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaComentadasGrupo).toEqual([])
   })
 
   it('variable listaComentadasCliente se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaComentadasCliente).toEqual([])
   })
 
   it('variable listaRespondidasGrupo se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
   })
 
-  it('variable listaRespondidasCliente se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
-    expect(wrapper.vm.listaRespondidasCliente).toEqual([])
-  })
-
   it('variable listaCerradas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaCerradas).toEqual([])
   })
 
   it('variable listaEmitidas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaEmitidas).toEqual([])
   })
 
   it('variable listaRevision se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.listaRevision).toEqual([])
   })
 
@@ -87,6 +207,9 @@ describe('TableroEst.vue', () => {
     const wrapper = shallowMount(TableroEst, {
       propsData: {
         contador: 0
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.contar).toEqual(0)
@@ -96,6 +219,9 @@ describe('TableroEst.vue', () => {
     const wrapper = shallowMount(TableroEst, {
       propsData: {
         seleccionado: 462345
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.minutaActual).toEqual(462345)
@@ -123,13 +249,15 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarBorradores).toBeTruthy()
   })
 
   it('propiedad computada mostrarBorradores funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarBorradores).toBeFalsy()
   })
 
@@ -155,13 +283,15 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarEmitidas).toBeTruthy()
   })
 
   it('propiedad computada mostrarEmitidas funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarEmitidas).toBeFalsy()
   })
 
@@ -187,13 +317,15 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarCerradas).toBeTruthy()
   })
 
   it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
 
@@ -219,13 +351,15 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarComentadasGrupo).toBeTruthy()
   })
 
   it('propiedad computada mostrarComentadasGrupo funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarComentadasGrupo).toBeFalsy()
   })
 
@@ -251,13 +385,15 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarComentadasCliente).toBeTruthy()
   })
 
   it('propiedad computada mostrarComentadasCliente funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarComentadasCliente).toBeFalsy()
   })
 
@@ -283,46 +419,16 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
   it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
-  })
-
-  it('propiedad computada mostrarRespondidasCliente funciona correctamente con true', () => {
-    const wrapper = shallowMount(TableroEst, {
-      data() {
-        return {
-          listaRespondidasCliente: [
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_04_2020-2_1207',
-                creada_por: 'ABC',
-                creada_el: '2020-11-16T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'RSK',
-                descripcion: 'Respondida por el cliente'
-              }
-            }
-          ]
-        }
-      }
-    })
-    expect(wrapper.vm.mostrarRespondidasCliente).toBeTruthy()
-  })
-
-  it('propiedad computada mostrarRespondidasCliente funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
-    expect(wrapper.vm.mostrarRespondidasCliente).toBeFalsy()
   })
 
   it('propiedad computada mostrarRevision funciona correctamente con true', () => {
@@ -347,34 +453,32 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
   it('propiedad computada mostrarRevision funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
   it('método elegirTab funciona correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     wrapper.vm.elegirTab('Revision')
     expect(wrapper.vm.nombreTab).toEqual('Revision')
   })
 
   it('método convertirFecha funciona correctamente', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.convertirFecha('2020-11-19T17:45:00.000Z')).toEqual('19-11-2020')
   })
 
   it('método convertirFecha funciona correctamente con entrada null', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.convertirFecha(null)).toEqual('')
   })
 
   it('método convertirFecha funciona correctamente con entrada undefined', () => {
-    const wrapper = shallowMount(TableroEst)
     expect(wrapper.vm.convertirFecha(undefined)).toEqual('')
   })
 
@@ -490,6 +594,9 @@ describe('TableroEst.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.categorizarMinutas()
@@ -498,6 +605,6 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaCerradas.length).toEqual(1)
     expect(wrapper.vm.listaComentadasGrupo.length).toEqual(1)
     expect(wrapper.vm.listaComentadasCliente.length).toEqual(1)
-    expect(wrapper.vm.listaRespondidasCliente.length).toEqual(1)
+    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(0)
   })
 })
