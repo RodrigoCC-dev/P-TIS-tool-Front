@@ -2,6 +2,64 @@
   <div class="has-text-left">
 
     <div v-if="verTablero">
+
+      <SelectorJornada/>
+
+      <div class="columns">
+        <div class="column is-three-fifths">
+          <div v-if="mostrarGrupos">
+            <div class="field">
+              <div class="control">
+                <label id="grupos" class="label">Listado de grupos</label>
+              </div>
+            </div>
+            <table class="table is-fullwidth" aria-describedby="grupos">
+              <thead>
+                <tr>
+                  <th scope="col">N°</th>
+                  <th scope="col">Grupo</th>
+                  <th scope="col">Proyecto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
+                  <th scope="row" :class="{ 'is-selected-usach' : grupoActual === grupo.id }">{{ index + 1}}</th>
+                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
+                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)"><a>{{ grupo.proyecto }}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="column is-1"></div>
+        <div class="column">
+          <div v-if="grupoActual !== 0">
+            <div class="field">
+              <div class="control">
+                <label id="estudiantes" class="label">Estudiantes</label>
+              </div>
+            </div>
+            <div>
+              <table class="table is-fullwidth" aria-describedby="estudiantes">
+                <thead>
+                  <tr>
+                    <th scope="col">R.U.N.</th>
+                    <th scope="col">Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
+                    <td>{{ estudiante.usuario.run }}</td>
+                    <td>{{ nombreCompleto(estudiante.usuario) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+
       <Tablero :contador="tableroStk" @revision="establecerRevision" @respuestas="revisarRespuestas"/>
     </div>
 
@@ -19,18 +77,21 @@
 <script>
 import axios from 'axios'
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import { mapState } from 'vuex'
 
 import Tablero from '@/components/TableroStk.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
+import SelectorJornada from '@/components/SelectorJornada.vue'
 
 export default {
   name: 'Stakeholder',
   components: {
     Tablero,
     Comentar,
-    Respuestas
+    Respuestas,
+    SelectorJornada
   },
   data () {
     return {
@@ -39,11 +100,38 @@ export default {
       verTablero: true,
       verRevision: false,
       verRespuestas: false,
+      listaGrupos: [],
+      grupoActual: 0,
+      grupoSeleccionado: {},
       tableroStk: 0
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'grupo'])
+    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'jornadaActual']),
+
+    gruposFiltrados: function () {
+      var lista = []
+      for (var i = 0; i < this.listaGrupos.length; i++) {
+        for (var j = 0; j < this.stakeholder.grupos.length; j++) {
+          if (this.listaGrupos[i].id === this.stakeholder.grupos[j].id) {
+            lista.push(this.listaGrupos[i])
+          }
+        }
+      }
+      return lista
+    },
+    gruposJornada: function () {
+      var lista = []
+      for (var i = 0; i < this.gruposFiltrados.length; i++) {
+        if (this.gruposFiltrados[i].jornada === this.jornadaActual) {
+          lista.push(this.gruposFiltrados[i])
+        }
+      }
+      return lista
+    },
+    mostrarGrupos: function () {
+      return this.gruposJornada.length > 0
+    }
   },
   methods: {
     establecerRevision: function (id) {
@@ -69,18 +157,26 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/stakeholders/' + this.usuario.id, { headers: Auth.authHeader() })
         this.$store.commit('setStakeholder', response.data)
-        this.obtenerGrupo()
       } catch (e) {
         console.log('No se ha obtenido la información del Stakeholder')
         console.log(e)
       }
     },
-    async obtenerGrupo () {
+    async obtenerGrupo (grupoId) {
       try {
-        const response = await axios.get(this.apiUrl + '/grupos/' + this.stakeholder.grupo_id, { headers: Auth.authHeader() })
+        const response = await axios.get(this.apiUrl + '/grupos/' + grupoId, { headers: Auth.authHeader() })
         this.$store.commit('setGrupo', response.data)
       } catch (e) {
         console.log('No se ha obtenido la información del grupo')
+        console.log(e)
+      }
+    },
+    async obtenerGrupos () {
+      try {
+        const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
+        this.listaGrupos = response.data
+      } catch (e) {
+        console.log('No se ha obtenido la lista de grupos')
         console.log(e)
       }
     },
@@ -91,10 +187,22 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    nombreCompleto: function (usuario) {
+      return Funciones.nombreCompleto(usuario)
+    },
+    buscarPorId: function (lista, id) {
+      return Funciones.busquedaPorId(lista, id)
+    },
+    seleccionarGrupo: function (id) {
+      this.grupoActual = id
+      this.grupoSeleccionado = this.buscarPorId(this.gruposFiltrados, id)
+      this.$store.commit('setGrupo', this.grupoSeleccionado)
     }
   },
   mounted () {
     this.obtenerStakeholder()
+    this.obtenerGrupos()
     this.obtenerAprobaciones()
   }
 }
