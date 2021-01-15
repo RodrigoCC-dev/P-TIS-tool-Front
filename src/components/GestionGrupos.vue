@@ -2,22 +2,13 @@
   <div class="">
     <br>
 
-    <div v-if="mostrarJornadas">
-      <section>
-        <div class="tabs is-toggle is-toggle-rounded is-centered">
-          <ul>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
-          </ul>
-        </div>
-      </section>
-    </div>
+    <SelectorJornada/>
 
     <div class="columns">
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
       <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarGrupo">Agregar Grupo</button>
+        <button class="button is-info-usach" @click="agregarGrupo">Agregar Grupo</button>
       </div>
     </div>
 
@@ -51,10 +42,10 @@
               <div class="column is-12">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <a class="button is-link" @click="agregar">Crear grupo</a>
+                    <a class="button is-primary-usach" @click="agregar">Crear grupo</a>
                   </div>
                   <div class="control">
-                    <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
+                    <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
                   </div>
                 </div>
               </div>
@@ -70,21 +61,21 @@
           <div v-if="mostrarLista">
             <table class="table is-bordered is-narrow is-fullwidth" aria-decribedby="estudiantes">
               <thead>
-                <tr class="has-text-centered has-background-light">
-                  <th scope="col">N°</th>
-                  <th scope="col">R.U.N.</th>
-                  <th scope="col">Nombre estudiante</th>
-                  <th scope="col">Sección</th>
+                <tr class="has-background-light">
+                  <th scope="col" class="has-text-centered">N°</th>
+                  <th scope="col" class="has-text-centered">R.U.N.</th>
+                  <th scope="col" class="has-text-centered">Nombre estudiante</th>
+                  <th scope="col" class="has-text-centered">Sección</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ estudiante.run_est}}</td>
-                  <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
-                  <td>{{ estudiante.codigo_seccion}}</td>
-                  <td><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
+                  <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
+                  <td class="has-text-centered">{{ estudiante.run_est}}</td>
+                  <td class="has-text-left">{{ concatenarNombre(estudiante) }}</td>
+                  <td class="has-text-centered">{{ estudiante.codigo_seccion}}</td>
+                  <td class="has-text-centered"><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -97,7 +88,7 @@
       <hr>
     </div>
 
-    <div class="columns">
+    <div class="columns is-multiline">
       <div v-for="grupo in listaGrupos" :key="grupo.id">
         <div class="column is-narrow" v-if="grupo.jornada === jornadaActual">
           <article class="message is-info">
@@ -127,19 +118,16 @@ import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
-const nombreTabs = {
-  diurna: 'Diurna',
-  vespertina: 'Vespertina'
-}
+import SelectorJornada from '@/components/SelectorJornada.vue'
 
 export default {
   name: 'GestionGrupos',
+  components: {
+    SelectorJornada
+  },
   data () {
     return {
       verFormulario: false,
-      jornadasProfesor: [],
-      mostrarJornadas: false,
-      jornadaActual: 'Diurna',
       estudiantes: [],
       entradas: {
         proyecto: {
@@ -156,13 +144,12 @@ export default {
         proyecto: '',
         correlativo: 0
       },
-      listaEstudiantes: {},
-      listaGrupos: [],
-      nombreTabs
+      listaEstudiantes: [],
+      listaGrupos: []
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     sinAsignar: function () {
       var lista = []
@@ -178,15 +165,14 @@ export default {
     }
   },
   methods: {
+    concatenarNombre: function (estudiante) {
+      return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
     },
     mostrarClientes: function (grupo) {
       return grupo.stakeholders.length > 0
-    },
-    elegirTab: function (nombreTab) {
-      this.jornadaActual = nombreTab
-      this.obtenerCorrelativo(this.jornadaActual)
     },
     agregarGrupo: function () {
       this.verFormulario = true
@@ -202,29 +188,6 @@ export default {
         }
       } catch (error) {
         console.log(error)
-      }
-    },
-    async obtenerJornadas () {
-      try {
-        const response = await axios.get(this.apiUrl + '/jornadas', { headers: Auth.authHeader() })
-        var datos = response.data
-        if (Object.keys(datos).length > 0) {
-          var aux = 0
-          for (var i = 0; i < Object.keys(datos).length; i++) {
-            if (this.jornadasProfesor.indexOf(datos[i].nombre) === -1) {
-              aux = this.jornadasProfesor.push(datos[i].nombre)
-            }
-          }
-          if (aux === 2) {
-            this.mostrarJornadas = true
-          } else if (aux === 1) {
-            this.jornadaActual = this.jornadasProfesor[0]
-          } else {
-            this.mostrarJornadas = false
-          }
-        }
-      } catch {
-        console.log('No fue posible obtener las jornadas del profesor')
       }
     },
     async obtenerGrupos () {
@@ -318,9 +281,13 @@ export default {
       return esvalido
     }
   },
+  watch: {
+    jornadaActual: function () {
+      this.obtenerCorrelativo(this.jornadaActual)
+    }
+  },
   mounted () {
     this.obtenerEstudiantes()
-    this.obtenerJornadas()
     this.obtenerGrupos()
   }
 }

@@ -5,7 +5,7 @@
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
       <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarEstudiante">Agregar Estudiante</button>
+        <button class="button is-info-usach" @click="agregarEstudiante">Agregar Estudiante</button>
       </div>
     </div>
     <div v-if="verFormulario">
@@ -78,10 +78,10 @@
           <div class="column is-12">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-link" @click="agregar">Agregar</a>
+                <a class="button is-primary-usach" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
+                <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
           </div>
@@ -89,8 +89,10 @@
       </form>
       <hr>
     </div>
+
     <br>
     <div v-if="mostrarLista">
+
       <table class="table is-bordered is-narrow is-fullwidth" summary="Estudiantes">
         <thead>
           <tr class="has-background-light">
@@ -99,6 +101,7 @@
             <th scope="col" class="has-text-centered">Nombre estudiante</th>
             <th scope="col" class="has-text-centered">Sección</th>
             <th scope="col" class="has-text-centered">Jornada</th>
+            <th scope="col" class="has-text-centered"><input type="checkbox" @click="seleccionarTodos"></th>
           </tr>
         </thead>
         <tbody>
@@ -108,9 +111,56 @@
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
             <td class="has-text-centered">{{ estudiante.codigo_seccion }}</td>
             <td class="has-text-centered">{{ estudiante.jornada }}</td>
+            <td class="has-text-centered"><input type="checkbox" v-model="eliminados" :value="estudiante.id"></td>
           </tr>
         </tbody>
       </table>
+
+      <div v-if="mostrarEliminar">
+        <br>
+        <div class="columns">
+          <div class="column is-half is-offset-3">
+            <div class="field">
+              <div class="control">
+                <button class="button is-secondary-usach is-fullwidth" @click="eliminarEstudiantes">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" :class="{ 'is-active ' : notificar }">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+
+            <div class="box">
+              <div class="columns">
+                <div class="column is-full">
+                  <p class="title is-5">¿Confirma la eliminación de {{ numeroEst }} estudiantes?</p>
+                  <div class="columns is-centered">
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-info-usach is-rounded" @click="confirmarEliminacion">Aceptar</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-1"></div>
+                    <div class="column is-3">
+                      <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                          <a class="button is-light-usach is-rounded" @click="cancelarEliminacion">Cancelar</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
     <br>
   </div>
@@ -170,11 +220,20 @@ export default {
         sin_run: 'No se ha ingresado R.U.N. del estudiante',
         run_error: 'No es un R.U.N. válido',
         run_repetido: 'Usuario ya se encuentra en el sistema'
-      }
+      },
+      eliminados: [],
+      notificar: false
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'secciones'])
+    ...mapState(['apiUrl', 'secciones']),
+
+    mostrarEliminar: function () {
+      return this.eliminados.length > 0
+    },
+    numeroEst: function () {
+      return this.eliminados.length
+    }
   },
   methods: {
     async obtenerSecciones () {
@@ -258,7 +317,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.estudiante.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre === '' || nombre.length === 0) {
           this.nombreEntrada.error = true
           this.nombreEntrada.mensaje = this.mensajes.sin_nombre
           return false
@@ -281,7 +340,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_paterno
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           this.apellidoPaternoEntrada.error = true
           this.apellidoPaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
@@ -304,7 +363,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const apellido = this.estudiante.usuario.apellido_materno
       try {
-        if (apellido === undefined || apellido.length === 0 || apellido === '' || apellido === null) {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           this.apellidoMaternoEntrada.error = true
           this.apellidoMaternoEntrada.mensaje = this.mensajes.sin_apellido
           return false
@@ -326,9 +385,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.estudiante.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.emailEntrada.error = true
           this.emailEntrada.mensaje = this.mensajes.sin_correo
           return false
@@ -354,7 +416,7 @@ export default {
     validarRun: function () {
       const regExp = /(\d{7,8})-(\d|K)/i
       const run = this.estudiante.usuario.run
-      if (run === undefined || run.length === 0 || run === '' || run === null) {
+      if (run === null || run === undefined || run === '' || run.length === 0) {
         this.runEntrada.error = true
         this.runEntrada.mensaje = this.mensajes.sin_run
         return false
@@ -391,7 +453,7 @@ export default {
     },
     validarSeccion: function () {
       const seleccion = this.estudiante.seccion_id
-      if (seleccion === null || seleccion === '' || seleccion === 0) {
+      if (seleccion === null || seleccion === undefined || seleccion === '' || seleccion === 0) {
         this.seccionEntrada = true
         return false
       } else {
@@ -409,6 +471,35 @@ export default {
       esvalido = esvalido && this.validarSeccion()
       esvalido = esvalido && !this.existeEstudiante()
       return esvalido
+    },
+    seleccionarTodos: function () {
+      if (this.eliminados.length === this.listaEstudiantes.length) {
+        this.eliminados = []
+      } else {
+        this.eliminados = []
+        for (var i = 0; i < this.listaEstudiantes.length; i++) {
+          this.eliminados.push(this.listaEstudiantes[i].id)
+        }
+      }
+    },
+    eliminarEstudiantes: function () {
+      this.notificar = true
+    },
+    cancelarEliminacion: function () {
+      this.notificar = false
+    },
+    async confirmarEliminacion () {
+      const estudiante = { eliminados: this.eliminados }
+      try {
+        await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
+        this.notificar = false
+        this.obtenerEstudiantes()
+        this.eliminados = []
+      } catch (e) {
+        this.notificar = false
+        console.log('No fue posible eliminar los estudiantes seleccioandos')
+        console.log(e)
+      }
     }
   },
   mounted () {

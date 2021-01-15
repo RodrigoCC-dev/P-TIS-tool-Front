@@ -2,109 +2,126 @@
   <div>
     <br>
 
-    <SelectorJornada @jornada="cambiarJornada"/>
+    <SelectorJornada/>
 
-    <div class="columns">
-      <div class="column is-10"></div>
-      <div class="column is-2" v-if="verFormulario"></div>
-      <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarCliente">Agregar Cliente</button>
+    <div v-if="!verAsignaciones">
+      <div class="columns">
+        <div class="column is-8"></div>
+        <div class="column is-4" v-if="verFormulario"></div>
+        <div class="column is-4" v-else>
+          <div class="field is-grouped is-grouped-right">
+            <div class="control">
+              <button class="button is-info-usach" @click="agregarCliente">Agregar Cliente</button>
+            </div>
+            <div class="control" v-if="mostrarLista">
+              <button class="button is-secondary-usach" @click="editarAsignaciones">Editar asignaciones</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="verFormulario">
+        <form class="form">
+          <div class="columns has-text-left">
+            <div class="column is-4">
+              <div class="field">
+                <label class="label">Nombre:</label>
+                <div class="control">
+                  <input v-model="stakeholder.usuario.nombre" @input="validarNombre" class="input" :class="{ 'is-danger' : entradas.nombre.error }" type="text" placeholder="ej.: Sergio">
+                </div>
+                <p class="is-danger help" v-if="entradas.nombre.error">{{ entradas.nombre.mensaje }}</p>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="field">
+                <label class="label">Apellido paterno:</label>
+                <div class="control">
+                  <input v-model="stakeholder.usuario.apellido_paterno" @input="validarApellidoP" class="input" :class="{ 'is-danger' : entradas.apellido_paterno.error }" type="text" placeholder="ej.: Maldonado">
+                </div>
+                <p class="is-danger help" v-if="entradas.apellido_paterno.error">{{ entradas.apellido_paterno.mensaje }}</p>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="field">
+                <label class="label">Apellido materno:</label>
+                <div class="control">
+                  <input v-model="stakeholder.usuario.apellido_materno" @input="validarApellidoM" class="input" :class="{ 'is-danger' : entradas.apellido_materno.error }" type="text" placeholder="ej.: Zamorano">
+                </div>
+                <p class="is-danger help" v-if="entradas.apellido_materno.error">{{ entradas.apellido_materno.mensaje }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="columns has-text-left">
+            <div class="column is-4">
+              <div class="field">
+                <label class="label">Correo electrónico:</label>
+                <div class="control">
+                  <input v-model="stakeholder.usuario.email" @input="validarEmail" class="input" :class="{ 'is-danger' : entradas.correo_elec.error }" type="text" placeholder="ej.: sergio.maldonado@gmail.com">
+                </div>
+                <p class="is-danger help" v-if="entradas.correo_elec.error">{{ entradas.correo_elec.mensaje }}</p>
+              </div>
+            </div>
+            <div class="column is-8">
+              <div class="field">
+                <label class="label">Grupo a asignar:</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo.error}">
+                      <option v-for="grupo in listaFiltrada" :key="grupo.id" :value="grupo.id">
+                        {{ grupo.nombre }} - {{ grupo.proyecto }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <p class="is-danger help" v-if="entradas.grupo">No ha seleccionado el grupo a asignar</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="column is-12">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <a class="button is-primary-usach" @click="agregar">Agregar</a>
+                </div>
+                <div class="control">
+                  <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <hr>
+      </div>
+
+      <br>
+      <div v-if="mostrarLista">
+        <table class="table is-bordered is-narrow is-fullwidth" summary="Lista Clientes">
+          <thead>
+            <tr class="has-background-light">
+              <th scope="col" class="has-text-centered">N°</th>
+              <th scope="col" class="has-text-centered">Nombre cliente</th>
+              <th scope="col" class="has-text-centered">Grupo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
+              <th scope="row" class="is-vcentered has-text-centered">{{ index + 1 }}</th>
+              <td class="is-vcentered has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+              <td>
+                <div v-for="grupo in stakeholder.grupos" :key="grupo.id">
+                  <p class="has-text-centered">{{ grupo.nombre }}</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div v-if="verFormulario">
-      <form class="form">
-        <div class="columns has-text-left">
-          <div class="column is-4">
-            <div class="field">
-              <label class="label">Nombre:</label>
-              <div class="control">
-                <input v-model="stakeholder.usuario.nombre" @input="validarNombre" class="input" :class="{ 'is-danger' : entradas.nombre.error }" type="text" placeholder="ej.: Sergio">
-              </div>
-              <p class="is-danger help" v-if="entradas.nombre.error">{{ entradas.nombre.mensaje }}</p>
-            </div>
-          </div>
-          <div class="column is-4">
-            <div class="field">
-              <label class="label">Apellido paterno:</label>
-              <div class="control">
-                <input v-model="stakeholder.usuario.apellido_paterno" @input="validarApellidoP" class="input" :class="{ 'is-danger' : entradas.apellido_paterno.error }" type="text" placeholder="ej.: Maldonado">
-              </div>
-              <p class="is-danger help" v-if="entradas.apellido_paterno.error">{{ entradas.apellido_paterno.mensaje }}</p>
-            </div>
-          </div>
-          <div class="column is-4">
-            <div class="field">
-              <label class="label">Apellido materno:</label>
-              <div class="control">
-                <input v-model="stakeholder.usuario.apellido_materno" @input="validarApellidoM" class="input" :class="{ 'is-danger' : entradas.apellido_materno.error }" type="text" placeholder="ej.: Zamorano">
-              </div>
-              <p class="is-danger help" v-if="entradas.apellido_materno.error">{{ entradas.apellido_materno.mensaje }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="columns has-text-left">
-          <div class="column is-4">
-            <div class="field">
-              <label class="label">Correo electrónico:</label>
-              <div class="control">
-                <input v-model="stakeholder.usuario.email" @input="validarEmail" class="input" :class="{ 'is-danger' : entradas.correo_elec.error }" type="text" placeholder="ej.: sergio.maldonado@gmail.com">
-              </div>
-              <p class="is-danger help" v-if="entradas.correo_elec.error">{{ entradas.correo_elec.mensaje }}</p>
-            </div>
-          </div>
-          <div class="column is-8">
-            <div class="field">
-              <label class="label">Grupo a asignar:</label>
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo.error}">
-                    <option v-for="grupo in listaFiltrada" :key="grupo.id" :value="grupo.id">
-                      {{ grupo.nombre }} - {{ grupo.proyecto }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <p class="is-danger help" v-if="entradas.grupo">No ha seleccionado el grupo a asignar</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="columns">
-          <div class="column is-12">
-            <div class="field is-grouped is-grouped-centered">
-              <div class="control">
-                <a class="button is-link" @click="agregar">Agregar</a>
-              </div>
-              <div class="control">
-                <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-      <hr>
-    </div>
-
-    <br>
-    <div v-if="mostrarLista">
-      <table class="table is-bordered is-narrow is-fullwidth" summary="Lista Clientes">
-        <thead>
-          <tr class="has-background-light">
-            <th scope="col" class="has-text-centered">N°</th>
-            <th scope="col" class="has-text-centered">Nombre cliente</th>
-            <th scope="col" class="has-text-centered">Grupo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
-            <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-            <td class="has-text-left">{{ nombreCompleto(stakeholder) }}</td>
-            <td class="has-text-centered">{{ stakeholder.grupo.nombre }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div v-else>
+      <AsignarStk @actualizar="actualizarAsignaciones" @cerrar="cerrarAsignaciones"/>
     </div>
     <br>
 
@@ -113,19 +130,23 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
+
 import SelectorJornada from '@/components/SelectorJornada.vue'
+import AsignarStk from '@/components/AsignarStk.vue'
 
 export default {
   name: 'GestionClientes',
   components: {
-    SelectorJornada
+    SelectorJornada,
+    AsignarStk
   },
   data () {
     return {
       verFormulario: false,
-      jornadaActual: 'Diurna',
+      verAsignaciones: false,
       stakeholder: {
         usuario: {
           nombre: '',
@@ -167,7 +188,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     listaFiltrada: function () {
       var lista = []
@@ -180,9 +201,26 @@ export default {
     },
     stakeholdersPorJornada: function () {
       var lista = []
+      var grupos = []
+      var cliente = {}
       for (var i = 0; i < this.listaStakeholders.length; i++) {
-        if (this.listaStakeholders[i].jornada === this.jornadaActual) {
-          lista.push(this.listaStakeholders[i])
+        grupos = []
+        cliente = {}
+        for (var j = 0; j < this.listaStakeholders[i].grupos.length; j++) {
+          if (this.listaStakeholders[i].grupos[j].jornada === this.jornadaActual) {
+            grupos.push(this.listaStakeholders[i].grupos[j])
+          }
+        }
+        if (grupos.length > 0) {
+          cliente = {
+            id: this.listaStakeholders[i].id,
+            nombre: this.listaStakeholders[i].nombre,
+            apellido_paterno: this.listaStakeholders[i].apellido_paterno,
+            apellido_materno: this.listaStakeholders[i].apellido_materno,
+            email: this.listaStakeholders[i].email,
+            grupos: grupos
+          }
+          lista.push(cliente)
         }
       }
       return lista
@@ -192,11 +230,8 @@ export default {
     }
   },
   methods: {
-    cambiarJornada: function (nuevaJornada) {
-      this.jornadaActual = nuevaJornada
-    },
     nombreCompleto (estudiante) {
-      return estudiante.nombre + ' ' + estudiante.apellido_paterno + ' ' + estudiante.apellido_materno
+      return Funciones.nombreCompleto(estudiante)
     },
     agregarCliente: function () {
       this.verFormulario = true
@@ -211,7 +246,7 @@ export default {
     },
     async obtenerStakeholders () {
       try {
-        const response = await axios.get(this.apiUrl + '/stakeholders', { headers: Auth.authHeader() })
+        const response = await axios.get(this.apiUrl + '/stakeholders/asignacion/grupos', { headers: Auth.authHeader() })
         this.listaStakeholders = response.data
       } catch {
         console.log('No fue posible obtener la lista de Clientes')
@@ -221,8 +256,10 @@ export default {
       if (this.validarFormulario()) {
         const nuevo = {
           stakeholder: {
-            grupo_id: this.stakeholder.grupo_id,
             usuario_attributes: this.stakeholder.usuario
+          },
+          grupo: {
+            id: this.stakeholder.grupo_id
           }
         }
         try {
@@ -255,7 +292,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.stakeholder.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre.length === 0 || nombre === '') {
           this.entradas.nombre.error = true
           this.entradas.nombre.mensaje = this.mensajes.sin_nombre
           return false
@@ -277,7 +314,7 @@ export default {
     validarApellido: function (apellido, entradas) {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           entradas.error = true
           entradas.mensaje = this.mensajes.sin_apellido
           return false
@@ -305,9 +342,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.stakeholder.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
@@ -328,7 +368,7 @@ export default {
     },
     validarGrupo: function () {
       const seleccion = this.stakeholder.grupo_id
-      if (seleccion === null || seleccion === '' || seleccion === 0 || seleccion === undefined) {
+      if (seleccion === null || seleccion === undefined || seleccion === '' || seleccion === 0) {
         this.entradas.grupo = true
         return false
       } else {
@@ -358,6 +398,17 @@ export default {
       esValido = esValido && this.validarGrupo()
       esValido = esValido && !this.existeStakeholder()
       return esValido
+    },
+    editarAsignaciones: function () {
+      this.verAsignaciones = true
+    },
+    cerrarAsignaciones: function () {
+      this.verAsignaciones = false
+    },
+    actualizarAsignaciones: function () {
+      this.verAsignaciones = false
+      this.obtenerGrupos()
+      this.obtenerStakeholders()
     }
   },
   mounted () {

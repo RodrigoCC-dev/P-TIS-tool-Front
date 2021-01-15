@@ -5,8 +5,8 @@
       <section>
         <div class="tabs is-toggle is-toggle-rounded is-centered">
           <ul>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
-            <li :class="{ 'is-active' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
+            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.diurna }" @click="elegirTab(nombreTabs.diurna)"><a><span>Diurnos</span></a></li>
+            <li :class="{ 'is-active-usach' : jornadaActual === nombreTabs.vespertina }" @click="elegirTab(nombreTabs.vespertina)"><a><span>Vespertinos</span></a></li>
           </ul>
         </div>
       </section>
@@ -55,6 +55,7 @@ export default {
           } else if (aux === 1) {
             this.jornadaActual = this.jornadasProfesor[0]
             this.$emit('jornada', this.jornadaActual)
+            this.$store.commit('setJornadaActual', this.jornadaActual)
           } else {
             this.mostrarJornadas = false
           }
@@ -65,7 +66,7 @@ export default {
     },
     elegirTab: function (nombreTab) {
       this.jornadaActual = nombreTab
-      this.$emit('jornada', nombreTab)
+      this.$store.commit('setJornadaActual', this.jornadaActual)
     }
   },
   mounted () {

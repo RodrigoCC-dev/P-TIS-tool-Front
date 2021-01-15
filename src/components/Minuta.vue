@@ -202,7 +202,7 @@
         <div class="column">
           <div class="columns">
             <div class="column is-2 is-offset-3">
-              <a class="button is-small is-success" @click="agregarObjetivo"><strong>+</strong></a>
+              <a class="button is-small is-info-usach is-rounded" @click="agregarObjetivo"><strong>+</strong></a>
             </div>
           </div>
         </div>
@@ -213,11 +213,11 @@
             <ul>
               <li v-for="(objetivo, index) in objetivos" :key="index">
                 <div class="field is-grouped">
-                  <p class="control is-expanded">
-                    <input v-model="objetivos[index].descripcion" class="input" type="text" @input="validarObjetivos">
-                  </p>
-                  <p class="control">
-                    <a class="button is-danger is-light" @click="removerObjetivo(objetivo)"><strong>X</strong></a>
+                  <p class="control is-expanded has-icons-right">
+                    <input v-model="objetivos[index].descripcion" class="input is-normal" type="text" @input="validarObjetivos">
+                    <span class="icon is-right">
+                      <button class="delete" @click="removerObjetivo(objetivo)"></button>
+                    </span>
                   </p>
                 </div>
               </li>
@@ -235,7 +235,7 @@
         <div class="column">
           <div class="columns">
             <div class="column is-2 is-offset-3">
-              <a class="button is-small is-success" @click="agregarConclusion"><strong>+</strong></a>
+              <a class="button is-small is-info-usach is-rounded" @click="agregarConclusion"><strong>+</strong></a>
             </div>
           </div>
         </div>
@@ -246,11 +246,11 @@
             <ul>
               <li v-for="(conclusion, index) in conclusiones" :key="index">
                 <div class="field is-grouped">
-                  <p class="control is-expanded">
-                    <input v-model="conclusiones[index].descripcion" class="input" type="text" @input="validarConclusiones">
-                  </p>
-                  <p class="control">
-                    <a class="button is-danger is-light" @click="removerConclusion(conclusion)"><strong>X</strong></a>
+                  <p class="control is-expanded has-icons-right">
+                    <input v-model="conclusiones[index].descripcion" class="input is-normal" type="text" @input="validarConclusiones">
+                    <span class="icon is-right">
+                      <button class="delete" @click="removerConclusion(conclusion)"></button>
+                    </span>
                   </p>
                 </div>
               </li>
@@ -270,7 +270,7 @@
               <th scope="col" class="has-text-centered"><abbr title="Descripción de la actividad realizada">Descripción</abbr></th>
               <th scope="col" class="has-text-centered"><abbr title="Fecha comprometida para la actividad">Fecha</abbr></th>
               <th scope="col" class="has-text-centered"><abbr title="Responsable de realizarla">Responsable</abbr></th>
-              <th scope="col"><a class="button is-success is-small" @click="agregarItem"><strong>+</strong></a></th>
+              <th scope="col" class="has-text-centered"><a class="button is-rounded is-info-usach is-small" @click="agregarItem"><strong>+</strong></a></th>
             </tr>
           </thead>
           <tbody>
@@ -279,7 +279,7 @@
               <td class="has-text-centered">
                 <div class="select is-small">
                   <select v-model="item.tipo_item_id" @change="validarItem(index)">
-                    <option v-for="item in tipo_items" :key="item.id" :value="item.id">{{ item.tipo }}</option>
+                    <option v-for="item in tipoItemsFiltrada" :key="item.id" :value="item.id">{{ item.tipo }}</option>
                   </select>
                 </div>
                 <p class="is-danger help" v-if="item.entradas.tipo_item">No se ha ingresado el tipo de ítem</p>
@@ -302,7 +302,9 @@
                 </div>
                 <p class="is-danger help" v-if="item.entradas.responsables">Falta asignar responsable</p>
               </td>
-              <td><a class="button is-small is-danger is-light" @click="removerItem(item)"><strong>X</strong></a></td>
+              <td class="has-text-centered">
+                <button class="delete is-medium" @click="removerItem(item)"></button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -313,13 +315,13 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-success" @click="guardarMinuta">Guardar</a>
+              <a class="button is-primary-usach" @click="guardarMinuta">Guardar</a>
             </div>
             <div class="control">
-              <a class="button is-link" @click="emitirMinuta">Emitir</a>
+              <a class="button is-secondary-usach" @click="emitirMinuta">Emitir</a>
             </div>
             <div class="control">
-              <a class="button is-dark" @click="cancelarEnvio">Cancelar</a>
+              <a class="button is-light-usach" @click="cancelarEnvio">Cancelar</a>
             </div>
           </div>
         </div>
@@ -422,6 +424,15 @@ export default {
 
     esBorrador: function () {
       return this.bitacora !== 0
+    },
+    tipoItemsFiltrada: function () {
+      var lista = []
+      for (var i = 0; i < this.tipo_items.length; i++) {
+        if (this.tipo_items[i].rango === 1) {
+          lista.push(this.tipo_items[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
@@ -433,8 +444,7 @@ export default {
       return Funciones.nombreCompleto(estudiante)
     },
     convertirFecha: function (timestamp) {
-      var fecha = timestamp.split('T')
-      return fecha[0]
+      return Funciones.convertirFecha(timestamp)
     },
     buscarIdEnLista: function (array, llave, busqueda) {
       return Funciones.obtenerIdDeLista(array, llave, busqueda)

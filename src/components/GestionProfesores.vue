@@ -6,7 +6,7 @@
       <div class="column is-10"></div>
       <div class="column is-2" v-if="verFormulario"></div>
       <div class="column is-2" v-else>
-        <button class="button is-success" @click="agregarProfesor">Agregar Profesor</button>
+        <button class="button is-info-usach" @click="agregarProfesor">Agregar Profesor</button>
       </div>
     </div>
 
@@ -64,10 +64,10 @@
               <div class="column is-full">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <a class="button is-link" @click="agregar">Agregar Profesor</a>
+                    <a class="button is-primary-usach" @click="agregar">Agregar Profesor</a>
                   </div>
                   <div class="control">
-                    <a class="button is-light" @click="noAgregar"><strong>Cancelar</strong></a>
+                    <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
                   </div>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       const nombre = this.usuario.nombre
       try {
-        if (nombre === null || nombre.length === 0 || nombre === undefined || nombre === '') {
+        if (nombre === null || nombre === undefined || nombre === '' || nombre.length === 0) {
           this.entradas.nombre.error = true
           this.entradas.nombre.mensaje = this.mensajes.sin_nombre
           return false
@@ -289,7 +289,7 @@ export default {
     validarApellido: function (apellido, entradas) {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
       try {
-        if (apellido === null || apellido.length === 0 || apellido === undefined || apellido === '') {
+        if (apellido === null || apellido === undefined || apellido === '' || apellido.length === 0) {
           entradas.error = true
           entradas.mensaje = this.mensajes.sin_apellido
           return false
@@ -317,9 +317,12 @@ export default {
     validarEmail: function () {
       const regExp = /^([a-z0-9_.-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
       const correo = this.usuario.email
-      var separarCorreo = correo.split('@')
+      var separarCorreo = []
+      if (correo !== null && correo !== undefined) {
+        separarCorreo = correo.split('@')
+      }
       try {
-        if (correo === undefined || correo.length === 0 || correo === '' || correo === null) {
+        if (correo === null || correo === undefined || correo === '' || correo.length === 0) {
           this.entradas.correo_elec.error = true
           this.entradas.correo_elec.mensaje = this.mensajes.sin_correo
           return false
