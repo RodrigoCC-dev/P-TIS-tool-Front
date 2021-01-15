@@ -166,7 +166,7 @@
     <br>
     <hr>
     <div v-if="actualizarAvance">
-      <div v-for="estudiante in compañerosGrupo" :key="estudiante.id">
+      <div v-for="estudiante in compagnerosGrupo" :key="estudiante.id">
         <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
       </div>
     </div>
@@ -220,7 +220,7 @@ export default {
     actualizarAvance: function () {
       return Object.keys(this.bitacora).length > 0
     },
-    compañerosGrupo: function () {
+    compagnerosGrupo: function () {
       var lista = []
       for (var i = 0; i < this.grupo.estudiantes.length; i++) {
         if (this.grupo.estudiantes[i].id !== this.estudiante.id) {
@@ -392,7 +392,7 @@ export default {
       var lista = []
       const obj = { id: 0, descripcion: '', correlativo: 1 }
       var aux = {}
-      if (listaAconvertir.length > 0) {
+      if (listaItems.length > 0) {
         for (var i = 0; i < listaItems.length; i++) {
           aux = Object.assign({}, obj)
           aux.id = listaItems[i].id
@@ -431,8 +431,8 @@ export default {
         return false
       } else {
         if (isNaN(parseInt(numero))) {
-          this.entradas.numeroSprint = true
-          this.entradas.numeroSprint = 'Error de entrada. Por favor, sólo números enteros.'
+          this.entradas.numeroSprint.error = true
+          this.entradas.numeroSprint.mensaje = 'Error de entrada. Por favor, sólo números enteros.'
           return false
         } else {
           this.numeroSprint = parseInt(numero)
