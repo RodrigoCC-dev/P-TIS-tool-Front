@@ -431,6 +431,20 @@ describe('Semanal.vue', () => {
   })
 
   it('método "removerLogro" funciona correctamente con largo "logros" igual a uno', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.removerLogro(wrapper.vm.logros[0])
+    expect(wrapper.vm.logros).toEqual(item)
+  })
+
+  it('método "removerLogro" funciona correctamente con largo "logros" mayor a uno', () => {
     const esperado = [
       {id: 0, descripcion: '', correlativo: 1},
       {id: 0, descripcion: '', correlativo: 3}
@@ -466,7 +480,21 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.metas[1]).toEqual({id: 0, descripcion: '', correlativo: 2})
   })
 
-  it('método "removerMeta" funciona correctamente con largo "logros" igual a uno', () => {
+  it('método "removerMeta" funciona correctamente con largo "metas" igual a uno', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.removerMeta(wrapper.vm.metas[0])
+    expect(wrapper.vm.metas).toEqual(item)
+  })
+
+  it('método "removerMeta" funciona correctamente con largo "metas" mayor a uno', () => {
     const esperado = [
       {id: 0, descripcion: '', correlativo: 1},
       {id: 0, descripcion: '', correlativo: 3}
@@ -510,11 +538,24 @@ describe('Semanal.vue', () => {
         plugins: [store]
       }
     })
-    debugger
     await wrapper.vm.$nextTick()
     wrapper.vm.minuta.correlativo = 9
     wrapper.vm.minuta.fecha_avance = '2021-01-14'
     expect(wrapper.vm.establecerCodigo()).toEqual('MINUTA_G08_09_2021-1_0114')
+  })
+
+  it('método "obtenerCorrelativo" funciona correctamente', async () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minuta.correlativo).toEqual(2945)
   })
 
   it('método "obtenerSemestre" funciona correctamente', async () => {
@@ -531,4 +572,144 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.semestre).toEqual(semestre)
   })
 
+  it('método "emitirMinuta" funciona correctamente', () => {
+    wrapper.vm.emitirMinuta()
+    expect(wrapper.vm.emitir).toBeTruthy()
+  })
+
+  it('método "cerrar" funciona correctamente', async () => {
+    wrapper.vm.cerrar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "convertirFecha" funciona correctamente', () => {
+    expect(wrapper.vm.convertirFecha('2021-01-15T00:00:00.000Z')).toEqual('2021-01-15')
+  })
+
+  it('método "separarItems" funcioan correctamente', () => {
+    const items = [
+      {id: 4534, tipo_item: {tipo: 'Logro'}},
+      {id: 2353, tipo_item: {tipo: 'Logro'}},
+      {id: 3434, tipo_item: {tipo: 'Meta'}},
+      {id: 9323, tipo_item: {tipo: 'Meta'}}
+    ]
+    const logrosEsperados = [
+      {id: 4534, tipo_item: {tipo: 'Logro'}},
+      {id: 2353, tipo_item: {tipo: 'Logro'}}
+    ]
+    const metasEsperadas =   [
+      {id: 3434, tipo_item: {tipo: 'Meta'}},
+      {id: 9323, tipo_item: {tipo: 'Meta'}}
+    ]
+    wrapper.vm.itemsLogros = []
+    wrapper.vm.itemsMetas = []
+    wrapper.vm.separarItems(items)
+    expect(wrapper.vm.itemsLogros.length).toEqual(2)
+    expect(wrapper.vm.itemsMetas.length).toEqual(2)
+    expect(wrapper.vm.itemsLogros).toEqual(logrosEsperados)
+    expect(wrapper.vm.itemsMetas).toEqual(metasEsperadas)
+  })
+
+  it('método "buscarIdAsistencia" funciona correctamente', () => {
+    expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
+  })
+
+  it('método "separarPorEstudiante" funciona correctamente', () => {
+    const lista = [
+      {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
+      {id: 2343, responsables: {id: 4543, asistencia_id: 95234}}
+    ]
+    debugger
+    expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
+  })
+
+  it('método "logrosPorEstudiante" funciona correctamente', () => {
+    const esperado = [
+      {
+        id: 94534,
+        descripcion: 'Item para la prueba',
+        correlativo: 9453,
+        tipo_item: {
+          id: 9534,
+          tipo: 'Logro'
+        },
+        responsables: {
+          id: 945,
+          asistencia_id: 4953
+        }
+      }
+    ]
+    expect(wrapper.vm.logrosPorEstudiante(94534)).toEqual(esperado)
+  })
+
+  it('método "metasPorEstudiante" funciona correctamente', () => {
+    const esperado = [
+      {
+        id: 2345345,
+        descripcion: 'Otro item para la prueba',
+        correlativo: 23534,
+        tipo_item: {
+          id: 54343,
+          tipo: 'Meta'
+        },
+        responsables: {
+          id: 13453,
+          asistencia_id: 4953
+        }
+      }
+    ]
+    expect(wrapper.vm.metasPorEstudiante(94534)).toEqual(esperado)
+  })
+
+  it('método "mostrarAvance" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.mostrarAvance(94534)).toBeTruthy()
+  })
+
+  it('método "mostrarAvance" funciona correctamente con "false"', () => {
+    expect(wrapper.vm.mostrarAvance(45334)).toBeFalsy()
+  })
+
+  it('método "convertirItems" funciona correctamente', () => {
+    const esperado = [
+      {id: 94534, descripcion: 'Item para la prueba', correlativo: 9453},
+      {id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}
+    ]
+    expect(wrapper.vm.convertirItems(wrapper.vm.bitacora.minuta.items)).toEqual(esperado)
+  })
+
+  it('método "convertirLogros" funciona correctamente', () => {
+    const esperado = [{id: 94534, descripcion: 'Item para la prueba', correlativo: 9453}]
+    expect(wrapper.vm.convertirLogros()).toEqual(esperado)
+  })
+
+  it('método "convertirMetas" funciona correctamente', () => {
+    const esperado = [{id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}]
+    expect(wrapper.vm.convertirMetas()).toEqual(esperado)
+  })
+
+  it('método "convertirBitacora" funciona correctamente', () => {
+    const logros = [{id: 94534, descripcion: 'Item para la prueba', correlativo: 9453}]
+    const metas = [{id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}]
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.bitacora = avance
+    wrapper.vm.convertirBitacora()
+    expect(wrapper.vm.minuta.estudiante_id).toEqual(94534)
+    expect(wrapper.vm.minuta.codigo).toEqual('MINUTA_G04_03_2020')
+    expect(wrapper.vm.minuta.correlativo).toEqual(1845)
+    expect(wrapper.vm.minuta.fecha_avance).toEqual('2020-12-27')
+    expect(wrapper.vm.numeroSprint).toEqual(34)
+    expect(wrapper.vm.logros).toEqual(logros)
+    expect(wrapper.vm.metas).toEqual(metas)
+  })
 })
