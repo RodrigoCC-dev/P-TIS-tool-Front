@@ -35,7 +35,7 @@
               <label id="estudiantes" class="label">Estudiantes</label>
             </div>
           </div>
-          <div >
+          <div>
             <table class="table is-fullwidth" aria-describedby="estudiantes">
               <thead>
                 <tr>
