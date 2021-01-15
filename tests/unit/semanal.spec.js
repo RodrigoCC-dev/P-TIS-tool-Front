@@ -622,7 +622,6 @@ describe('Semanal.vue', () => {
       {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
       {id: 2343, responsables: {id: 4543, asistencia_id: 95234}}
     ]
-    debugger
     expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
   })
 
@@ -711,5 +710,293 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.numeroSprint).toEqual(34)
     expect(wrapper.vm.logros).toEqual(logros)
     expect(wrapper.vm.metas).toEqual(metas)
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con valor "null"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = null
+    expect(wrapper.vm.validarSprint()).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('No se ha ingresado el núermo del Sprint')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con valor "undefined"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = undefined
+    expect(wrapper.vm.validarSprint()).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('No se ha ingresado el núermo del Sprint')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con valor ""', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = ''
+    expect(wrapper.vm.validarSprint()).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('No se ha ingresado el núermo del Sprint')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con letras', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = 'Abc'
+    expect(wrapper.vm.validarSprint()).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('Error de entrada. Por favor, sólo números enteros.')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con números negativos', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = -4
+    expect(wrapper.vm.validarSprint()).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('No se aceptan valores menores a cero')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con número decimal', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = 2.5
+    expect(wrapper.vm.validarSprint()).toBeTruthy()
+    expect(wrapper.vm.numeroSprint).toEqual(2)
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('')
+  })
+
+  it('método "validarSprint" funciona correctamente con "numeroSprint" con número enteros', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = 5
+    expect(wrapper.vm.validarSprint()).toBeTruthy()
+    expect(wrapper.vm.entradas.numeroSprint.error).toBeFalsy()
+    expect(wrapper.vm.entradas.numeroSprint.mensaje).toEqual('')
+  })
+
+  it('método "validarFecha" funciona correctamente con "fecha_avance" igual a "null"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.minuta.fecha_avance = null
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fechaAvance).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente con "fecha_avance" igual a "undefined"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.minuta.fecha_avance = undefined
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fechaAvance).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente con "fecha_avance" igual a ""', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.minuta.fecha_avance = ''
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fechaAvance).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente con "fecha_avance" distinto a "regExp"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.minuta.fecha_avance = '6453-623452-62345324'
+    expect(wrapper.vm.validarFecha()).toBeFalsy()
+    expect(wrapper.vm.entradas.fechaAvance).toBeTruthy()
+  })
+
+  it('método "validarFecha" funciona correctamente con "fecha_avance" con "regExp"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.minuta.fecha_avance = '1933-91-51'
+    expect(wrapper.vm.validarFecha()).toBeTruthy()
+    expect(wrapper.vm.entradas.fechaAvance).toBeFalsy()
+  })
+
+  it('método "validarLista" funciona correctamente con lista de largo igual a uno y descripcion igual a ""', () => {
+    const lista = [{descripcion: ''}]
+    let entrada = {error: ''}
+    expect(wrapper.vm.validarLista(lista, 'error', entrada)).toBeFalsy()
+    expect(entrada.error).toBeTruthy()
+  })
+
+  it('método "validarLista" funciona correctamente con lista de largo igual a uno y descripcion distinto a ""', () => {
+    const lista = [{descripcion: 'Esto es una prueba'}]
+    let entrada = {error: ''}
+    expect(wrapper.vm.validarLista(lista, 'error', entrada)).toBeTruthy()
+    expect(entrada.error).toBeFalsy()
+  })
+
+  it('método "validarLista" funciona correctamente con lista de largo mayor a uno y descripcion igual a ""', () => {
+    const lista = [{descripcion: 'Esto es una prueba'}, {descripcion: ''}]
+    let entrada = {error: ''}
+    expect(wrapper.vm.validarLista(lista, 'error', entrada)).toBeFalsy()
+    expect(entrada.error).toBeTruthy()
+  })
+
+  it('método "validarLista" funciona correctamente con lista de largo mayor a uno y descripcion distinto a ""', () => {
+    const lista = [{descripcion: 'Esto es una prueba'}, {descripcion: 'Otra prueba'}]
+    let entrada = {error: ''}
+    expect(wrapper.vm.validarLista(lista, 'error', entrada)).toBeTruthy()
+    expect(entrada.error).toBeFalsy()
+  })
+
+  it('método "validarLogros" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.validarLogros()).toBeTruthy()
+    expect(wrapper.vm.entradas.logros).toBeFalsy()
+  })
+
+  it('método "validarLogros" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.validarLogros()).toBeFalsy()
+    expect(wrapper.vm.entradas.logros).toBeTruthy()
+  })
+
+  it('método "validarMetas" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.validarMetas()).toBeTruthy()
+    expect(wrapper.vm.entradas.metas).toBeFalsy()
+  })
+
+  it('método "validarMetas" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.validarMetas()).toBeFalsy()
+    expect(wrapper.vm.entradas.metas).toBeTruthy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = 6
+    wrapper.vm.minuta.fecha_avance = '2021-02-15'
+    wrapper.vm.logros = [{id: 534, descripcion: 'Esto es una prueba', correlativo: 5234}]
+    wrapper.vm.metas = [{id: 954, descripcion: 'Esta es una meta de prueba', correlativo: 9453}]
+    expect(wrapper.vm.validarFormulario()).toBeTruthy()
+  })
+
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.numeroSprint = 6
+    wrapper.vm.minuta.fecha_avance = '2021-02-15'
+    wrapper.vm.logros = [{id: 534, descripcion: '', correlativo: 5234}]
+    wrapper.vm.metas = [{id: 954, descripcion: 'Esta es una meta de prueba', correlativo: 9453}]
+    expect(wrapper.vm.validarFormulario()).toBeFalsy()
   })
 })

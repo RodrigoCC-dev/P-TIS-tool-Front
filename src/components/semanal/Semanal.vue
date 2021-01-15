@@ -431,8 +431,8 @@ export default {
         return false
       } else {
         if (isNaN(parseInt(numero))) {
-          this.entradas.numeroSprint = true
-          this.entradas.numeroSprint = 'Error de entrada. Por favor, sólo números enteros.'
+          this.entradas.numeroSprint.error = true
+          this.entradas.numeroSprint.mensaje = 'Error de entrada. Por favor, sólo números enteros.'
           return false
         } else {
           this.numeroSprint = parseInt(numero)
