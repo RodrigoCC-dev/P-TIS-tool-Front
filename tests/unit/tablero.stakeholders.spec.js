@@ -1,48 +1,82 @@
 import { shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
 import TableroStk from '@/components/TableroStk.vue'
 
+const store = createStore({
+  state() {
+    return {
+      apiUrl: '127.0.0.1:3000',
+      grupo: {
+        id: 93453,
+        nombre: 'G01',
+        proyecto: 'Proyecto de prueba unitario',
+        correlativo: 34,
+        jornada: 'Diurna',
+        estudiantes: [{
+          id: 92345,
+          iniciales: 'ABC',
+          usuario: {
+            nombre: 'Alberto',
+            apellido_paterno: 'Becerra',
+            apellido_materno: 'Castro',
+            run: '11111111-1',
+            email: 'alberto.becerra@algo.com'
+          }
+        }],
+        stakeholders: []
+      }
+    }
+  }
+})
+
 describe('TableroStk.vue', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = shallowMount(TableroStk, {
+      global: {
+        plugins: [store]
+      }
+    })
+  })
+
   it('se asigna props "contador" adecuadamente', () => {
     const wrapper = shallowMount(TableroStk, {
       propsData: {
         contador: 63453
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().contador).toEqual(63453)
   })
 
   it('variable nombreTab se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.nombreTab).toEqual('Revision')
   })
 
   it('variable listaMinutas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaMinutas).toEqual([])
   })
 
   it('variable listaRevision se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaRevision).toEqual([])
   })
 
   it('variable listaComentadas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaComentadas).toEqual([])
   })
 
   it('variable listaRespondidasGrupo se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
   })
 
   it('variable listaRespondidasCliente se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaRespondidasCliente).toEqual([])
   })
 
   it('variable listaCerradas se inicializa correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.listaCerradas).toEqual([])
   })
 
@@ -53,7 +87,6 @@ describe('TableroStk.vue', () => {
       respondidas: 'Respondidas',
       cerradas: 'Cerradas'
     }
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
 
@@ -61,6 +94,9 @@ describe('TableroStk.vue', () => {
     const wrapper = shallowMount(TableroStk, {
       propsData: {
         contador: 692345
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.contar).toEqual(692345)
@@ -88,13 +124,15 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
   it('propiedad computada mostrarRevision funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
@@ -120,13 +158,15 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarComentadas).toBeTruthy()
   })
 
   it('propiedad computada mostrarComentadas funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarComentadas).toBeFalsy()
   })
 
@@ -152,13 +192,15 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
   it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
 
@@ -184,13 +226,15 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarRespondidasCliente).toBeTruthy()
   })
 
   it('propiedad computada mostrarRespondidasCliente funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarRespondidasCliente).toBeFalsy()
   })
 
@@ -216,34 +260,32 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.mostrarCerradas).toBeTruthy()
   })
 
   it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
 
   it('método elegirTab funciona correctamente', () => {
-    const wrapper = shallowMount(TableroStk)
     wrapper.vm.elegirTab('Revision')
     expect(wrapper.vm.nombreTab).toEqual('Revision')
   })
 
   it('método convertirFecha funciona correctamente para valores null', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.convertirFecha(null)).toEqual('')
   })
 
   it('método convertirFecha funciona correctamente para valores undefined', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.convertirFecha(undefined)).toEqual('')
   })
 
   it('método convertirFecha funciona correctamente para valores fecha', () => {
-    const wrapper = shallowMount(TableroStk)
     expect(wrapper.vm.convertirFecha('2020-11-19T17:45:00.000Z')).toEqual('19-11-2020')
   })
 
@@ -359,6 +401,9 @@ describe('TableroStk.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.categorizarMinutas()
