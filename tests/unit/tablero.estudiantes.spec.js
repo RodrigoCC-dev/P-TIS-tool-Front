@@ -177,11 +177,11 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaMinutas se inicializa correctamente', () => {
-    expect(wrapper.vm.listaMinutas).toEqual([])
+    expect(wrapper.vm.listaMinutas).toEqual(estados)
   })
 
   it('variable listaBorradores se inicializa correctamente', () => {
-    expect(wrapper.vm.listaBorradores).toEqual([])
+    expect(wrapper.vm.listaBorradores).toEqual([estados[1]])
   })
 
   it('variable listaComentadasGrupo se inicializa correctamente', () => {
@@ -197,7 +197,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaCerradas se inicializa correctamente', () => {
-    expect(wrapper.vm.listaCerradas).toEqual([])
+    expect(wrapper.vm.listaCerradas).toEqual([estados[0]])
   })
 
   it('variable listaEmitidas se inicializa correctamente', () => {
@@ -209,7 +209,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable "listaAvances" se inicializa correctamente', () => {
-    expect(wrapper.vm.listaAvances).toEqual([])
+    expect(wrapper.vm.listaAvances).toEqual(grupo)
   })
 
   it('variable "borradoresAvances" se inicializa correctamente', () => {
@@ -275,6 +275,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('propiedad computada mostrarBorradores funciona correctamente con false', () => {
+    wrapper.vm.listaBorradores = []
     expect(wrapper.vm.mostrarBorradores).toBeFalsy()
   })
 
@@ -343,6 +344,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
+    wrapper.vm.listaCerradas = []
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
 
