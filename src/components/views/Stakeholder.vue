@@ -5,60 +5,62 @@
 
       <SelectorJornada/>
 
-      <div class="columns">
-        <div class="column is-three-fifths">
-          <div v-if="mostrarGrupos">
-            <div class="field">
-              <div class="control">
-                <label id="grupos" class="label">Listado de grupos</label>
+      <div v-if="verSelectorGrupo">
+        <div class="columns">
+          <div class="column is-three-fifths">
+            <div v-if="mostrarGrupos">
+              <div class="field">
+                <div class="control">
+                  <label id="grupos" class="label">Listado de grupos</label>
+                </div>
               </div>
-            </div>
-            <table class="table is-fullwidth" aria-describedby="grupos">
-              <thead>
-                <tr>
-                  <th scope="col">N°</th>
-                  <th scope="col">Grupo</th>
-                  <th scope="col">Proyecto</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
-                  <th scope="row" :class="{ 'is-selected-usach' : grupoActual === grupo.id }">{{ index + 1}}</th>
-                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
-                  <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)"><a>{{ grupo.proyecto }}</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="column is-1"></div>
-        <div class="column">
-          <div v-if="grupoActual !== 0">
-            <div class="field">
-              <div class="control">
-                <label id="estudiantes" class="label">Estudiantes</label>
-              </div>
-            </div>
-            <div>
-              <table class="table is-fullwidth" aria-describedby="estudiantes">
+              <table class="table is-fullwidth" aria-describedby="grupos">
                 <thead>
                   <tr>
-                    <th scope="col">R.U.N.</th>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">N°</th>
+                    <th scope="col">Grupo</th>
+                    <th scope="col">Proyecto</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-                    <td>{{ estudiante.usuario.run }}</td>
-                    <td>{{ nombreCompleto(estudiante.usuario) }}</td>
+                  <tr v-for="(grupo, index) in gruposJornada" :key="grupo.id">
+                    <th scope="row" :class="{ 'is-selected-usach' : grupoActual === grupo.id }">{{ index + 1}}</th>
+                    <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)">{{ grupo.nombre }}</td>
+                    <td :class="{ 'is-selected-usach' : grupoActual === grupo.id }" @click="seleccionarGrupo(grupo.id)"><a>{{ grupo.proyecto }}</a></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <div class="column is-1"></div>
+          <div class="column">
+            <div v-if="grupoActual !== 0">
+              <div class="field">
+                <div class="control">
+                  <label id="estudiantes" class="label">Estudiantes</label>
+                </div>
+              </div>
+              <div>
+                <table class="table is-fullwidth" aria-describedby="estudiantes">
+                  <thead>
+                    <tr>
+                      <th scope="col">R.U.N.</th>
+                      <th scope="col">Nombre</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
+                      <td>{{ estudiante.usuario.run }}</td>
+                      <td>{{ nombreCompleto(estudiante.usuario) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
+        <hr>
       </div>
-      <hr>
 
       <Tablero :contador="tableroStk" @revision="establecerRevision" @respuestas="revisarRespuestas"/>
     </div>
@@ -103,6 +105,7 @@ export default {
       listaGrupos: [],
       grupoActual: 0,
       grupoSeleccionado: {},
+      verSelectorGrupo: true,
       tableroStk: 0
     }
   },
@@ -175,6 +178,10 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
+        if (this.gruposFiltrados.length === 1) {
+          this.seleccionarGrupo(this.gruposFiltrados[0].id)
+          this.verSelectorGrupo = false
+        }
       } catch (e) {
         console.log('No se ha obtenido la lista de grupos')
         console.log(e)
