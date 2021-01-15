@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
+import axios from 'axios'
 import TableroStk from '@/components/TableroStk.vue'
 
 const store = createStore({
@@ -27,6 +28,12 @@ const store = createStore({
       }
     }
   }
+})
+
+jest.mock('axios', () => {
+  get: () => new Promise(resolve => {
+    resolve({ data: []})
+  })
 })
 
 describe('TableroStk.vue', () => {
