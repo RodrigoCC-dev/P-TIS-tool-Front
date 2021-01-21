@@ -20,7 +20,7 @@
           <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
           <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
           <td class="is-vcentered has-text-centered">{{ obtenerIniciales(item.responsables) }}</td>
-          <td>
+          <td v-if="comentarios || respuestas">
             <div v-if="comentarios">
               <div v-if="!this.mostrarComentar[index]">
                 <a @click="abrirComentario(index, item.id)">comentar</a>
@@ -516,6 +516,8 @@ export default {
     this.crearListas()
     this.categorizarComentarios()
     this.crearRespuestasItems()
+    console.log(this.comentariosPorItem)
+    console.log(this.comentariosGenerales)
   }
 }
 </script>
