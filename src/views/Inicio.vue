@@ -8,7 +8,7 @@
         <div class="column is-6 bg-semitransparent px-5 py-5" style="z-index: 999">
           <div class="title is-2">Módulo de minutas de reunión</div>
           <div class="subtitle is-5 my-3">
-            <p>Herramienta de apoyo a las actividades de desarrollo de proyecto de software de los cursos P/TIS</p>
+            <p>Herramienta de apoyo a las actividades de desarrollo de proyecto de software de los cursos Proyecto y Taller de Ingeniería de Software</p>
           </div>
 
           <div class="is-vcentered">

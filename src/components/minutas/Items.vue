@@ -20,7 +20,7 @@
           <td class="is-vcentered has-text-left">{{ item.descripcion }}</td>
           <td class="is-vcentered">{{ fechaItem(item.fecha) }}</td>
           <td class="is-vcentered has-text-centered">{{ obtenerIniciales(item.responsables) }}</td>
-          <td>
+          <td v-if="comentarios || respuestas">
             <div v-if="comentarios">
               <div v-if="!this.mostrarComentar[index]">
                 <a @click="abrirComentario(index, item.id)">comentar</a>
@@ -185,7 +185,7 @@
           <div class="column is-half is-offset-3">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-primary-usach" @click="enviarRespuestas">Guardar respuestas</a>
+                <a class="button is-primary-usach" @click="enviarRespuestas">{{ mostrarGuardar ? 'Guardar respuestas' : 'Aceptar comentarios' }}</a>
               </div>
               <div class="control">
                 <a class="button is-light-usach" @click="cancelarEnvioRespuestas">Cancelar</a>
@@ -256,6 +256,23 @@ export default {
         lista.push(this.buscarComentarios(this.listaOrdenada[i].id))
       }
       return lista
+    },
+    mostrarGuardar: function () {
+      for (var i = 0; i < this.respuestasItems.length; i++) {
+        for (var k = 0; k < this.respuestasItems[i].length; k++) {
+          if (this.respuestasItems[i][k].respuesta.length > 0) {
+            return true
+          }
+        }
+      }
+      for (var j = 0; j < this.respuestasGenerales.length; j++) {
+        if (Object.keys(this.respuestasGenerales[j]).length > 0) {
+          if (this.respuestasGenerales[j].respuesta.length > 0) {
+            return true
+          }
+        }
+      }
+      return false
     }
   },
   methods: {
@@ -512,7 +529,13 @@ export default {
       return Funciones.buscarIniciales(this.asistencia, asistenciaId)
     }
   },
-  mounted () {
+  watch: {
+    comentariosMinuta: function () {
+      this.categorizarComentarios()
+      this.crearRespuestasItems()
+    }
+  },
+  created () {
     this.crearListas()
     this.categorizarComentarios()
     this.crearRespuestasItems()
