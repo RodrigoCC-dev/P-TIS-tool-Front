@@ -221,11 +221,11 @@ export default {
       listaCerradas: [],
       nombreTabs,
       contar: this.contador,
-      mostrarTablero: false
+      mostrarTablero: true
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo', 'jornadaActual']),
+    ...mapState(['apiUrl', 'stakeholder', 'grupo', 'jornadaActual']),
 
     mostrarRevision: function () {
       return this.listaRevision.length > 0
@@ -307,6 +307,7 @@ export default {
     contar: function () {
       this.reiniciarTablero()
       this.obtenerMinutas()
+      this.mostrarTablero = true
     },
     grupo: function () {
       this.reiniciarTablero()
@@ -316,6 +317,11 @@ export default {
     jornadaActual: function () {
       this.mostrarTablero = false
       this.reiniciarTablero()
+    },
+    stakeholder: function () {
+      if (this.stakeholder.grupos.length > 0) {
+        this.mostrarTablero = false
+      }
     }
   },
   mounted () {

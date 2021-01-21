@@ -539,12 +539,6 @@ export default {
     this.crearListas()
     this.categorizarComentarios()
     this.crearRespuestasItems()
-  },
-  mounted () {
-    console.log(this.respuestasItems)
-    console.log(this.verRespuestasItems)
-    console.log(this.mostrarGuardar)
-    console.log(this.respuestasGenerales)
   }
 }
 </script>
