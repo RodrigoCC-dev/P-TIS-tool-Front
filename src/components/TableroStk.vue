@@ -241,15 +241,6 @@ export default {
     },
     mostrarCerradas: function () {
       return this.listaCerradas.length > 0
-    },
-    minutasGrupo: function () {
-      var lista = []
-      for (var i = 0; i < this.listaMinutas.length; i++) {
-        if (this.listaMinutas[i].grupo.id === this.grupo.id) {
-          lista.push(this.listaMinutas[i])
-        }
-      }
-      return lista
     }
   },
   methods: {
@@ -264,18 +255,18 @@ export default {
       }
     },
     categorizarMinutas: function () {
-      if (this.minutasGrupo.length > 0) {
-        for (var i = 0; i < this.minutasGrupo.length; i++) {
-          if (this.minutasGrupo[i].estado.abreviacion === 'EMI') {
-            this.listaRevision.push(this.minutasGrupo[i])
-          } else if (this.minutasGrupo[i].estado.abreviacion === 'CSK') {
-            this.listaComentadas.push(this.minutasGrupo[i])
-          } else if (this.minutasGrupo[i].estado.abreviacion === 'RIG') {
-            this.listaRespondidasGrupo.push(this.minutasGrupo[i])
-          } else if (this.minutasGrupo[i].estado.abreviacion === 'RSK') {
-            this.listaRespondidasCliente.push(this.minutasGrupo[i])
-          } else if (this.minutasGrupo[i].estado.abreviacion === 'CER') {
-            this.listaCerradas.push(this.minutasGrupo[i])
+      if (this.listaMinutas.length > 0) {
+        for (var i = 0; i < this.listaMinutas.length; i++) {
+          if (this.listaMinutas[i].estado.abreviacion === 'EMI') {
+            this.listaRevision.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'CSK') {
+            this.listaComentadas.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'RIG') {
+            this.listaRespondidasGrupo.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'RSK') {
+            this.listaRespondidasCliente.push(this.listaMinutas[i])
+          } else if (this.listaMinutas[i].estado.abreviacion === 'CER') {
+            this.listaCerradas.push(this.listaMinutas[i])
           }
         }
       }
