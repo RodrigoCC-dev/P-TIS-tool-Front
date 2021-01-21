@@ -271,6 +271,9 @@
               </tr>
             </tbody>
           </table>
+          <div v-else>
+            <p class="subtitle is-5">No hay minutas de avance semanal cerradas</p>
+          </div>
         </div>
       </section>
     </div>
