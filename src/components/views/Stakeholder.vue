@@ -115,9 +115,15 @@ export default {
     gruposFiltrados: function () {
       var lista = []
       for (var i = 0; i < this.listaGrupos.length; i++) {
-        for (var j = 0; j < this.stakeholder.grupos.length; j++) {
-          if (this.listaGrupos[i].id === this.stakeholder.grupos[j].id) {
+        if (this.stakeholder.grupos.length === undefined) {
+          if (this.listaGrupos[i].id === this.stakeholder.grupos.id) {
             lista.push(this.listaGrupos[i])
+          }
+        } else {
+          for (var j = 0; j < this.stakeholder.grupos.length; j++) {
+            if (this.listaGrupos[i].id === this.stakeholder.grupos[j].id) {
+              lista.push(this.listaGrupos[i])
+            }
           }
         }
       }
