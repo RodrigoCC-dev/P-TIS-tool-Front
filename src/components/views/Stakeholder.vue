@@ -211,6 +211,7 @@ export default {
       this.grupoActual = id
       this.grupoSeleccionado = this.buscarPorId(this.gruposFiltrados, id)
       this.$store.commit('setGrupo', this.grupoSeleccionado)
+      this.tableroStk++
     }
   },
   mounted () {

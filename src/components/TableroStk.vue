@@ -220,11 +220,12 @@ export default {
       listaRespondidasCliente: [],
       listaCerradas: [],
       nombreTabs,
-      contar: this.contador
+      contar: this.contador,
+      mostrarTablero: false
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'jornadaActual']),
 
     mostrarRevision: function () {
       return this.listaRevision.length > 0
@@ -240,9 +241,6 @@ export default {
     },
     mostrarCerradas: function () {
       return this.listaCerradas.length > 0
-    },
-    mostrarTablero: function () {
-      return Object.keys(this.grupo).length > 0
     }
   },
   methods: {
@@ -291,14 +289,21 @@ export default {
   },
   watch: {
     contar: function () {
+      this.listaMinutas = []
       this.obtenerMinutas()
     },
     grupo: function () {
+      this.listaMinutas = []
       this.obtenerMinutas()
+      this.mostrarTablero = true
+    },
+    jornadaActual: function () {
+      this.mostrarTablero = false
+      this.listaMinutas = []
     }
   },
   mounted () {
-    if (this.mostrarTablero) {
+    if (Object.keys(this.grupo).length > 0) {
       this.obtenerMinutas()
     }
   }
