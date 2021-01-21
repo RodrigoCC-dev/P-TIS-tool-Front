@@ -121,36 +121,6 @@
             </div>
           </div>
         </section>
-        <hr>
-        <section class="new-section">
-          <div class="container">
-            <p id="resp-cliente" class="title is-5">Respondidas por el cliente</p>
-            <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
-              <thead>
-                <tr class="has-background-light">
-                  <th scope="col" class="has-text-centered">N°</th>
-                  <th scope="col" class="has-text-centered">Código</th>
-                  <th scope="col" class="has-text-centered">Revisión</th>
-                  <th scope="col" class="has-text-centered">Realizada por</th>
-                  <th scope="col" class="has-text-centered">Respondida el</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                  <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                  <td>{{ bitacora.minuta.codigo }}</td>
-                  <td class="has-text-centered">{{ bitacora.revision }}</td>
-                  <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                  <td class="has-text-centered"></td>
-                </tr>
-              </tbody>
-            </table>
-            <div v-else>
-              <br>
-              <p class="subtitle is-5">No hay minutas respondidas para mostrar</p>
-            </div>
-          </div>
-        </section>
       </div>
 
       <div v-if="nombreTab === nombreTabs.cerradas">
