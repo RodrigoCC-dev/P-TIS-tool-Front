@@ -6,6 +6,7 @@
         <p>
           <strong>Sistema de apoyo a los cursos Proyecto y Taller de Ingeniería de Sotware del Departamento de Ingeniería en Informática</strong>
         </p>
+        <p>Desarrollado por Rodrigo Castillo Cáceres - Año 2021 </p>
       </div>
     </footer>
   </div>

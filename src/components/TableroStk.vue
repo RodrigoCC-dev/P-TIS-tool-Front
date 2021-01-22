@@ -121,36 +121,6 @@
             </div>
           </div>
         </section>
-        <hr>
-        <section class="new-section">
-          <div class="container">
-            <p id="resp-cliente" class="title is-5">Respondidas por el cliente</p>
-            <table class="table is-fullwidth is-bordered is-narrow" v-if="mostrarRespondidasCliente" aria-describedby="resp-cliente">
-              <thead>
-                <tr class="has-background-light">
-                  <th scope="col" class="has-text-centered">N°</th>
-                  <th scope="col" class="has-text-centered">Código</th>
-                  <th scope="col" class="has-text-centered">Revisión</th>
-                  <th scope="col" class="has-text-centered">Realizada por</th>
-                  <th scope="col" class="has-text-centered">Respondida el</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(bitacora, index) in listaRespondidasCliente" :key="bitacora.id">
-                  <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                  <td>{{ bitacora.minuta.codigo }}</td>
-                  <td class="has-text-centered">{{ bitacora.revision }}</td>
-                  <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
-                  <td class="has-text-centered"></td>
-                </tr>
-              </tbody>
-            </table>
-            <div v-else>
-              <br>
-              <p class="subtitle is-5">No hay minutas respondidas para mostrar</p>
-            </div>
-          </div>
-        </section>
       </div>
 
       <div v-if="nombreTab === nombreTabs.cerradas">
@@ -220,11 +190,12 @@ export default {
       listaRespondidasCliente: [],
       listaCerradas: [],
       nombreTabs,
-      contar: this.contador
+      contar: this.contador,
+      mostrarTablero: true
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'stakeholder', 'grupo', 'jornadaActual']),
 
     mostrarRevision: function () {
       return this.listaRevision.length > 0
@@ -240,9 +211,6 @@ export default {
     },
     mostrarCerradas: function () {
       return this.listaCerradas.length > 0
-    },
-    mostrarTablero: function () {
-      return Object.keys(this.grupo).length > 0
     }
   },
   methods: {
@@ -273,6 +241,13 @@ export default {
         }
       }
     },
+    reiniciarTablero: function () {
+      this.listaRevision = []
+      this.listaComentadas = []
+      this.listaRespondidasGrupo = []
+      this.listaRespondidasCliente = []
+      this.listaCerradas = []
+    },
     async obtenerMinutas () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/cliente/' + this.grupo.id, { headers: Auth.authHeader() })
@@ -291,14 +266,27 @@ export default {
   },
   watch: {
     contar: function () {
+      this.reiniciarTablero()
       this.obtenerMinutas()
+      this.mostrarTablero = true
     },
     grupo: function () {
+      this.reiniciarTablero()
       this.obtenerMinutas()
+      this.mostrarTablero = true
+    },
+    jornadaActual: function () {
+      this.mostrarTablero = false
+      this.reiniciarTablero()
+    },
+    stakeholder: function () {
+      if (this.stakeholder.grupos.length > 0) {
+        this.mostrarTablero = false
+      }
     }
   },
   mounted () {
-    if (this.mostrarTablero) {
+    if (Object.keys(this.grupo).length > 0) {
       this.obtenerMinutas()
     }
   }
