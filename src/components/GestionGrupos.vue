@@ -89,23 +89,22 @@
     </div>
 
     <div class="columns is-multiline">
-      <div v-for="grupo in listaGrupos" :key="grupo.id">
-        <div class="column is-narrow" v-if="grupo.jornada === jornadaActual">
-          <article class="message is-info">
-            <div class="message-header">
-              <p>{{ grupo.nombre }}</p>
+      <div class="column is-3" v-for="grupo in listaGrupos" :key="grupo.id">
+        <article class="message is-info" v-if="grupo.jornada === jornadaActual">
+          <div class="message-header">
+            <p>{{ grupo.nombre }}</p>
+            <button class="delete" aria-label="delete"></button>
+          </div>
+          <div class="message-body">
+            <p class="title is-6">{{ grupo.proyecto }}</p>
+            <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
+            <div v-if="mostrarClientes(grupo)">
+              <br>
+              <p class="subtitle is-6"><strong>Clientes:</strong></p>
+              <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
             </div>
-            <div class="message-body">
-              <p class="title is-6">{{ grupo.proyecto }}</p>
-              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
-              <div v-if="mostrarClientes(grupo)">
-                <br>
-                <p class="subtitle is-6"><strong>Clientes:</strong></p>
-                <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
-              </div>
-            </div>
-          </article>
-        </div>
+          </div>
+        </article>
       </div>
     </div>
 
