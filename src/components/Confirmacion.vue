@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="modal">
+    <div class="modal" :class="{ 'is-active' : activo }">
       <div class="modal-background"></div>
       <div class="modal-content">
 
@@ -36,10 +36,11 @@
 
 <script>
 export default {
-  name: 'Notificacion',
-  props: ['texto'],
+  name: 'Confirmacion',
+  props: ['mostrar', 'texto'],
   data () {
     return {
+      activo: this.mostrar,
       mensaje: this.texto
     }
   },

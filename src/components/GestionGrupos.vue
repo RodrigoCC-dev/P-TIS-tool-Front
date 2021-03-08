@@ -93,7 +93,7 @@
         <article class="message is-info" v-if="grupo.jornada === jornadaActual">
           <div class="message-header">
             <p>{{ grupo.nombre }}</p>
-            <button class="delete" aria-label="delete"></button>
+            <button class="delete" aria-label="delete" @click="borrarGrupo(grupo.id)"></button>
           </div>
           <div class="message-body">
             <p class="title is-6">{{ grupo.proyecto }}</p>
@@ -108,6 +108,10 @@
       </div>
     </div>
 
+    <div v-if="this.notificar.mostrar">
+      <Confirmacion :mostrar="notificar.mostrar" :texto="notificar.mensaje" @accion="confirmarBorrado" @cerrar="cerrarNotificacion"/>
+    </div>
+
   </div>
 </template>
 
@@ -118,11 +122,13 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 
 import SelectorJornada from '@/components/SelectorJornada.vue'
+import Confirmacion from '@/components/Confirmacion.vue'
 
 export default {
   name: 'GestionGrupos',
   components: {
-    SelectorJornada
+    SelectorJornada,
+    Confirmacion
   },
   data () {
     return {
@@ -144,7 +150,12 @@ export default {
         correlativo: 0
       },
       listaEstudiantes: [],
-      listaGrupos: []
+      listaGrupos: [],
+      notificar: {
+        id: 0,
+        mostrar: false,
+        mensaje: '¿Confirma la eliminación del grupo?'
+      }
     }
   },
   computed: {
@@ -278,6 +289,20 @@ export default {
       esvalido = esvalido && this.validarProyecto()
       esvalido = esvalido && this.validarAsignacion()
       return esvalido
+    },
+    borrarGrupo: function (id) {
+      this.notificar.mostrar = true
+      this.notificar.id = id
+      console.log(this.notificar)
+    },
+    confirmarBorrado: function () {
+      console.log('Se manda orden de borrar grupo')
+      console.log('Id a borrar:', this.notificar.id)
+      this.notificar.mostrar = false
+      this.notificar.id = 0
+    },
+    cerrarNotificacion: function () {
+      this.notificar.mostrar = false
     }
   },
   watch: {
