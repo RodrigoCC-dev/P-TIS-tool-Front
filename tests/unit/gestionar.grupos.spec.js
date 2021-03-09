@@ -13,30 +13,46 @@ const store = createStore({
   }
 })
 
-jest.mock('axios', () => {
-  get: () => new Promise(resolve => {
-    resolve({ data: [
-      {
-        id: 93453,
-        nombre: 'G01',
-        proyecto: 'Proyecto de prueba unitario',
-        correlativo: 34,
-        jornada: 'Diurna',
-        estudiantes: [{
-          id: 92345,
-          iniciales: 'ABC',
-          usuario: {
-            nombre: 'Alberto',
-            apellido_paterno: 'Becerra',
-            apellido_materno: 'Castro',
-            run: '11111111-1',
-            email: 'alberto.becerra@algo.com'
-          }
-        }],
-        stakeholders: []
+const grupos = [
+  {
+    id: 93453,
+    nombre: 'G01',
+    proyecto: 'Proyecto de prueba unitario',
+    correlativo: 34,
+    jornada: 'Diurna',
+    estudiantes: [{
+      id: 92345,
+      iniciales: 'ABC',
+      usuario: {
+        nombre: 'Alberto',
+        apellido_paterno: 'Becerra',
+        apellido_materno: 'Castro',
+        run: '11111111-1',
+        email: 'alberto.becerra@algo.com'
       }
-    ]})
-  })
+    }],
+    stakeholders: []
+  }
+]
+
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case '127.0.0.1:3000/grupos':
+      return Promise.resolve({data: grupos})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.delete.mockImplementation((url) => {
+  switch (url) {
+    case '127.0.0.1:3000/grupos/10':
+      return Promise.resolve(201)
+    default:
+      return Promise.reject(new Error('not found'))
+  }
 })
 
 describe('GestionGrupos.vue', () => {
@@ -106,9 +122,15 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.listaEstudiantes).toEqual([])
   })
 
-  it('variable listaGrupos se inicializa vacía', async () => {
+  it('variable listaGrupos se inicializa correctamente', async () => {
     await flushPromises()
-    expect(wrapper.vm.listaGrupos).toEqual([])
+    expect(wrapper.vm.listaGrupos).toEqual(grupos)
+  })
+
+  it('variable "notificar" se inicializa correctamente', () => {
+    expect(wrapper.vm.notificar.id).toEqual(0)
+    expect(wrapper.vm.notificar.mostrar).toBeFalsy()
+    expect(wrapper.vm.notificar.mensaje).toEqual('¿Confirma la eliminación del grupo?')
   })
 
   it('propiedad computada "sinAsignar" funciona correctamente', async () => {
@@ -159,13 +181,6 @@ describe('GestionGrupos.vue', () => {
     await flushPromises()
     expect(wrapper.vm.mostrarClientes(grupo)).toBeFalsy()
   })
-
-/*
-  it('método "elegirTab" funciona correctamente', () => {
-    wrapper.vm.elegirTab('Vespertina')
-    expect(wrapper.vm.jornadaActual).toEqual('Vespertina')
-  })
-*/
 
   it('método "agregarGrupo" funciona correctamente', async () => {
     wrapper.vm.verFormulario = false
@@ -266,5 +281,26 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
     await flushPromises()
     expect(wrapper.vm.validarDatos()).toBeFalsy()
+  })
+
+  it('método "borrarGrupo" funciona correctamente', () => {
+    wrapper.vm.borrarGrupo(10)
+    expect(wrapper.vm.notificar.mostrar).toBeTruthy()
+    expect(wrapper.vm.notificar.id).toEqual(10)
+  })
+
+  it('método "confirmarBorrado" funciona correctamente', async () => {
+    wrapper.vm.notificar.mostrar = true
+    wrapper.vm.notificar.id = 10
+    wrapper.vm.confirmarBorrado()
+    await flushPromises()
+    expect(wrapper.vm.notificar.mostrar).toBeFalsy()
+    expect(wrapper.vm.notificar.id).toEqual(0)
+  })
+
+  it('método "cerrarNotificacion" funciona correctamente', () => {
+    wrapper.vm.notificar.mostrar = true
+    wrapper.vm.cerrarNotificacion()
+    expect(wrapper.vm.notificar.mostrar).toBeFalsy()
   })
 })
