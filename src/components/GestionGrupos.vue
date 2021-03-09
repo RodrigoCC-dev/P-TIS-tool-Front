@@ -293,11 +293,14 @@ export default {
     borrarGrupo: function (id) {
       this.notificar.mostrar = true
       this.notificar.id = id
-      console.log(this.notificar)
     },
-    confirmarBorrado: function () {
-      console.log('Se manda orden de borrar grupo')
-      console.log('Id a borrar:', this.notificar.id)
+    async confirmarBorrado () {
+      try {
+        await axios.delete(this.apiUrl + '/grupos/' + this.notificar.id, { headers: Auth.authHeader() })
+        this.obtenerGrupos()
+      } catch {
+        console.log('No fue posible borrar el grupo')
+      }
       this.notificar.mostrar = false
       this.notificar.id = 0
     },
