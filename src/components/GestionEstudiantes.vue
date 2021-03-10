@@ -81,7 +81,7 @@
                 <a class="button is-primary-usach" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-secondary-usach">Desde nómina</a>
+                <a class="button is-secondary-usach" @click="cargarNomina">Desde nómina</a>
               </div>
               <div class="control">
                 <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
@@ -93,22 +93,38 @@
     </div>
 
     <div v-if="mostrarNomina">
-      <div class="file is-centered has-name">
-        <label class="file-label">
-          <input class="file-input" type="file">
-          <span class="file-cta">
-            <span class="file-icon">
-              <i class="fas fa-upload"></i>
-            </span>
-            <span class="file-label">
-              Subir nómina
-            </span>
-          </span>
-          <span class="file-name">
-            No se ha subido el archivo
-          </span>
-        </label>
+      <br>
+      <div class="columns is-4 is-centered">
+
+        <div class="column is-2">
+          <button class="button is-primary-usach is-fullwidth">Descargar plantilla</button>
+        </div>
+
+        <div class="column is-6">
+          <div class="file is-centered has-name is-fullwidth">
+            <label class="file-label">
+              <input ref="archivo" class="file-input" type="file" @change="cargarNombre">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Subir nómina
+                </span>
+              </span>
+              <span class="file-name">
+                {{ nombreArchivo }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="column is-2">
+          <button class="button is-secondary-usach is-fullwidth" @click="enviarArchivo">Enviar</button>
+        </div>
+
       </div>
+
     </div>
 
     <hr>
@@ -245,7 +261,9 @@ export default {
       },
       eliminados: [],
       notificar: false,
-      mostrarNomina: true
+      mostrarNomina: false,
+      archivo: '',
+      nombreArchivo: 'No se ha subido el archivo'
     }
   },
   computed: {
@@ -335,6 +353,7 @@ export default {
       this.runEntrada.error = false
       this.emailEntrada.error = false
       this.seccionEntrada = false
+      this.mostrarNomina = false
     },
     validarNombre: function () {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
@@ -521,6 +540,23 @@ export default {
       } catch (e) {
         this.notificar = false
         console.log('No fue posible eliminar los estudiantes seleccioandos')
+        console.log(e)
+      }
+    },
+    cargarNomina: function () {
+      this.mostrarNomina = true
+    },
+    cargarNombre: function () {
+      this.archivo = this.$refs.archivo.files[0]
+      this.nombreArchivo = this.archivo.name
+    },
+    async enviarArchivo () {
+      const formData = new FormData()
+      formData.append('archivo', this.archivo)
+      try {
+        await axios.post(this.apiUrl + '/', formData, { headers: Auth.fileHeader() })
+      } catch (e) {
+        console.log('No se ha podido enviar el archivo')
         console.log(e)
       }
     }
