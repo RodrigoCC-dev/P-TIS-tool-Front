@@ -554,7 +554,7 @@ export default {
       const formData = new FormData()
       formData.append('archivo', this.archivo)
       try {
-        await axios.post(this.apiUrl + '/', formData, { headers: Auth.fileHeader() })
+        await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
       } catch (e) {
         console.log('No se ha podido enviar el archivo')
         console.log(e)
