@@ -589,10 +589,18 @@ export default {
       formData.append('seccion', this.estudiante.seccion_id)
       try {
         await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
+        this.obtenerEstudiantes()
+        this.limpiarNomina()
       } catch (e) {
         console.log('No se ha podido enviar el archivo')
         console.log(e)
       }
+    },
+    limpiarNomina: function () {
+      this.mostrarNomina = false
+      this.estudiante.seccion_id = null
+      this.archivo = ''
+      this.nombreArchivo = 'No se ha subido el archivo'
     }
   },
   mounted () {
