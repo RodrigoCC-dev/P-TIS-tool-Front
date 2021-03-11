@@ -2,10 +2,17 @@
   <div>
     <br>
     <div class="columns">
-      <div class="column is-10"></div>
-      <div class="column is-2" v-if="verFormulario"></div>
-      <div class="column is-2" v-else>
-        <button class="button is-info-usach" @click="agregarEstudiante">Agregar Estudiante</button>
+      <div class="column is-8"></div>
+      <div class="column is-4" v-if="verFormulario || mostrarNomina"></div>
+      <div class="column is-4" v-else>
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <a class="button is-info-usach" @click="agregarEstudiante">Agregar Estudiante</a>
+          </p>
+          <p class="control">
+            <a class="button is-secondary-usach" @click="cargarNomina">Subir nómina</a>
+          </p>
+        </div>
       </div>
     </div>
     <div v-if="verFormulario">
@@ -81,9 +88,6 @@
                 <a class="button is-primary-usach" @click="agregar">Agregar</a>
               </div>
               <div class="control">
-                <a class="button is-secondary-usach" @click="cargarNomina">Desde nómina</a>
-              </div>
-              <div class="control">
                 <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
               </div>
             </div>
@@ -96,12 +100,30 @@
       <br>
       <div class="columns is-4 is-centered">
 
-        <div class="column is-2">
-          <button class="button is-primary-usach is-fullwidth">Descargar plantilla</button>
+        <div class="column is-8">
+          <div class="field is-horizontal">
+            <div class="field-label-2c is-normal">
+              <label class="label">Sección - Curso:</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select v-model="estudiante.seccion_id" v-on:change="validarSeccion" :class="{ 'is-danger' : seccionEntrada}">
+                      <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
+                        {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <p class="is-danger help" v-if="seccionEntrada">No ha seleccionado la sección</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="column is-6">
-          <div class="file is-centered has-name is-fullwidth">
+        <div class="column is-4">
+          <div class="file is-right has-name is-fullwidth">
             <label class="file-label">
               <input ref="archivo" class="file-input" type="file" @change="cargarNombre">
               <span class="file-cta">
@@ -119,10 +141,21 @@
           </div>
         </div>
 
-        <div class="column is-2">
-          <button class="button is-secondary-usach is-fullwidth" @click="enviarArchivo">Enviar</button>
-        </div>
+      </div>
 
+      <div class="columns is-centered">
+        <div class="column is-3">
+          <button class="button is-primary-usach is-fullwidth" @click="enviarArchivo">Cargar</button>
+        </div>
+        <div class="column is-3">
+          <button class="button is-light-usach is-fullwidth" @click="noAgregar">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-6">
+          <button class="button is-secondary-usach is-fullwidth">Descargar plantilla</button>
+        </div>
       </div>
 
     </div>
@@ -553,6 +586,7 @@ export default {
     async enviarArchivo () {
       const formData = new FormData()
       formData.append('archivo', this.archivo)
+      formData.append('seccion', this.estudiante.seccion_id)
       try {
         await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
       } catch (e) {
