@@ -7,7 +7,7 @@
       <div class="column is-4" v-else>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <a class="button is-info-usach" @click="agregarEstudiante">Agregar Estudiante</a>
+            <a class="button is-info-usach" @click="agregarEstudiante">Agregar estudiante</a>
           </p>
           <p class="control">
             <a class="button is-secondary-usach" @click="cargarNomina">Subir nómina</a>
@@ -116,7 +116,7 @@
                     </select>
                   </div>
                 </div>
-                <p class="is-danger help" v-if="seccionEntrada">No ha seleccionado la sección</p>
+                <p class="is-danger help has-text-left" v-if="seccionEntrada">No ha seleccionado la sección</p>
               </div>
             </div>
           </div>
@@ -139,6 +139,7 @@
               </span>
             </label>
           </div>
+          <p class="is-danger help has-text-left" v-if="agregaArchivo">No se ha añadido el archivo a enviar</p>
         </div>
 
       </div>
@@ -154,7 +155,7 @@
 
       <div class="columns is-centered">
         <div class="column is-6">
-          <button class="button is-secondary-usach is-fullwidth">Descargar plantilla</button>
+          <button class="button is-secondary-usach is-fullwidth">Descargar formato plantilla</button>
         </div>
       </div>
 
@@ -296,7 +297,8 @@ export default {
       notificar: false,
       mostrarNomina: false,
       archivo: '',
-      nombreArchivo: 'No se ha subido el archivo'
+      nombreArchivo: 'No se ha subido el archivo',
+      agregaArchivo: false
     }
   },
   computed: {
@@ -582,18 +584,21 @@ export default {
     cargarNombre: function () {
       this.archivo = this.$refs.archivo.files[0]
       this.nombreArchivo = this.archivo.name
+      this.validarArchivo()
     },
     async enviarArchivo () {
-      const formData = new FormData()
-      formData.append('archivo', this.archivo)
-      formData.append('seccion', this.estudiante.seccion_id)
-      try {
-        await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
-        this.obtenerEstudiantes()
-        this.limpiarNomina()
-      } catch (e) {
-        console.log('No se ha podido enviar el archivo')
-        console.log(e)
+      if (this.validarIngresoNomina()) {
+        const formData = new FormData()
+        formData.append('archivo', this.archivo)
+        formData.append('seccion', this.estudiante.seccion_id)
+        try {
+          await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
+          this.obtenerEstudiantes()
+          this.limpiarNomina()
+        } catch (e) {
+          console.log('No se ha podido enviar el archivo')
+          console.log(e)
+        }
       }
     },
     limpiarNomina: function () {
@@ -601,6 +606,22 @@ export default {
       this.estudiante.seccion_id = null
       this.archivo = ''
       this.nombreArchivo = 'No se ha subido el archivo'
+      this.agregaArchivo = false
+    },
+    validarArchivo: function () {
+      if (this.archivo === null || this.archivo === undefined || this.archivo === '') {
+        this.agregaArchivo = true
+        return false
+      } else {
+        this.agregaArchivo = false
+        return true
+      }
+    },
+    validarIngresoNomina: function () {
+      let validacion = true
+      validacion = validacion && this.validarSeccion()
+      validacion = validacion && this.validarArchivo()
+      return validacion
     }
   },
   mounted () {
