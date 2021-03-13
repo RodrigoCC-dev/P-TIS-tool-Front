@@ -155,7 +155,7 @@
 
       <div class="columns is-centered">
         <div class="column is-6">
-          <button class="button is-secondary-usach is-fullwidth">Descargar formato plantilla</button>
+          <button class="button is-secondary-usach is-fullwidth" @click="obtenerPlantilla">Descargar formato plantilla</button>
         </div>
       </div>
 
@@ -622,6 +622,19 @@ export default {
       validacion = validacion && this.validarSeccion()
       validacion = validacion && this.validarArchivo()
       return validacion
+    },
+    async obtenerPlantilla () {
+      try {
+        const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.authHeader() }, { responseType: 'document' })
+        var fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
+        var fileLink = document.createElement('a')
+        fileLink.href = fileURL
+        fileLink.setAttribute('download', 'Plantilla_nomina_curso.xlsx')
+        document.body.appendChild(fileLink)
+        fileLink.click()
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   mounted () {
