@@ -625,11 +625,12 @@ export default {
     },
     async obtenerPlantilla () {
       try {
-        const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.authHeader() }, { responseType: 'document' })
-        var fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
+        const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.authHeader() }, { responseType: 'blob' })
+        console.log(response)
+        var fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }))
         var fileLink = document.createElement('a')
         fileLink.href = fileURL
-        fileLink.setAttribute('download', 'Plantilla_nomina_curso.xlsx')
+        fileLink.setAttribute('download', 'Formato_nomina_curso.xls')
         document.body.appendChild(fileLink)
         fileLink.click()
       } catch (e) {
