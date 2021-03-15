@@ -623,16 +623,37 @@ export default {
       validacion = validacion && this.validarArchivo()
       return validacion
     },
-    async obtenerPlantilla () {
+    obtenerPlantilla: function () {
       try {
-        const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.authHeader() }, { responseType: 'blob' })
-        console.log(response)
-        var fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }))
+        // const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.fileDownloadHeader() }, { responseType: 'arraybuffer' })
+        // console.log(response)
+        fetch(this.apiUrl + '/estudiantes/archivo/plantilla', {
+          method: 'GET',
+          headers: Auth.fileDownloadHeader()
+        }).then(function (response) {
+          console.log(response.ok)
+          console.log(response.status)
+          return response.blob()
+        }).then(function (data) {
+          console.log(data)
+          var fileURL = URL.createObjectURL(data)
+          var fileLink = document.createElement('a')
+          fileLink.href = fileURL
+          fileLink.setAttribute('download', 'Backlog.png')
+          document.body.appendChild(fileLink)
+          fileLink.click()
+        })
+        /*
+        var blob = new Blob([response.data], { type: 'image/png', endings: 'native' })
+        console.log(blob.size)
+        console.log(blob.type)
+        var fileURL = URL.createObjectURL(blob)
         var fileLink = document.createElement('a')
         fileLink.href = fileURL
-        fileLink.setAttribute('download', 'Formato_nomina_curso.xls')
+        fileLink.setAttribute('download', 'Backlog.png')
         document.body.appendChild(fileLink)
         fileLink.click()
+        */
       } catch (e) {
         console.log(e)
       }

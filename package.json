@@ -13,7 +13,10 @@
   "jest": {
     "collectCoverage": true,
     "testResultsProcessor": "jest-sonnar-reporter",
-    "collectCoverageFrom": ["**/*.{js,vue}", "!**/node_modules/**"]
+    "collectCoverageFrom": [
+      "**/*.{js,vue}",
+      "!**/node_modules/**"
+    ]
   },
   "dependencies": {
     "core-js": "^3.6.5",
