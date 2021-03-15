@@ -600,4 +600,46 @@ describe('GestionEstudiantes.vue', () => {
     wrapper.vm.cancelarEliminacion()
     expect(wrapper.vm.notificar).toBeFalsy()
   })
+
+  it('método "cargarNomina" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.cargarNomina()
+    expect(wrapper.vm.mostrarNomina).toBeTruthy()
+  })
+
+  it('método "limpiarNomina" funciona correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.mostrarNomina = true
+    wrapper.vm.estudiante.seccion_id = 234
+    wrapper.vm.archivo = 'Archivo de prueba'
+    wrapper.vm.nombreArchivo = 'prueba.txt'
+    wrapper.agregaArchivo = true
+    wrapper.vm.limpiarNomina()
+    expect(wrapper.vm.mostrarNomina).toBeFalsy()
+    expect(wrapper.vm.estudiante.seccion_id).toEqual(null)
+    expect(wrapper.vm.archivo).toEqual('')
+    expect(wrapper.vm.nombreArchivo).toEqual('No se ha subido el archivo')
+    expect(wrapper.vm.agregaArchivo).toBeFalsy()
+  })
+
+  it('método "validarArchivo" funciona correctamente con "archivo" igual a "null"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.archivo = null
+    expect(wrapper.vm.validarArchivo()).toBeFalsy()
+    expect(wrapper.vm.agregaArchivo).toBeTruthy()
+  })
+
+  it('método "validarArchivo" funciona correctamente con "archivo" igual a "undefined"', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.archivo = undefined
+    expect(wrapper.vm.validarArchivo()).toBeFalsy()
+    expect(wrapper.vm.agregaArchivo).toBeTruthy()
+  })
+
+  it('método "validarArchivo" funciona correctamente con "archivo" igual a ""', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    wrapper.vm.archivo = ''
+    expect(wrapper.vm.validarArchivo()).toBeFalsy()
+    expect(wrapper.vm.agregaArchivo).toBeTruthy()
+  })
 })
