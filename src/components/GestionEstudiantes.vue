@@ -625,35 +625,25 @@ export default {
     },
     obtenerPlantilla: function () {
       try {
-        // const response = await axios.get(this.apiUrl + '/estudiantes/archivo/plantilla', { headers: Auth.fileDownloadHeader() }, { responseType: 'arraybuffer' })
-        // console.log(response)
         fetch(this.apiUrl + '/estudiantes/archivo/plantilla', {
           method: 'GET',
-          headers: Auth.fileDownloadHeader()
+          headers: Auth.authHeader()
         }).then(function (response) {
-          console.log(response.ok)
-          console.log(response.status)
           return response.blob()
         }).then(function (data) {
-          console.log(data)
-          var fileURL = URL.createObjectURL(data)
-          var fileLink = document.createElement('a')
-          fileLink.href = fileURL
-          fileLink.setAttribute('download', 'Backlog.png')
-          document.body.appendChild(fileLink)
-          fileLink.click()
+          if (data !== undefined) {
+            var fileURL = URL.createObjectURL(data)
+            var fileLink = document.createElement('a')
+            fileLink.href = fileURL
+            fileLink.setAttribute('download', 'Formato_nomina_curso.xls')
+            document.body.appendChild(fileLink)
+            fileLink.click()
+          } else {
+            console.log('No fue posible descargar del archivo')
+          }
+        }).catch(function (e) {
+          console.log(e)
         })
-        /*
-        var blob = new Blob([response.data], { type: 'image/png', endings: 'native' })
-        console.log(blob.size)
-        console.log(blob.type)
-        var fileURL = URL.createObjectURL(blob)
-        var fileLink = document.createElement('a')
-        fileLink.href = fileURL
-        fileLink.setAttribute('download', 'Backlog.png')
-        document.body.appendChild(fileLink)
-        fileLink.click()
-        */
       } catch (e) {
         console.log(e)
       }
