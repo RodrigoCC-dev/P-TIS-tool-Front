@@ -44,15 +44,6 @@ export default {
     }
   },
 
-  fileDownloadHeader () {
-    const user = localStorage.getItem('user_tk')
-    if (user) {
-      return { Authorization: 'Bearer ' + user, Accept: 'application/octet-stream' }
-    } else {
-      return {}
-    }
-  },
-
   setUser (userLogged) {
     Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
   },
