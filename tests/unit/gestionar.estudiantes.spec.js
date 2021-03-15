@@ -83,6 +83,36 @@ describe('GestionEstudiantes.vue', () => {
     expect(wrapper.vm.mensajes).toEqual(esperado)
   })
 
+  it('varialbe "eliminados" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.eliminados).toEqual([])
+  })
+
+  it('varialbe "notificar" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.notificar).toBeFalsy()
+  })
+
+  it('variable "mostrarNomina" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.mostrarNomina).toBeFalsy()
+  })
+
+  it('variable "archivo" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.archivo).toEqual('')
+  })
+
+  it('variable "nombreArchivo" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.nombreArchivo).toEqual('No se ha subido el archivo')
+  })
+
+  it('variable "agregaArchivo" se inicializa correctamente', () => {
+    const wrapper = shallowMount(GestionEstudiantes)
+    expect(wrapper.vm.agregaArchivo).toBeFalsy()
+  })
+
   it('propiedad computada "mostrarEliminar" funciona correctamente con true', () => {
     const wrapper = shallowMount(GestionEstudiantes)
     wrapper.vm.eliminados = [2453, 938534]
