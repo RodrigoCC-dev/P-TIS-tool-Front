@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
-import flushPromises from 'flush-promises'
 import axios from 'axios'
 import GestionGrupos from '@/components/GestionGrupos.vue'
 
@@ -73,17 +72,17 @@ describe('GestionGrupos.vue', () => {
   })
 
   it('variable verFormulario se inicializa en false', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
   it('variable mostrarJornadas se inicializa en false', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarJornadas).toBeFalsy()
   })
 
   it('variable jornadaActual se inicializa en Diurna', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.jornadaActual).toEqual('Diurna')
   })
 
@@ -93,12 +92,12 @@ describe('GestionGrupos.vue', () => {
       proyecto: '',
       correlativo: 0
     }
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupo).toEqual(nuevo)
   })
 
   it('variable estudiantes se inicializa vacía', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.estudiantes).toEqual([])
   })
 
@@ -113,17 +112,17 @@ describe('GestionGrupos.vue', () => {
         mensaje: ''
       }
     }
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.entradas).toEqual(entradas)
   })
 
   it('variable listaEstudiantes se inicializa vacía', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaEstudiantes).toEqual([])
   })
 
   it('variable listaGrupos se inicializa correctamente', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaGrupos).toEqual(grupos)
   })
 
@@ -140,19 +139,19 @@ describe('GestionGrupos.vue', () => {
     ]
     wrapper.vm.listaEstudiantes = listaEstudiantes
     wrapper.vm.jornadaActual = 'Diurna'
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.sinAsignar).toEqual(esperado)
   })
 
   it('propiedad computada "mostrarLista" funciona correctamente con "true"', async () => {
     wrapper.vm.listaEstudiantes = listaEstudiantes
     wrapper.vm.jornadaActual = 'Diurna'
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarLista).toBeTruthy()
   })
 
   it('propiedad computada "mostrarLista" funciona correctamente con "false"', async () => {
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarLista).toBeFalsy()
   })
 
@@ -162,7 +161,7 @@ describe('GestionGrupos.vue', () => {
       apellido_paterno: 'Iglesias',
       apellido_materno: 'Del Campo'
     }
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Mateo Iglesias Del Campo')
   })
 
@@ -170,7 +169,7 @@ describe('GestionGrupos.vue', () => {
     const grupo = {
       stakeholders: [{id: 962354}, {id: 6235345}, {id: 63453}]
     }
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarClientes(grupo)).toBeTruthy()
   })
 
@@ -178,14 +177,14 @@ describe('GestionGrupos.vue', () => {
     const grupo = {
       stakeholders: []
     }
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarClientes(grupo)).toBeFalsy()
   })
 
   it('método "agregarGrupo" funciona correctamente', async () => {
     wrapper.vm.verFormulario = false
     wrapper.vm.agregarGrupo()
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeTruthy()
   })
 
@@ -193,7 +192,7 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.verFormulario = true
     wrapper.vm.entradas.proyecto.error = true
     wrapper.vm.entradas.estudiantes.error = true
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     wrapper.vm.noAgregar()
     expect(wrapper.vm.verFormulario).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
@@ -205,7 +204,7 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.grupo.proyecto = 'Pruebas de código'
     wrapper.vm.grupo.correlativo = 623534
     wrapper.vm.estudiantes = [{id: 962345}, {id: 9629353}]
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     wrapper.vm.nuevoGrupo()
     expect(wrapper.vm.grupo.nombre).toEqual('')
     expect(wrapper.vm.grupo.proyecto).toEqual('')
@@ -215,7 +214,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarProyecto" funciona correctamente con proyecto igual a "null"', async () => {
     wrapper.vm.grupo.proyecto = null
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
@@ -223,7 +222,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarProyecto" funciona correctamente con proyecto igual a "undefined"', async () => {
     wrapper.vm.grupo.proyecto = undefined
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
@@ -231,7 +230,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarProyecto" funciona correctamente con proyecto igual a ""', async () => {
     wrapper.vm.grupo.proyecto = ''
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
@@ -239,7 +238,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarProyecto" funciona correctamente con proyecto distinto a "regExp"', async () => {
     wrapper.vm.grupo.proyecto = 'Gistdc,ast346#&#adis'
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Sólo se admiten letras. Verificar que no tenga caracteres especiales')
@@ -247,7 +246,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarProyecto" funciona correctamente con proyecto con "regExp" correcto', async () => {
     wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('')
@@ -255,7 +254,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarAsignacion" funciona correctamente para "true"', async () => {
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarAsignacion()).toBeTruthy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('')
@@ -263,7 +262,7 @@ describe('GestionGrupos.vue', () => {
 
   it('método "validarAsignacion" funciona correctamente para "false"', async () => {
     wrapper.vm.estudiantes = []
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarAsignacion()).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeTruthy()
     expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('No se han asignado estudiantes al grupo')
@@ -272,14 +271,14 @@ describe('GestionGrupos.vue', () => {
   it('método "validarDatos" funciona correctamente para "true"', async () => {
     wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarDatos()).toBeTruthy()
   })
 
   it('método "validarDatos" funciona correctamente para "false"', async () => {
     wrapper.vm.grupo.proyecto = undefined
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarDatos()).toBeFalsy()
   })
 
@@ -293,7 +292,7 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.notificar.mostrar = true
     wrapper.vm.notificar.id = 10
     wrapper.vm.confirmarBorrado()
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.notificar.mostrar).toBeFalsy()
     expect(wrapper.vm.notificar.id).toEqual(0)
   })
