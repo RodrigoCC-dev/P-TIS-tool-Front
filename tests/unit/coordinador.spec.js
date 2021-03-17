@@ -20,7 +20,8 @@ describe('Coordinador.vue', () => {
       Minutas: 'minutas',
       Stakeholders: 'clientes',
       Profesores: 'profesores',
-      Avances: 'avances'
+      Avances: 'avances',
+      Estadisticas: 'estadisticas'
     }
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
