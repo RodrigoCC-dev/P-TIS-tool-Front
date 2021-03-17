@@ -7,21 +7,28 @@
       <SelectorGrupo @eleccion="seleccionGrupo"/>
     </div>
 
+    <br>
+    <br>
     <div v-if="mostrarRegistros">
-      <table class="table is-bordered is-fullwidth">
+      <div class="field">
+        <div class="control">
+          <label id="participacion" class="label">Participación de estudiantes en confección de minutas de reunión</label>
+        </div>
+      </div>
+      <table class="table is-fullwidth" aria-describedby="participacion">
         <thead>
           <tr class="has-background-light">
-            <th scope="col">R.U.N.</th>
-            <th scope="col">Estudiante</th>
-            <th scope="col"><abbr title="Definición de los datos de las minutas como: hora de inicio, hora de término, clasificación y asistencia">Minutas</abbr></th>
-            <th scope="col"><abbr title="Definición del tema a tratar en las minutas">Tema</abbr></th>
-            <th scope="col"><abbr title="Definición de los objetivos de las minutas">Objetivos</abbr></th>
-            <th scope="col"><abbr title="Definición de las conclusiones de las minutas">Conclusiones</abbr></th>
-            <th scope="col"><abbr title="Definición de los ítems de las minutas, estableciendo los responsables y fechas de los compromisos">Items</abbr></th>
-            <th scope="col"><abbr title="Ingreso de comentarios a las minutas realizadas">Comentarios</abbr></th>
-            <th scope="col"><abbr title="Ingreso de respuestas a los comentarios realizados a las minutas">Respuestas</abbr></th>
-            <th scope="col">Subtotal</th>
-            <th scope="col">Participación</th>
+            <th scope="col" class="has-text-centered">R.U.N.</th>
+            <th scope="col" class="has-text-centered">Estudiante</th>
+            <th scope="col" class="has-text-centered"><abbr title="Definición de los datos de las minutas como: hora de inicio, hora de término, clasificación y asistencia">Minutas</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Definición del tema a tratar en las minutas">Tema</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Definición de los objetivos de las minutas">Objetivos</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Definición de las conclusiones de las minutas">Conclusiones</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Definición de los ítems de las minutas, estableciendo los responsables y fechas de los compromisos">Ítems</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Ingreso de comentarios a las minutas realizadas">Comentarios</abbr></th>
+            <th scope="col" class="has-text-centered"><abbr title="Ingreso de respuestas a los comentarios realizados a las minutas">Respuestas</abbr></th>
+            <th scope="col" class="has-text-centered">Subtotal</th>
+            <th scope="col" class="has-text-centered">Participación</th>
           </tr>
         </thead>
         <tfoot>
@@ -34,24 +41,24 @@
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"></th>
-            <th scope="col">Total:</th>
-            <th scope="col">{{totalRegistros}}</th>
+            <th scope="col" class="has-text-right">Total:</th>
+            <th scope="col" class="has-text-centered">{{totalRegistros}}</th>
             <th scope="col"></th>
           </tr>
         </tfoot>
         <tbody>
           <tr v-for="estudiante in registros" :key="estudiante.id">
-            <td>{{estudiante.usuario.run}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.run}}</td>
             <td>{{nombreCompleto(estudiante.usuario)}}</td>
-            <td>{{estudiante.usuario.registros.minutas}}</td>
-            <td>{{estudiante.usuario.registros.tema}}</td>
-            <td>{{estudiante.usuario.registros.objetivos}}</td>
-            <td>{{estudiante.usuario.registros.conclusiones}}</td>
-            <td>{{estudiante.usuario.registros.items}}</td>
-            <td>{{estudiante.usuario.registros.comentarios}}</td>
-            <td>{{estudiante.usuario.registros.respuestas}}</td>
-            <th scope="row">{{subTotalRegistros(estudiante)}}</th>
-            <th scope="row">{{porcentajeParcial(estudiante)}} %</th>
+            <td class="has-text-centered">{{estudiante.usuario.registros.minutas}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.tema}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.objetivos}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.conclusiones}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.items}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.comentarios}}</td>
+            <td class="has-text-centered">{{estudiante.usuario.registros.respuestas}}</td>
+            <th scope="row" class="has-text-centered">{{subTotalRegistros(estudiante)}}</th>
+            <th scope="row" class="has-text-right">{{porcentajeParcial(estudiante)}} %</th>
           </tr>
         </tbody>
       </table>
