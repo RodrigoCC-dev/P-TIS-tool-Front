@@ -9,6 +9,7 @@
           <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Stakeholders }" @click="elegirTab(nombreTabs.Stakeholders)"><a><strong>Clientes</strong></a></li>
           <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Minutas}" @click="elegirTab(nombreTabs.Minutas)"><a><strong>Revisar Minutas</strong></a></li>
           <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Avances}" @click="elegirTab(nombreTabs.Avances)"><a><strong>Revisar Avances</strong></a></li>
+          <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Estadisticas}" @click="elegirTab(nombreTabs.Estadisticas)"><a><strong>Estadísticas</strong></a></li>
           <li :class="{ 'is-active-usach' : nombreTabActiva === nombreTabs.Profesores }" @click="elegirTab(nombreTabs.Profesores)"><a><strong>Profesores</strong></a></li>
         </ul>
       </div>
@@ -19,6 +20,7 @@
     <RevisionAvances v-else-if="nombreTabActiva === nombreTabs.Avances"/>
     <GestionClientes v-else-if="nombreTabActiva === nombreTabs.Stakeholders"/>
     <GestionProfesores v-else-if="nombreTabActiva === nombreTabs.Profesores"/>
+    <EstadisticasGrupo v-else-if="nombreTabActiva === nombreTabs.Estadisticas"/>
 
   </div>
 </template>
@@ -30,6 +32,7 @@ import RevisionMinutas from '@/components/RevisionMinutas.vue'
 import GestionClientes from '@/components/GestionClientes.vue'
 import GestionProfesores from '@/components/GestionProfesores.vue'
 import RevisionAvances from '@/components/RevisionAvances.vue'
+import EstadisticasGrupo from '@/components/EstadisticasGrupo.vue'
 
 const nombreTabs = {
   Estudiantes: 'estudiantes',
@@ -37,7 +40,8 @@ const nombreTabs = {
   Minutas: 'minutas',
   Stakeholders: 'clientes',
   Profesores: 'profesores',
-  Avances: 'avances'
+  Avances: 'avances',
+  Estadisticas: 'estadisticas'
 }
 
 export default {
@@ -48,7 +52,8 @@ export default {
     RevisionMinutas,
     GestionClientes,
     GestionProfesores,
-    RevisionAvances
+    RevisionAvances,
+    EstadisticasGrupo
   },
   data () {
     return {
