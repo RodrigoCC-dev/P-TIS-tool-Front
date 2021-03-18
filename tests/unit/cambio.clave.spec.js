@@ -1,5 +1,32 @@
 import { shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
 import CambioClave from '@/components/views/CambioClave.vue'
+
+const store = createStore({
+  state() {
+    return {
+      apiUrl: '127.0.0.1:3000',
+      usuario: {
+        id: 4363,
+        nombre: 'Juan',
+        apellido_paterno: 'Castro',
+        apellido_materno: 'Campos',
+        run: null,
+        email: 'juan.castro@algo.com',
+        rol_id: 346,
+        rol: {
+          id: 346,
+          rol: 'Profesor',
+          rango: 2
+        }
+      }
+    }
+  }
+})
+
+const mockRouter = {
+  push: jest.fn()
+}
 
 describe('CambioClave.vue', () => {
   it('variable "actual" se inicializa correctamente', () => {
@@ -243,5 +270,25 @@ describe('CambioClave.vue', () => {
     wrapper.vm.limpiarRepetir()
     expect(wrapper.vm.entradas.repetir.error).toBeFalsy()
     expect(wrapper.vm.entradas.repetir.mensaje).toEqual('')
+  })
+
+  it('método "cancelarCambio" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      global: {
+        plugins: [store],
+        mocks: {
+          $router: mockRouter
+        }
+      }
+    })
+    wrapper.vm.actual = 'prueba'
+    wrapper.vm.nueva = 'otra prueba'
+    wrapper.vm.repetirNueva = 'otra prueba'
+    wrapper.vm.cancelarCambio()
+    expect(wrapper.vm.actual).toEqual('')
+    expect(wrapper.vm.nueva).toEqual('')
+    expect(wrapper.vm.repetirNueva).toEqual('')
+    expect(mockRouter.push).toHaveBeenCalledTimes(1)
+    expect(mockRouter.push).toHaveBeenCalledWith({path: '/profesor'})
   })
 })
