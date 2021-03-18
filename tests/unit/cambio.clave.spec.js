@@ -1,11 +1,14 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
+import axios from 'axios'
 import CambioClave from '@/components/views/CambioClave.vue'
+
+const apiUrl = '127.0.0.1:3000'
 
 const store = createStore({
   state() {
     return {
-      apiUrl: '127.0.0.1:3000',
+      apiUrl: apiUrl,
       usuario: {
         id: 4363,
         nombre: 'Juan',
@@ -27,6 +30,8 @@ const store = createStore({
 const mockRouter = {
   push: jest.fn()
 }
+
+jest.mock('axios')
 
 describe('CambioClave.vue', () => {
   it('variable "actual" se inicializa correctamente', () => {
@@ -221,6 +226,37 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
 
+/*  Intento fallido de prueba función de autenticación con axios.post
+
+  it('método "autenticar" funciona correctamente con "true"', async () => {
+    const user = {
+      auth: {
+        email: 'juan.castro@algo.com',
+        password: 'prueba1'
+      }
+    }
+    const wrapper = shallowMount(CambioClave, {
+      global: {
+        plugins: [store]
+      }
+    })
+    axios.post.mockImplementation((url) => {
+      switch (url) {
+        case apiUrl + '/auth/login':
+          return Promise.resolve(200)
+        default:
+          return Promise.reject(new Error('not found'))
+      }
+    })
+    wrapper.vm.actual = 'prueba1'
+    wrapper.vm.autenticar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.autenticar()).toBeTruthy()
+    expect(wrapper.vm.entradas.actual.error).toBeFalsy()
+    expect(wrapper.vm.entradas.actual.mensaje).toEqual('')
+  })
+*/
+
   it('método "limpiarActual" funciona correctamente', () => {
     const wrapper = shallowMount(CambioClave, {
       data() {
@@ -272,6 +308,20 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.entradas.repetir.mensaje).toEqual('')
   })
 
+  it('método "redirigirUsuario" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      global: {
+        plugins: [store],
+        mocks: {
+          $router: mockRouter
+        }
+      }
+    })
+    wrapper.vm.redirigirUsuario()
+    expect(mockRouter.push).toHaveBeenCalledTimes(1)
+    expect(mockRouter.push).toHaveBeenCalledWith({ path: '/profesor' })
+  })
+
   it('método "cancelarCambio" funciona correctamente', () => {
     const wrapper = shallowMount(CambioClave, {
       global: {
@@ -288,7 +338,5 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.actual).toEqual('')
     expect(wrapper.vm.nueva).toEqual('')
     expect(wrapper.vm.repetirNueva).toEqual('')
-    expect(mockRouter.push).toHaveBeenCalledTimes(1)
-    expect(mockRouter.push).toHaveBeenCalledWith({path: '/profesor'})
   })
 })
