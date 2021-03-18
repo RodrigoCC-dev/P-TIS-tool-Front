@@ -239,4 +239,11 @@ describe('Estudiante.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.bitacoraAvance).toEqual({})
   })
+
+  it('propiedad computada "minutasFiltradas" funciona correctamente', async () => {
+    const esperado = [
+      {id: 463, tipo: 'Coordinacion'},
+      {id: 6921, tipo: 'Cliente'}
+    ]
+  })
 })
