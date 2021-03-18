@@ -5,6 +5,7 @@ import Estudiante from '@/components/views/Estudiante.vue'
 
 const apiUrl = '127.0.0.1:3000'
 
+// Mock store
 const store = createStore({
   state() {
     return {
@@ -49,6 +50,7 @@ const store = createStore({
   }
 })
 
+// Variables globales
 const tipoMinutas = [
   {id: 463, tipo: 'Coordinacion'},
   {id: 6921, tipo: 'Cliente'},
@@ -100,11 +102,61 @@ const tipoAprobaciones = [
 ]
 
 const motivos = [
-  {id: 9643, motivo: 'Coordinacion interna', identificador: 'CI'},
+  {id: 9643, motivo: 'Coordinacion interna', identificador: 'ECI'},
   {id: 9436, motivo: 'Para aprobacion', identificador: 'PA'},
   {id: 9233, motivo: 'Emision final', identificador: 'EF'}
 ]
 
+const bitacora = {
+  id: 23453,
+  emitida: false,
+  activa: true,
+  fecha_emision: null,
+  minuta: {
+    id: 5342,
+    estudiante_id: 6342,
+    correlativo: 3,
+    codigo: 'MINUTA_G04_03_2020-2_0108',
+    fecha_reunion: '2020-01-10T00:00:00.000Z',
+    numero_sprint: 34,
+    creada_el: '2020-01-10T08:45:34.000Z',
+    asistencia: [
+      {
+        id: 434,
+        id_estudiante: 6342,
+        id_stakeholder: null,
+        minuta_id: 5432,
+        tipo_asistencia_id: 1
+      }
+    ],
+    items: [
+      {
+        id: 93463,
+        descripcion: 'Esto es un logro de prueba',
+        correlativo: 32,
+        tipo_item: {
+          id: 34523,
+          tipo: 'Logro',
+          descripcion: 'Logro conseguido'
+        },
+        responsables: {
+          id: 234,
+          asistencia_id: 134
+        }
+      }
+    ],
+    bicatora_estado: {
+      id: 42324,
+      tipo_estado: {
+        id: 234,
+        abreviacion: 'BOR',
+        descripcion: 'Borrador'
+      }
+    }
+  }
+}
+
+// Mock axios
 jest.mock('axios')
 
 axios.get.mockImplementation((url) => {
@@ -265,7 +317,27 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.tipo).toEqual(0)
   })
 
-  // evaluación método 'elegirTipo'
+  it('método "elegirTipo" funciona correctamente con tipo "Semanal"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verSemanal = false
+    wrapper.vm.seleccionarMinuta = true
+    wrapper.vm.tipo = 631
+    wrapper.vm.elegirTipo()
+    expect(wrapper.vm.verSemanal).toBeTruthy()
+    expect(wrapper.vm.seleccionarMinuta).toBeFalsy()
+  })
+
+  it('método "elegirTipo" funciona correctamente con tipo distinto a "Semanal"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verFormulario = false
+    wrapper.vm.seleccionarMinuta = true
+    wrapper.vm.tipo = 463
+    wrapper.vm.elegirTipo()
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+    expect(wrapper.vm.seleccionarMinuta).toBeFalsy()
+    expect(wrapper.vm.idMotivo).toEqual(9643)
+    expect(wrapper.vm.nuevaRevision).toEqual('A')
+  })
 
   it('método "cerrarFormulario" funciona correctamente', async () => {
     await wrapper.vm.$nextTick()
@@ -376,5 +448,92 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.verRespuestas).toBeTruthy()
     expect(wrapper.vm.crearMinuta).toBeFalsy()
     expect(wrapper.vm.verEmision).toBeFalsy()
+  })
+
+  it('método "nuevaVersion" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verEmision = false
+    wrapper.vm.nuevaVersion(9463)
+    expect(wrapper.vm.idEmision).toEqual(9463)
+    expect(wrapper.vm.verEmision).toBeTruthy()
+  })
+
+  it('método "revisarAprobacion" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.valorActual = 96342
+    wrapper.vm.revisarAprobacion()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+    expect(wrapper.vm.valorActual).toEqual(0)
+  })
+
+  it('método "buscarIdMotivo" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.buscarIdMotivo('ECI')).toEqual(9643)
+  })
+
+  it('método "buscarIdTipoMinuta" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.buscarIdTipoMinuta('Coordinacion')).toEqual(463)
+  })
+
+  it('método "nuevaEmision" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verRevision = true
+    wrapper.vm.verComentarios = true
+    wrapper.vm.verEmision = true
+    wrapper.vm.crearMinuta = false
+    wrapper.vm.verFormulario = false
+    wrapper.vm.idRevision = 9634
+    wrapper.vm.esNuevaEmision = false
+    wrapper.vm.valorActual = 96432
+    wrapper.vm.idEmision = 2234
+    wrapper.vm.nuevaEmision('PA', 'B')
+    expect(wrapper.vm.verRevision).toBeFalsy()
+    expect(wrapper.vm.verComentarios).toBeFalsy()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+    expect(wrapper.vm.crearMinuta).toBeTruthy()
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+    expect(wrapper.vm.idRevision).toEqual(0)
+    expect(wrapper.vm.idMotivo).toEqual(9436)
+    expect(wrapper.vm.nuevaRevision).toEqual('B')
+    expect(wrapper.vm.idBitacora).toEqual(2234)
+    expect(wrapper.vm.esNuevaEmision).toBeTruthy()
+    expect(wrapper.vm.valorActual).toEqual(0)
+    expect(wrapper.vm.tableroEst).toEqual(1)
+  })
+
+  it('método "cerrarSemanal" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verSemanal = true
+    wrapper.vm.cerrarSemanal()
+    expect(wrapper.vm.verSemanal).toBeFalsy()
+  })
+
+  it('método "editarAvance" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verSemanal = false
+    wrapper.vm.seleccionarMinuta = true
+    wrapper.vm.editarAvance(bitacora)
+    expect(wrapper.vm.bitacoraAvance).toEqual(bitacora)
+    expect(wrapper.vm.verSemanal).toBeTruthy()
+    expect(wrapper.vm.seleccionarMinuta).toBeFalsy()
+  })
+
+  it('método "revisarAvance" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisarSemanal = false
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.revisarAvance(bitacora)
+    expect(wrapper.vm.bitacoraAvance).toEqual(bitacora)
+    expect(wrapper.vm.revisarSemanal).toBeTruthy()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+  })
+
+  it('método "cerrarAvance" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisarSemanal = true
+    wrapper.vm.cerrarAvance()
+    expect(wrapper.vm.revisarSemanal).toBeFalsy()
   })
 })
