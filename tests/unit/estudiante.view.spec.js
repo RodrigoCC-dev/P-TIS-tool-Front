@@ -60,7 +60,7 @@ const estudiante = {
   iniciales: 'MAH',
   usuario_id: 345,
   seccion_id: 5,
-  grupo_id: 8,
+  grupo_id: 123,
   usuario: {
     id: 345,
     nombre: 'Manuel',
@@ -135,11 +135,108 @@ describe('Estudiante.vue', () => {
     })
   })
 
-  it('variable "verFormulario" se inicializa correctamente', () => {
+  it('variable "verFormulario" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
-  it('variable "tipo" se inicializa correctamente', () => {
+  it('variable "tipo" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.tipo).toEqual(0)
+  })
+
+  it('variable "seleccionarMinuta" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.seleccionarMinuta).toBeFalsy()
+  })
+
+  it('variable "idBitacora" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idBitacora).toEqual(0)
+  })
+
+  it('variable "idRevision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idRevision).toEqual(0)
+  })
+
+  it('variable "idComentarios" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idComentarios).toEqual(0)
+  })
+
+  it('variable "idRespuestas" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idRespuestas).toEqual(0)
+  })
+
+  it('variable "idEmision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idEmision).toEqual(0)
+  })
+
+  it('variable "crearMinuta" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.crearMinuta).toBeTruthy()
+  })
+
+  it('variable "verRevision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verRevision).toBeFalsy()
+  })
+
+  it('variable "verComentarios" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verComentarios).toBeFalsy()
+  })
+
+  it('variable "verRespuestas" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verRespuestas).toBeFalsy()
+  })
+
+  it('variable "verEmision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+  })
+
+  it('variable "verSemanal" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verSemanal).toBeFalsy()
+  })
+
+  it('variable "revisarSemanal" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisarSemanal).toBeFalsy()
+  })
+
+  it('variable "idMotivo" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idMotivo).toEqual(0)
+  })
+
+  it('variable "nuevaRevision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.nuevaRevision).toEqual('')
+  })
+
+  it('variable "esNuevaEmision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.esNuevaEmision).toBeFalsy()
+  })
+
+  it('variable "valorActual" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.valorActual).toEqual(0)
+  })
+
+  it('variable "tableroEst" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tableroEst).toEqual(0)
+  })
+
+  it('variable "bitacoraAvance" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.bitacoraAvance).toEqual({})
   })
 })
