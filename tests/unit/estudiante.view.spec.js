@@ -135,6 +135,7 @@ describe('Estudiante.vue', () => {
     })
   })
 
+  // Comienzo de pruebas unitarias
   it('variable "verFormulario" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeFalsy()
@@ -245,5 +246,66 @@ describe('Estudiante.vue', () => {
       {id: 463, tipo: 'Coordinacion'},
       {id: 6921, tipo: 'Cliente'}
     ]
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minutasFiltradas).toEqual(esperado)
   })
+
+  it('método "nuevaMinuta" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.nuevaMinuta()
+    expect(wrapper.vm.seleccionarMinuta).toBeTruthy()
+  })
+
+  it('método "cancelarMinuta" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.seleccionarMinuta = true
+    wrapper.vm.tipo = 5
+    wrapper.vm.cancelarMinuta()
+    expect(wrapper.vm.seleccionarMinuta).toBeFalsy()
+    expect(wrapper.vm.tipo).toEqual(0)
+  })
+
+  // evaluación método 'elegirTipo'
+
+  it('método "cerrarFormulario" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verFormulario = true
+    wrapper.vm.tipo = 5
+    wrapper.vm.idBitacora = 960345
+    wrapper.vm.esNuevaEmision = true
+    wrapper.vm.cerrarFormulario()
+    expect(wrapper.vm.verFormulario).toBeFalsy()
+    expect(wrapper.vm.tipo).toEqual(0)
+    expect(wrapper.vm.idBitacora).toEqual(0)
+    expect(wrapper.vm.esNuevaEmision).toBeFalsy()
+    expect(wrapper.vm.tableroEst).toEqual(1)
+  })
+
+  it('método "obtenerTipoMinutas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tipoMinutas).toEqual(tipoMinutas)
+  })
+
+  it('método "obtenerEstudiante" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.estudiante).toEqual(estudiante)
+    expect(wrapper.vm.grupo).toEqual(grupo)
+  })
+
+  it('método "obtenerGrupo" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupo).toEqual(grupo)
+  })
+
+  it('método "obtenerAprobaciones" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.$store.state.tipoAprobaciones).toEqual(tipoAprobaciones)
+  })
+
+  it('método "obtenerMotivos" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.motivos).toEqual(motivos)
+  })
+
+
 })
