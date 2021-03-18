@@ -307,5 +307,74 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.motivos).toEqual(motivos)
   })
 
+  it('método "cambiarTab" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verEmision = true
+    wrapper.vm.cambiarTab()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+  })
 
+  it('método "establecerBitacora" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verFormulario = false
+    wrapper.vm.verEmision = true
+    wrapper.vm.establecerBitacora(32)
+    expect(wrapper.vm.idBitacora).toEqual(32)
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+  })
+
+  it('método "establecerRevision" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verRevision = false
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.verEmision = true
+    wrapper.vm.establecerRevision(943)
+    expect(wrapper.vm.idRevision).toEqual(943)
+    expect(wrapper.vm.verRevision).toBeTruthy()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+  })
+
+  it('método "mostrarTablero" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verRevision = true
+    wrapper.vm.verComentarios = true
+    wrapper.vm.crearMinuta = false
+    wrapper.vm.idRevision = 493
+    wrapper.vm.idEmision = 39453
+    wrapper.vm.verEmision = true
+    wrapper.vm.valorActual = 9433
+    wrapper.vm.mostrarTablero()
+    expect(wrapper.vm.verRevision).toBeFalsy()
+    expect(wrapper.vm.verComentarios).toBeFalsy()
+    expect(wrapper.vm.crearMinuta).toBeTruthy()
+    expect(wrapper.vm.idRevision).toEqual(0)
+    expect(wrapper.vm.idEmision).toEqual(0)
+    expect(wrapper.vm.verEmision).toBeFalsy()
+    expect(wrapper.vm.valorActual).toEqual(0)
+    expect(wrapper.vm.tableroEst).toEqual(1)
+  })
+
+  it('método "revisarComentarios" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verComentarios = false
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.revisarComentarios(634)
+    expect(wrapper.vm.idComentarios).toEqual(634)
+    expect(wrapper.vm.verComentarios).toBeTruthy()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+  })
+
+  it('método "revisarRespuestas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verRespuestas = false
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.verEmision = true
+    wrapper.vm.revisarRespuestas(9643)
+    expect(wrapper.vm.idRespuestas).toEqual(9643)
+    expect(wrapper.vm.verRespuestas).toBeTruthy()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+    expect(wrapper.vm.verEmision).toBeFalsy()
+  })
 })
