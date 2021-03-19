@@ -207,4 +207,49 @@ describe('Stakeholder.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.idRevision).toEqual(0)
   })
+
+  it('variable "idRespuestas" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idRespuestas).toEqual(0)
+  })
+
+  it('variable "verTablero" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verTablero).toBeTruthy()
+  })
+
+  it('variable "verRevision" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verRevision).toBeFalsy()
+  })
+
+  it('variable "verRespuestas" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verRespuestas).toBeFalsy()
+  })
+
+  it('variable "listaGrupos" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(listaGrupos)
+  })
+
+  it('variable "grupoActual" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupoActual).toEqual(123)
+  })
+
+  it('variable "grupoSeleccionado" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupoSeleccionado).toEqual(listaGrupos[1])
+  })
+
+  it('variable "verSelectorGrupo" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verSelectorGrupo).toBeFalsy()
+  })
+
+  it('variable "tableroStk" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tableroStk).toEqual(1)
+  })
 })
