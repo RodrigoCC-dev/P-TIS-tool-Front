@@ -226,6 +226,11 @@ export default {
     },
     categorizarMinutas: function () {
       if (this.listaMinutas.length > 0) {
+        this.listaRevision = []
+        this.listaComentadas = []
+        this.listaRepondidiasGrupo = []
+        this.listaRepondidiasCliente = []
+        this.listaCerradas = []
         for (var i = 0; i < this.listaMinutas.length; i++) {
           if (this.listaMinutas[i].estado.abreviacion === 'EMI') {
             this.listaRevision.push(this.listaMinutas[i])
