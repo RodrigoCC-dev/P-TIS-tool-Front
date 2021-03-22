@@ -137,6 +137,7 @@
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
                 <th class="has-text-centered" scope="col">Emitida el</th>
+                <th class="has-text-centered" scope="col">Comentada el</th>
               </tr>
             </thead>
             <tbody>
@@ -146,6 +147,7 @@
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el )}}</td>
               </tr>
             </tbody>
           </table>
@@ -166,6 +168,7 @@
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
                 <th class="has-text-centered" scope="col">Emitida el</th>
+                <th class="has-text-centered" scope="col">Comentada el</th>
               </tr>
             </thead>
             <tbody>
@@ -175,6 +178,7 @@
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el) }}</td>
               </tr>
             </tbody>
           </table>
@@ -197,6 +201,7 @@
                 <th class="has-text-centered" scope="col">Revisión</th>
                 <th class="has-text-centered" scope="col">Realizada por</th>
                 <th class="has-text-centered" scope="col">Emitida el</th>
+                <th class="has-text-centered" scope="col">Respondida el</th>
               </tr>
             </thead>
             <tbody>
@@ -206,6 +211,7 @@
                 <td class="has-text-centered">{{ bitacora.revision }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
+                <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el) }}</td>
               </tr>
             </tbody>
           </table>
@@ -238,7 +244,7 @@
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
-                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"></td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.estado.inicia_el )}}</td>
               </tr>
             </tbody>
           </table>
@@ -395,6 +401,11 @@ export default {
     },
     categorizarMinutas: function () {
       if (this.listaMinutas.length > 0) {
+        this.listaBorradores = []
+        this.listaComentadasGrupo = []
+        this.listaComentadasCliente = []
+        this.listaCerradas = []
+        this.listaEmitidas = []
         for (var i = 0; i < this.listaMinutas.length; i++) {
           if (this.listaMinutas[i].estado.abreviacion === 'BOR') {
             this.listaBorradores.push(this.listaMinutas[i])

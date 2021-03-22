@@ -89,24 +89,27 @@
     </div>
 
     <div class="columns is-multiline">
-      <div v-for="grupo in listaGrupos" :key="grupo.id">
-        <div class="column is-narrow" v-if="grupo.jornada === jornadaActual">
-          <article class="message is-info">
-            <div class="message-header">
-              <p>{{ grupo.nombre }}</p>
+      <div class="column is-3" v-for="grupo in listaGrupos" :key="grupo.id">
+        <article class="message is-info" v-if="grupo.jornada === jornadaActual">
+          <div class="message-header">
+            <p>{{ grupo.nombre }}</p>
+            <button class="delete" aria-label="delete" @click="borrarGrupo(grupo.id)"></button>
+          </div>
+          <div class="message-body">
+            <p class="title is-6">{{ grupo.proyecto }}</p>
+            <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
+            <div v-if="mostrarClientes(grupo)">
+              <br>
+              <p class="subtitle is-6"><strong>Clientes:</strong></p>
+              <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
             </div>
-            <div class="message-body">
-              <p class="title is-6">{{ grupo.proyecto }}</p>
-              <p v-for="estudiante in grupo.estudiantes" :key="estudiante.id">{{ nombreCompleto(estudiante.usuario) }}</p>
-              <div v-if="mostrarClientes(grupo)">
-                <br>
-                <p class="subtitle is-6"><strong>Clientes:</strong></p>
-                <p v-for="cliente in grupo.stakeholders" :key="cliente.id">{{ nombreCompleto(cliente.usuario) }}</p>
-              </div>
-            </div>
-          </article>
-        </div>
+          </div>
+        </article>
       </div>
+    </div>
+
+    <div v-if="this.notificar.mostrar">
+      <Confirmacion :mostrar="notificar.mostrar" :texto="notificar.mensaje" @accion="confirmarBorrado" @cerrar="cerrarNotificacion"/>
     </div>
 
   </div>
@@ -119,11 +122,13 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 
 import SelectorJornada from '@/components/SelectorJornada.vue'
+import Confirmacion from '@/components/Confirmacion.vue'
 
 export default {
   name: 'GestionGrupos',
   components: {
-    SelectorJornada
+    SelectorJornada,
+    Confirmacion
   },
   data () {
     return {
@@ -145,7 +150,12 @@ export default {
         correlativo: 0
       },
       listaEstudiantes: [],
-      listaGrupos: []
+      listaGrupos: [],
+      notificar: {
+        id: 0,
+        mostrar: false,
+        mensaje: '¿Confirma la eliminación del grupo?'
+      }
     }
   },
   computed: {
@@ -279,6 +289,23 @@ export default {
       esvalido = esvalido && this.validarProyecto()
       esvalido = esvalido && this.validarAsignacion()
       return esvalido
+    },
+    borrarGrupo: function (id) {
+      this.notificar.mostrar = true
+      this.notificar.id = id
+    },
+    async confirmarBorrado () {
+      try {
+        await axios.delete(this.apiUrl + '/grupos/' + this.notificar.id, { headers: Auth.authHeader() })
+        this.obtenerGrupos()
+      } catch {
+        console.log('No fue posible borrar el grupo')
+      }
+      this.notificar.mostrar = false
+      this.notificar.id = 0
+    },
+    cerrarNotificacion: function () {
+      this.notificar.mostrar = false
     }
   },
   watch: {

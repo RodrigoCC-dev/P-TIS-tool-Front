@@ -2,10 +2,17 @@
   <div>
     <br>
     <div class="columns">
-      <div class="column is-10"></div>
-      <div class="column is-2" v-if="verFormulario"></div>
-      <div class="column is-2" v-else>
-        <button class="button is-info-usach" @click="agregarEstudiante">Agregar Estudiante</button>
+      <div class="column is-8"></div>
+      <div class="column is-4" v-if="verFormulario || mostrarNomina"></div>
+      <div class="column is-4" v-else>
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <a class="button is-info-usach" @click="agregarEstudiante">Agregar estudiante</a>
+          </p>
+          <p class="control">
+            <a class="button is-secondary-usach" @click="cargarNomina">Subir nómina</a>
+          </p>
+        </div>
       </div>
     </div>
     <div v-if="verFormulario">
@@ -87,9 +94,74 @@
           </div>
         </div>
       </form>
-      <hr>
     </div>
 
+    <div v-if="mostrarNomina">
+      <br>
+      <div class="columns is-4 is-centered">
+
+        <div class="column is-8">
+          <div class="field is-horizontal">
+            <div class="field-label-2c is-normal">
+              <label class="label">Sección - Curso:</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select v-model="estudiante.seccion_id" v-on:change="validarSeccion" :class="{ 'is-danger' : seccionEntrada}">
+                      <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
+                        {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <p class="is-danger help has-text-left" v-if="seccionEntrada">No ha seleccionado la sección</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="file is-right has-name is-fullwidth">
+            <label class="file-label">
+              <input ref="archivo" class="file-input" type="file" @change="cargarNombre">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Subir nómina
+                </span>
+              </span>
+              <span class="file-name">
+                {{ nombreArchivo }}
+              </span>
+            </label>
+          </div>
+          <p class="is-danger help has-text-left" v-if="agregaArchivo">No se ha añadido el archivo a enviar</p>
+        </div>
+
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-3">
+          <button class="button is-primary-usach is-fullwidth" @click="enviarArchivo">Cargar</button>
+        </div>
+        <div class="column is-3">
+          <button class="button is-light-usach is-fullwidth" @click="noAgregar">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column is-6">
+          <button class="button is-secondary-usach is-fullwidth" @click="obtenerPlantilla">Descargar formato plantilla</button>
+        </div>
+      </div>
+
+    </div>
+
+    <hr>
     <br>
     <div v-if="mostrarLista">
 
@@ -222,7 +294,11 @@ export default {
         run_repetido: 'Usuario ya se encuentra en el sistema'
       },
       eliminados: [],
-      notificar: false
+      notificar: false,
+      mostrarNomina: false,
+      archivo: '',
+      nombreArchivo: 'No se ha subido el archivo',
+      agregaArchivo: false
     }
   },
   computed: {
@@ -312,6 +388,7 @@ export default {
       this.runEntrada.error = false
       this.emailEntrada.error = false
       this.seccionEntrada = false
+      this.mostrarNomina = false
     },
     validarNombre: function () {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
@@ -498,6 +575,76 @@ export default {
       } catch (e) {
         this.notificar = false
         console.log('No fue posible eliminar los estudiantes seleccioandos')
+        console.log(e)
+      }
+    },
+    cargarNomina: function () {
+      this.mostrarNomina = true
+    },
+    cargarNombre: function () {
+      this.archivo = this.$refs.archivo.files[0]
+      this.nombreArchivo = this.archivo.name
+      this.validarArchivo()
+    },
+    async enviarArchivo () {
+      if (this.validarIngresoNomina()) {
+        const formData = new FormData()
+        formData.append('archivo', this.archivo)
+        formData.append('seccion', this.estudiante.seccion_id)
+        try {
+          await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
+          this.obtenerEstudiantes()
+          this.limpiarNomina()
+        } catch (e) {
+          console.log('No se ha podido enviar el archivo')
+          console.log(e)
+        }
+      }
+    },
+    limpiarNomina: function () {
+      this.mostrarNomina = false
+      this.estudiante.seccion_id = null
+      this.archivo = ''
+      this.nombreArchivo = 'No se ha subido el archivo'
+      this.agregaArchivo = false
+    },
+    validarArchivo: function () {
+      if (this.archivo === null || this.archivo === undefined || this.archivo === '') {
+        this.agregaArchivo = true
+        return false
+      } else {
+        this.agregaArchivo = false
+        return true
+      }
+    },
+    validarIngresoNomina: function () {
+      let validacion = true
+      validacion = validacion && this.validarSeccion()
+      validacion = validacion && this.validarArchivo()
+      return validacion
+    },
+    obtenerPlantilla: function () {
+      try {
+        fetch(this.apiUrl + '/estudiantes/archivo/plantilla', {
+          method: 'GET',
+          headers: Auth.authHeader()
+        }).then(function (response) {
+          return response.blob()
+        }).then(function (data) {
+          if (data !== undefined) {
+            var fileURL = URL.createObjectURL(data)
+            var fileLink = document.createElement('a')
+            fileLink.href = fileURL
+            fileLink.setAttribute('download', 'Formato_nomina_curso.xls')
+            document.body.appendChild(fileLink)
+            fileLink.click()
+          } else {
+            console.log('No fue posible descargar del archivo')
+          }
+        }).catch(function (e) {
+          console.log(e)
+        })
+      } catch (e) {
         console.log(e)
       }
     }

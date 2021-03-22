@@ -35,6 +35,15 @@ export default {
     }
   },
 
+  fileHeader () {
+    const user = localStorage.getItem('user_tk')
+    if (user) {
+      return { Authorization: 'Bearer ' + user, 'Content-Type': 'multipart/form-data' }
+    } else {
+      return {}
+    }
+  },
+
   setUser (userLogged) {
     Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
   },

@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
-import flushPromises from 'flush-promises'
 import axios from 'axios'
 import TableroEst from '@/components/TableroEst.vue'
 

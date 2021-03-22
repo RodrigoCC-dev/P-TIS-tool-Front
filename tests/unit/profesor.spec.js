@@ -19,7 +19,8 @@ describe('Profesor.vue', () => {
       Grupos: 'grupos',
       Minutas: 'minutas',
       Stakeholders: 'clientes',
-      Avances: 'avances'
+      Avances: 'avances',
+      Estadisticas: 'estadisticas'
     }
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
