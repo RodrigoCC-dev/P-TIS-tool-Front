@@ -11,7 +11,7 @@ ENV PORT=80
 WORKDIR usr/src/app
 
 RUN rm -rf /tmp/* /var/cache/apk/*
-RUN apk add nano
+RUN apt-get update && apt-get install nano
 
 # Install dependencies
 COPY . usr/src/app
