@@ -16,7 +16,7 @@ build:
     paths:
       - dist
   before_script:
-    - echo "VUE_APP_API_URL='http://127.0.0.1:8080'" > .env
+    - echo "VUE_APP_API_URL='http://34.69.36.48:8080'" > .env
 
 test:
   stage: unit test
