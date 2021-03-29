@@ -197,7 +197,7 @@
       <br>
       <div class="columns">
         <div class="column is-8 is-offset-2">
-          <p class="title is-5 has-text-centered">Agenda / Objetivos</p>
+          <p class="title is-5 has-text-centered">Objetivos</p>
         </div>
         <div class="column">
           <div class="columns">
