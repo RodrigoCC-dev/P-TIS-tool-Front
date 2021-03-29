@@ -11,12 +11,13 @@ ENV PORT=80
 WORKDIR usr/src/app
 
 RUN rm -rf /tmp/* /var/cache/apk/*
+RUN apk add nano
 
 # Install dependencies
 COPY . usr/src/app
 COPY package.json package-lock.json ./
 
-RUN npm install --progres:false
+RUN npm install --progress:false
 
 ################
 ## Production ##
