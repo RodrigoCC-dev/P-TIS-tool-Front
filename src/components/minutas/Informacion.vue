@@ -50,7 +50,7 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input has-text-centered is-static" type="text" :value="bitacora.revision">
+            <input class="input has-text-centered is-static" type="text" :value="revisionEstado">
           </p>
         </div>
       </div>
@@ -197,6 +197,13 @@ export default {
       var fecha = this.bitacora.minuta.fecha_reunion.split('T')
       var separar = fecha[0].split('-')
       return separar[2] + '-' + separar[1] + '-' + separar[0]
+    },
+    revisionEstado: function () {
+      if (Object.keys(this.bitacora).length > 0) {
+        return Funciones.convertirRevisionAEstado(this.bitacora.identificador)
+      } else {
+        return ''
+      }
     }
   },
   methods: {
