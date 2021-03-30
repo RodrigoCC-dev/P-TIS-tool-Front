@@ -67,12 +67,12 @@
           </div>
           <div class="column is-9">
             <div class="field">
-              <label class="label">Sección - Curso:</label>
+              <label class="label">Jornada:</label>
               <div class="control">
                 <div class="select is-fullwidth">
                   <select v-model="estudiante.seccion_id" v-on:change="validarSeccion" :class="{ 'is-danger' : seccionEntrada}">
                     <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
-                      {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
+                      {{ seccion.jornada.nombre }}
                     </option>
                   </select>
                 </div>
@@ -103,7 +103,7 @@
         <div class="column is-8">
           <div class="field is-horizontal">
             <div class="field-label-2c is-normal">
-              <label class="label">Sección - Curso:</label>
+              <label class="label">Jornada:</label>
             </div>
             <div class="field-body">
               <div class="field">
@@ -111,7 +111,7 @@
                   <div class="select is-fullwidth">
                     <select v-model="estudiante.seccion_id" v-on:change="validarSeccion" :class="{ 'is-danger' : seccionEntrada}">
                       <option v-for="seccion in secciones" :key="seccion.id" :value="seccion.id">
-                        {{ seccion.codigo }} - {{ seccion.curso.nombre }} ({{ seccion.curso.codigo }}) - Jornada: {{ seccion.jornada.nombre }}
+                        {{ seccion.jornada.nombre }}
                       </option>
                     </select>
                   </div>
