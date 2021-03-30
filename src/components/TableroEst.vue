@@ -53,8 +53,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaBorradores" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="editarBorrador(bitacora.id)">{{ bitacora.minuta.codigo}}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td><a @click="editarBorrador(bitacora.id)">{{ bitacora.minuta.codigo}}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -111,8 +111,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}</td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td>{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
               </tr>
@@ -143,8 +143,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaComentadasGrupo" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el )}}</td>
@@ -174,8 +174,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaComentadasCliente" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td><a @click="revisarComentarios(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el) }}</td>
@@ -207,8 +207,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaRespondidasGrupo" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarRespuestas(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td><a @click="revisarRespuestas(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.estado.inicia_el) }}</td>
@@ -240,8 +240,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
                 <th class="has-text-centered" scope="row" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }">{{ index + 1 }}</th>
-                <td :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.revision }}</td>
+                <td :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)"><a>{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.fecha_emision) }}</td>
                 <td class="has-text-centered" :class="{ 'is-selected-usach' : minutaActual === bitacora.id }" @click="nuevaEmision(bitacora.id)">{{ convertirFecha(bitacora.estado.inicia_el )}}</td>
@@ -301,8 +301,8 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaRevision" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                <td class="has-text-centered">{{ bitacora.revision }}</td>
+                <td><a @click="revisarMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
+                <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.minuta.creada_el) }}</td>
               </tr>
@@ -493,6 +493,9 @@ export default {
     },
     revisarAvance: function (bitacora) {
       this.$emit('revisar-avance', bitacora)
+    },
+    revisionEstado: function (identificador) {
+      return Funciones.convertirRevisionAEstado(identificador)
     }
   },
   watch: {
