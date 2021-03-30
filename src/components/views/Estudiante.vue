@@ -278,7 +278,7 @@ export default {
       this.verFormulario = true
       this.idRevision = 0
       this.idMotivo = this.buscarIdMotivo(identificador)
-      this.revisionEstado = this.revisionesPorEstado(identificador)
+      this.revisionesPorEstados(identificador)
       this.nuevaRevision = revision
       this.idBitacora = this.idEmision
       this.esNuevaEmision = true
