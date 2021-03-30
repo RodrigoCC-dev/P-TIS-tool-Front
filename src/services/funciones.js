@@ -85,5 +85,19 @@ export default {
   convertirFecha (timestamp) {
     var fecha = timestamp.split('T')
     return fecha[0]
+  },
+  convertirRevisionAEstado (identificador) {
+    switch (identificador) {
+      case 'ECI':
+        return 'Coordinación de grupo'
+      case 'ERC':
+        return 'Para el cliente'
+      case 'EAC':
+        return 'Para aprobación'
+      case 'EF':
+        return 'Emisión final'
+      default:
+        return 'Sin estado'
+    }
   }
 }

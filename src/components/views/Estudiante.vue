@@ -3,7 +3,7 @@
 
     <div v-if="crearMinuta">
 
-      <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" v-if="verFormulario" @cerrar="cerrarFormulario"/>
+      <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" :estado="revisionEstado" v-if="verFormulario" @cerrar="cerrarFormulario"/>
 
       <div v-else-if="verSemanal">
         <Semanal :avance="bitacoraAvance" :tipo-minuta="tipo"  @cerrar="cerrarSemanal"/>
@@ -136,7 +136,8 @@ export default {
       esNuevaEmision: false,
       valorActual: 0,
       tableroEst: 0,
-      bitacoraAvance: {}
+      bitacoraAvance: {},
+      revisionEstado: ''
     }
   },
   computed: {
@@ -169,6 +170,7 @@ export default {
         this.seleccionarMinuta = false
         this.idMotivo = this.buscarIdMotivo('ECI')
         this.nuevaRevision = 'A'
+        this.revisionEstado = 'Coordinación de Grupo'
       }
     },
     cerrarFormulario: function () {
@@ -299,6 +301,9 @@ export default {
     cerrarAvance: function () {
       this.revisarSemanal = false
       this.mostrarTablero()
+    },
+    revisionesPorEstados: function (identificador) {
+      this.revisionEstado = Funciones.convertirRevisionAEstado(identificador)
     }
   },
   mounted () {

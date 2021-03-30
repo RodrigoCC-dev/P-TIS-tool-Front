@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
+            <input v-model="revisionEstado" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -343,7 +343,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir'],
+  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir', 'estado'],
   data () {
     return {
       bitacora: this.idBitacora,
@@ -421,7 +421,8 @@ export default {
         objetivos: false,
         conclusiones: false
       },
-      nuevaEmision: this.reEmitir
+      nuevaEmision: this.reEmitir,
+      revisionEstado: this.estado
     }
   },
   computed: {
