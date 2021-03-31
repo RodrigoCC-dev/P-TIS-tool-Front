@@ -1,6 +1,11 @@
 <template>
   <div>
 
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <p class="title is-5 has-text-centered">Acuerdos / Compromisos</p>
+      </div>
+    </div>
     <table class="table is-hoverable is-fullwidth" summary="Items">
       <thead>
         <tr class="has-text-centered">

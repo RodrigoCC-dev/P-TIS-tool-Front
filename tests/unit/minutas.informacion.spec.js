@@ -40,6 +40,7 @@ describe('Informacion.vue', () => {
   const bitacora = {
     id: 663462,
     revision: 'Z',
+    identificador: 'ERC',
     minuta: {
       id: 242345345,
       correlativo: 6345,
@@ -120,6 +121,7 @@ describe('Informacion.vue', () => {
     const esperado = {
       id: 663462,
       revision: 'Z',
+      identificador: 'ERC',
       minuta: {
         id: 242345345,
         correlativo: 6345,
@@ -202,6 +204,7 @@ describe('Informacion.vue', () => {
     const esperado = {
       id: 663462,
       revision: 'Z',
+      identificador: 'ERC',
       minuta: {
         id: 242345345,
         correlativo: 6345,
@@ -261,7 +264,7 @@ describe('Informacion.vue', () => {
     expect(wrapper.vm.horaInicio).toEqual('23:00')
   })
 
-  it('propiedad computada horaTermino funcioan correctamente', () => {
+  it('propiedad computada horaTermino funciona correctamente', () => {
     const wrapper = shallowMount(Informacion, {
       propsData: {
         proyecto: proyecto,
@@ -269,6 +272,27 @@ describe('Informacion.vue', () => {
       }
     })
     expect(wrapper.vm.horaTermino).toEqual('23:59')
+  })
+
+  it('propiedad computada "revisionEstado" funciona correctamente', () => {
+    const wrapper = shallowMount(Informacion, {
+      propsData: {
+        proyecto: proyecto,
+        minuta: bitacora
+      }
+    })
+    expect(wrapper.vm.revisionEstado).toEqual('Para el cliente')
+  })
+
+  it('propiedad computada "revisionEstado" funciona correctamente con "bitacora" vacía', () => {
+    const wrapper = shallowMount(Informacion, {
+      propsData: {
+        proyecto: proyecto,
+        minuta: bitacora
+      }
+    })
+    wrapper.vm.bitacora = {}
+    expect(wrapper.vm.revisionEstado).toEqual('')
   })
 
   it('método nombreCompleto funciona correctamente', () => {
