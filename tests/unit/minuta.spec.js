@@ -57,6 +57,15 @@ describe('Minuta.vue', () => {
     expect(wrapper.props().reEmitir).toBeFalsy()
   })
 
+  it('se asigna prop "estado" adecuadamente', () => {
+    const wrapper = mount(Minuta, {
+      propsData: {
+        estado: 'Esto es una prueba'
+      }
+    })
+    expect(wrapper.props().estado).toEqual('Esto es una prueba')
+  })
+
   it('variable "bitacora" se inicializa correctamente', () => {
     const wrapper = mount(Minuta, {
       propsData: {
@@ -267,6 +276,20 @@ describe('Minuta.vue', () => {
       }
     })
     expect(wrapper.vm.nuevaEmision).toBeFalsy()
+  })
+
+  it('variable "revisionEstado" se inicializa correctamente', () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        tipoMinuta: 1,
+        idBitacora: 0,
+        idMotivo: 6,
+        letraRevision: 'A',
+        reEmitir: false,
+        estado: 'Esto es una prueba'
+      }
+    })
+    expect(wrapper.vm.revisionEstado).toEqual('Esto es una prueba')
   })
 
   it('propiedad computada esBorrador funciona correctamente con true', () => {
