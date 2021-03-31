@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revision" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
+            <input v-model="revisionEstado" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -197,7 +197,7 @@
       <br>
       <div class="columns">
         <div class="column is-8 is-offset-2">
-          <p class="title is-5 has-text-centered">Agenda / Objetivos</p>
+          <p class="title is-5 has-text-centered">Objetivos</p>
         </div>
         <div class="column">
           <div class="columns">
@@ -262,6 +262,11 @@
 
       <div>
         <br>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <p class="title is-5 has-text-centered">Acuerdos / Compromisos</p>
+          </div>
+        </div>
         <table class="table is-hoverable is-fullwidth" summary="Items de la minuta">
           <thead>
             <tr>
@@ -338,7 +343,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Minuta',
-  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir'],
+  props: ['tipoMinuta', 'idBitacora', 'idMotivo', 'letraRevision', 'reEmitir', 'estado'],
   data () {
     return {
       bitacora: this.idBitacora,
@@ -416,7 +421,8 @@ export default {
         objetivos: false,
         conclusiones: false
       },
-      nuevaEmision: this.reEmitir
+      nuevaEmision: this.reEmitir,
+      revisionEstado: this.estado
     }
   },
   computed: {

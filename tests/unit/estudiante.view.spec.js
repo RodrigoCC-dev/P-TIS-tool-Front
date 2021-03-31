@@ -293,6 +293,11 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.bitacoraAvance).toEqual({})
   })
 
+  it('variable "revisionEstado" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado).toEqual('')
+  })
+
   it('propiedad computada "minutasFiltradas" funciona correctamente', async () => {
     const esperado = [
       {id: 463, tipo: 'Coordinacion'},
@@ -497,6 +502,7 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.idRevision).toEqual(0)
     expect(wrapper.vm.idMotivo).toEqual(9436)
     expect(wrapper.vm.nuevaRevision).toEqual('B')
+    expect(wrapper.vm.revisionEstado).toEqual('Sin estado')
     expect(wrapper.vm.idBitacora).toEqual(2234)
     expect(wrapper.vm.esNuevaEmision).toBeTruthy()
     expect(wrapper.vm.valorActual).toEqual(0)
@@ -535,5 +541,35 @@ describe('Estudiante.vue', () => {
     wrapper.vm.revisarSemanal = true
     wrapper.vm.cerrarAvance()
     expect(wrapper.vm.revisarSemanal).toBeFalsy()
+  })
+
+  it('método "revisionesPorEstados" funciona correctamente con "ECI"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisionesPorEstados('ECI')
+    expect(wrapper.vm.revisionEstado).toEqual('Coordinación de grupo')
+  })
+
+  it('método "revisionesPorEstados" funciona correctamente con "ERC"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisionesPorEstados('ERC')
+    expect(wrapper.vm.revisionEstado).toEqual('Para el cliente')
+  })
+
+  it('método "revisionesPorEstados" funciona correctamente con "EAC"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisionesPorEstados('EAC')
+    expect(wrapper.vm.revisionEstado).toEqual('Para aprobación')
+  })
+
+  it('método "revisionesPorEstados" funciona correctamente con "EF"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisionesPorEstados('EF')
+    expect(wrapper.vm.revisionEstado).toEqual('Emisión final')
+  })
+
+  it('método "revisionesPorEstados" funciona correctamente con identificador distinto', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.revisionesPorEstados('PA')
+    expect(wrapper.vm.revisionEstado).toEqual('Sin estado')
   })
 })
