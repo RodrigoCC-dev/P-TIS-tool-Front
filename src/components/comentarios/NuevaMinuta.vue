@@ -196,7 +196,7 @@ export default {
           this.nuevaRevision = 0
         }
       } else {
-        if (this.bitacora.identificador === 'EF' ) {
+        if (this.bitacora.identificador === 'EF') {
           this.nuevaRevision = parseInt(this.bitacora.revision) + 1
         } else {
           this.nuevaRevision = this.abc.charAt(this.abc.indexOf(this.bitacora.revision) + 2)

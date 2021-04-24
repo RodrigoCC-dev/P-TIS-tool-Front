@@ -145,7 +145,7 @@
               <tbody>
                 <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
                   <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                  <td>{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</td>
+                  <td><a @click="verMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
                   <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                   <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                   <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
@@ -185,10 +185,10 @@ const nombreTabs = {
 
 export default {
   name: 'TableroStk',
-  props: ['contador'],
+  props: ['contador', 'tarjeta'],
   data () {
     return {
-      nombreTab: 'Revision',
+      nombreTab: this.tarjeta,
       listaMinutas: [],
       listaRevision: [],
       listaComentadas: [],
@@ -276,6 +276,9 @@ export default {
     },
     revisionEstado: function (identificador) {
       return Funciones.convertirRevisionAEstado(identificador)
+    },
+    verMinuta: function (id) {
+      this.$emit('ver-minuta', id)
     }
   },
   watch: {
