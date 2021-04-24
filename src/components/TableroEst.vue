@@ -111,7 +111,7 @@
             <tbody>
               <tr v-for="(bitacora, index) in listaEmitidas" :key="bitacora.id">
                 <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                <td>{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</td>
+                <td><a @click="verMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
                 <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                 <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                 <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
@@ -493,6 +493,9 @@ export default {
     },
     revisarAvance: function (bitacora) {
       this.$emit('revisar-avance', bitacora)
+    },
+    verMinuta: function (id) {
+      this.$emit('ver-minuta', id)
     },
     revisionEstado: function (identificador) {
       return Funciones.convertirRevisionAEstado(identificador)
