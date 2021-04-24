@@ -65,7 +65,7 @@
       <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
     </div>
 
-    <div v-else-if="verEmision">
+    <div v-if="verEmision">
       <Emision :id-bitacora="idEmision" @cerrar="nuevaEmision" @revisar="revisarAprobacion" @cancelar="mostrarTablero"/>
     </div>
 

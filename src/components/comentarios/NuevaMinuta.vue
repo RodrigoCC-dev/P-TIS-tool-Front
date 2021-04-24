@@ -137,7 +137,13 @@ export default {
     },
     obtenerNuevoMotivo: function () {
       if (this.bitacora.identificador === 'EF') {
-        this.nuevoMotivo = 'EF'
+        if (this.bitacora.minuta.tipo === 'Coordinacion') {
+          this.nuevoMotivo = 'ECI'
+        } else if (this.bitacora.minuta.tipo === 'Cliente') {
+          this.nuevoMotivo = 'EAC'
+        } else {
+          this.nuevoMotivo = 'EF'
+        }
       } else {
         var revisores = 0
         var aprobaciones = 0
