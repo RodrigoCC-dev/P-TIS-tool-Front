@@ -140,7 +140,7 @@ export default {
         if (this.bitacora.minuta.tipo === 'Coordinacion') {
           this.nuevoMotivo = 'ECI'
         } else if (this.bitacora.minuta.tipo === 'Cliente') {
-          this.nuevoMotivo = 'EAC'
+          this.nuevoMotivo = 'ERC'
         } else {
           this.nuevoMotivo = 'EF'
         }
@@ -190,13 +190,17 @@ export default {
     },
     establecerNuevaRevision: function () {
       if (this.nuevoMotivo === 'EF') {
-        if (this.bitacora.identificador === 'EF') {
+        if (!isNaN(parseInt(this.bitacora.revision))) {
           this.nuevaRevision = parseInt(this.bitacora.revision) + 1
         } else {
           this.nuevaRevision = 0
         }
       } else {
-        this.nuevaRevision = this.abc.charAt(this.abc.indexOf(this.bitacora.revision) + 2)
+        if (this.bitacora.identificador === 'EF' ) {
+          this.nuevaRevision = parseInt(this.bitacora.revision) + 1
+        } else {
+          this.nuevaRevision = this.abc.charAt(this.abc.indexOf(this.bitacora.revision) + 2)
+        }
       }
     },
     emitir: function () {
