@@ -203,6 +203,11 @@ describe('Stakeholder.vue', () => {
   })
 
   // Comienzo de pruebas unitarias
+  it('variable "nombreTab" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.nombreTab).toEqual('Revision')
+  })
+
   it('variable "idRevision" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.idRevision).toEqual(0)
@@ -211,6 +216,11 @@ describe('Stakeholder.vue', () => {
   it('variable "idRespuestas" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.idRespuestas).toEqual(0)
+  })
+
+  it('variable "idMinuta" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idMinuta).toEqual(0)
   })
 
   it('variable "verTablero" se inicializa correctamente', async () => {
@@ -226,6 +236,11 @@ describe('Stakeholder.vue', () => {
   it('variable "verRespuestas" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verRespuestas).toBeFalsy()
+  })
+
+  it('variable "verMinuta" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.verMinuta).toBeFalsy()
   })
 
   it('variable "listaGrupos" se inicializa correctamente', async () => {
@@ -252,4 +267,6 @@ describe('Stakeholder.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.tableroStk).toEqual(1)
   })
+
+  
 })

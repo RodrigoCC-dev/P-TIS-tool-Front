@@ -3,10 +3,12 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import TableroStk from '@/components/TableroStk.vue'
 
+const apiUrl = '127.0.0.1:3000'
+
 const store = createStore({
   state() {
     return {
-      apiUrl: '127.0.0.1:3000',
+      apiUrl: apiUrl,
       grupo: {
         id: 93453,
         nombre: 'G01',
@@ -142,7 +144,7 @@ jest.mock('axios')
 
 axios.get.mockImplementation((url) => {
   switch (url) {
-    case '127.0.0.1:3000/minutas/revision/cliente/93453':
+    case apiUrl + '/minutas/revision/cliente/93453':
       return Promise.resolve({ data: minutas})
     default:
       return Promise.reject(new Error('not found'))
