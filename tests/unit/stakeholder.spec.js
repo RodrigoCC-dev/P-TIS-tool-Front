@@ -331,4 +331,25 @@ describe('Stakeholder.vue', () => {
     expect(wrapper.vm.verMinuta).toBeFalsy()
     expect(wrapper.vm.idMinuta).toEqual(0)
   })
+
+  it('método "obtenerStakeholder" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.stakeholder).toEqual(stakeholder)
+  })
+/*
+  it('método "obtenerGrupo" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.obtenerGrupo(123)
+    expect(wrapper.vm.grupo).toEqual(grupo)
+  })
+*/
+  it('método "obtenerGrupos" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(listaGrupos)
+  })
+
+  it('método "obtenerAprobaciones" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tipoAprobaciones).toEqual(tipoAprobaciones)
+  })
 })

@@ -119,7 +119,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'jornadaActual']),
+    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'jornadaActual', 'grupo', 'tipoAprobaciones']),
 
     gruposFiltrados: function () {
       var lista = []
