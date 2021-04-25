@@ -3,10 +3,12 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import TableroEst from '@/components/TableroEst.vue'
 
+const apiUrl = '127.0.0.1:3000'
+
 const store = createStore({
   state() {
     return {
-      apiUrl: '127.0.0.1:3000',
+      apiUrl: apiUrl,
       grupo: {
         id: 93453,
         nombre: 'G01',
@@ -111,13 +113,13 @@ const grupo = [
 
 axios.get.mockImplementation((url) => {
   switch (url) {
-    case '127.0.0.1:3000/minutas/revision/estados':
+    case apiUrl + '/minutas/revision/estados':
       return Promise.resolve({ data: estados})
-    case '127.0.0.1:3000/minutas/revision/grupo':
+    case apiUrl + '/minutas/revision/grupo':
       return Promise.resolve({ data: []})
-    case '127.0.0.1:3000/minutas/revision/respondidas':
+    case apiUrl + '/minutas/revision/respondidas':
       return Promise.resolve({ data: []})
-    case '127.0.0.1:3000/minutas/avances/semanales/grupo/93453':
+    case apiUrl + '/minutas/avances/semanales/grupo/93453':
       return Promise.resolve({ data: grupo})
     default:
       return Promise.reject(new Error('not found'))
@@ -837,5 +839,38 @@ describe('TableroEst.vue', () => {
     expect(wrapper.emitted()['revisar-avance']).toBeTruthy()
     expect(wrapper.emitted()['revisar-avance'].length).toEqual(1)
     expect(wrapper.emitted()['revisar-avance'][0]).toEqual([9453])
+  })
+
+  it('método "verMinuta" funciona correctamente', async () => {
+    wrapper.vm.verMinuta(63453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted()['ver-minuta']).toBeTruthy()
+    expect(wrapper.emitted()['ver-minuta'].length).toEqual(1)
+    expect(wrapper.emitted()['ver-minuta'][0]).toEqual([63453])
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ECI"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('ECI')).toEqual('Coordinación de grupo')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ERC"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('ERC')).toEqual('Para el cliente')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EAC"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('EAC')).toEqual('Para aprobación')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EF"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('EF')).toEqual('Emisión final')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "PA"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('PA')).toEqual('Sin estado')
   })
 })
