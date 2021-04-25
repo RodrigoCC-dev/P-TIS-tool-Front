@@ -297,7 +297,7 @@ export default {
       this.reiniciarTablero()
     },
     stakeholder: function () {
-      if (this.stakeholder.grupos.length > 0) {
+      if (this.stakeholder.grupos.length > 1) {
         this.mostrarTablero = false
       }
     }

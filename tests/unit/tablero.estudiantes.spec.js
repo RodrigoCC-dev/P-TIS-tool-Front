@@ -834,7 +834,6 @@ describe('TableroEst.vue', () => {
   it('método "revisarAvance" funciona correctamente', async () => {
     wrapper.vm.revisarAvance(9453)
     await wrapper.vm.$nextTick()
-    debugger
     expect(wrapper.emitted()['revisar-avance']).toBeTruthy()
     expect(wrapper.emitted()['revisar-avance'].length).toEqual(1)
     expect(wrapper.emitted()['revisar-avance'][0]).toEqual([9453])

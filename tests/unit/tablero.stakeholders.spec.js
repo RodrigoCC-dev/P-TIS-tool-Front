@@ -30,10 +30,123 @@ const store = createStore({
   }
 })
 
-jest.mock('axios', () => {
-  get: () => new Promise(resolve => {
-    resolve({ data: []})
-  })
+const minutas = [
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_04_2020-2_1207',
+      creada_por: 'ABC',
+      creada_el: '2020-11-16T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'BOR',
+      descripcion: 'Borrador'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'EMI',
+      descripcion: 'Emitida'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'CIG',
+      descripcion: 'Comentada integrante del grupo'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'CSK',
+      descripcion: 'Comentada por el cliente'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'RIG',
+      descripcion: 'Respondida por integrante del grupo'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'RSK',
+      descripcion: 'Respondida por el cliente'
+    }
+  },
+  {
+    id: 46234,
+    revision: 'A',
+    minuta: {
+      id: 42345,
+      codigo: 'MINUTA_G02_05_2020-2_1107',
+      creada_por: 'ABC',
+      creada_el: '2020-10-07T17:29:00.000Z'
+    },
+    estado: {
+      id: 46345,
+      abreviacion: 'CER',
+      descripcion: 'Cerrada'
+    }
+  }
+]
+
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case '127.0.0.1:3000/minutas/revision/cliente/93453':
+      return Promise.resolve({ data: minutas})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
 })
 
 describe('TableroStk.vue', () => {
@@ -41,6 +154,9 @@ describe('TableroStk.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(TableroStk, {
+      propsData: {
+        tarjeta: 'Revision'
+      },
       global: {
         plugins: [store]
       }
@@ -59,32 +175,44 @@ describe('TableroStk.vue', () => {
     expect(wrapper.props().contador).toEqual(63453)
   })
 
+  it('se asigna props "tarjeta" adecuadamente', () => {
+    const wrapper = shallowMount(TableroStk, {
+      propsData: {
+        tarjeta: 'Revision'
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.props().tarjeta).toEqual('Revision')
+  })
+
   it('variable nombreTab se inicializa correctamente', () => {
     expect(wrapper.vm.nombreTab).toEqual('Revision')
   })
 
   it('variable listaMinutas se inicializa correctamente', () => {
-    expect(wrapper.vm.listaMinutas).toEqual([])
+    expect(wrapper.vm.listaMinutas).toEqual(minutas)
   })
 
   it('variable listaRevision se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRevision).toEqual([])
+    expect(wrapper.vm.listaRevision).toEqual([minutas[1]])
   })
 
   it('variable listaComentadas se inicializa correctamente', () => {
-    expect(wrapper.vm.listaComentadas).toEqual([])
+    expect(wrapper.vm.listaComentadas).toEqual([minutas[3]])
   })
 
   it('variable listaRespondidasGrupo se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual([minutas[4]])
   })
 
   it('variable listaRespondidasCliente se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRespondidasCliente).toEqual([])
+    expect(wrapper.vm.listaRespondidasCliente).toEqual([minutas[5]])
   })
 
   it('variable listaCerradas se inicializa correctamente', () => {
-    expect(wrapper.vm.listaCerradas).toEqual([])
+    expect(wrapper.vm.listaCerradas).toEqual([minutas[6]])
   })
 
   it('variable nombreTabs se inicializa correctamente', () => {
@@ -140,6 +268,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('propiedad computada mostrarRevision funciona correctamente con false', () => {
+    wrapper.vm.listaRevision = []
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
@@ -174,6 +303,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('propiedad computada mostrarComentadas funciona correctamente con false', () => {
+    wrapper.vm.listaComentadas = []
     expect(wrapper.vm.mostrarComentadas).toBeFalsy()
   })
 
@@ -208,6 +338,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
+    wrapper.vm.listaRespondidasGrupo = []
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
 
@@ -242,6 +373,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('propiedad computada mostrarRespondidasCliente funciona correctamente con false', () => {
+    wrapper.vm.listaRespondidasCliente = []
     expect(wrapper.vm.mostrarRespondidasCliente).toBeFalsy()
   })
 
@@ -276,6 +408,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('propiedad computada mostrarCerradas funciona correctamente con false', () => {
+    wrapper.vm.listaCerradas = []
     expect(wrapper.vm.mostrarCerradas).toBeFalsy()
   })
 
@@ -300,113 +433,7 @@ describe('TableroStk.vue', () => {
     const wrapper = shallowMount(TableroStk, {
       data() {
         return {
-          listaMinutas: [
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_04_2020-2_1207',
-                creada_por: 'ABC',
-                creada_el: '2020-11-16T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'BOR',
-                descripcion: 'Borrador'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'EMI',
-                descripcion: 'Emitida'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'CIG',
-                descripcion: 'Comentada integrante del grupo'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'CSK',
-                descripcion: 'Comentada por el cliente'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'RIG',
-                descripcion: 'Respondida por integrante del grupo'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'RSK',
-                descripcion: 'Respondida por el cliente'
-              }
-            },
-            {
-              id: 46234,
-              revision: 'A',
-              minuta: {
-                id: 42345,
-                codigo: 'MINUTA_G02_05_2020-2_1107',
-                creada_por: 'ABC',
-                creada_el: '2020-10-07T17:29:00.000Z'
-              },
-              estado: {
-                id: 46345,
-                abreviacion: 'CER',
-                descripcion: 'Cerrada'
-              }
-            }
-          ]
+          listaMinutas: minutas
         }
       },
       global: {
@@ -419,5 +446,73 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.listaComentadas.length).toEqual(1)
     expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
     expect(wrapper.vm.listaRespondidasCliente.length).toEqual(1)
+  })
+
+  it('método "reiniciarTablero" funciona correctamente', () => {
+    wrapper.vm.listaRevision = [minutas[1]]
+    wrapper.vm.listaComentadas = [minutas[3]]
+    wrapper.vm.listaRespondidasGrupo = [minutas[4]]
+    wrapper.vm.listaRepondidiasCliente = [minutas[5]]
+    wrapper.vm.listaCerradas = [minutas[6]]
+    wrapper.vm.reiniciarTablero()
+    expect(wrapper.vm.listaRevision).toEqual([])
+    expect(wrapper.vm.listaComentadas).toEqual([])
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
+    expect(wrapper.vm.listaRespondidasCliente).toEqual([])
+    expect(wrapper.vm.listaCerradas).toEqual([])
+  })
+
+  it('método "obtenerMinutas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaMinutas).toEqual(minutas)
+    expect(wrapper.vm.listaRevision.length).toEqual(1)
+    expect(wrapper.vm.listaComentadas.length).toEqual(1)
+    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
+    expect(wrapper.vm.listaRespondidasCliente.length).toEqual(1)
+    expect(wrapper.vm.listaCerradas.length).toEqual(1)
+  })
+
+  it('método "revisarMinuta" funciona correctamente', async () => {
+    wrapper.vm.revisarMinuta(49345)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().revision).toBeTruthy()
+    expect(wrapper.emitted().revision.length).toEqual(1)
+    expect(wrapper.emitted().revision[0]).toEqual([49345])
+  })
+
+  it('método "revisarRespuestas" funciona correctamente', async () => {
+    wrapper.vm.revisarRespuestas(46345)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().respuestas).toBeTruthy()
+    expect(wrapper.emitted().respuestas.length).toEqual(1)
+    expect(wrapper.emitted().respuestas[0]).toEqual([46345])
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ECI"', () => {
+    expect(wrapper.vm.revisionEstado('ECI')).toEqual('Coordinación de grupo')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ERC"', () => {
+    expect(wrapper.vm.revisionEstado('ERC')).toEqual('Para el cliente')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EAC"', () => {
+    expect(wrapper.vm.revisionEstado('EAC')).toEqual('Para aprobación')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EF"', () => {
+    expect(wrapper.vm.revisionEstado('EF')).toEqual('Emisión final')
+  })
+
+  it('método "revisionEstado" funciona correctamente con cualquier identificador', () => {
+    expect(wrapper.vm.revisionEstado('PA')).toEqual('Sin estado')
+  })
+
+  it('método "verMinuta" funciona correctamente', async () => {
+    wrapper.vm.verMinuta(14634)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted()['ver-minuta']).toBeTruthy()
+    expect(wrapper.emitted()['ver-minuta'].length).toEqual(1)
+    expect(wrapper.emitted()['ver-minuta'][0]).toEqual([14634])
   })
 })
