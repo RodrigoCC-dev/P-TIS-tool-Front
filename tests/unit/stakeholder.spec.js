@@ -352,4 +352,30 @@ describe('Stakeholder.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.tipoAprobaciones).toEqual(tipoAprobaciones)
   })
+
+  it('método "nombreCompleto" funciona correctamente', async () =>  {
+    const usuario = {
+      nombre: 'Pamela',
+      apellido_paterno: 'Venegas',
+      apellido_materno: 'Bastías'
+    }
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.nombreCompleto(usuario)).toEqual('Pamela Venegas Bastías')
+  })
+
+  it('método "buscarPorId" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.buscarPorId(listaGrupos, 123)).toEqual(listaGrupos[1])
+  })
+
+  it('método "seleccionarGrupo" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.$store.commit('setGrupo', {})
+    wrapper.vm.tableroStk = 10
+    wrapper.vm.seleccionarGrupo(123)
+    expect(wrapper.vm.grupoActual).toEqual(123)
+    expect(wrapper.vm.grupoSeleccionado).toEqual(listaGrupos[1])
+    expect(wrapper.vm.grupo).toEqual(listaGrupos[1])
+    expect(wrapper.vm.tableroStk).toEqual(11)
+  })
 })
