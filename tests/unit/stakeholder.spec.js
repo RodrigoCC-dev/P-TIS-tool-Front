@@ -39,6 +39,9 @@ const store = createStore({
     },
     setTipoAprobaciones(state, valor) {
       state.tipoAprobaciones = valor
+    },
+    setJornadaActual(state, valor) {
+      state.jornadaActual = valor
     }
   }
 })
@@ -266,6 +269,52 @@ describe('Stakeholder.vue', () => {
   it('variable "tableroStk" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.tableroStk).toEqual(1)
+  })
+
+  it('propiedad computada "gruposFiltrados" funciona correctamente con "undefined"', async () => {
+    const cliente = {
+      id: 964,
+      iniciales: 'MAH',
+      usuario_id: 345,
+      usuario: {
+        id: 345,
+        nombre: 'Manuel',
+        apellido_paterno: 'Aravena',
+        apellido_materno: 'Hernandez',
+        run: '12345678-9',
+        email: 'manuel.aravena@algo.com',
+        rol_id: 6493
+      },
+      grupos: {
+        id: 123,
+        nombre: 'G05',
+        proyecto: 'Prueba de estudiantes',
+        correlativo: 5
+      }
+    }
+    await wrapper.vm.$nextTick()
+    wrapper.vm.$store.commit('setStakeholder',cliente)
+    expect(wrapper.vm.gruposFiltrados.length).toEqual(1)
+    expect(wrapper.vm.gruposFiltrados[0]).toEqual(listaGrupos[1])
+  })
+
+  it('propiedad computada "gruposFiltrados" funciona correctamente sin "undefined"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.gruposFiltrados.length).toEqual(1)
+    expect(wrapper.vm.gruposFiltrados[0]).toEqual(listaGrupos[1])
+  })
+
+  it('propiedad computada "gruposJornada" funciona correctamente con jornada "Diurna"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.gruposJornada.length).toEqual(1)
+    expect(wrapper.vm.gruposJornada[0]).toEqual(listaGrupos[1])
+  })
+
+  it('propiedad computada "gruposJornada" funciona correctamente con jornada "Vespertina"', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.$store.commit('setJornadaActual', 'Vespertina')
+    expect(wrapper.vm.gruposJornada.length).toEqual(0)
+    expect(wrapper.vm.gruposJornada).toEqual([])
   })
 
   it('método "establecerRevision" funciona correctamente', async () => {
