@@ -77,7 +77,53 @@ const estados = [
   }
 ]
 
-const grupo = [
+const revision = [
+  {
+    id: 13239,
+    motivo: 'Emitida para pruebas',
+    revision: 'C',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 34593,
+      codigo: 'MINUTA_G02_05_2020',
+      correlativo: 10,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Coordinacion',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 23543,
+      abreviacion: 'CIG',
+      descripcion: 'Comentada por integrante del grupo'
+    }
+  }
+]
+
+const respondidas = [
+  {
+    id: 194534,
+    motivo: 'Emitida para pruebas',
+    revision: 'D',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 34593,
+      codigo: 'MINUTA_G02_05_2020',
+      correlativo: 10,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Coordinacion',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 23543,
+      abreviacion: 'RIG',
+      descripcion: 'Respondida por integrante del grupo'
+    }
+  }
+]
+
+const avance = [
   {
     id: 72534,
     emitida: true,
@@ -116,11 +162,11 @@ axios.get.mockImplementation((url) => {
     case apiUrl + '/minutas/revision/estados':
       return Promise.resolve({ data: estados})
     case apiUrl + '/minutas/revision/grupo':
-      return Promise.resolve({ data: []})
+      return Promise.resolve({ data: revision})
     case apiUrl + '/minutas/revision/respondidas':
-      return Promise.resolve({ data: []})
+      return Promise.resolve({ data: respondidas})
     case apiUrl + '/minutas/avances/semanales/grupo/93453':
-      return Promise.resolve({ data: grupo})
+      return Promise.resolve({ data: avance})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -194,7 +240,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaRespondidasGrupo se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
   })
 
   it('variable listaCerradas se inicializa correctamente', () => {
@@ -206,11 +252,11 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaRevision se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRevision).toEqual([])
+    expect(wrapper.vm.listaRevision).toEqual(revision)
   })
 
   it('variable "listaAvances" se inicializa correctamente', () => {
-    expect(wrapper.vm.listaAvances).toEqual(grupo)
+    expect(wrapper.vm.listaAvances).toEqual(avance)
   })
 
   it('variable "borradoresAvances" se inicializa correctamente', () => {
@@ -447,7 +493,9 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
+  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.listaRespondidasGrupo = []
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
 
@@ -481,7 +529,9 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRevision funciona correctamente con false', () => {
+  it('propiedad computada mostrarRevision funciona correctamente con false', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.listaRevision = []
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
@@ -782,6 +832,30 @@ describe('TableroEst.vue', () => {
     wrapper.vm.categorizarAvances()
     expect(wrapper.vm.borradoresAvances.length).toEqual(1)
     expect(wrapper.vm.cerradasAvances.length).toEqual(1)
+  })
+
+  it('método "obtenerMinutas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaMinutas).toEqual(estados)
+    expect(wrapper.vm.listaBorradores.length).toEqual(1)
+    expect(wrapper.vm.listaBorradores[0]).toEqual(estados[1])
+    expect(wrapper.vm.listaComentadasGrupo.length).toEqual(0)
+    expect(wrapper.vm.listaComentadasCliente.length).toEqual(0)
+    expect(wrapper.vm.listaCerradas.length).toEqual(1)
+    expect(wrapper.vm.listaCerradas[0]).toEqual(estados[0])
+    expect(wrapper.vm.listaEmitidas.length).toEqual(0)
+  })
+
+  it('método "obtenerParaRevisar" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaRevision).toEqual(revision)
+    expect(wrapper.vm.listaRevision.length).toEqual(1)
+  })
+
+  it('método "obtenerRespondidas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
+    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
   })
 
   it('método "editarBorrador" funciona correctamente', async () => {
