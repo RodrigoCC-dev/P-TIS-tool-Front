@@ -140,7 +140,7 @@ export default {
         if (this.bitacora.minuta.tipo === 'Coordinacion') {
           this.nuevoMotivo = 'ECI'
         } else if (this.bitacora.minuta.tipo === 'Cliente') {
-          this.nuevoMotivo = 'ERC'
+          this.nuevoMotivo = 'EAC'
         } else {
           this.nuevoMotivo = 'EF'
         }
