@@ -228,6 +228,11 @@ describe('Estudiante.vue', () => {
     expect(wrapper.vm.idEmision).toEqual(0)
   })
 
+  it('variable "idVerMinuta" se inicializa correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.idVerMinuta).toEqual(0)
+  })
+
   it('variable "crearMinuta" se inicializa correctamente', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.crearMinuta).toBeTruthy()
@@ -541,6 +546,25 @@ describe('Estudiante.vue', () => {
     wrapper.vm.revisarSemanal = true
     wrapper.vm.cerrarAvance()
     expect(wrapper.vm.revisarSemanal).toBeFalsy()
+  })
+
+  it('método "mostrarMinuta" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verMinuta = false
+    wrapper.vm.crearMinuta = true
+    wrapper.vm.mostrarMinuta(64353)
+    expect(wrapper.vm.verMinuta).toBeTruthy()
+    expect(wrapper.vm.crearMinuta).toBeFalsy()
+    expect(wrapper.vm.idVerMinuta).toEqual(64353)
+  })
+
+  it('método "cerrarMinuta" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.verMinuta = true
+    wrapper.vm.idVerMinuta = 96345
+    wrapper.vm.cerrarMinuta()
+    expect(wrapper.vm.verMinuta).toBeFalsy()
+    expect(wrapper.vm.idVerMinuta).toEqual(0)
   })
 
   it('método "revisionesPorEstados" funciona correctamente con "ECI"', async () => {
