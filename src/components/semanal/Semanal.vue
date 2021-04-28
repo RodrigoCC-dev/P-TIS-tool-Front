@@ -68,6 +68,43 @@
     <br>
     <div class="columns">
       <div class="column is-8 is-offset-2">
+        <p class="title is-5 has-text-centered">Impedimentos de la semana anterior</p>
+      </div>
+      <div class="column">
+        <div class="columns">
+          <div class="column is-2 is-offset-3">
+            <a class="button is-small is-info-usach is-rounded" @click="agregarImpedimento">
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="content has-text-left">
+          <ul>
+            <li v-for="(impedimento, index) in impedimentos" :key="index">
+              <div class="field is-grouped">
+                <p class="control is-expanded has-icons-right">
+                  <input v-model="impedimentos[index].descripcion" class="input is-normal" :class="{ 'is-danger' : entradas.impedimentos }" type="text" @input="validarImpedimentos">
+                  <span class="icon is-right">
+                    <button class="delete" @click="removerImpedimento(impedimento)"></button>
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+          <p class="is-danger help" v-if="entradas.impedimentos">Faltan los impedimentos. Si no hubo, colocar "No tuve impedimentos"</p>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div class="columns">
+      <div class="column is-8 is-offset-2">
         <p class="title is-5 has-text-centered">Logros de la semana anterior</p>
       </div>
       <div class="column">
@@ -167,7 +204,7 @@
     <hr>
     <div v-if="actualizarAvance">
       <div v-for="estudiante in compagnerosGrupo" :key="estudiante.id">
-        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
+        <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" :impedimentos="impedimentosPorEstudiante(estudiante.id)" v-show="mostrarAvance(estudiante.id)"/>
       </div>
     </div>
 
@@ -202,15 +239,18 @@ export default {
       numeroSprint: '',
       logros: [{ id: 0, descripcion: '', correlativo: 1 }],
       metas: [{ id: 0, descripcion: '', correlativo: 1 }],
+      impedimentos: [{ id: 0, descripcion: '', correlativo: 1 }],
       semestre: {},
       entradas: {
         numeroSprint: { error: false, mensaje: '' },
         fechaAvance: false,
         logros: false,
-        metas: false
+        metas: false,
+        impedimentos: false
       },
       itemsLogros: [],
       itemsMetas: [],
+      itemsImpedimentos: [],
       emitir: false
     }
   },
@@ -267,6 +307,17 @@ export default {
         this.removeFromArray(this.metas, meta)
       }
     },
+    agregarImpedimento: function () {
+      var nuevoImpedimento = { id: 0, descripcion: '', correlativo: 0 }
+      const anterior = this.impedimentos[this.impedimentos.length - 1].correlativo
+      nuevoImpedimento.correlativo = anterior + 1
+      this.impedimentos.push(nuevoImpedimento)
+    },
+    removerImpedimento: function (impedimento) {
+      if (this.impedimentos.length > 1) {
+        this.removeFromArray(this.impedimentos, impedimento)
+      }
+    },
     establecerId: function () {
       this.minuta.estudiante_id = this.estudiante.id
     },
@@ -309,7 +360,8 @@ export default {
             minuta: this.minuta,
             numero_sprint: this.numeroSprint,
             logros: this.logros,
-            metas: this.metas
+            metas: this.metas,
+            impedimentos: this.impedimentos
           }
           try {
             await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
@@ -330,6 +382,7 @@ export default {
         numero_sprint: this.numeroSprint,
         logros: this.logros,
         metas: this.metas,
+        impedimentos: this.impedimentos,
         emitir: this.emitir
       }
       try {
@@ -356,18 +409,17 @@ export default {
           this.itemsLogros.push(listaItems[i])
         } else if (listaItems[i].tipo_item.tipo === 'Meta') {
           this.itemsMetas.push(listaItems[i])
+        } else if (listaItems[i].tipo_item.tipo === 'Impedimento') {
+          this.itemsImpedimentos.push(listaItems[i])
         }
       }
     },
     buscarIdAsistencia: function (idEstudiante) {
       if (this.actualizarAvance) {
-        for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
-          if (this.bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
-            return this.bitacora.minuta.asistencia[i].id
-          }
-        }
+        return Funciones.buscarIdAsistencia(this.bitacora, idEstudiante)
       }
     },
+    /*
     separarPorEstudiante: function (listaFuente, idEstudiante) {
       var lista = []
       const idAsistencia = this.buscarIdAsistencia(idEstudiante)
@@ -377,15 +429,18 @@ export default {
         }
       }
       return lista
-    },
+    }, */
     logrosPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsLogros, this.buscarIdAsistencia(idEstudiante))
     },
     metasPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsMetas, this.buscarIdAsistencia(idEstudiante))
+    },
+    impedimentosPorEstudiante: function (idEstudiante) {
+      return Funciones.separarPorEstudiante(this.itemsImpedimentos, this.buscarIdAsistencia(idEstudiante))
     },
     mostrarAvance: function (idEstudiante) {
-      return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0
+      return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0 && this.impedimentosPorEstudiante(idEstudiante).length > 0
     },
     convertirItems: function (listaAconvertir) {
       const listaItems = listaAconvertir
@@ -411,6 +466,9 @@ export default {
     convertirMetas: function () {
       return this.convertirItems(this.metasPorEstudiante(this.estudiante.id))
     },
+    convertirImpedimentos: function () {
+      return this.convertirItems(this.impedimentosPorEstudiante(this.estudiante.id))
+    },
     convertirBitacora: function () {
       if (this.actualizarAvance) {
         this.separarItems(this.bitacora.minuta.items)
@@ -421,6 +479,7 @@ export default {
         this.numeroSprint = this.bitacora.minuta.numero_sprint
         this.logros = this.convertirLogros()
         this.metas = this.convertirMetas()
+        this.impedimentos = this.convertirImpedimentos()
       }
     },
     validarSprint: function () {
@@ -488,10 +547,14 @@ export default {
     validarMetas: function () {
       return this.validarLista(this.metas, 'metas', this.entradas)
     },
+    validarImpedimentos: function () {
+      return this.validarLista(this.impedimentos, 'impedimentos', this.entradas)
+    },
     validarFormulario: function () {
       var validar = true
       validar = validar && this.validarSprint()
       validar = validar && this.validarFecha()
+      validar = validar && this.validarImpedimentos()
       validar = validar && this.validarLogros()
       validar = validar && this.validarMetas()
       return validar
@@ -503,6 +566,14 @@ export default {
       this.obtenerSemestre()
     }
     this.convertirBitacora()
+    console.log(this.bitacora)
+    // console.log(this.actualizarAvance)
+    // console.log(this.estudiante)
+    console.log(this.mostrarAvance(5))
+    console.log(this.mostrarAvance(6))
+    console.log(this.logrosPorEstudiante(6))
+    console.log(this.metasPorEstudiante(6))
+    console.log(this.impedimentosPorEstudiante(6))
   }
 }
 </script>
