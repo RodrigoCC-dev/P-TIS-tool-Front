@@ -182,7 +182,7 @@ describe('RevisionSemanal.vue', () => {
   it('método "buscarIdAsistencia" funciona correctamente', () => {
     expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
   })
-
+/*
   it('método "separarPorEstudiante" funciona correctamente', () => {
     const lista = [
       {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
@@ -190,7 +190,7 @@ describe('RevisionSemanal.vue', () => {
     ]
     expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
   })
-
+*/
   it('método "logrosPorEstudiante" funciona correctamente', () => {
     const esperado = [
       {
