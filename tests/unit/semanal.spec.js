@@ -136,6 +136,19 @@ describe('Semanal.vue', () => {
             id: 13453,
             asistencia_id: 4953
           }
+        },
+        {
+          id: 14513,
+          descripcion: 'Este es un impedimento de prueba',
+          correlativo: 143453,
+          tipo_item: {
+            id: 134543,
+            tipo: 'Impedimento'
+          },
+          responsables: {
+            id: 1934534,
+            asistencia_id: 4953
+          }
         }
       ],
       bitacora_estado: {
@@ -282,7 +295,8 @@ describe('Semanal.vue', () => {
       numeroSprint: {error: false, mensaje: ''},
       fechaAvance: false,
       logros: false,
-      metas: false
+      metas: false,
+      impedimentos: false
     }
     expect(wrapper.vm.entradas).toEqual(esperado)
   })
@@ -349,6 +363,38 @@ describe('Semanal.vue', () => {
       }
     ]
     expect(wrapper.vm.itemsMetas).toEqual(esperado)
+  })
+
+  it('variable "itemsImpedimentos" se inicializa correctamente sin props', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipo_minuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.itemsMetas).toEqual([])
+  })
+
+  it('variable "itemsImpedimentos" se inicializa correctamente con props', () => {
+    const esperado = [
+      {
+        id: 14513,
+        descripcion: 'Este es un impedimento de prueba',
+        correlativo: 143453,
+        tipo_item: {
+          id: 134543,
+          tipo: 'Impedimento'
+        },
+        responsables: {
+          id: 1934534,
+          asistencia_id: 4953
+        }
+      }
+    ]
+    expect(wrapper.vm.itemsImpedimentos).toEqual(esperado)
   })
 
   it('variable "emitir" se inicializa correctamente', () => {
@@ -589,12 +635,14 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.convertirFecha('2021-01-15T00:00:00.000Z')).toEqual('2021-01-15')
   })
 
-  it('método "separarItems" funcioan correctamente', () => {
+  it('método "separarItems" funciona correctamente', () => {
     const items = [
       {id: 4534, tipo_item: {tipo: 'Logro'}},
       {id: 2353, tipo_item: {tipo: 'Logro'}},
       {id: 3434, tipo_item: {tipo: 'Meta'}},
-      {id: 9323, tipo_item: {tipo: 'Meta'}}
+      {id: 9323, tipo_item: {tipo: 'Meta'}},
+      {id: 13453, tipo_item: {tipo: 'Impedimento'}},
+      {id: 64345, tipo_item: {tipo: 'Impedimento'}}
     ]
     const logrosEsperados = [
       {id: 4534, tipo_item: {tipo: 'Logro'}},
@@ -604,19 +652,26 @@ describe('Semanal.vue', () => {
       {id: 3434, tipo_item: {tipo: 'Meta'}},
       {id: 9323, tipo_item: {tipo: 'Meta'}}
     ]
+    const impedimentosEsperados = [
+      {id: 13453, tipo_item: {tipo: 'Impedimento'}},
+      {id: 64345, tipo_item: {tipo: 'Impedimento'}}
+    ]
     wrapper.vm.itemsLogros = []
     wrapper.vm.itemsMetas = []
+    wrapper.vm.itemsImpedimentos = []
     wrapper.vm.separarItems(items)
     expect(wrapper.vm.itemsLogros.length).toEqual(2)
     expect(wrapper.vm.itemsMetas.length).toEqual(2)
+    expect(wrapper.vm.itemsImpedimentos.length).toEqual(2)
     expect(wrapper.vm.itemsLogros).toEqual(logrosEsperados)
     expect(wrapper.vm.itemsMetas).toEqual(metasEsperadas)
+    expect(wrapper.vm.itemsImpedimentos).toEqual(impedimentosEsperados)
   })
 
   it('método "buscarIdAsistencia" funciona correctamente', () => {
     expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
   })
-
+/*
   it('método "separarPorEstudiante" funciona correctamente', () => {
     const lista = [
       {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
@@ -624,7 +679,7 @@ describe('Semanal.vue', () => {
     ]
     expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
   })
-
+*/
   it('método "logrosPorEstudiante" funciona correctamente', () => {
     const esperado = [
       {
@@ -674,7 +729,8 @@ describe('Semanal.vue', () => {
   it('método "convertirItems" funciona correctamente', () => {
     const esperado = [
       {id: 94534, descripcion: 'Item para la prueba', correlativo: 9453},
-      {id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}
+      {id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534},
+      {id: 14513, descripcion: 'Este es un impedimento de prueba', correlativo: 143453}
     ]
     expect(wrapper.vm.convertirItems(wrapper.vm.bitacora.minuta.items)).toEqual(esperado)
   })
@@ -692,6 +748,7 @@ describe('Semanal.vue', () => {
   it('método "convertirBitacora" funciona correctamente', () => {
     const logros = [{id: 94534, descripcion: 'Item para la prueba', correlativo: 9453}]
     const metas = [{id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}]
+    const impedimentos = [{id: 14513, descripcion: 'Este es un impedimento de prueba', correlativo: 143453}]
     const wrapper = shallowMount(Semanal, {
       propsData: {
         avance: {},
@@ -710,6 +767,7 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.numeroSprint).toEqual(34)
     expect(wrapper.vm.logros).toEqual(logros)
     expect(wrapper.vm.metas).toEqual(metas)
+    expect(wrapper.vm.impedimentos).toEqual(impedimentos)
   })
 
   it('método "validarSprint" funciona correctamente con "numeroSprint" con valor "null"', () => {
@@ -966,6 +1024,25 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.entradas.metas).toBeTruthy()
   })
 
+  it('método "validarImpedimentos" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.validarImpedimentos()).toBeTruthy()
+    expect(wrapper.vm.entradas.impedimentos).toBeFalsy()
+  })
+
+  it('método "validarImpedimentos" funciona correctamente con false', () => {
+    const wrapper = shallowMount(Semanal, {
+      propsData: {
+        avance: {},
+        tipoMinuta: 3
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    expect(wrapper.vm.validarImpedimentos()).toBeFalsy()
+    expect(wrapper.vm.entradas.impedimentos).toBeTruthy()
+  })
+
   it('método "validarFormulario" funciona correctamente con "true"', () => {
     const wrapper = shallowMount(Semanal, {
       propsData: {
@@ -980,6 +1057,7 @@ describe('Semanal.vue', () => {
     wrapper.vm.minuta.fecha_avance = '2021-02-15'
     wrapper.vm.logros = [{id: 534, descripcion: 'Esto es una prueba', correlativo: 5234}]
     wrapper.vm.metas = [{id: 954, descripcion: 'Esta es una meta de prueba', correlativo: 9453}]
+    wrapper.vm.impedimentos = [{id: 14513, descripcion: 'Este es un impedimento de prueba', correlativo: 143453}]
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
 

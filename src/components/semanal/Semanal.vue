@@ -419,7 +419,6 @@ export default {
         return Funciones.buscarIdAsistencia(this.bitacora, idEstudiante)
       }
     },
-    /*
     separarPorEstudiante: function (listaFuente, idEstudiante) {
       var lista = []
       const idAsistencia = this.buscarIdAsistencia(idEstudiante)
@@ -429,15 +428,15 @@ export default {
         }
       }
       return lista
-    }, */
+    },
     logrosPorEstudiante: function (idEstudiante) {
-      return Funciones.separarPorEstudiante(this.itemsLogros, this.buscarIdAsistencia(idEstudiante))
+      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
     },
     metasPorEstudiante: function (idEstudiante) {
-      return Funciones.separarPorEstudiante(this.itemsMetas, this.buscarIdAsistencia(idEstudiante))
+      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
     },
     impedimentosPorEstudiante: function (idEstudiante) {
-      return Funciones.separarPorEstudiante(this.itemsImpedimentos, this.buscarIdAsistencia(idEstudiante))
+      return this.separarPorEstudiante(this.itemsImpedimentos, idEstudiante)
     },
     mostrarAvance: function (idEstudiante) {
       return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0 && this.impedimentosPorEstudiante(idEstudiante).length > 0
@@ -566,14 +565,6 @@ export default {
       this.obtenerSemestre()
     }
     this.convertirBitacora()
-    console.log(this.bitacora)
-    // console.log(this.actualizarAvance)
-    // console.log(this.estudiante)
-    console.log(this.mostrarAvance(5))
-    console.log(this.mostrarAvance(6))
-    console.log(this.logrosPorEstudiante(6))
-    console.log(this.metasPorEstudiante(6))
-    console.log(this.impedimentosPorEstudiante(6))
   }
 }
 </script>
