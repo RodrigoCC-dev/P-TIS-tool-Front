@@ -99,5 +99,21 @@ export default {
       default:
         return 'Sin estado'
     }
+  },
+  buscarIdAsistencia (bitacora, idEstudiante) {
+    for (var i = 0; i < bitacora.minuta.asistencia.length; i++) {
+      if (bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
+        return bitacora.minuta.asistencia[i].id
+      }
+    }
+  },
+  separarPorEstudiante (listaFuente, idAsistencia) {
+    var lista = []
+    for (var i = 0; i < listaFuente.length; i++) {
+      if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
+        lista.push(listaFuente[i])
+      }
+    }
+    return lista
   }
 }

@@ -6,7 +6,7 @@
     <br>
 
     <div v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-      <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)"/>
+      <VisorEstudiante :est="estudiante" :logros="logrosPorEstudiante(estudiante.id)" :metas="metasPorEstudiante(estudiante.id)" :impedimentos="impedimentosPorEstudiante(estudiante.id)"/>
       <br>
     </div>
 
@@ -16,6 +16,8 @@
 <script>
 import InfoAvance from '@/components/semanal/InfoAvance.vue'
 import VisorEstudiante from '@/components/semanal/VisorEstudiante.vue'
+
+import Funciones from '@/services/funciones.js'
 
 export default {
   name: 'RevisionSemanal',
@@ -29,7 +31,8 @@ export default {
       grupoSeleccionado: this.grupo,
       bitacora: this.minuta,
       itemsLogros: [],
-      itemsMetas: []
+      itemsMetas: [],
+      itemsImpedimentos: []
     }
   },
   computed: {
@@ -44,33 +47,24 @@ export default {
           this.itemsLogros.push(listaItems[i])
         } else if (listaItems[i].tipo_item.tipo === 'Meta') {
           this.itemsMetas.push(listaItems[i])
+        } else if (listaItems[i].tipo_item.tipo === 'Impedimento') {
+          this.itemsImpedimentos.push(listaItems[i])
         }
       }
     },
     buscarIdAsistencia: function (idEstudiante) {
       if (this.mostrarBitacora) {
-        for (var i = 0; i < this.bitacora.minuta.asistencia.length; i++) {
-          if (this.bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
-            return this.bitacora.minuta.asistencia[i].id
-          }
-        }
+        return Funciones.buscarIdAsistencia(this.bitacora, idEstudiante)
       }
-    },
-    separarPorEstudiante: function (listaFuente, idEstudiante) {
-      var lista = []
-      const idAsistencia = this.buscarIdAsistencia(idEstudiante)
-      for (var i = 0; i < listaFuente.length; i++) {
-        if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
-          lista.push(listaFuente[i])
-        }
-      }
-      return lista
     },
     logrosPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsLogros, this.buscarIdAsistencia(idEstudiante))
     },
     metasPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsMetas, this.buscarIdAsistencia(idEstudiante))
+    },
+    impedimentosPorEstudiante: function (idEstudiante) {
+      return Funciones.separarPorEstudiante(this.itemsImpedimentos, this.buscarIdAsistencia(idEstudiante))
     }
   },
   mounted () {
