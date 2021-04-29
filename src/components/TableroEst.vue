@@ -61,7 +61,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay borradores para mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas que has guardado como borradores antes de ser emitidas.</p>
+            <p class="subtitle is-5">En este momento no hay borradores para mostrar.</p>
           </div>
         </div>
       </section>
@@ -88,7 +89,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay borradores de avance semanal para mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas de avance semanal que aún no han sido llenadas por todos los integrantes del grupo y aún no han sido emitidas.</p>
+            <p class="subtitle is-5">En este momento no hay borradores de avance semanal para mostrar.</p>
           </div>
         </div>
       </section>
@@ -119,7 +121,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas emitidas para mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas de reunión que has emitido y que se encuentran en revisión.</p>
+            <p class="subtitle is-5">En este momento no hay minutas emitidas para mostrar.</p>
           </div>
         </div>
       </section>
@@ -152,7 +155,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas comentadas por los integrantes del grupo para mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas que te han comentado los integrantes de tu grupo.</p>
+            <p class="subtitle is-5">Ahora no hay minutas comentadas para mostrar.</p>
           </div>
         </div>
       </section>
@@ -183,7 +187,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas comentadas por el Cliente para mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas que te ha comentado el cliente.</p>
+            <p class="subtitle is-5">Ahora noo hay minutas comentadas para mostrar.</p>
           </div>
         </div>
       </section>
@@ -216,7 +221,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas respondidas por los integrantes del grupo</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas comentadas por ti y que fueron respondidas por tus compañeros de grupo.</p>
+            <p class="subtitle is-5">En estos momentos no hay minutas respondidas para mostrar.</p>
           </div>
         </div>
       </section>
@@ -249,7 +255,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas cerradas a mostrar</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas de reunión creadas por ti y que ya han sido revisadas por tus compañeros de grupo y/o por el cliente.</p>
+            <p class="subtitle is-5">Por ahora no hay minutas cerradas a mostrar.</p>
           </div>
         </div>
       </section>
@@ -278,7 +285,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas de avance semanal cerradas</p>
+            <p class="subtitle is-5">Aquí se presentan las minutas de avance semanal que han sido emitidas por tu grupo.</p>
+            <p class="subtitle is-5">En estos momentos no hay minutas de avance semanal para mostrar.</p>
           </div>
         </div>
       </section>
@@ -309,7 +317,8 @@
             </tbody>
           </table>
           <div v-else>
-            <p class="subtitle is-5">No hay minutas pendientes de revisión</p>
+            <p class="subtitle is-5">En esta sección se presentan las minutas de reunión emitidas por tus compañeros de grupo para tu revisión.</p>
+            <p class="subtitle is-5">Actualmente no hay minutas pendientes que revisar.</p>
           </div>
         </div>
       </section>
