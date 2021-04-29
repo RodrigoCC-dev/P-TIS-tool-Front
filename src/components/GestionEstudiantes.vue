@@ -18,16 +18,7 @@
     <div v-if="verFormulario">
       <form class="form" method="post">
         <div class="columns has-text-left">
-          <div class="column is-3">
-            <div class="field">
-              <label class="label">R.U.N.:</label>
-              <div class="control">
-                <input v-model="estudiante.usuario.run" v-on:input="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
-              </div>
-              <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
-            </div>
-          </div>
-          <div class="column is-3">
+          <div class="column is-4">
             <div class="field">
               <label class="label">Nombre:</label>
               <div class="control">
@@ -36,7 +27,7 @@
               <p class="is-danger help" v-if="nombreEntrada.error">{{ nombreEntrada.mensaje }}</p>
             </div>
           </div>
-          <div class="column is-3">
+          <div class="column is-4">
             <div class="field">
               <label class="label">Apellido paterno:</label>
               <div class="control">
@@ -45,7 +36,7 @@
               <p class="is-danger help" v-if="apellidoPaternoEntrada.error">{{ apellidoPaternoEntrada.mensaje }}</p>
             </div>
           </div>
-          <div class="column is-3">
+          <div class="column is-4">
             <div class="field">
               <label class="label">Apellido materno:</label>
               <div class="control">
@@ -56,7 +47,16 @@
           </div>
         </div>
         <div class="columns has-text-left">
-          <div class="column is-3">
+          <div class="column is-4">
+            <div class="field">
+              <label class="label">R.U.N.:</label>
+              <div class="control">
+                <input v-model="estudiante.usuario.run" v-on:input="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
+              </div>
+              <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
+            </div>
+          </div>
+          <div class="column is-4">
             <div class="field">
               <label class="label">Correo electrónico:</label>
               <div class="control">
@@ -65,7 +65,7 @@
               <p class="is-danger help" v-if="emailEntrada.error">{{ emailEntrada.mensaje }}</p>
             </div>
           </div>
-          <div class="column is-9">
+          <div class="column is-4">
             <div class="field">
               <label class="label">Jornada:</label>
               <div class="control">
