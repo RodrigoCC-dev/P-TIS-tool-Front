@@ -51,6 +51,19 @@ describe('RevisionSemanal.vue', () => {
             id: 13453,
             asistencia_id: 4953
           }
+        },
+        {
+          id: 14513,
+          descripcion: 'Este es un impedimento de prueba',
+          correlativo: 143453,
+          tipo_item: {
+            id: 134543,
+            tipo: 'Impedimento'
+          },
+          responsables: {
+            id: 1934534,
+            asistencia_id: 4953
+          }
         }
       ],
       bitacora_estado: {
@@ -155,42 +168,66 @@ describe('RevisionSemanal.vue', () => {
     expect(wrapper.vm.itemsMetas).toEqual([avance.minuta.items[1]])
   })
 
-  it('método "separarItems" funcioan correctamente', () => {
+  it('variable "itemsImpedimentos" se inicializa correctamente', () => {
+    const wrapper = shallowMount(RevisionSemanal, {
+      propsData: {
+        minuta: {},
+        grupo: grupo
+      }
+    })
+    expect(wrapper.vm.itemsImpedimentos).toEqual([])
+  })
+
+  it('variable "itemsImpedimentos" se inicializa correctamente con props', () => {
+    expect(wrapper.vm.itemsImpedimentos).toEqual([avance.minuta.items[2]])
+  })
+
+  it('propiedad computada "mostrarBitacora" funciona correctamente con "true"', () => {
+    expect(wrapper.vm.mostrarBitacora).toBeTruthy()
+  })
+
+  it('propiedad computada "mostrarBitacora" funciona correctamente con "true"', () => {
+    wrapper.vm.bitacora = {}
+    expect(wrapper.vm.mostrarBitacora).toBeFalsy()
+  })
+
+  it('método "separarItems" funciona correctamente', () => {
     const items = [
       {id: 4534, tipo_item: {tipo: 'Logro'}},
       {id: 2353, tipo_item: {tipo: 'Logro'}},
       {id: 3434, tipo_item: {tipo: 'Meta'}},
-      {id: 9323, tipo_item: {tipo: 'Meta'}}
+      {id: 9323, tipo_item: {tipo: 'Meta'}},
+      {id: 46345, tipo_item: {tipo: 'Impedimento'}},
+      {id: 68923, tipo_item: {tipo: 'Impedimento'}}
     ]
     const logrosEsperados = [
       {id: 4534, tipo_item: {tipo: 'Logro'}},
       {id: 2353, tipo_item: {tipo: 'Logro'}}
     ]
-    const metasEsperadas =   [
+    const metasEsperadas = [
       {id: 3434, tipo_item: {tipo: 'Meta'}},
       {id: 9323, tipo_item: {tipo: 'Meta'}}
     ]
+    const impedimentosEsperados = [
+      {id: 46345, tipo_item: {tipo: 'Impedimento'}},
+      {id: 68923, tipo_item: {tipo: 'Impedimento'}}
+    ]
     wrapper.vm.itemsLogros = []
     wrapper.vm.itemsMetas = []
+    wrapper.vm.itemsImpedimentos = []
     wrapper.vm.separarItems(items)
     expect(wrapper.vm.itemsLogros.length).toEqual(2)
     expect(wrapper.vm.itemsMetas.length).toEqual(2)
+    expect(wrapper.vm.itemsImpedimentos.length).toEqual(2)
     expect(wrapper.vm.itemsLogros).toEqual(logrosEsperados)
     expect(wrapper.vm.itemsMetas).toEqual(metasEsperadas)
+    expect(wrapper.vm.itemsImpedimentos).toEqual(impedimentosEsperados)
   })
 
   it('método "buscarIdAsistencia" funciona correctamente', () => {
     expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
   })
-/*
-  it('método "separarPorEstudiante" funciona correctamente', () => {
-    const lista = [
-      {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
-      {id: 2343, responsables: {id: 4543, asistencia_id: 95234}}
-    ]
-    expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
-  })
-*/
+  
   it('método "logrosPorEstudiante" funciona correctamente', () => {
     const esperado = [
       {
@@ -227,5 +264,24 @@ describe('RevisionSemanal.vue', () => {
       }
     ]
     expect(wrapper.vm.metasPorEstudiante(94534)).toEqual(esperado)
+  })
+
+  it('método "impedimentosPorEstudiante" funciona correctamente', () => {
+    const esperado = [
+      {
+        id: 14513,
+        descripcion: 'Este es un impedimento de prueba',
+        correlativo: 143453,
+        tipo_item: {
+          id: 134543,
+          tipo: 'Impedimento'
+        },
+        responsables: {
+          id: 1934534,
+          asistencia_id: 4953
+        }
+      }
+    ]
+    expect(wrapper.vm.impedimentosPorEstudiante(94534)).toEqual(esperado)
   })
 })

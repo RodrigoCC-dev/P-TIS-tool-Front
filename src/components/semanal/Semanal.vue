@@ -419,24 +419,14 @@ export default {
         return Funciones.buscarIdAsistencia(this.bitacora, idEstudiante)
       }
     },
-    separarPorEstudiante: function (listaFuente, idEstudiante) {
-      var lista = []
-      const idAsistencia = this.buscarIdAsistencia(idEstudiante)
-      for (var i = 0; i < listaFuente.length; i++) {
-        if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
-          lista.push(listaFuente[i])
-        }
-      }
-      return lista
-    },
     logrosPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsLogros, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsLogros, this.buscarIdAsistencia(idEstudiante))
     },
     metasPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsMetas, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsMetas, this.buscarIdAsistencia(idEstudiante))
     },
     impedimentosPorEstudiante: function (idEstudiante) {
-      return this.separarPorEstudiante(this.itemsImpedimentos, idEstudiante)
+      return Funciones.separarPorEstudiante(this.itemsImpedimentos, this.buscarIdAsistencia(idEstudiante))
     },
     mostrarAvance: function (idEstudiante) {
       return this.logrosPorEstudiante(idEstudiante).length > 0 && this.metasPorEstudiante(idEstudiante).length > 0 && this.impedimentosPorEstudiante(idEstudiante).length > 0

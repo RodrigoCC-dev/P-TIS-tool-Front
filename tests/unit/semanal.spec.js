@@ -671,15 +671,7 @@ describe('Semanal.vue', () => {
   it('método "buscarIdAsistencia" funciona correctamente', () => {
     expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
   })
-/*
-  it('método "separarPorEstudiante" funciona correctamente', () => {
-    const lista = [
-      {id: 4453, responsables: {id: 9453, asistencia_id: 4953}},
-      {id: 2343, responsables: {id: 4543, asistencia_id: 95234}}
-    ]
-    expect(wrapper.vm.separarPorEstudiante(lista, 94534)).toEqual([{id: 4453, responsables: {id: 9453, asistencia_id: 4953}}])
-  })
-*/
+  
   it('método "logrosPorEstudiante" funciona correctamente', () => {
     const esperado = [
       {
@@ -718,6 +710,25 @@ describe('Semanal.vue', () => {
     expect(wrapper.vm.metasPorEstudiante(94534)).toEqual(esperado)
   })
 
+  it('método "impedimentosPorEstudiante" funciona correctamente', () => {
+    const esperado = [
+      {
+        id: 14513,
+        descripcion: 'Este es un impedimento de prueba',
+        correlativo: 143453,
+        tipo_item: {
+          id: 134543,
+          tipo: 'Impedimento'
+        },
+        responsables: {
+          id: 1934534,
+          asistencia_id: 4953
+        }
+      }
+    ]
+    expect(wrapper.vm.impedimentosPorEstudiante(94534)).toEqual(esperado)
+  })
+
   it('método "mostrarAvance" funciona correctamente con "true"', () => {
     expect(wrapper.vm.mostrarAvance(94534)).toBeTruthy()
   })
@@ -743,6 +754,11 @@ describe('Semanal.vue', () => {
   it('método "convertirMetas" funciona correctamente', () => {
     const esperado = [{id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}]
     expect(wrapper.vm.convertirMetas()).toEqual(esperado)
+  })
+
+  it('método "convertirImpedimentos" funciona correctamente', () => {
+    const esperado = [{id: 14513, descripcion: 'Este es un impedimento de prueba', correlativo: 143453}]
+    expect(wrapper.vm.convertirImpedimentos()).toEqual(esperado)
   })
 
   it('método "convertirBitacora" funciona correctamente', () => {

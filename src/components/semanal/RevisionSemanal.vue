@@ -57,18 +57,6 @@ export default {
         return Funciones.buscarIdAsistencia(this.bitacora, idEstudiante)
       }
     },
-    /*
-    separarPorEstudiante: function (listaFuente, idEstudiante) {
-      var lista = []
-      const idAsistencia = this.buscarIdAsistencia(idEstudiante)
-      for (var i = 0; i < listaFuente.length; i++) {
-        if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
-          lista.push(listaFuente[i])
-        }
-      }
-      return lista
-    },
-    */
     logrosPorEstudiante: function (idEstudiante) {
       return Funciones.separarPorEstudiante(this.itemsLogros, this.buscarIdAsistencia(idEstudiante))
     },
