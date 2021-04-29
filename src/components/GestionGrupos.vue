@@ -89,8 +89,8 @@
     </div>
 
     <div class="columns is-multiline">
-      <div class="column is-3" v-for="grupo in listaGrupos" :key="grupo.id">
-        <article class="message is-info" v-if="grupo.jornada === jornadaActual">
+      <div class="column is-3" v-for="grupo in gruposJornada" :key="grupo.id">
+        <article class="message is-info">
           <div class="message-header">
             <p>{{ grupo.nombre }}</p>
             <button class="delete" aria-label="delete" @click="borrarGrupo(grupo.id)"></button>
@@ -172,6 +172,15 @@ export default {
     },
     mostrarLista: function () {
       return this.sinAsignar.length > 0
+    },
+    gruposJornada: function () {
+      var lista = []
+      for (var i = 0; i < this.listaGrupos.length; i++) {
+        if (this.listaGrupos[i].jornada === this.jornadaActual) {
+          lista.push(this.listaGrupos[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
