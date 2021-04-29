@@ -72,7 +72,7 @@
               <tbody>
                 <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                   <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                  <td class="has-text-centered">{{ estudiante.run_est}}</td>
+                  <td class="has-text-centered">{{ visualizarRun(estudiante.run_est) }}</td>
                   <td class="has-text-left">{{ concatenarNombre(estudiante) }}</td>
                   <td class="has-text-centered">{{ estudiante.codigo_seccion}}</td>
                   <td class="has-text-centered"><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
@@ -180,6 +180,9 @@ export default {
     },
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
+    },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
     },
     mostrarClientes: function (grupo) {
       return grupo.stakeholders.length > 0
