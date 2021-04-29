@@ -171,7 +171,7 @@
             <th scope="col" class="has-text-centered">N°</th>
             <th scope="col" class="has-text-centered">R.U.N.</th>
             <th scope="col" class="has-text-centered">Nombre estudiante</th>
-            <th scope="col" class="has-text-centered">Sección</th>
+            <th scope="col" class="has-text-centered">Correo electrónico</th>
             <th scope="col" class="has-text-centered">Jornada</th>
             <th scope="col" class="has-text-centered"><input type="checkbox" @click="seleccionarTodos"></th>
           </tr>
@@ -179,9 +179,9 @@
         <tbody>
           <tr v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
             <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-            <td class="has-text-centered">{{ estudiante.run_est }}</td>
+            <td class="has-text-centered">{{ visualizarRun(estudiante.run_est) }}</td>
             <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
-            <td class="has-text-centered">{{ estudiante.codigo_seccion }}</td>
+            <td class="has-text-centered">{{ estudiante.correo }}</td>
             <td class="has-text-centered">{{ estudiante.jornada }}</td>
             <td class="has-text-centered"><input type="checkbox" v-model="eliminados" :value="estudiante.id"></td>
           </tr>
@@ -240,6 +240,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 
 import { mapState } from 'vuex'
 import axios from 'axios'
@@ -322,6 +323,9 @@ export default {
     },
     nombreCompleto: function (estudiante) {
       return estudiante.nombre_est + ' ' + estudiante.apellido1 + ' ' + estudiante.apellido2
+    },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
     },
     async obtenerEstudiantes () {
       try {
