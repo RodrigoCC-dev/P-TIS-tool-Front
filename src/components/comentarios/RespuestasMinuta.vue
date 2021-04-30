@@ -34,6 +34,16 @@
           </div>
         </div>
       </div>
+      <br>
+      <div class="columns is-centered">
+        <div class="column is-4">
+          <div class="field">
+            <div class="control">
+              <a class="button is-secondary-usach is-fullwidth" @click="cerrar">Volver</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -116,6 +126,9 @@ export default {
     },
     establecerEstado: function () {
       this.enviarAprobacion()
+    },
+    cerrar: function () {
+      this.$emit('cerrar')
     }
   },
   mounted () {
