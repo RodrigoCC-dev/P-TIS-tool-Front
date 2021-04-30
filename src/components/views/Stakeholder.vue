@@ -50,7 +50,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-                      <td>{{ estudiante.usuario.run }}</td>
+                      <td>{{ visualizarRun(estudiante.usuario.run) }}</td>
                       <td>{{ nombreCompleto(estudiante.usuario) }}</td>
                     </tr>
                   </tbody>
@@ -228,6 +228,9 @@ export default {
     nombreCompleto: function (usuario) {
       return Funciones.nombreCompleto(usuario)
     },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
+    },
     buscarPorId: function (lista, id) {
       return Funciones.busquedaPorId(lista, id)
     },
@@ -236,6 +239,11 @@ export default {
       this.grupoSeleccionado = this.buscarPorId(this.gruposFiltrados, id)
       this.$store.commit('setGrupo', this.grupoSeleccionado)
       this.tableroStk++
+    }
+  },
+  watch: {
+    jornadaActual: function () {
+      this.grupoActual = 0
     }
   },
   mounted () {
