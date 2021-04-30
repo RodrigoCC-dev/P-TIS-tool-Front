@@ -114,6 +114,11 @@ export default {
       this.$emit('eleccion', this.grupoSeleccionado)
     }
   },
+  watch: {
+    jornadaActual: function () {
+      this.grupoActual = 0
+    }
+  },
   mounted () {
     this.obtenerGrupos()
   }
