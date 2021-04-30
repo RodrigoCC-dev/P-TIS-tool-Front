@@ -196,7 +196,7 @@
           </table>
           <div v-else>
             <p class="subtitle is-5">Aquí se presentan las minutas que te ha comentado el cliente.</p>
-            <p class="subtitle is-5">Ahora noo hay minutas comentadas para mostrar.</p>
+            <p class="subtitle is-5">Ahora no hay minutas comentadas para mostrar.</p>
           </div>
         </div>
       </section>
