@@ -30,13 +30,12 @@ export default {
   data () {
     return {
       mostrarJornadas: false,
-      jornadaActual: 'Diurna',
       jornadasProfesor: [],
       nombreTabs
     }
   },
   computed: {
-    ...mapState(['apiUrl'])
+    ...mapState(['apiUrl', 'jornadaActual'])
   },
   methods: {
     async obtenerJornadas () {
@@ -53,8 +52,7 @@ export default {
           if (aux === 2) {
             this.mostrarJornadas = true
           } else if (aux === 1) {
-            this.jornadaActual = this.jornadasProfesor[0]
-            this.$store.commit('setJornadaActual', this.jornadaActual)
+            this.$store.commit('setJornadaActual', this.jornadasProfesor[0])
           } else {
             this.mostrarJornadas = false
           }
@@ -64,8 +62,7 @@ export default {
       }
     },
     elegirTab: function (nombreTab) {
-      this.jornadaActual = nombreTab
-      this.$store.commit('setJornadaActual', this.jornadaActual)
+      this.$store.commit('setJornadaActual', nombreTab)
     }
   },
   mounted () {
