@@ -121,6 +121,11 @@ const comentarios = [
   }
 ]
 
+const respuestas = [
+  { id: 9453453, respuesta: 'Una respuesta de prueba' },
+  { id: 9824534, respuesta: 'Otra respuesta de prueba' }
+]
+
 // Mock Axios
 jest.mock('axios')
 
@@ -130,6 +135,15 @@ axios.get.mockImplementation((url) => {
       return Promise.resolve({data: minuta})
     case apiUrl + '/comentarios/' + idMinuta:
       return Promise.resolve({data: comentarios})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.post.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/respuestas':
+      return Promise.resolve(201)
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -182,6 +196,22 @@ describe('ResponderMinuta.vue', () => {
     wrapper.vm.obtenerComentarios(idMinuta)
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.comentarios).toEqual(comentarios)
+  })
+
+  it('método "enviarRespuestas" funciona correctamente', async () => {
+    wrapper.vm.enviarRespuestas(respuestas)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "recibirRespuestas" funciona correctamente', async () => {
+    wrapper.vm.recibirRespuestas(respuestas)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
   })
 
   it('método "cerrarRespuestas" funciona correctamente', async () => {
