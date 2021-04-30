@@ -11,6 +11,19 @@
 
     <div class="columns is-centered">
       <div class="column is-10">
+        <p class="title is-6 has-text-left">Impedimentos:</p>
+        <div class="content has-text-left">
+          <ol type="1">
+            <li v-for="(impedimento, index) in impedimentos" :key="index">
+              <p>{{ impedimento.descripcion }}</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-10">
         <p class="title is-6 has-text-left">Logros:</p>
         <div class="content has-text-left">
           <ol type="1">
@@ -44,12 +57,13 @@ import Funciones from '@/services/funciones.js'
 
 export default {
   name: 'VisorEstudiante',
-  props: ['est', 'logros', 'metas'],
+  props: ['est', 'logros', 'metas', 'impedimentos'],
   data () {
     return {
       estudiante: this.est,
       listaLogros: this.logros,
-      listaMetas: this.metas
+      listaMetas: this.metas,
+      listaImpedimentos: this.impedimentos
     }
   },
   methods: {

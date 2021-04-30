@@ -46,7 +46,7 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input v-model="revisionEstado" class="input has-text-centered" type="text" v-on:input="validarRevision" disabled>
+            <input v-model="revisionEstado" class="input has-text-centered" type="text" disabled>
           </div>
           <p class="is-danger help" v-if="entradas.revision.error">{{ entradas.revision.mensaje }}</p>
         </div>
@@ -990,7 +990,6 @@ export default {
     },
     validarFormulario: function () {
       var validacion = true
-      validacion = validacion && this.validarRevision()
       validacion = validacion && this.validarFecha()
       validacion = validacion && this.validarHinicio()
       validacion = validacion && this.validarHtermino()

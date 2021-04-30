@@ -50,7 +50,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-                      <td>{{ estudiante.usuario.run }}</td>
+                      <td>{{ visualizarRun(estudiante.usuario.run) }}</td>
                       <td>{{ nombreCompleto(estudiante.usuario) }}</td>
                     </tr>
                   </tbody>
@@ -62,15 +62,19 @@
         <hr>
       </div>
 
-      <Tablero :contador="tableroStk" @revision="establecerRevision" @respuestas="revisarRespuestas"/>
+      <Tablero :contador="tableroStk" :tarjeta="nombreTab" @revision="establecerRevision" @respuestas="revisarRespuestas" @ver-minuta="mostrarMinuta"/>
     </div>
 
     <div v-else-if="verRevision">
-      <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero"/>
+      <Comentar :id-bitacora="idRevision" @cerrar="mostrarTablero('Revision')"/>
     </div>
 
     <div v-else-if="verRespuestas">
-      <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero"/>
+      <Respuestas :id-bitacora="idRespuestas" @cerrar="mostrarTablero('Revision')"/>
+    </div>
+
+    <div v-else-if="verMinuta">
+      <RevisarMinuta :id-bitacora="idMinuta" @cerrar="verCerradas"/>
     </div>
 
   </div>
@@ -86,6 +90,7 @@ import Tablero from '@/components/TableroStk.vue'
 import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import SelectorJornada from '@/components/SelectorJornada.vue'
+import RevisarMinuta from '@/components/comentarios/RevisarMinuta.vue'
 
 export default {
   name: 'Stakeholder',
@@ -93,15 +98,19 @@ export default {
     Tablero,
     Comentar,
     Respuestas,
-    SelectorJornada
+    SelectorJornada,
+    RevisarMinuta
   },
   data () {
     return {
+      nombreTab: 'Revision',
       idRevision: 0,
       idRespuestas: 0,
+      idMinuta: 0,
       verTablero: true,
       verRevision: false,
       verRespuestas: false,
+      verMinuta: false,
       listaGrupos: [],
       grupoActual: 0,
       grupoSeleccionado: {},
@@ -110,7 +119,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'jornadaActual']),
+    ...mapState(['apiUrl', 'usuario', 'stakeholder', 'jornadaActual', 'grupo', 'tipoAprobaciones']),
 
     gruposFiltrados: function () {
       var lista = []
@@ -148,19 +157,31 @@ export default {
       this.verRevision = true
       this.verTablero = false
     },
-    mostrarTablero: function () {
+    mostrarTablero: function (tarjeta) {
       this.verTablero = true
       this.verRevision = false
       this.idRevision = 0
       this.verRespuestas = false
       this.idRespuestas = 0
       this.tableroStk++
+      this.nombreTab = tarjeta
     },
     revisarRespuestas: function (id) {
       this.verTablero = false
       this.verRevision = false
       this.verRespuestas = true
       this.idRespuestas = id
+    },
+    mostrarMinuta: function (id) {
+      this.verTablero = false
+      this.verRevision = false
+      this.verMinuta = true
+      this.idMinuta = id
+    },
+    verCerradas: function () {
+      this.mostrarTablero('Cerradas')
+      this.verMinuta = false
+      this.idMinuta = 0
     },
     async obtenerStakeholder () {
       try {
@@ -185,8 +206,11 @@ export default {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
         if (this.gruposFiltrados.length === 1) {
-          this.seleccionarGrupo(this.gruposFiltrados[0].id)
+          this.grupoActual = this.gruposFiltrados[0].id
+          this.grupoSeleccionado = this.gruposFiltrados[0]
+          this.$store.commit('setGrupo', this.grupoSeleccionado)
           this.verSelectorGrupo = false
+          this.tableroStk++
         }
       } catch (e) {
         console.log('No se ha obtenido la lista de grupos')
@@ -204,6 +228,9 @@ export default {
     nombreCompleto: function (usuario) {
       return Funciones.nombreCompleto(usuario)
     },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
+    },
     buscarPorId: function (lista, id) {
       return Funciones.busquedaPorId(lista, id)
     },
@@ -212,6 +239,11 @@ export default {
       this.grupoSeleccionado = this.buscarPorId(this.gruposFiltrados, id)
       this.$store.commit('setGrupo', this.grupoSeleccionado)
       this.tableroStk++
+    }
+  },
+  watch: {
+    jornadaActual: function () {
+      this.grupoActual = 0
     }
   },
   mounted () {

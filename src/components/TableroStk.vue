@@ -54,7 +54,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas para revisar</p>
+              <p class="subtitle is-5">En esta sección se muestran las minutas emitidas por los estudiantes para su revisión.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas para revisar.</p>
             </div>
           </div>
         </section>
@@ -88,7 +89,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas comentadas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se muestran las minutas comentadas por usted.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas para mostrar.</p>
             </div>
           </div>
         </section>
@@ -121,7 +123,8 @@
               </tbody>
             </table>
             <div v-else>
-              <p class="subtitle is-5">No hay minutas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se presentan las minutas comentadas por usted cuyos comentarios fueron respondidos por los estudiantes.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas de esta sección para mostrar.</p>
             </div>
           </div>
         </section>
@@ -145,7 +148,7 @@
               <tbody>
                 <tr v-for="(bitacora, index) in listaCerradas" :key="bitacora.id">
                   <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                  <td>{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</td>
+                  <td><a @click="verMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</a></td>
                   <td class="has-text-centered">{{ revisionEstado(bitacora.identificador) }}</td>
                   <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                   <td class="has-text-centered">{{ convertirFecha(bitacora.fecha_emision) }}</td>
@@ -155,7 +158,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas cerradas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se presentan las minutas que han concluido su revisión.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas de esta sección para mostrar</p>
             </div>
           </div>
         </section>
@@ -185,10 +189,10 @@ const nombreTabs = {
 
 export default {
   name: 'TableroStk',
-  props: ['contador'],
+  props: ['contador', 'tarjeta'],
   data () {
     return {
-      nombreTab: 'Revision',
+      nombreTab: this.tarjeta,
       listaMinutas: [],
       listaRevision: [],
       listaComentadas: [],
@@ -276,6 +280,9 @@ export default {
     },
     revisionEstado: function (identificador) {
       return Funciones.convertirRevisionAEstado(identificador)
+    },
+    verMinuta: function (id) {
+      this.$emit('ver-minuta', id)
     }
   },
   watch: {
@@ -294,7 +301,7 @@ export default {
       this.reiniciarTablero()
     },
     stakeholder: function () {
-      if (this.stakeholder.grupos.length > 0) {
+      if (this.stakeholder.grupos.length > 1) {
         this.mostrarTablero = false
       }
     }

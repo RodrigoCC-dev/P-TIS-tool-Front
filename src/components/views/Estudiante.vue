@@ -47,7 +47,7 @@
           <br>
         </div>
 
-        <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion" @avance="editarAvance" @revisar-avance="revisarAvance"/>
+        <Tablero :seleccionado="valorActual" :contador="tableroEst" @cambiar="cambiarTab" @bitacora="establecerBitacora" @revision="establecerRevision" @comentarios="revisarComentarios" @respuestas="revisarRespuestas" @emitir="nuevaVersion" @avance="editarAvance" @revisar-avance="revisarAvance" @ver-minuta="mostrarMinuta"/>
 
       </div>
 
@@ -84,6 +84,10 @@
       </div>
     </div>
 
+    <div v-else-if="verMinuta">
+      <RevisarMinuta :id-bitacora="idVerMinuta" @cerrar="cerrarMinuta"/>
+    </div>
+
   </div>
 </template>
 
@@ -96,6 +100,7 @@ import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import Emision from '@/components/comentarios/NuevaMinuta.vue'
 import Semanal from '@/components/semanal/Semanal.vue'
 import RevisionSemanal from '@/components/semanal/RevisionSemanal.vue'
+import RevisarMinuta from '@/components/comentarios/RevisarMinuta.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -112,7 +117,8 @@ export default {
     Respuestas,
     Emision,
     Semanal,
-    RevisionSemanal
+    RevisionSemanal,
+    RevisarMinuta
   },
   data () {
     return {
@@ -124,12 +130,14 @@ export default {
       idComentarios: 0,
       idRespuestas: 0,
       idEmision: 0,
+      idVerMinuta: 0,
       crearMinuta: true,
       verRevision: false,
       verComentarios: false,
       verRespuestas: false,
       verEmision: false,
       verSemanal: false,
+      verMinuta: false,
       revisarSemanal: false,
       idMotivo: 0,
       nuevaRevision: '',
@@ -301,6 +309,16 @@ export default {
     },
     cerrarAvance: function () {
       this.revisarSemanal = false
+      this.mostrarTablero()
+    },
+    mostrarMinuta: function (id) {
+      this.idVerMinuta = id
+      this.verMinuta = true
+      this.crearMinuta = false
+    },
+    cerrarMinuta: function () {
+      this.verMinuta = false
+      this.idVerMinuta = 0
       this.mostrarTablero()
     },
     revisionesPorEstados: function (identificador) {

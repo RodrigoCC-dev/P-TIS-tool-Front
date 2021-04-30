@@ -48,7 +48,7 @@
         </tfoot>
         <tbody>
           <tr v-for="estudiante in registros" :key="estudiante.id">
-            <td class="has-text-centered">{{estudiante.usuario.run}}</td>
+            <td class="has-text-centered">{{visualizarRun(estudiante.usuario.run)}}</td>
             <td>{{nombreCompleto(estudiante.usuario)}}</td>
             <td class="has-text-centered">{{estudiante.usuario.registros.minutas}}</td>
             <td class="has-text-centered">{{estudiante.usuario.registros.tema}}</td>
@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     mostrarRegistros: function () {
       return this.registros.length > 0
@@ -109,6 +109,9 @@ export default {
   methods: {
     nombreCompleto: function (usuario) {
       return Funciones.nombreCompleto(usuario)
+    },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
     },
     seleccionGrupo: function (grupo) {
       this.grupoSeleccionado = grupo
@@ -141,6 +144,11 @@ export default {
       } else {
         return 0
       }
+    }
+  },
+  watch: {
+    jornadaActual: function () {
+      this.registros = []
     }
   }
 }

@@ -3,15 +3,22 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import GestionGrupos from '@/components/GestionGrupos.vue'
 
+// Mock store
 const store = createStore({
   state() {
     return {
       apiUrl: '127.0.0.1:3000',
       jornadaActual: 'Diurna'
     }
+  },
+  mutations: {
+    setJornadaActual (state, valor) {
+      state.jornadaActual = valor
+    }
   }
 })
 
+// Variables globales
 const grupos = [
   {
     id: 93453,
@@ -34,12 +41,21 @@ const grupos = [
   }
 ]
 
+const listaEstudiantes = [
+  {id: 29353, jornada: 'Diurna'},
+  {id: 9534, jornada: 'Diurna'},
+  {id: 926364, jornada: 'Vespertina'}
+]
+
+// Mock axios
 jest.mock('axios')
 
 axios.get.mockImplementation((url) => {
   switch (url) {
     case '127.0.0.1:3000/grupos':
       return Promise.resolve({data: grupos})
+    case '127.0.0.1:3000/estudiantes/asignacion/sin_grupo':
+      return Promise.resolve({data: []})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -55,12 +71,6 @@ axios.delete.mockImplementation((url) => {
 })
 
 describe('GestionGrupos.vue', () => {
-  const listaEstudiantes = [
-    {id: 29353, jornada: 'Diurna'},
-    {id: 9534, jornada: 'Diurna'},
-    {id: 926364, jornada: 'Vespertina'}
-  ]
-
   let wrapper
 
   beforeEach(() => {
@@ -74,26 +84,6 @@ describe('GestionGrupos.vue', () => {
   it('variable verFormulario se inicializa en false', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeFalsy()
-  })
-
-  it('variable mostrarJornadas se inicializa en false', async () => {
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.mostrarJornadas).toBeFalsy()
-  })
-
-  it('variable jornadaActual se inicializa en Diurna', async () => {
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.jornadaActual).toEqual('Diurna')
-  })
-
-  it('variable grupo se inicializa correctamente', async () => {
-    const nuevo = {
-      nombre: '',
-      proyecto: '',
-      correlativo: 0
-    }
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.grupo).toEqual(nuevo)
   })
 
   it('variable estudiantes se inicializa vacía', async () => {
@@ -114,6 +104,16 @@ describe('GestionGrupos.vue', () => {
     }
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.entradas).toEqual(entradas)
+  })
+
+  it('variable grupo se inicializa correctamente', async () => {
+    const nuevo = {
+      nombre: '',
+      proyecto: '',
+      correlativo: 0
+    }
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupo).toEqual(nuevo)
   })
 
   it('variable listaEstudiantes se inicializa vacía', async () => {
@@ -138,14 +138,12 @@ describe('GestionGrupos.vue', () => {
       {id: 9534, jornada: 'Diurna'}
     ]
     wrapper.vm.listaEstudiantes = listaEstudiantes
-    wrapper.vm.jornadaActual = 'Diurna'
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.sinAsignar).toEqual(esperado)
   })
 
   it('propiedad computada "mostrarLista" funciona correctamente con "true"', async () => {
     wrapper.vm.listaEstudiantes = listaEstudiantes
-    wrapper.vm.jornadaActual = 'Diurna'
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarLista).toBeTruthy()
   })
@@ -153,6 +151,46 @@ describe('GestionGrupos.vue', () => {
   it('propiedad computada "mostrarLista" funciona correctamente con "false"', async () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarLista).toBeFalsy()
+  })
+
+  it('propiedad computada "gruposJornada" funciona correctamente con jornada "Diurna"', async () => {
+    const esperado = [
+      {
+        id: 93453,
+        nombre: 'G01',
+        proyecto: 'Proyecto de prueba unitario',
+        correlativo: 34,
+        jornada: 'Diurna',
+        estudiantes: [{
+          id: 92345,
+          iniciales: 'ABC',
+          usuario: {
+            nombre: 'Alberto',
+            apellido_paterno: 'Becerra',
+            apellido_materno: 'Castro',
+            run: '11111111-1',
+            email: 'alberto.becerra@algo.com'
+          }
+        }],
+        stakeholders: []
+      }
+    ]
+    expect(wrapper.vm.gruposJornada).toEqual(esperado)
+  })
+
+  it('propiedad computada "gruposJornada" funciona correctamente con jornada "Vespertina"', async () => {
+    wrapper.vm.$store.commit('setJornadaActual', "Vespertina")
+    expect(wrapper.vm.gruposJornada).toEqual([])
+  })
+
+  it('método "concatenarNombre" funciona correctamente', async () => {
+    const estudiante = {
+      nombre_est: 'Mateo',
+      apellido1: 'Iglesias',
+      apellido2: 'Del Campo'
+    }
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.concatenarNombre(estudiante)).toEqual('Mateo Iglesias Del Campo')
   })
 
   it('método "nombreCompleto" funciona correctamente', async () => {
@@ -163,6 +201,11 @@ describe('GestionGrupos.vue', () => {
     }
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Mateo Iglesias Del Campo')
+  })
+
+  it('método "visualizarRun" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.visualizarRun('12345678-9')).toEqual('12.345.678-9')
   })
 
   it('método "mostrarClientes" funciona correctamente con "true"', async () => {
@@ -186,6 +229,25 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.agregarGrupo()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeTruthy()
+  })
+
+/* Falta implementar función axios mock por única vez
+
+  const url = '127.0.0.1:3000/estudiantes/asignacion/sin_grupo'
+  axios.get.mockImplementationOnce((url) => Promise.resolve({data: listaEstudiantes}))
+
+  it('método "obtenerEstudiantes" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaEstudiantes).toEqual(listaEstudiantes)
+  })
+*/
+
+  it('método "obtenerGrupos" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.listaGrupos = []
+    wrapper.vm.obtenerGrupos()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(grupos)
   })
 
   it('método "noAgregar" funciona correctamente', async () => {

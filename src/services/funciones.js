@@ -99,5 +99,29 @@ export default {
       default:
         return 'Sin estado'
     }
+  },
+  buscarIdAsistencia (bitacora, idEstudiante) {
+    for (var i = 0; i < bitacora.minuta.asistencia.length; i++) {
+      if (bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
+        return bitacora.minuta.asistencia[i].id
+      }
+    }
+  },
+  separarPorEstudiante (listaFuente, idAsistencia) {
+    var lista = []
+    for (var i = 0; i < listaFuente.length; i++) {
+      if (listaFuente[i].responsables.asistencia_id === idAsistencia) {
+        lista.push(listaFuente[i])
+      }
+    }
+    return lista
+  },
+  visualizarRun (run) {
+    const separar = run.split('-')
+    const lista = []
+    lista.push(separar[0].slice(-9, -6))
+    lista.push(separar[0].slice(-6, -3))
+    lista.push(separar[0].slice(-3))
+    return lista.join('.') + '-' + separar[1]
   }
 }

@@ -3,10 +3,12 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import TableroEst from '@/components/TableroEst.vue'
 
+const apiUrl = '127.0.0.1:3000'
+
 const store = createStore({
   state() {
     return {
-      apiUrl: '127.0.0.1:3000',
+      apiUrl: apiUrl,
       grupo: {
         id: 93453,
         nombre: 'G01',
@@ -75,7 +77,53 @@ const estados = [
   }
 ]
 
-const grupo = [
+const revision = [
+  {
+    id: 13239,
+    motivo: 'Emitida para pruebas',
+    revision: 'C',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 34593,
+      codigo: 'MINUTA_G02_05_2020',
+      correlativo: 10,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Coordinacion',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 23543,
+      abreviacion: 'CIG',
+      descripcion: 'Comentada por integrante del grupo'
+    }
+  }
+]
+
+const respondidas = [
+  {
+    id: 194534,
+    motivo: 'Emitida para pruebas',
+    revision: 'D',
+    fecha_emision: '2020-01-18T03:53:34.394Z',
+    minuta: {
+      id: 34593,
+      codigo: 'MINUTA_G02_05_2020',
+      correlativo: 10,
+      fecha_reunion: '2021-01-12T00:00:00.000Z',
+      tipo_minuta: 'Coordinacion',
+      creada_por: 'ABC',
+      creada_el: '2021-01-22T04:23:53.945Z'
+    },
+    estado: {
+      id: 23543,
+      abreviacion: 'RIG',
+      descripcion: 'Respondida por integrante del grupo'
+    }
+  }
+]
+
+const avance = [
   {
     id: 72534,
     emitida: true,
@@ -111,14 +159,14 @@ const grupo = [
 
 axios.get.mockImplementation((url) => {
   switch (url) {
-    case '127.0.0.1:3000/minutas/revision/estados':
+    case apiUrl + '/minutas/revision/estados':
       return Promise.resolve({ data: estados})
-    case '127.0.0.1:3000/minutas/revision/grupo':
-      return Promise.resolve({ data: []})
-    case '127.0.0.1:3000/minutas/revision/respondidas':
-      return Promise.resolve({ data: []})
-    case '127.0.0.1:3000/minutas/avances/semanales/grupo/93453':
-      return Promise.resolve({ data: grupo})
+    case apiUrl + '/minutas/revision/grupo':
+      return Promise.resolve({ data: revision})
+    case apiUrl + '/minutas/revision/respondidas':
+      return Promise.resolve({ data: respondidas})
+    case apiUrl + '/minutas/avances/semanales/grupo/93453':
+      return Promise.resolve({ data: avance})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -192,7 +240,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaRespondidasGrupo se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
   })
 
   it('variable listaCerradas se inicializa correctamente', () => {
@@ -204,11 +252,11 @@ describe('TableroEst.vue', () => {
   })
 
   it('variable listaRevision se inicializa correctamente', () => {
-    expect(wrapper.vm.listaRevision).toEqual([])
+    expect(wrapper.vm.listaRevision).toEqual(revision)
   })
 
   it('variable "listaAvances" se inicializa correctamente', () => {
-    expect(wrapper.vm.listaAvances).toEqual(grupo)
+    expect(wrapper.vm.listaAvances).toEqual(avance)
   })
 
   it('variable "borradoresAvances" se inicializa correctamente', () => {
@@ -445,7 +493,9 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', () => {
+  it('propiedad computada mostrarRespondidasGrupo funciona correctamente con false', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.listaRespondidasGrupo = []
     expect(wrapper.vm.mostrarRespondidasGrupo).toBeFalsy()
   })
 
@@ -479,7 +529,9 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.mostrarRevision).toBeTruthy()
   })
 
-  it('propiedad computada mostrarRevision funciona correctamente con false', () => {
+  it('propiedad computada mostrarRevision funciona correctamente con false', async () => {
+    await wrapper.vm.$nextTick()
+    wrapper.vm.listaRevision = []
     expect(wrapper.vm.mostrarRevision).toBeFalsy()
   })
 
@@ -782,6 +834,30 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.cerradasAvances.length).toEqual(1)
   })
 
+  it('método "obtenerMinutas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaMinutas).toEqual(estados)
+    expect(wrapper.vm.listaBorradores.length).toEqual(1)
+    expect(wrapper.vm.listaBorradores[0]).toEqual(estados[1])
+    expect(wrapper.vm.listaComentadasGrupo.length).toEqual(0)
+    expect(wrapper.vm.listaComentadasCliente.length).toEqual(0)
+    expect(wrapper.vm.listaCerradas.length).toEqual(1)
+    expect(wrapper.vm.listaCerradas[0]).toEqual(estados[0])
+    expect(wrapper.vm.listaEmitidas.length).toEqual(0)
+  })
+
+  it('método "obtenerParaRevisar" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaRevision).toEqual(revision)
+    expect(wrapper.vm.listaRevision.length).toEqual(1)
+  })
+
+  it('método "obtenerRespondidas" funciona correctamente', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
+    expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
+  })
+
   it('método "editarBorrador" funciona correctamente', async () => {
     wrapper.vm.editarBorrador(3459)
     await wrapper.vm.$nextTick()
@@ -834,9 +910,51 @@ describe('TableroEst.vue', () => {
   it('método "revisarAvance" funciona correctamente', async () => {
     wrapper.vm.revisarAvance(9453)
     await wrapper.vm.$nextTick()
-    debugger
     expect(wrapper.emitted()['revisar-avance']).toBeTruthy()
     expect(wrapper.emitted()['revisar-avance'].length).toEqual(1)
     expect(wrapper.emitted()['revisar-avance'][0]).toEqual([9453])
+  })
+
+  it('método "verMinuta" funciona correctamente', async () => {
+    wrapper.vm.verMinuta(63453)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted()['ver-minuta']).toBeTruthy()
+    expect(wrapper.emitted()['ver-minuta'].length).toEqual(1)
+    expect(wrapper.emitted()['ver-minuta'][0]).toEqual([63453])
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ECI"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('ECI')).toEqual('Coordinación de grupo')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "ERC"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('ERC')).toEqual('Para el cliente')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EAC"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('EAC')).toEqual('Para aprobación')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "EF"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('EF')).toEqual('Emisión final')
+  })
+
+  it('método "revisionEstado" funciona correctamente con "PA"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.revisionEstado('PA')).toEqual('Sin estado')
+  })
+
+  it('método "actualizarTipo" funciona correctamente con tipo igual a "Coordinacion"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.actualizarTipo('Coordinacion')).toEqual('Coordinación')
+  })
+
+  it('método "actualizarTipo" funciona correctamente con tipo distinto a "Coordinacion"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.actualizarTipo('algo')).toEqual('algo')
   })
 })
