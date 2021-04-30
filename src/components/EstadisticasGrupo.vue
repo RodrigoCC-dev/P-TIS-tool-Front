@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl']),
+    ...mapState(['apiUrl', 'jornadaActual']),
 
     mostrarRegistros: function () {
       return this.registros.length > 0
@@ -144,6 +144,11 @@ export default {
       } else {
         return 0
       }
+    }
+  },
+  watch: {
+    jornadaActual: function () {
+      this.registros = []
     }
   }
 }
