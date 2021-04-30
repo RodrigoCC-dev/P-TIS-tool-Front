@@ -45,7 +45,7 @@
               </thead>
               <tbody>
                 <tr v-for="estudiante in grupoSeleccionado.estudiantes" :key="estudiante.id">
-                  <td>{{ estudiante.usuario.run }}</td>
+                  <td class="is-vcentered">{{ visualizarRun(estudiante.usuario.run) }}</td>
                   <td>{{ nombreCompleto(estudiante.usuario) }}</td>
                 </tr>
               </tbody>
@@ -92,6 +92,9 @@ export default {
   methods: {
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
+    },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
     },
     buscarPorId: function (lista, id) {
       return Funciones.busquedaPorId(lista, id)
