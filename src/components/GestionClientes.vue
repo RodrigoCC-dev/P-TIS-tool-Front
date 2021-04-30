@@ -102,6 +102,7 @@
             <tr class="has-background-light">
               <th scope="col" class="has-text-centered">N°</th>
               <th scope="col" class="has-text-centered">Nombre cliente</th>
+              <th scope="col" class="has-text-centered">Correo electrónico</th>
               <th scope="col" class="has-text-centered">Grupo</th>
             </tr>
           </thead>
@@ -109,6 +110,7 @@
             <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
               <th scope="row" class="is-vcentered has-text-centered">{{ index + 1 }}</th>
               <td class="is-vcentered has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+              <td class="is-vcentered has-text-centered">{{ stakeholder.email }}</td>
               <td>
                 <div v-for="grupo in stakeholder.grupos" :key="grupo.id">
                   <p class="has-text-centered">{{ grupo.nombre }}</p>

@@ -111,6 +111,10 @@ describe('EstadisticasGrupo.vue', () => {
     expect(wrapper.vm.nombreCompleto(registros[0].usuario)).toEqual('Juan Castro Gonzalez')
   })
 
+  it('método "visualizarRun" funciona correctamente', () => {
+    expect(wrapper.vm.visualizarRun('12345678-9')).toEqual('12.345.678-9')
+  })
+
   it('método "seleccionGrupo" funciona correctamente', async () => {
     wrapper.vm.seleccionGrupo(grupo)
     await wrapper.vm.$nextTick()

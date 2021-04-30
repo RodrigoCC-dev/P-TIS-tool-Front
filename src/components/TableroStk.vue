@@ -54,7 +54,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas para revisar</p>
+              <p class="subtitle is-5">En esta sección se muestran las minutas emitidas por los estudiantes para su revisión.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas para revisar.</p>
             </div>
           </div>
         </section>
@@ -88,7 +89,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas comentadas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se muestran las minutas comentadas por usted.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas para mostrar.</p>
             </div>
           </div>
         </section>
@@ -121,7 +123,8 @@
               </tbody>
             </table>
             <div v-else>
-              <p class="subtitle is-5">No hay minutas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se presentan las minutas comentadas por usted cuyos comentarios fueron respondidos por los estudiantes.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas de esta sección para mostrar.</p>
             </div>
           </div>
         </section>
@@ -155,7 +158,8 @@
             </table>
             <div v-else>
               <br>
-              <p class="subtitle is-5">No hay minutas cerradas para mostrar</p>
+              <p class="subtitle is-5">En esta sección se presentan las minutas que han concluido su revisión.</p>
+              <p class="subtitle is-5">Actualmente no hay minutas de esta sección para mostrar</p>
             </div>
           </div>
         </section>

@@ -947,4 +947,14 @@ describe('TableroEst.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.revisionEstado('PA')).toEqual('Sin estado')
   })
+
+  it('método "actualizarTipo" funciona correctamente con tipo igual a "Coordinacion"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.actualizarTipo('Coordinacion')).toEqual('Coordinación')
+  })
+
+  it('método "actualizarTipo" funciona correctamente con tipo distinto a "Coordinacion"', async () => {
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.actualizarTipo('algo')).toEqual('algo')
+  })
 })

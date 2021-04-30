@@ -72,7 +72,7 @@
               <tbody>
                 <tr v-for="(estudiante, index) in sinAsignar" :key="estudiante.id">
                   <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
-                  <td class="has-text-centered">{{ estudiante.run_est}}</td>
+                  <td class="has-text-centered">{{ visualizarRun(estudiante.run_est) }}</td>
                   <td class="has-text-left">{{ concatenarNombre(estudiante) }}</td>
                   <td class="has-text-centered">{{ estudiante.codigo_seccion}}</td>
                   <td class="has-text-centered"><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
@@ -89,8 +89,8 @@
     </div>
 
     <div class="columns is-multiline">
-      <div class="column is-3" v-for="grupo in listaGrupos" :key="grupo.id">
-        <article class="message is-info" v-if="grupo.jornada === jornadaActual">
+      <div class="column is-3" v-for="grupo in gruposJornada" :key="grupo.id">
+        <article class="message is-info">
           <div class="message-header">
             <p>{{ grupo.nombre }}</p>
             <button class="delete" aria-label="delete" @click="borrarGrupo(grupo.id)"></button>
@@ -172,6 +172,15 @@ export default {
     },
     mostrarLista: function () {
       return this.sinAsignar.length > 0
+    },
+    gruposJornada: function () {
+      var lista = []
+      for (var i = 0; i < this.listaGrupos.length; i++) {
+        if (this.listaGrupos[i].jornada === this.jornadaActual) {
+          lista.push(this.listaGrupos[i])
+        }
+      }
+      return lista
     }
   },
   methods: {
@@ -180,6 +189,9 @@ export default {
     },
     nombreCompleto: function (estudiante) {
       return Funciones.nombreCompleto(estudiante)
+    },
+    visualizarRun: function (run) {
+      return Funciones.visualizarRun(run)
     },
     mostrarClientes: function (grupo) {
       return grupo.stakeholders.length > 0
