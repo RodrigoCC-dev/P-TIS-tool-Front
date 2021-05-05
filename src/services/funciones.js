@@ -100,6 +100,13 @@ export default {
         return 'Sin estado'
     }
   },
+  actualizarTipo (tipo) {
+    if (tipo === 'Coordinacion') {
+      return 'Coordinación'
+    } else {
+      return tipo
+    }
+  },
   buscarIdAsistencia (bitacora, idEstudiante) {
     for (var i = 0; i < bitacora.minuta.asistencia.length; i++) {
       if (bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {

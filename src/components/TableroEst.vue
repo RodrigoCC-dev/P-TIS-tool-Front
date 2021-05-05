@@ -524,11 +524,7 @@ export default {
       return Funciones.convertirRevisionAEstado(identificador)
     },
     actualizarTipo: function (tipo) {
-      if (tipo === 'Coordinacion') {
-        return 'Coordinación'
-      } else {
-        return tipo
-      }
+      return Funciones.actualizarTipo(tipo)
     }
   },
   watch: {
