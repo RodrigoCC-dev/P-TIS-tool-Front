@@ -326,10 +326,12 @@ export default {
     }
   },
   mounted () {
-    this.obtenerTipoMinutas()
-    this.obtenerEstudiante()
-    this.obtenerAprobaciones()
-    this.obtenerMotivos()
+    if (localStorage.user_tk) {
+      this.obtenerTipoMinutas()
+      this.obtenerEstudiante()
+      this.obtenerAprobaciones()
+      this.obtenerMotivos()
+    }
   }
 }
 </script>

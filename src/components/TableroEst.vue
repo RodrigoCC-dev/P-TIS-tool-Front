@@ -539,11 +539,13 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinutas()
-    this.obtenerParaRevisar()
-    this.obtenerRespondidas()
-    if (Object.keys(this.grupo).length > 0) {
-      this.obtenerAvances()
+    if (localStorage.user_tk) {
+      this.obtenerMinutas()
+      this.obtenerParaRevisar()
+      this.obtenerRespondidas()
+      if (Object.keys(this.grupo).length > 0) {
+        this.obtenerAvances()
+      }
     }
   }
 }
