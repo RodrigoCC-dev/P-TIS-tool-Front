@@ -1003,11 +1003,13 @@ export default {
     }
   },
   mounted () {
-    this.obtenerTiposItem()
-    this.obtenerTiposAsistencia()
-    this.obtenerTiposEstado()
-    this.obtenerInfoEstudiante()
-    this.obtenerSemestre()
+    if (localStorage.user_tk) {
+      this.obtenerTiposItem()
+      this.obtenerTiposAsistencia()
+      this.obtenerTiposEstado()
+      this.obtenerInfoEstudiante()
+      this.obtenerSemestre()
+    }
   }
 }
 </script>

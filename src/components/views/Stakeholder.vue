@@ -247,9 +247,11 @@ export default {
     }
   },
   mounted () {
-    this.obtenerStakeholder()
-    this.obtenerGrupos()
-    this.obtenerAprobaciones()
+    if (localStorage.user_tk) {
+      this.obtenerStakeholder()
+      this.obtenerGrupos()
+      this.obtenerAprobaciones()
+    }
   }
 }
 </script>

@@ -541,9 +541,11 @@ export default {
     }
   },
   created () {
-    this.crearListas()
-    this.categorizarComentarios()
-    this.crearRespuestasItems()
+    if (localStorage.user_tk) {
+      this.crearListas()
+      this.categorizarComentarios()
+      this.crearRespuestasItems()
+    }
   }
 }
 </script>

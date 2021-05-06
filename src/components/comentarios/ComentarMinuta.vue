@@ -116,7 +116,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinuta(this.id)
+    if (localStorage.user_tk) {
+      this.obtenerMinuta(this.id)
+    }
   }
 }
 </script>
