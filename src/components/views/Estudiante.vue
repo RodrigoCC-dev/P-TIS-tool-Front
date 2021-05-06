@@ -246,6 +246,7 @@ export default {
     mostrarTablero: function () {
       this.verRevision = false
       this.verComentarios = false
+      this.verRespuestas = false
       this.crearMinuta = true
       this.idRevision = 0
       this.idEmision = 0
