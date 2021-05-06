@@ -52,5 +52,14 @@ export default {
   },
   deleteUser () {
     Cookies.remove('userLogged')
+  },
+  setCookie (nombre, valor) {
+    Cookies.set(nombre, valor, { sameSite: 'lax' })
+  },
+  getCookie (nombre) {
+    return Cookies.get(nombre)
+  },
+  deleteCookie (nombre) {
+    Cookies.remove(nombre)
   }
 }
