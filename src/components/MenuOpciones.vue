@@ -54,9 +54,6 @@ export default {
       Auth.deleteCookie('userLogged')
       Auth.deleteCookie('range')
       return this.$router.push('/')
-    },
-    obtenerCookie: function () {
-      return Auth.getUser()
     }
   },
   mounted () {
@@ -82,9 +79,7 @@ export default {
           usuario.run = datosUsuario[4]
         }
         this.$store.commit('setUsuario', usuario)
-        console.log(this.usuario)
-        console.log(Auth.getUser())
-        console.log(Auth.getCookie('range'))
+        this.$store.commit('setAutenticacion', true)
       }
     } catch {
       this.cerrarSesion()

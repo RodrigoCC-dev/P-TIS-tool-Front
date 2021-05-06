@@ -44,17 +44,8 @@ export default {
     }
   },
 
-  setUser (userLogged) {
-    Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
-  },
-  getUser () {
-    return Cookies.get('userLogged')
-  },
-  deleteUser () {
-    Cookies.remove('userLogged')
-  },
   setCookie (nombre, valor) {
-    Cookies.set(nombre, valor, { sameSite: 'lax' })
+    Cookies.set(nombre, valor, { sameSite: 'none', secure: true })
   },
   getCookie (nombre) {
     return Cookies.get(nombre)

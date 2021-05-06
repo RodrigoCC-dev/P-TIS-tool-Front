@@ -120,8 +120,7 @@ export default {
           const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
           this.$store.commit('setUsuario', usuario.data)
           this.redirigirUsuario()
-          const cookie = this.usuarioACadena(usuario.data)
-          Auth.setUser(cookie)
+          Auth.setCookie('userLogged', this.usuarioACadena(usuario.data))
           Auth.setCookie('range', this.usuarioACadena(usuario.data.rol))
         } catch (e1) {
           console.log(e1)
