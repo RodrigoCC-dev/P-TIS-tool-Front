@@ -66,7 +66,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerJornadas()
+    if (localStorage.user_tk) {
+      this.obtenerJornadas()
+    }
   }
 }
 </script>

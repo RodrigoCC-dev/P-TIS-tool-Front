@@ -654,8 +654,10 @@ export default {
     }
   },
   mounted () {
-    this.obtenerSecciones()
-    this.obtenerEstudiantes()
+    if (localStorage.user_tk) {
+      this.obtenerSecciones()
+      this.obtenerEstudiantes()
+    }
   }
 }
 </script>

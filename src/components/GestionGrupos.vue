@@ -326,8 +326,10 @@ export default {
     }
   },
   mounted () {
-    this.obtenerEstudiantes()
-    this.obtenerGrupos()
+    if (localStorage.user_tk) {
+      this.obtenerEstudiantes()
+      this.obtenerGrupos()
+    }
   }
 }
 </script>

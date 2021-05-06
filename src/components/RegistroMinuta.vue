@@ -82,7 +82,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerRegistros()
+    if (localStorage.user_tk) {
+      this.obtenerRegistros()
+    }
   }
 }
 </script>
