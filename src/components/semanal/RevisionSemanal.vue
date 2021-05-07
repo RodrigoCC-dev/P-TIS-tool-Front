@@ -68,7 +68,7 @@ export default {
     }
   },
   mounted () {
-    if (this.mostrarBitacora && localStorage.user_tk) {
+    if (this.mostrarBitacora) {
       this.separarItems(this.bitacora.minuta.items)
     }
   }
