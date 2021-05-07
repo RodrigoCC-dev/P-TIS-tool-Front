@@ -260,7 +260,7 @@ export default {
         },
         seccion_id: null
       },
-      listaEstudiantes: {},
+      listaEstudiantes: [],
       mostrarLista: false,
       runEntrada: {
         error: false,
