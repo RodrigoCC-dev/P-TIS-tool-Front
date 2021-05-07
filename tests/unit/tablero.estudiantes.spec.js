@@ -160,13 +160,13 @@ const avance = [
 axios.get.mockImplementation((url) => {
   switch (url) {
     case apiUrl + '/minutas/revision/estados':
-      return Promise.resolve({ data: estados})
+      return Promise.resolve({ data: estados })
     case apiUrl + '/minutas/revision/grupo':
-      return Promise.resolve({ data: revision})
+      return Promise.resolve({ data: revision })
     case apiUrl + '/minutas/revision/respondidas':
-      return Promise.resolve({ data: respondidas})
+      return Promise.resolve({ data: respondidas })
     case apiUrl + '/minutas/avances/semanales/grupo/93453':
-      return Promise.resolve({ data: avance})
+      return Promise.resolve({ data: avance })
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -223,11 +223,15 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
 
-  it('variable listaMinutas se inicializa correctamente', () => {
+  it('variable listaMinutas se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaMinutas).toEqual(estados)
   })
 
-  it('variable listaBorradores se inicializa correctamente', () => {
+  it('variable listaBorradores se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaBorradores).toEqual([estados[1]])
   })
 
@@ -239,11 +243,15 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaComentadasCliente).toEqual([])
   })
 
-  it('variable listaRespondidasGrupo se inicializa correctamente', () => {
+  it('variable listaRespondidasGrupo se inicializa correctamente', async () => {
+    wrapper.vm.obtenerRespondidas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
   })
 
-  it('variable listaCerradas se inicializa correctamente', () => {
+  it('variable listaCerradas se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaCerradas).toEqual([estados[0]])
   })
 
@@ -251,11 +259,16 @@ describe('TableroEst.vue', () => {
     expect(wrapper.vm.listaEmitidas).toEqual([])
   })
 
-  it('variable listaRevision se inicializa correctamente', () => {
+  it('variable listaRevision se inicializa correctamente', async () => {
+    wrapper.vm.obtenerParaRevisar()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRevision).toEqual(revision)
   })
 
-  it('variable "listaAvances" se inicializa correctamente', () => {
+  it('variable "listaAvances" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerAvances()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaAvances).toEqual(avance)
   })
 
@@ -835,6 +848,7 @@ describe('TableroEst.vue', () => {
   })
 
   it('método "obtenerMinutas" funciona correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaMinutas).toEqual(estados)
     expect(wrapper.vm.listaBorradores.length).toEqual(1)
@@ -847,12 +861,14 @@ describe('TableroEst.vue', () => {
   })
 
   it('método "obtenerParaRevisar" funciona correctamente', async () => {
+    wrapper.vm.obtenerParaRevisar()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRevision).toEqual(revision)
     expect(wrapper.vm.listaRevision.length).toEqual(1)
   })
 
   it('método "obtenerRespondidas" funciona correctamente', async () => {
+    wrapper.vm.obtenerRespondidas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRespondidasGrupo).toEqual(respondidas)
     expect(wrapper.vm.listaRespondidasGrupo.length).toEqual(1)
