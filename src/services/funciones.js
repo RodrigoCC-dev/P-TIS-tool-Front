@@ -130,5 +130,16 @@ export default {
     lista.push(separar[0].slice(-6, -3))
     lista.push(separar[0].slice(-3))
     return lista.join('.') + '-' + separar[1]
+  },
+  sinComentarios (listaComentarios) {
+    if (listaComentarios.length === 0) {
+      return true
+    } else {
+      var sinComentario = true
+      for (var i = 0; i < listaComentarios.length; i++) {
+        sinComentario = sinComentario && listaComentarios[i].comentario === ''
+      }
+      return sinComentario
+    }
   }
 }

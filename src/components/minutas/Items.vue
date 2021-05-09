@@ -128,7 +128,7 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-primary-usach" @click="enviarComentarios">Guardar comentarios</a>
+              <a class="button is-primary-usach" @click="enviarComentarios">{{ sinComentarios ? 'Terminar revisión' : 'Guardar comentarios' }}</a>
             </div>
             <div class="control">
               <a class="button is-light-usach" @click="cancelarEnvio"><strong>Cancelar</strong></a>
@@ -278,6 +278,9 @@ export default {
         }
       }
       return false
+    },
+    sinComentarios: function () {
+      return Funciones.sinComentarios(this.listaComentarios.concat(this.listaGenerales))
     }
   },
   methods: {
