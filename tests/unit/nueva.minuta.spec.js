@@ -1,12 +1,80 @@
 import { shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
+import axios from 'axios'
 import Nueva from '@/components/comentarios/NuevaMinuta.vue'
 
+// Mock store
+const apiUrl = '127.0.0.1:3000'
+
+const store = createStore({
+  state() {
+    return {
+      apiUrl: apiUrl,
+      grupo: {
+        id: 93453,
+        nombre: 'G01',
+        proyecto: 'Proyecto de prueba unitario',
+        correlativo: 34,
+        jornada: 'Diurna',
+        estudiantes: [{
+          id: 92345,
+          iniciales: 'ABC',
+          usuario: {
+            nombre: 'Alberto',
+            apellido_paterno: 'Becerra',
+            apellido_materno: 'Castro',
+            run: '11111111-1',
+            email: 'alberto.becerra@algo.com'
+          }
+        }],
+        stakeholders: []
+      },
+      motivos: [
+        {id: 9245, motivo: 'Emitida para coordinación interna', identificador: 'ECI'},
+        {id: 9245, motivo: 'Emitida para revisión del cliente', identificador: 'ERC'},
+        {id: 9245, motivo: 'Emitida para aprobación del cliente', identificador: 'EAC'},
+        {id: 9245, motivo: 'Emisión final', identificador: 'EF'}
+      ]
+    }
+  }
+})
+
+// Variables globales
+const idMinuta = 663462
+
+const respuestas = []
+
+const aprobaciones = []
+
+// Mock axios
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/minutas/' + idMinuta:
+      return Promise.resolve({data: bitacora})
+    case apiUrl + '/respuestas/' + idMinuta:
+      return Promise.resolve({data: []})
+    case apiUrl + '/aprobaciones/' + idMinuta:
+      return Promise.resolve({data: []})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
 describe('NuevaMinuta.vue', () => {
+  let wrapper
   let bitacora
 
   beforeEach(() => {
+    wrapper = shallowMount(Nueva, {
+      global: {
+        plugins: [store]
+      }
+    })
+
     bitacora = {
-      id: 663462,
+      id: idMinuta,
       revision: 'M',
       identificador: 'EAC',
       minuta: {
@@ -38,6 +106,9 @@ describe('NuevaMinuta.vue', () => {
     const wrapper = shallowMount(Nueva, {
       propsData: {
         idBitacora: 523
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().idBitacora).toEqual(523)
@@ -47,96 +118,67 @@ describe('NuevaMinuta.vue', () => {
     const wrapper = shallowMount(Nueva, {
       propsData: {
         idBitacora: 523
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.id).toEqual(523)
   })
 
   it('variable "bitacora" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.bitacora).toEqual({})
   })
 
   it('variable "comentarios" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.comentarios).toEqual([])
   })
 
   it('variable "aprobaciones" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.aprobaciones).toEqual([])
   })
 
   it('variable "verAprobacion" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.verAprobacion).toBeFalsy()
   })
 
   it('variable "nuevoMotivo" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.nuevoMotivo).toEqual('')
   })
 
   it('variable "nuevaRevision" se inicializa correctamente', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.nuevaRevision).toEqual('')
   })
 
   it('variable "abc" se inicializa correctamente', () => {
     const esperado = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.abc).toEqual(esperado)
   })
 
   it('propiedad computada "mostrarMinuta funciona correctamente para "false"', () => {
-    const wrapper = shallowMount(Nueva)
     expect(wrapper.vm.mostrarMinuta).toBeFalsy()
   })
 
   it('propiedad computada "mostrarMinuta funciona correctamente para "true"', () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
     expect(wrapper.vm.mostrarMinuta).toBeTruthy()
   })
 
   it('método "buscarIniciales" funciona correctamente', () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
     expect(wrapper.vm.buscarIniciales(62345)).toEqual('GER')
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "nuevoMotivo" igual a "EF"', () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora,
-          nuevoMotivo: 'EF'
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
+    wrapper.vm.nuevoMotivo = 'EF'
     wrapper.vm.establecerNuevaRevision()
     expect(wrapper.vm.nuevaRevision).toEqual(0)
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "identificador" igual a "EF"', () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora,
-          nuevoMotivo: 'EF'
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
+    wrapper.vm.nuevoMotivo = 'EF'
     wrapper.vm.bitacora.identificador = 'EF'
     wrapper.vm.bitacora.revision = 1
     wrapper.vm.establecerNuevaRevision()
@@ -144,26 +186,15 @@ describe('NuevaMinuta.vue', () => {
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "nuevoMotivo" distinto a "EF"', () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora,
-          nuevoMotivo: 'EAC'
-        }
-      }
-    })
+    debugger
+    wrapper.vm.bitacora = bitacora
+    wrapper.vm.nuevoMotivo = 'EAC'
     wrapper.vm.establecerNuevaRevision()
     expect(wrapper.vm.nuevaRevision).toEqual('N')
   })
 
   it('método "emitir" funciona correctamente', async () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
     wrapper.vm.bitacora.identificador = 'EF'
     wrapper.vm.bitacora.revision = 0
     wrapper.vm.emitir()
@@ -177,13 +208,7 @@ describe('NuevaMinuta.vue', () => {
   })
 
   it('método "revisar" funciona correctamente', async () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
     wrapper.vm.revisar()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verAprobacion).toBeTruthy()
@@ -193,13 +218,7 @@ describe('NuevaMinuta.vue', () => {
   })
 
   it('método "cancelar" funciona correctamente', async () => {
-    const wrapper = shallowMount(Nueva, {
-      data() {
-        return {
-          bitacora: bitacora
-        }
-      }
-    })
+    wrapper.vm.bitacora = bitacora
     wrapper.vm.cancelar()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verAprobacion).toBeFalsy()

@@ -222,6 +222,9 @@ describe('Semanal.vue', () => {
       fecha_avance: '2020-12-27',
       tipo_minuta_id: 3
     }
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.minuta).toEqual(esperado)
   })
 
@@ -239,6 +242,9 @@ describe('Semanal.vue', () => {
   })
 
   it('variable "numeroSprint" se inicializa correctamente con props', () => {
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.numeroSprint).toEqual(34)
   })
 
@@ -261,6 +267,9 @@ describe('Semanal.vue', () => {
       descripcion: 'Item para la prueba',
       correlativo: 9453
     }]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.logros).toEqual(esperado)
   })
 
@@ -283,6 +292,9 @@ describe('Semanal.vue', () => {
       descripcion: 'Otro item para la prueba',
       correlativo: 23534
     }]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.metas).toEqual(esperado)
   })
 
@@ -330,6 +342,9 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.itemsLogros).toEqual(esperado)
   })
 
@@ -362,6 +377,9 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.itemsMetas).toEqual(esperado)
   })
 
@@ -394,6 +412,9 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.itemsImpedimentos).toEqual(esperado)
   })
 
@@ -584,6 +605,9 @@ describe('Semanal.vue', () => {
         plugins: [store]
       }
     })
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     await wrapper.vm.$nextTick()
     wrapper.vm.minuta.correlativo = 9
     wrapper.vm.minuta.fecha_avance = '2021-01-14'
@@ -600,6 +624,9 @@ describe('Semanal.vue', () => {
         plugins: [store]
       }
     })
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.minuta.correlativo).toEqual(2945)
   })
@@ -614,6 +641,9 @@ describe('Semanal.vue', () => {
         plugins: [store]
       }
     })
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.semestre).toEqual(semestre)
   })
@@ -671,7 +701,7 @@ describe('Semanal.vue', () => {
   it('método "buscarIdAsistencia" funciona correctamente', () => {
     expect(wrapper.vm.buscarIdAsistencia(94534)).toEqual(4953)
   })
-  
+
   it('método "logrosPorEstudiante" funciona correctamente', () => {
     const esperado = [
       {
@@ -688,6 +718,7 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.logrosPorEstudiante(94534)).toEqual(esperado)
   })
 
@@ -707,6 +738,7 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.metasPorEstudiante(94534)).toEqual(esperado)
   })
 
@@ -726,10 +758,14 @@ describe('Semanal.vue', () => {
         }
       }
     ]
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.impedimentosPorEstudiante(94534)).toEqual(esperado)
   })
 
   it('método "mostrarAvance" funciona correctamente con "true"', () => {
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.mostrarAvance(94534)).toBeTruthy()
   })
 
@@ -748,16 +784,25 @@ describe('Semanal.vue', () => {
 
   it('método "convertirLogros" funciona correctamente', () => {
     const esperado = [{id: 94534, descripcion: 'Item para la prueba', correlativo: 9453}]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.convertirLogros()).toEqual(esperado)
   })
 
   it('método "convertirMetas" funciona correctamente', () => {
     const esperado = [{id: 2345345, descripcion: 'Otro item para la prueba', correlativo: 23534}]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.convertirMetas()).toEqual(esperado)
   })
 
   it('método "convertirImpedimentos" funciona correctamente', () => {
     const esperado = [{id: 14513, descripcion: 'Este es un impedimento de prueba', correlativo: 143453}]
+    wrapper.vm.obtenerCorrelativo()
+    wrapper.vm.obtenerSemestre()
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.convertirImpedimentos()).toEqual(esperado)
   })
 
@@ -1003,6 +1048,7 @@ describe('Semanal.vue', () => {
   })
 
   it('método "validarLogros" funciona correctamente con "true"', () => {
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.validarLogros()).toBeTruthy()
     expect(wrapper.vm.entradas.logros).toBeFalsy()
   })
@@ -1022,6 +1068,7 @@ describe('Semanal.vue', () => {
   })
 
   it('método "validarMetas" funciona correctamente con "true"', () => {
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.validarMetas()).toBeTruthy()
     expect(wrapper.vm.entradas.metas).toBeFalsy()
   })
@@ -1041,6 +1088,7 @@ describe('Semanal.vue', () => {
   })
 
   it('método "validarImpedimentos" funciona correctamente con "true"', () => {
+    wrapper.vm.convertirBitacora()
     expect(wrapper.vm.validarImpedimentos()).toBeTruthy()
     expect(wrapper.vm.entradas.impedimentos).toBeFalsy()
   })

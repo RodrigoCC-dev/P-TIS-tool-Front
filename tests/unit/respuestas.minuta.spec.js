@@ -98,6 +98,15 @@ axios.get.mockImplementation((url) => {
   }
 })
 
+axios.put.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/aprobaciones/23':
+      return Promise.resolve(201)
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
 describe('RespuestasMinuta.vue', () => {
   let wrapper
 
@@ -145,6 +154,10 @@ describe('RespuestasMinuta.vue', () => {
     expect(wrapper.vm.aprobacion).toEqual(0)
   })
 
+  it('variable "error" se inicializa correctamente', () => {
+    expect(wrapper.vm.error).toBeFalsy()
+  })
+
   it('propiedad computada "mostrarMinuta" funciona correctamente con "true"', () => {
     wrapper.vm.bitacora = bitacora
     expect(wrapper.vm.mostrarMinuta).toBeTruthy()
@@ -174,4 +187,53 @@ describe('RespuestasMinuta.vue', () => {
     expect(wrapper.vm.comentarios).toEqual(comentarios)
   })
 
+  it('método "enviarAprobacion" funciona correctamente', async () => {
+    wrapper.vm.id = 23
+    wrapper.vm.aprobacion = 4353
+    wrapper.vm.enviarAprobacion()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "establecerEstado" funciona correctamente con "validarAprobacion" en "true"', async () => {
+    wrapper.vm.id = 23
+    wrapper.vm.aprobacion = 4353
+    wrapper.vm.establecerEstado()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "establecerEstado" funciona correctamente con "validarAprobacion" en "false"', async () => {
+    wrapper.vm.id = 23
+    wrapper.vm.aprobacion = 0
+    wrapper.vm.establecerEstado()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeFalsy()
+  })
+
+  it('método "cerrar" funciona correctamente', async () => {
+    wrapper.vm.cerrar()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().cerrar).toBeTruthy()
+    expect(wrapper.emitted().cerrar.length).toEqual(1)
+    expect(wrapper.emitted().cerrar[0]).toEqual([])
+  })
+
+  it('método "validarAprobacion" funciona correctamente con "true"', () => {
+    wrapper.vm.aprobacion = 9453
+    wrapper.vm.error = true
+    expect(wrapper.vm.validarAprobacion()).toBeTruthy()
+    expect(wrapper.vm.error).toBeFalsy()
+  })
+
+  it('método "validarAprobacion" funciona correctamente con "true"', () => {
+    wrapper.vm.aprobacion = 9453
+    wrapper.vm.error = true
+    expect(wrapper.vm.validarAprobacion()).toBeTruthy()
+    expect(wrapper.vm.error).toBeFalsy()
+  })
 })

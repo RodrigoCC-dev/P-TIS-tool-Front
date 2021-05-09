@@ -193,27 +193,63 @@ describe('TableroStk.vue', () => {
     expect(wrapper.vm.nombreTab).toEqual('Revision')
   })
 
-  it('variable listaMinutas se inicializa correctamente', () => {
+  it('variable listaMinutas se inicializa vacía', () => {
+    expect(wrapper.vm.listaMinutas).toEqual([])
+  })
+
+  it('variable listaMinutas se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaMinutas).toEqual(minutas)
   })
 
-  it('variable listaRevision se inicializa correctamente', () => {
+  it('variable listaRevision se inicializa vacía', () => {
+    expect(wrapper.vm.listaRevision).toEqual([])
+  })
+
+  it('variable listaRevision se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRevision).toEqual([minutas[1]])
   })
 
-  it('variable listaComentadas se inicializa correctamente', () => {
+  it('variable listaComentadas se inicializa vacía', () => {
+    expect(wrapper.vm.listaComentadas).toEqual([])
+  })
+
+  it('variable listaComentadas se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaComentadas).toEqual([minutas[3]])
   })
 
-  it('variable listaRespondidasGrupo se inicializa correctamente', () => {
+  it('variable listaRespondidasGrupo se inicializa vacía', () => {
+    expect(wrapper.vm.listaRespondidasGrupo).toEqual([])
+  })
+
+  it('variable listaRespondidasGrupo se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRespondidasGrupo).toEqual([minutas[4]])
   })
 
-  it('variable listaRespondidasCliente se inicializa correctamente', () => {
+  it('variable listaRespondidasCliente se inicializa vacía', () => {
+    expect(wrapper.vm.listaRespondidasCliente).toEqual([])
+  })
+
+  it('variable listaRespondidasCliente se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaRespondidasCliente).toEqual([minutas[5]])
   })
 
-  it('variable listaCerradas se inicializa correctamente', () => {
+  it('variable listaCerradas se inicializa vacía', () => {
+    expect(wrapper.vm.listaCerradas).toEqual([])
+  })
+
+  it('variable listaCerradas se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaCerradas).toEqual([minutas[6]])
   })
 
@@ -465,6 +501,7 @@ describe('TableroStk.vue', () => {
   })
 
   it('método "obtenerMinutas" funciona correctamente', async () => {
+    wrapper.vm.obtenerMinutas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaMinutas).toEqual(minutas)
     expect(wrapper.vm.listaRevision.length).toEqual(1)

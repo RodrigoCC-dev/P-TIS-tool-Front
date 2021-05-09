@@ -120,7 +120,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerGrupos()
+    if (localStorage.user_tk) {
+      this.obtenerGrupos()
+    }
   }
 }
 </script>

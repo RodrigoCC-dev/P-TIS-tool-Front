@@ -156,7 +156,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerStakeholders()
+    if (localStorage.user_tk) {
+      this.obtenerStakeholders()
+    }
   }
 }
 </script>

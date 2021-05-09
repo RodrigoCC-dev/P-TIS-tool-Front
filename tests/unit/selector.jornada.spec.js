@@ -82,6 +82,7 @@ describe('SelectorJornada.vue', () => {
 
   it('método "obtenerJornadas" funciona correctamente', async () => {
     const esperado = ['Diurna', 'Vespertina']
+    wrapper.vm.obtenerJornadas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.jornadasProfesor.length).toEqual(2)
     expect(wrapper.vm.jornadasProfesor).toEqual(esperado)

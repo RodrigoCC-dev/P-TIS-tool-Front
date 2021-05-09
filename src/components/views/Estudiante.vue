@@ -246,6 +246,7 @@ export default {
     mostrarTablero: function () {
       this.verRevision = false
       this.verComentarios = false
+      this.verRespuestas = false
       this.crearMinuta = true
       this.idRevision = 0
       this.idEmision = 0
@@ -326,10 +327,12 @@ export default {
     }
   },
   mounted () {
-    this.obtenerTipoMinutas()
-    this.obtenerEstudiante()
-    this.obtenerAprobaciones()
-    this.obtenerMotivos()
+    if (localStorage.user_tk) {
+      this.obtenerTipoMinutas()
+      this.obtenerEstudiante()
+      this.obtenerAprobaciones()
+      this.obtenerMotivos()
+    }
   }
 }
 </script>

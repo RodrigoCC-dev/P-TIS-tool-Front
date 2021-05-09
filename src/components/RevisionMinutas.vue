@@ -24,15 +24,17 @@
                     <tr class="has-background-light">
                       <th scope="col" class="has-text-centered">N°</th>
                       <th scope="col" class="has-text-centered">Código minuta</th>
-                      <th scope="col" class="has-text-centered">Revisión</th>
+                      <th scope="col" class="has-text-centered">Tipo de minuta</th>
+                      <th scope="col" class="has-text-centered">Fase de revisión</th>
                       <th scope="col" class="has-text-centered">Creada por</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(bitacora, index) in listaMinutas" :key="bitacora.id">
                       <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
-                      <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}</a></td>
-                      <td class="has-text-centered">{{ bitacora.revision }}</td>
+                      <td><a @click="traerMinuta(bitacora.id)">{{ bitacora.minuta.codigo }}_{{ bitacora.revision}}</a></td>
+                      <td class="has-text-centered">{{ actualizarTipo(bitacora.minuta.tipo) }}</td>
+                      <td class="has-text-centered">{{ convertirRevision(bitacora.identificador) }}</td>
                       <td class="has-text-centered">{{ bitacora.minuta.creada_por }}</td>
                     </tr>
                   </tbody>
@@ -86,6 +88,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -153,6 +156,12 @@ export default {
     },
     cerrarRegistros: function () {
       this.mostrarRegistros = false
+    },
+    convertirRevision: function (identificador) {
+      return Funciones.convertirRevisionAEstado(identificador)
+    },
+    actualizarTipo: function (tipo) {
+      return Funciones.actualizarTipo(tipo)
     }
   },
   watch: {

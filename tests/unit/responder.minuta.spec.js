@@ -167,11 +167,23 @@ describe('ResponderMinuta.vue', () => {
     expect(wrapper.props().idBitacora).toEqual(43535)
   })
 
-  it('variable "bitacora" se inicializa correctamente', () => {
+  it('variable "bitacora" se inicializa vacía', () => {
+    expect(wrapper.vm.bitacora).toEqual({})
+  })
+
+  it('variable "bitacora" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerMinuta(idMinuta)
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.bitacora).toEqual(minuta)
   })
 
-  it('variable "comentarios" se inicializa correctamente', () => {
+  it('variable "comentarios" se inicializa vacía', () => {
+    expect(wrapper.vm.comentarios).toEqual([])
+  })
+
+  it('variable "comentarios" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerComentarios(idMinuta)
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.comentarios).toEqual(comentarios)
   })
 
@@ -180,7 +192,9 @@ describe('ResponderMinuta.vue', () => {
     expect(wrapper.vm.mostrarMinuta).toBeFalsy()
   })
 
-  it('propiedad computada "mostrarMinuta" funciona correctamente con "true"', () => {
+  it('propiedad computada "mostrarMinuta" funciona correctamente con "true"', async () => {
+    wrapper.vm.obtenerMinuta(idMinuta)
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarMinuta).toBeTruthy()
   })
 

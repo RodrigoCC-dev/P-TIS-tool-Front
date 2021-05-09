@@ -21,8 +21,8 @@
               <div class="field has-addons has-addons-right">
                 <p class="control is-expanded">
                   <span class="select is-fullwidth">
-                    <select v-model="aprobacion">
-                      <option v-for="(aprobacion, index) in tipoAprobaciones" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
+                    <select v-model="aprobacion" @change="validarAprobacion">
+                      <option v-for="(aprobacion, index) in aprobacionesFiltradas" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
                     </select>
                   </span>
                 </p>
@@ -32,6 +32,7 @@
               </div>
             </div>
           </div>
+          <p v-if="error" class="is-danger help select-centered">No se ha seleccionado un estado de evaluación</p>
         </div>
       </div>
     </div>
@@ -41,6 +42,7 @@
 
 <script>
 import Auth from '@/services/auth.js'
+import Funciones from '@/services/funciones.js'
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -64,7 +66,8 @@ export default {
       bitacora: {},
       comentarios: [],
       mostrarAprobacion: false,
-      aprobacion: 0
+      aprobacion: 0,
+      error: false
     }
   },
   computed: {
@@ -72,6 +75,24 @@ export default {
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
+    },
+    sinComentarios: function () {
+      return Funciones.sinComentarios(this.comentarios)
+    },
+    aprobacionesFiltradas: function () {
+      var lista = []
+      for (var i = 0; i < this.tipoAprobaciones.length; i++) {
+        if (this.sinComentarios) {
+          if (this.tipoAprobaciones[i].identificador.length === 1) {
+            lista.push(this.tipoAprobaciones[i])
+          }
+        } else {
+          if (this.tipoAprobaciones[i].identificador.length === 2) {
+            lista.push(this.tipoAprobaciones[i])
+          }
+        }
+      }
+      return lista
     }
   },
   methods: {
@@ -105,18 +126,38 @@ export default {
       this.$emit('cerrar')
     },
     establecerEstado: function () {
-      this.enviarComentarios()
-      this.$emit('cerrar')
-      this.mostrarAprobacion = false
+      if (this.validarAprobacion()) {
+        this.enviarComentarios()
+        this.$emit('cerrar')
+        this.mostrarAprobacion = false
+      }
     },
     limpiarCampos: function () {
       this.bitacora = {}
       this.comentarios = []
       this.aprobacion = 0
+    },
+    validarAprobacion: function () {
+      if (this.aprobacion === 0) {
+        this.error = true
+        return false
+      } else {
+        this.error = false
+        return true
+      }
     }
   },
   mounted () {
-    this.obtenerMinuta(this.id)
+    if (localStorage.user_tk) {
+      this.obtenerMinuta(this.id)
+    }
   }
 }
 </script>
+
+<style lang="css" scoped>
+  .select-centered {
+    margin-left: 2.5rem;
+    text-align: center;
+  }
+</style>

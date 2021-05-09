@@ -90,17 +90,21 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.stakeholder).toEqual(esperado)
   })
 
+  it('variable listaStakeholders se inicializa vacía', () => {
+    expect(wrapper.vm.listaStakeholders).toEqual([])
+  })
+
   it('variable listaStakeholders se inicializa correctamente', async () => {
+    wrapper.vm.obtenerStakeholders()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaStakeholders).toEqual(listaStakeholders)
   })
 
-  it('variable listaGrupos se inicializa correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable listaGrupos se inicializa correctamente', () => {
     expect(wrapper.vm.listaGrupos).toEqual([])
   })
 
-  it('variable entradas se inicializa correctamente', async () => {
+  it('variable entradas se inicializa correctamente', () => {
     const esperado = {
       nombre: {
         error: false,
@@ -120,7 +124,6 @@ describe('GestionClientes.vue', () => {
       },
       grupo: false
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.entradas).toEqual(esperado)
   })
 
@@ -600,6 +603,7 @@ describe('GestionClientes.vue', () => {
         email: 'juan.garmendia@algo.com'
       }
     }
+    wrapper.vm.obtenerStakeholders()
     await wrapper.vm.$nextTick()
     wrapper.vm.stakeholder = cliente
     expect(wrapper.vm.existeStakeholder()).toBeTruthy()

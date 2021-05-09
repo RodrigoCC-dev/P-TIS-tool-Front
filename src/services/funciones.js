@@ -100,6 +100,13 @@ export default {
         return 'Sin estado'
     }
   },
+  actualizarTipo (tipo) {
+    if (tipo === 'Coordinacion') {
+      return 'Coordinación'
+    } else {
+      return tipo
+    }
+  },
   buscarIdAsistencia (bitacora, idEstudiante) {
     for (var i = 0; i < bitacora.minuta.asistencia.length; i++) {
       if (bitacora.minuta.asistencia[i].id_estudiante === idEstudiante) {
@@ -123,5 +130,16 @@ export default {
     lista.push(separar[0].slice(-6, -3))
     lista.push(separar[0].slice(-3))
     return lista.join('.') + '-' + separar[1]
+  },
+  sinComentarios (listaComentarios) {
+    if (listaComentarios.length === 0) {
+      return true
+    } else {
+      var sinComentario = true
+      for (var i = 0; i < listaComentarios.length; i++) {
+        sinComentario = sinComentario && listaComentarios[i].comentario === ''
+      }
+      return sinComentario
+    }
   }
 }

@@ -80,9 +80,11 @@ export default {
       this.$emit('cerrar')
     }
   },
-  mounted () {
-    this.obtenerMinuta(this.id)
-    this.obtenerComentarios(this.id)
+  created () {
+    if (localStorage.user_tk) {
+      this.obtenerMinuta(this.id)
+      this.obtenerComentarios(this.id)
+    }
   }
 }
 </script>

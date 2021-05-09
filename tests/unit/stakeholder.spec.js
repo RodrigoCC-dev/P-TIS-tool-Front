@@ -246,29 +246,51 @@ describe('Stakeholder.vue', () => {
     expect(wrapper.vm.verMinuta).toBeFalsy()
   })
 
+  it('variable "listaGrupos" se inicializa vacía', () => {
+    expect(wrapper.vm.listaGrupos).toEqual([])
+  })
+
   it('variable "listaGrupos" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaGrupos).toEqual(listaGrupos)
   })
 
+  it('variable "grupoActual" se inicializa correctamente con cero', () => {
+    expect(wrapper.vm.grupoActual).toEqual(0)
+  })
+
   it('variable "grupoActual" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupoActual).toEqual(123)
   })
 
+  it('variable "grupoSeleccionado" se inicializa vacío', () => {
+    expect(wrapper.vm.grupoSeleccionado).toEqual({})
+  })
+
   it('variable "grupoSeleccionado" se inicializa correctamente', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupoSeleccionado).toEqual(listaGrupos[1])
   })
 
-  it('variable "verSelectorGrupo" se inicializa correctamente', async () => {
+  it('variable "verSelectorGrupo" se inicializa correctamente con "true"', () => {
+    expect(wrapper.vm.verSelectorGrupo).toBeTruthy()
+  })
+
+  it('variable "verSelectorGrupo" se inicializa correctamente con "false"', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verSelectorGrupo).toBeFalsy()
   })
 
-  it('variable "tableroStk" se inicializa correctamente', async () => {
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.tableroStk).toEqual(1)
+  it('variable "tableroStk" se inicializa correctamente con "cero"', () => {
+    expect(wrapper.vm.tableroStk).toEqual(0)
   })
 
   it('propiedad computada "gruposFiltrados" funciona correctamente con "undefined"', async () => {
@@ -292,6 +314,7 @@ describe('Stakeholder.vue', () => {
         correlativo: 5
       }
     }
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     wrapper.vm.$store.commit('setStakeholder',cliente)
     expect(wrapper.vm.gruposFiltrados.length).toEqual(1)
@@ -299,18 +322,24 @@ describe('Stakeholder.vue', () => {
   })
 
   it('propiedad computada "gruposFiltrados" funciona correctamente sin "undefined"', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.gruposFiltrados.length).toEqual(1)
     expect(wrapper.vm.gruposFiltrados[0]).toEqual(listaGrupos[1])
   })
 
   it('propiedad computada "gruposJornada" funciona correctamente con jornada "Diurna"', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.gruposJornada.length).toEqual(1)
     expect(wrapper.vm.gruposJornada[0]).toEqual(listaGrupos[1])
   })
 
   it('propiedad computada "gruposJornada" funciona correctamente con jornada "Vespertina"', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     wrapper.vm.$store.commit('setJornadaActual', 'Vespertina')
     expect(wrapper.vm.gruposJornada.length).toEqual(0)
@@ -382,6 +411,7 @@ describe('Stakeholder.vue', () => {
   })
 
   it('método "obtenerStakeholder" funciona correctamente', async () => {
+    wrapper.vm.obtenerStakeholder()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.stakeholder).toEqual(stakeholder)
   })
@@ -393,11 +423,13 @@ describe('Stakeholder.vue', () => {
   })
 */
   it('método "obtenerGrupos" funciona correctamente', async () => {
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaGrupos).toEqual(listaGrupos)
   })
 
   it('método "obtenerAprobaciones" funciona correctamente', async () => {
+    wrapper.vm.obtenerAprobaciones()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.tipoAprobaciones).toEqual(tipoAprobaciones)
   })
@@ -418,6 +450,8 @@ describe('Stakeholder.vue', () => {
   })
 
   it('método "seleccionarGrupo" funciona correctamente', async () => {
+    wrapper.vm.obtenerStakeholder()
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     wrapper.vm.$store.commit('setGrupo', {})
     wrapper.vm.tableroStk = 10

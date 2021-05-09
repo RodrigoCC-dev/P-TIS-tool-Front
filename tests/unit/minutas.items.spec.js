@@ -246,6 +246,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.mostrarComentar).toEqual(esperado)
   })
 
@@ -263,6 +266,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.listaComentarios).toEqual(esperado)
   })
 
@@ -320,6 +326,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.listaEntradas).toEqual(esperado)
   })
 
@@ -378,6 +387,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.comentariosItems).toEqual(esperado)
   })
 
@@ -409,6 +421,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.comentariosGenerales).toEqual(esperado)
   })
 
@@ -426,6 +441,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.respuestasItems).toEqual(esperado)
   })
 
@@ -455,6 +473,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.respuestasGenerales).toEqual(esperado)
   })
 
@@ -469,6 +490,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.verRespuestasItems).toEqual(esperado)
   })
 
@@ -483,6 +507,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.verRespuestasItems).toEqual(esperado)
   })
 
@@ -510,6 +537,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.verRespuestasGenerales).toEqual(esperado)
   })
 
@@ -524,6 +554,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.responderEntradasItems).toEqual(esperado)
   })
 
@@ -541,6 +574,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.responderEntradasItems).toEqual(esperado)
   })
 
@@ -568,6 +604,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.responderEntradasGenerales).toEqual(esperado)
   })
 
@@ -637,7 +676,55 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.comentariosPorItem).toEqual(esperado)
+  })
+
+  it('propiedad computada "sinComentarios" funciona correctamente con "true" con comentarios vacios', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.sinComentarios).toBeTruthy()
+  })
+
+  it('propiedad computada "sinComentarios" funciona correctamente con "true" con comentarios', () => {
+    const comentarios = [
+      {comentario: '', es_item: true, id_item: 0},
+      {comentario: '', es_item: true, id_item: 0}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.listaComentarios = comentarios
+    expect(wrapper.vm.sinComentarios).toBeTruthy()
+  })
+
+  it('propiedad computada "sinComentarios" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.listaComentarios = comentarios
+    expect(wrapper.vm.sinComentarios).toBeFalsy()
   })
 
   it('método fechaItem funciona correctamente', () => {
@@ -705,6 +792,7 @@ describe('Items.vue', () => {
         verRespuestas: false
       }
     })
+    wrapper.vm.crearListas()
     expect(wrapper.vm.mostrarComentar).toEqual(esperadoMostrar)
     expect(wrapper.vm.listaComentarios).toEqual(esperadoComentarios)
     expect(wrapper.vm.listaEntradas).toEqual(esperadoEntradas)
@@ -787,7 +875,7 @@ describe('Items.vue', () => {
         }
       }
     })
-    wrapper.vm.removerComentario()
+    wrapper.vm.removerComentario(wrapper.vm.listaGenerales[0])
     expect(wrapper.vm.listaGenerales).toEqual([])
   })
 
@@ -837,6 +925,9 @@ describe('Items.vue', () => {
         verRespuestas: false
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
     wrapper.vm.agregaComentario()
@@ -860,6 +951,9 @@ describe('Items.vue', () => {
         verRespuestas: false
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
     wrapper.vm.agregaComentario()
@@ -897,6 +991,9 @@ describe('Items.vue', () => {
         }
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.listaEntradas[0].error = true
     wrapper.vm.listaEntradas[0].mensaje = 'Este es un mensaje de prueba'
     wrapper.vm.cancelarEnvio()
@@ -929,6 +1026,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
     expect(wrapper.vm.listaEntradas[0].error).toBeFalsy()
     expect(wrapper.vm.listaEntradas[0].mensaje).toEqual('')
@@ -972,6 +1072,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
     expect(wrapper.vm.validarComentarioItem(0)).toBeTruthy()
@@ -989,6 +1092,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.abrirComentario(1, 4534)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
@@ -1008,6 +1114,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.abrirComentario(1, 4534)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
@@ -1061,6 +1170,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
     wrapper.vm.agregaComentario()
@@ -1080,6 +1192,9 @@ describe('Items.vue', () => {
         listaCom: []
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirComentario(0, 3453)
     wrapper.vm.abrirComentario(1, 4534)
     wrapper.vm.listaComentarios[0].comentario = 'Comentario de prueba'
@@ -1147,6 +1262,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.comentariosItems).toEqual([listaComentarios[0]])
     expect(wrapper.vm.comentariosGenerales).toEqual([listaComentarios[1]])
     expect(wrapper.vm.respuestasGenerales).toEqual(respuestas)
@@ -1164,6 +1282,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     wrapper.vm.verRespuestasGenerales[0] = true
@@ -1189,6 +1310,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     wrapper.vm.verRespuestasGenerales[0] = true
@@ -1249,6 +1373,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.buscarComentarios(46245)).toEqual(esperado)
   })
 
@@ -1264,6 +1391,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.respuestasItems).toEqual(esperado)
     expect(wrapper.vm.verRespuestasItems).toEqual([[false], []])
     expect(wrapper.vm.responderEntradasItems).toEqual(entrada)
@@ -1293,6 +1423,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaGeneral(0)
     wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
     wrapper.vm.cerrarRespuestaGeneral(0)
@@ -1310,6 +1443,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     expect(wrapper.vm.verRespuestasItems[0][0]).toBeTruthy()
   })
@@ -1324,6 +1460,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     wrapper.vm.cerrarRespuestaItem(0, 0)
@@ -1341,6 +1480,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeFalsy()
     expect(wrapper.vm.responderEntradasItems[0][0].error).toBeTruthy()
@@ -1357,6 +1499,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeTruthy()
     expect(wrapper.vm.responderEntradasItems[0][0].error).toBeFalsy()
     expect(wrapper.vm.responderEntradasItems[0][0].mensaje).toEqual('')
@@ -1372,6 +1517,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     expect(wrapper.vm.validarRespuestaItem(0, 0)).toBeTruthy()
@@ -1389,6 +1537,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     expect(wrapper.vm.validarListaRespuestas()).toBeTruthy()
@@ -1406,6 +1557,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     expect(wrapper.vm.validarListaRespuestas()).toBeFalsy()
     expect(wrapper.vm.responderEntradasItems[0][0].error).toBeTruthy()
@@ -1422,6 +1576,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.verRespuestasGenerales[0] = true
     wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
     expect(wrapper.vm.validarRespuestaGeneral(0)).toBeTruthy()
@@ -1439,6 +1596,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     expect(wrapper.vm.validarRespuestaGeneral(0)).toBeTruthy()
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeFalsy()
     expect(wrapper.vm.responderEntradasGenerales[0].mensaje).toEqual('')
@@ -1454,6 +1614,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.verRespuestasGenerales[0] = true
     expect(wrapper.vm.validarRespuestaGeneral(0)).toBeFalsy()
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeTruthy()
@@ -1470,6 +1633,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.verRespuestasGenerales[0] = true
     wrapper.vm.respuestasGenerales[0].respuesta = 'respuesta de prueba'
     expect(wrapper.vm.validarListaRespGenerales()).toBeTruthy()
@@ -1487,6 +1653,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.verRespuestasGenerales[0] = true
     expect(wrapper.vm.validarListaRespGenerales()).toBeFalsy()
     expect(wrapper.vm.responderEntradasGenerales[0].error).toBeTruthy()
@@ -1503,6 +1672,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.respuestasItems[0][0].respuesta = 'respuesta de prueba'
     wrapper.vm.verRespuestasGenerales[0] = true
@@ -1520,6 +1692,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.abrirRespuestaItem(0, 0)
     wrapper.vm.verRespuestasGenerales[0] = true
     expect(wrapper.vm.validarRespuestas()).toBeFalsy()
@@ -1535,6 +1710,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.responderEntradasItems[0][0].error = true
     wrapper.vm.responderEntradasItems[0][0].mensaje = 'mensaje de error de prueba'
     wrapper.vm.limpiarErrorRespItem(0, 0)
@@ -1552,6 +1730,9 @@ describe('Items.vue', () => {
         listaCom: listaComentarios
       }
     })
+    wrapper.vm.crearListas()
+    wrapper.vm.categorizarComentarios()
+    wrapper.vm.crearRespuestasItems()
     wrapper.vm.responderEntradasGenerales[0].error = true
     wrapper.vm.responderEntradasGenerales[0].mensaje = 'mensaje de error de prueba'
     wrapper.vm.limpiarErrorRespGeneral(0)
