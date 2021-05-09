@@ -199,6 +199,7 @@ describe('RevisarMinuta.vue', () => {
         plugins: [store]
       }
     })
+    wrapper.vm.obtenerMinuta(194623)
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.bitacora).toEqual(minuta)
   })

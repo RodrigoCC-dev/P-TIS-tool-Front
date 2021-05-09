@@ -550,11 +550,13 @@ export default {
     }
   },
   mounted () {
-    if (!this.actualizarAvance) {
-      this.obtenerCorrelativo()
-      this.obtenerSemestre()
+    if (localStorage.user_tk) {
+      if (!this.actualizarAvance) {
+        this.obtenerCorrelativo()
+        this.obtenerSemestre()
+      }
+      this.convertirBitacora()
     }
-    this.convertirBitacora()
   }
 }
 </script>

@@ -120,11 +120,8 @@ export default {
           const usuario = await axios.get(this.apiUrl + '/login/user', { headers: Auth.authHeader() })
           this.$store.commit('setUsuario', usuario.data)
           this.redirigirUsuario()
-          const cookie = {
-            email: usuario.data.email,
-            rango: usuario.data.rol.rango
-          }
-          Auth.setUser(cookie)
+          Auth.setCookie('userLogged', this.usuarioACadena(usuario.data))
+          Auth.setCookie('range', this.usuarioACadena(usuario.data.rol))
         } catch (e1) {
           console.log(e1)
           console.log('No se ha cargado la información del usuario')
@@ -134,6 +131,14 @@ export default {
         this.passError = true
         this.mostrarError()
       }
+    },
+    usuarioACadena: function (usuario) {
+      var cadena = ''
+      var llaves = Object.keys(usuario)
+      for (var i = 0; i < llaves.length; i++) {
+        cadena += usuario[llaves[i]] + ';'
+      }
+      return cadena
     }
   }
 }

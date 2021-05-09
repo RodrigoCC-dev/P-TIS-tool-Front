@@ -44,13 +44,13 @@ export default {
     }
   },
 
-  setUser (userLogged) {
-    Cookies.set('userLogged', userLogged, { sameSite: 'lax' })
+  setCookie (nombre, valor) {
+    Cookies.set(nombre, valor, { sameSite: 'lax', secure: true })
   },
-  getUser () {
-    return Cookies.get('userLogged')
+  getCookie (nombre) {
+    return Cookies.get(nombre)
   },
-  deleteUser () {
-    Cookies.remove('userLogged')
+  deleteCookie (nombre) {
+    Cookies.remove(nombre)
   }
 }

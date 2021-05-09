@@ -375,7 +375,9 @@ export default {
     }
   },
   mounted () {
-    this.obtenerProfesores()
+    if (localStorage.user_tk) {
+      this.obtenerProfesores()
+    }
   }
 }
 </script>

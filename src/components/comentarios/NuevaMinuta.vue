@@ -219,9 +219,11 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinuta(this.id)
-    this.obtenerRespuestas(this.id)
-    this.obtenerAprobaciones(this.id)
+    if (localStorage.user_tk) {
+      this.obtenerMinuta(this.id)
+      this.obtenerRespuestas(this.id)
+      this.obtenerAprobaciones(this.id)
+    }
   }
 }
 </script>

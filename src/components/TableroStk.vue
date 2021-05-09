@@ -307,7 +307,7 @@ export default {
     }
   },
   mounted () {
-    if (Object.keys(this.grupo).length > 0) {
+    if (Object.keys(this.grupo).length > 0 && localStorage.user_tk) {
       this.obtenerMinutas()
     }
   }

@@ -524,11 +524,7 @@ export default {
       return Funciones.convertirRevisionAEstado(identificador)
     },
     actualizarTipo: function (tipo) {
-      if (tipo === 'Coordinacion') {
-        return 'Coordinación'
-      } else {
-        return tipo
-      }
+      return Funciones.actualizarTipo(tipo)
     }
   },
   watch: {
@@ -543,11 +539,13 @@ export default {
     }
   },
   mounted () {
-    this.obtenerMinutas()
-    this.obtenerParaRevisar()
-    this.obtenerRespondidas()
-    if (Object.keys(this.grupo).length > 0) {
-      this.obtenerAvances()
+    if (localStorage.user_tk) {
+      this.obtenerMinutas()
+      this.obtenerParaRevisar()
+      this.obtenerRespondidas()
+      if (Object.keys(this.grupo).length > 0) {
+        this.obtenerAvances()
+      }
     }
   }
 }

@@ -34,7 +34,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['usuario'])
+    ...mapState(['usuario', 'authenticated']),
+
+    sesionIniciada: function () {
+      return this.authenticated || !!localStorage.user_tk
+    }
   },
   methods: {
     nombreCompleto: function (usuario) {
@@ -47,8 +51,38 @@ export default {
       localStorage.removeItem('user_tk')
       this.$store.commit('setAutenticacion', false)
       this.$store.commit('setUsuario', {})
-      Auth.deleteUser('userLogged')
+      Auth.deleteCookie('userLogged')
+      Auth.deleteCookie('range')
       return this.$router.push('/')
+    }
+  },
+  mounted () {
+    try {
+      if (this.sesionIniciada && Object.keys(this.usuario).length === 0) {
+        const datosUsuario = Auth.getCookie('userLogged').split(';')
+        const datosRango = Auth.getCookie('range').split(';')
+        const usuario = {
+          id: datosUsuario[0],
+          nombre: datosUsuario[1],
+          apellido_paterno: datosUsuario[2],
+          apellido_materno: datosUsuario[3],
+          run: null,
+          email: datosUsuario[5],
+          rol_id: datosUsuario[6],
+          rol: {
+            id: datosRango[0],
+            rol: datosRango[1],
+            rango: datosRango[2]
+          }
+        }
+        if (datosUsuario[4] !== 'null') {
+          usuario.run = datosUsuario[4]
+        }
+        this.$store.commit('setUsuario', usuario)
+        this.$store.commit('setAutenticacion', true)
+      }
+    } catch {
+      this.cerrarSesion()
     }
   }
 }

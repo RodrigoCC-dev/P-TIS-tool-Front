@@ -122,6 +122,7 @@ describe('GestionGrupos.vue', () => {
   })
 
   it('variable listaGrupos se inicializa correctamente', async () => {
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaGrupos).toEqual(grupos)
   })
@@ -175,11 +176,15 @@ describe('GestionGrupos.vue', () => {
         stakeholders: []
       }
     ]
+    wrapper.vm.obtenerGrupos()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.gruposJornada).toEqual(esperado)
   })
 
   it('propiedad computada "gruposJornada" funciona correctamente con jornada "Vespertina"', async () => {
     wrapper.vm.$store.commit('setJornadaActual', "Vespertina")
+    wrapper.vm.obtenerGrupos()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.gruposJornada).toEqual([])
   })
 

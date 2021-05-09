@@ -308,6 +308,7 @@ describe('Estudiante.vue', () => {
       {id: 463, tipo: 'Coordinacion'},
       {id: 6921, tipo: 'Cliente'}
     ]
+    wrapper.vm.obtenerTipoMinutas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.minutasFiltradas).toEqual(esperado)
   })
@@ -328,6 +329,8 @@ describe('Estudiante.vue', () => {
   })
 
   it('método "elegirTipo" funciona correctamente con tipo "Semanal"', async () => {
+    wrapper.vm.obtenerTipoMinutas()
+    wrapper.vm.obtenerMotivos()
     await wrapper.vm.$nextTick()
     wrapper.vm.verSemanal = false
     wrapper.vm.seleccionarMinuta = true
@@ -338,6 +341,8 @@ describe('Estudiante.vue', () => {
   })
 
   it('método "elegirTipo" funciona correctamente con tipo distinto a "Semanal"', async () => {
+    wrapper.vm.obtenerTipoMinutas()
+    wrapper.vm.obtenerMotivos()
     await wrapper.vm.$nextTick()
     wrapper.vm.verFormulario = false
     wrapper.vm.seleccionarMinuta = true
@@ -364,27 +369,33 @@ describe('Estudiante.vue', () => {
   })
 
   it('método "obtenerTipoMinutas" funciona correctamente', async () => {
+    wrapper.vm.obtenerTipoMinutas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.tipoMinutas).toEqual(tipoMinutas)
   })
 
   it('método "obtenerEstudiante" funciona correctamente', async () => {
+    wrapper.vm.obtenerEstudiante()
+    await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.estudiante).toEqual(estudiante)
     expect(wrapper.vm.grupo).toEqual(grupo)
   })
 
   it('método "obtenerGrupo" funciona correctamente', async () => {
+    wrapper.vm.obtenerGrupo()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupo).toEqual(grupo)
   })
 
   it('método "obtenerAprobaciones" funciona correctamente', async () => {
+    wrapper.vm.obtenerAprobaciones()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.$store.state.tipoAprobaciones).toEqual(tipoAprobaciones)
   })
 
   it('método "obtenerMotivos" funciona correctamente', async () => {
+    wrapper.vm.obtenerMotivos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.motivos).toEqual(motivos)
   })
@@ -478,16 +489,22 @@ describe('Estudiante.vue', () => {
   })
 
   it('método "buscarIdMotivo" funciona correctamente', async () => {
+    wrapper.vm.obtenerMotivos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.buscarIdMotivo('ECI')).toEqual(9643)
   })
 
   it('método "buscarIdTipoMinuta" funciona correctamente', async () => {
+    wrapper.vm.obtenerTipoMinutas()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.buscarIdTipoMinuta('Coordinacion')).toEqual(463)
   })
 
   it('método "nuevaEmision" funciona correctamente', async () => {
+    wrapper.vm.obtenerTipoMinutas()
+    wrapper.vm.obtenerEstudiante()
+    wrapper.vm.obtenerAprobaciones()
+    wrapper.vm.obtenerMotivos()
     await wrapper.vm.$nextTick()
     wrapper.vm.verRevision = true
     wrapper.vm.verComentarios = true

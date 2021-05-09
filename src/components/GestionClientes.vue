@@ -414,8 +414,10 @@ export default {
     }
   },
   mounted () {
-    this.obtenerGrupos()
-    this.obtenerStakeholders()
+    if (localStorage.user_tk) {
+      this.obtenerGrupos()
+      this.obtenerStakeholders()
+    }
   }
 }
 </script>
