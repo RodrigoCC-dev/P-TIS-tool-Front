@@ -21,7 +21,7 @@
               <div class="field has-addons has-addons-right">
                 <p class="control is-expanded">
                   <span class="select is-fullwidth">
-                    <select v-model="aprobacion">
+                    <select v-model="aprobacion" @change="validarAprobacion">
                       <option v-for="(aprobacion, index) in aprobacionesFiltradas" :key="aprobacion.id" :value="aprobacion.id">{{ index + 1 }} - {{ aprobacion.descripcion }}</option>
                     </select>
                   </span>
@@ -32,6 +32,7 @@
               </div>
             </div>
           </div>
+          <p v-if="error" class="is-danger help select-centered">No se ha seleccionado un estado de evaluación</p>
         </div>
       </div>
       <br>
@@ -73,7 +74,8 @@ export default {
       id: this.idBitacora,
       bitacora: {},
       comentarios: [],
-      aprobacion: 0
+      aprobacion: 0,
+      error: false
     }
   },
   computed: {
@@ -125,10 +127,21 @@ export default {
       }
     },
     establecerEstado: function () {
-      this.enviarAprobacion()
+      if (this.validarAprobacion()) {
+        this.enviarAprobacion()
+      }
     },
     cerrar: function () {
       this.$emit('cerrar')
+    },
+    validarAprobacion: function () {
+      if (this.aprobacion === 0) {
+        this.error = true
+        return false
+      } else {
+        this.error = false
+        return true
+      }
     }
   },
   created () {
@@ -139,3 +152,10 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+  .select-centered {
+    margin-left: 2.5rem;
+    text-align: center;
+  }
+</style>
