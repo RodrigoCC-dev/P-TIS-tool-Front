@@ -131,7 +131,7 @@ export default {
       this.$emit('cerrar')
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerMinuta(this.id)
       this.obtenerRespuestas(this.id)
