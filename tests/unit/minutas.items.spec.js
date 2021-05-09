@@ -682,6 +682,51 @@ describe('Items.vue', () => {
     expect(wrapper.vm.comentariosPorItem).toEqual(esperado)
   })
 
+  it('propiedad computada "sinComentarios" funciona correctamente con "true" con comentarios vacios', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    expect(wrapper.vm.sinComentarios).toBeTruthy()
+  })
+
+  it('propiedad computada "sinComentarios" funciona correctamente con "true" con comentarios', () => {
+    const comentarios = [
+      {comentario: '', es_item: true, id_item: 0},
+      {comentario: '', es_item: true, id_item: 0}
+    ]
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.listaComentarios = comentarios
+    expect(wrapper.vm.sinComentarios).toBeTruthy()
+  })
+
+  it('propiedad computada "sinComentarios" funciona correctamente con "false"', () => {
+    const wrapper = shallowMount(Items, {
+      propsData: {
+        lista: lista,
+        asistentes: presentes,
+        comentar: true,
+        responder: false,
+        listaCom: []
+      }
+    })
+    wrapper.vm.listaComentarios = comentarios
+    expect(wrapper.vm.sinComentarios).toBeFalsy()
+  })
+
   it('método fechaItem funciona correctamente', () => {
     const wrapper = shallowMount(Items, {
       propsData: {
