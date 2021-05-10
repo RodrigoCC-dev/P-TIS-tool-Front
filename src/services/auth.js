@@ -45,7 +45,7 @@ export default {
   },
 
   setCookie (nombre, valor) {
-    Cookies.set(nombre, valor, { sameSite: 'lax', secure: true })
+    Cookies.set(nombre, valor, { sameSite: 'lax', secure: false })
   },
   getCookie (nombre) {
     return Cookies.get(nombre)
