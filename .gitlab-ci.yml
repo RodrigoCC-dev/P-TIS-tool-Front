@@ -16,7 +16,7 @@ build:
     paths:
       - dist
   before_script:
-    - echo "VUE_APP_API_URL='http://34.122.189.193:8080'" > .env
+    - echo "VUE_APP_API_URL='http://104.197.75.83:8080'" > .env
 
 test:
   stage: unit test
@@ -59,8 +59,6 @@ sonarqube:
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" #Define la ubicación del caché de análisis de Sonarqube
     GIT_DEPTH: "0" #Tell git to fetch all branches of the project, required by the analisys task
-    SONAR_HOST: http://104.197.75.83:9000
-    SONAR_TOKEN: 704cae1068c0876ad7f55450afeee93214f33fce
   cache:
     key: ptis-tool-front
     paths:

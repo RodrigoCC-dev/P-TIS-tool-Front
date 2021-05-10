@@ -65,7 +65,6 @@
                   <th scope="col" class="has-text-centered">N°</th>
                   <th scope="col" class="has-text-centered">R.U.N.</th>
                   <th scope="col" class="has-text-centered">Nombre estudiante</th>
-                  <th scope="col" class="has-text-centered">Sección</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -74,7 +73,6 @@
                   <th class="has-text-centered" scope="row">{{ index + 1 }}</th>
                   <td class="has-text-centered">{{ visualizarRun(estudiante.run_est) }}</td>
                   <td class="has-text-left">{{ concatenarNombre(estudiante) }}</td>
-                  <td class="has-text-centered">{{ estudiante.codigo_seccion}}</td>
                   <td class="has-text-centered"><input type="checkbox" v-model="estudiantes" :value="estudiante.id"></td>
                 </tr>
               </tbody>
