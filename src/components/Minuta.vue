@@ -320,10 +320,10 @@
         <div class="column is-half is-offset-3">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <a class="button is-primary-usach" @click="guardarMinuta">Guardar</a>
+              <a class="button is-primary-usach" @click="guardarMinuta">Guardar borrador</a>
             </div>
             <div class="control">
-              <a class="button is-secondary-usach" @click="emitirMinuta">Emitir</a>
+              <a class="button is-secondary-usach" @click="emitirMinuta">Emitir minuta</a>
             </div>
             <div class="control">
               <a class="button is-light-usach" @click="cancelarEnvio">Cancelar</a>
