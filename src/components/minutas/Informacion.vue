@@ -4,6 +4,7 @@
     <div class="columns">
       <div class="column is-full">
         <p class="title is-4 has-text-centered">MINUTA DE REUNIÓN</p>
+        <p class="subtitle is-6 has-text-centered">{{ bitacora.minuta.codigo }}_{{ bitacora.revision }}</p>
       </div>
     </div>
 
