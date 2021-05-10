@@ -88,7 +88,6 @@
                   <th scope="col" class="has-text-centered">N°</th>
                   <th scope="col" class="has-text-centered">Código</th>
                   <th scope="col" class="has-text-centered">Curso</th>
-                  <th scope="col" class="has-text-centered">Sección</th>
                   <th scope="col" class="has-text-centered">Jornada</th>
                   <th scope="col"></th>
                 </tr>
@@ -98,7 +97,6 @@
                   <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
                   <td class="has-text-centered">{{ seccion.curso.codigo }}</td>
                   <td class="has-text-left">{{ seccion.curso.nombre }}</td>
-                  <td class="has-text-centered">{{ seccion.codigo }}</td>
                   <td class="has-text-centered">{{ seccion.jornada.nombre }}</td>
                   <td class="has-text-centered"><input type="checkbox" v-model="seccionesAsignadas" :value="seccion.id"></td>
                 </tr>
@@ -123,7 +121,6 @@
                 <th scope="col" class="has-text-centered">N°</th>
                 <th scope="col" class="has-text-centered">Nombre</th>
                 <th scope="col" class="has-text-centered">Correo Electrónico</th>
-                <th scope="col" class="has-text-centered">Secciones</th>
                 <th socpe="col" class="has-text-centered">Jornada</th>
               </tr>
             </thead>
@@ -132,11 +129,6 @@
                 <th scope="row" class="has-text-centered is-vcentered">{{ index + 1 }}</th>
                 <td class="is-vcentered">{{ nombreCompleto(profesor.usuario) }}</td>
                 <td class="is-vcentered has-text-centered">{{ profesor.usuario.email }}</td>
-                <td>
-                  <div v-for="seccion in profesor.secciones" :key="seccion.id">
-                    <p class="has-text-centered">{{ seccion.codigo }}</p>
-                  </div>
-                </td>
                 <td>
                   <div v-for="seccion in profesor.secciones" :key="seccion.id">
                     <p class="has-text-centered">{{ seccion.jornada.nombre }}</p>
