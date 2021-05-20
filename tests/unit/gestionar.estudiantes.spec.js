@@ -127,6 +127,8 @@ axios.post.mockImplementation((url) => {
       return Promise.resolve()
     case apiUrl + '/estudiantes/eliminar':
       return Promise.resolve()
+    case apiUrl + '/estudiantes/archivo/nuevos':
+      return Promise.resolve()
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -802,6 +804,23 @@ describe('GestionEstudiantes.vue', () => {
 
   // Faltan test unitarios a manejo de archivos
 
+  it('método "enviarArchivo" funciona correctamente', async () => {
+    wrapper.vm.archivo = 'Archivo de prueba'
+    wrapper.vm.estudiante.seccion_id = 94534
+    wrapper.vm.mostrarNomina = true
+    wrapper.vm.nombreArchivo = 'prueba.txt'
+    wrapper.vm.agregaArchivo = true
+    wrapper.vm.enviarArchivo()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaEstudiantes).toEqual(estudiantes)
+    expect(wrapper.vm.mostrarNomina).toBeFalsy()
+    expect(wrapper.vm.estudiante.seccion_id).toEqual(null)
+    expect(wrapper.vm.archivo).toEqual('')
+    expect(wrapper.vm.nombreArchivo).toEqual('No se ha subido el archivo')
+    expect(wrapper.vm.agregaArchivo).toBeFalsy()
+  })
+
   it('método "limpiarNomina" funciona correctamente',  () => {
     wrapper.vm.mostrarNomina = true
     wrapper.vm.estudiante.seccion_id = 234
@@ -850,5 +869,34 @@ describe('GestionEstudiantes.vue', () => {
     wrapper.vm.estudiante.seccion_id = 92453
     wrapper.vm.archivo = ''
     expect(wrapper.vm.validarIngresoNomina()).toBeFalsy()
+  })
+
+  // Falta test unitario a método 'obtenerPlantilla'
+
+  it('método "buscarIdSeccion" funciona correctamente con código existente', async () => {
+    wrapper.vm.obtenerSecciones()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.buscarIdSeccion('A1')).toEqual(secciones[0].id)
+  })
+
+  it('método "buscarIdSeccion" funciona correctamente con código inexistente', async () => {
+    wrapper.vm.obtenerSecciones()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.buscarIdSeccion('P21')).toEqual(0)
+  })
+
+  it('método "cargarEstudiante" funciona correctamente', async () => {
+    wrapper.vm.obtenerSecciones()
+    await wrapper.vm.$nextTick()
+    wrapper.vm.cargarEstudiante(estudiantes[1])
+    expect(wrapper.vm.estudiante.id).toEqual(estudiantes[1].id)
+    expect(wrapper.vm.estudiante.usuario.nombre).toEqual(estudiantes[1].nombre_est)
+    expect(wrapper.vm.estudiante.usuario.apellido_paterno).toEqual(estudiantes[1].apellido1)
+    expect(wrapper.vm.estudiante.usuario.apellido_materno).toEqual(estudiantes[1].apellido2)
+    expect(wrapper.vm.estudiante.usuario.run).toEqual(estudiantes[1].run_est)
+    expect(wrapper.vm.estudiante.usuario.email).toEqual(estudiantes[1].correo)
+    expect(wrapper.vm.estudiante.seccion_id).toEqual(secciones[1].id)
+    expect(wrapper.vm.actualizarEstudiante).toBeTruthy()
+    expect(wrapper.vm.verFormulario).toBeTruthy()
   })
 })
