@@ -42,9 +42,120 @@ const store = createStore({
 // Variables globales
 const idMinuta = 663462
 
-const respuestas = []
+const bitacora = {
+  id: idMinuta,
+  revision: 'M',
+  identificador: 'EAC',
+  minuta: {
+    id: 242345345,
+    correlativo: 6345,
+    tema: 'Esto es una prueba',
+    fecha_reunion: '2020-12-14T00:00:00.000Z',
+    h_inicio: '2020-12-14T23:00:00.000Z',
+    h_termino: '2020-12-14T23:59:00.000Z',
+    clasificacion: {
+      informativa: false,
+      avance: false,
+      decision: true,
+      coordinacion: false,
+      otro: false
+    },
+    asistencia: [
+      {
+        id: 62345,
+        iniciales: 'GER',
+        descripcion: 'Presente'
+      },
+      {
+        id: 143534,
+        iniciales: 'PAR',
+        descripcion: 'Presente'
+      },
+      {
+        id: 63453,
+        iniciales: 'CER',
+        descripcion: 'Presente'
+      }
+    ],
+    items: [
+      {
+        id: 413453,
+        tipo: 'Compromiso',
+        correlativo: 1,
+        descripcion: 'Este es un item de prueba',
+        fecha: '2020-12-31T00:00:00.000Z',
+        responsables: [
+          {
+            id: 653453,
+            asistencia_id: 62345
+          }
+        ]
+      }
+    ]
+  }
+}
 
-const aprobaciones = []
+const respuestas = [
+  {
+    id: 93453,
+    comentario: 'Este es un comentario para la prueba',
+    es_item: true,
+    id_item: 413453,
+    asistencia_id: 62345,
+    bitacora_revision_id: idMinuta,
+    respuestas: [
+      {
+        id: 134534,
+        respuesta: 'Respuesta a un comentario de prueba',
+        comentario_id: 93453,
+        asistencia_id: 143534
+      }
+    ]
+  },
+  {
+    id: 34534,
+    comentario: 'Este es un comentario de prueba general',
+    es_item: false,
+    id_item: null,
+    asistencia_id: 62345,
+    bitacora_revision_id: idMinuta,
+    respuestas: [
+      {
+        id: 845343,
+        respuesta: 'Esta es una respuesta general de prueba',
+        comentario_id: 34534,
+        asistencia_id: 143534
+      }
+    ]
+  }
+]
+
+const aprobaciones = [
+  {
+    id: 134534,
+    bitacora_revision_id: idMinuta,
+    asistencia_id: 143534,
+    tipo_aprobacion_id: 1453464,
+    tipo_aprobacion: {
+      id: 1453464,
+      identificador: 'A',
+      descripcion: 'Aprobada',
+      rango: 1
+    }
+  },
+  {
+    id: 843453,
+    bitacora_revision_id: idMinuta,
+    asistencia_id: 63453,
+    tipo_aprobacion_id: 613453,
+    tipo_aprobacion: {
+      id: 613453,
+      identificador: 'R',
+      descripcion: 'Rechazada',
+      rango: 3
+    }
+  }
+]
 
 // Mock axios
 jest.mock('axios')
@@ -54,9 +165,9 @@ axios.get.mockImplementation((url) => {
     case apiUrl + '/minutas/' + idMinuta:
       return Promise.resolve({data: bitacora})
     case apiUrl + '/respuestas/' + idMinuta:
-      return Promise.resolve({data: []})
+      return Promise.resolve({data: respuestas})
     case apiUrl + '/aprobaciones/' + idMinuta:
-      return Promise.resolve({data: []})
+      return Promise.resolve({data: aprobaciones})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -64,7 +175,6 @@ axios.get.mockImplementation((url) => {
 
 describe('NuevaMinuta.vue', () => {
   let wrapper
-  let bitacora
 
   beforeEach(() => {
     wrapper = shallowMount(Nueva, {
@@ -72,34 +182,6 @@ describe('NuevaMinuta.vue', () => {
         plugins: [store]
       }
     })
-
-    bitacora = {
-      id: idMinuta,
-      revision: 'M',
-      identificador: 'EAC',
-      minuta: {
-        id: 242345345,
-        correlativo: 6345,
-        tema: 'Esto es una prueba',
-        fecha_reunion: '2020-12-14T00:00:00.000Z',
-        h_inicio: '2020-12-14T23:00:00.000Z',
-        h_termino: '2020-12-14T23:59:00.000Z',
-        clasificacion: {
-          informativa: false,
-          avance: false,
-          decision: true,
-          coordinacion: false,
-          otro: false
-        },
-        asistencia: [
-          {
-            id: 62345,
-            iniciales: 'GER',
-            descripcion: 'Presente'
-          }
-        ]
-      }
-    }
   })
 
   it('se asigna props "idBitacora" adecuadamente', () => {
@@ -164,6 +246,24 @@ describe('NuevaMinuta.vue', () => {
     expect(wrapper.vm.mostrarMinuta).toBeTruthy()
   })
 
+  it('método "obtenerMinuta" funciona correctamente', async () => {
+    wrapper.vm.obtenerMinuta(idMinuta)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.bitacora).toEqual(bitacora)
+  })
+
+  it('método "obtenerRespuestas" funciona correctamente', async () => {
+    wrapper.vm.obtenerRespuestas(idMinuta)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.comentarios).toEqual(respuestas)
+  })
+
+  it('método "obtenerAprobaciones" funciona correctamente', async () => {
+    wrapper.vm.obtenerAprobaciones(idMinuta)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.aprobaciones).toEqual(aprobaciones)
+  })
+
   it('método "buscarIniciales" funciona correctamente', () => {
     wrapper.vm.bitacora = bitacora
     expect(wrapper.vm.buscarIniciales(62345)).toEqual('GER')
@@ -177,16 +277,39 @@ describe('NuevaMinuta.vue', () => {
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "identificador" igual a "EF"', () => {
-    wrapper.vm.bitacora = bitacora
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      revision: '1',
+      identificador: 'EF',
+      minuta: {
+        id: 242345345,
+        correlativo: 6345,
+        tema: 'Esto es una prueba',
+        fecha_reunion: '2020-12-14T00:00:00.000Z',
+        h_inicio: '2020-12-14T23:00:00.000Z',
+        h_termino: '2020-12-14T23:59:00.000Z',
+        clasificacion: {
+          informativa: false,
+          avance: false,
+          decision: true,
+          coordinacion: false,
+          otro: false
+        },
+        asistencia: [
+          {
+            id: 62345,
+            iniciales: 'GER',
+            descripcion: 'Presente'
+          }
+        ]
+      }
+    }
     wrapper.vm.nuevoMotivo = 'EF'
-    wrapper.vm.bitacora.identificador = 'EF'
-    wrapper.vm.bitacora.revision = 1
     wrapper.vm.establecerNuevaRevision()
     expect(wrapper.vm.nuevaRevision).toEqual(2)
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "nuevoMotivo" distinto a "EF"', () => {
-    debugger
     wrapper.vm.bitacora = bitacora
     wrapper.vm.nuevoMotivo = 'EAC'
     wrapper.vm.establecerNuevaRevision()
@@ -194,9 +317,33 @@ describe('NuevaMinuta.vue', () => {
   })
 
   it('método "emitir" funciona correctamente', async () => {
-    wrapper.vm.bitacora = bitacora
-    wrapper.vm.bitacora.identificador = 'EF'
-    wrapper.vm.bitacora.revision = 0
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      revision: '0',
+      identificador: 'EF',
+      minuta: {
+        id: 242345345,
+        correlativo: 6345,
+        tema: 'Esto es una prueba',
+        fecha_reunion: '2020-12-14T00:00:00.000Z',
+        h_inicio: '2020-12-14T23:00:00.000Z',
+        h_termino: '2020-12-14T23:59:00.000Z',
+        clasificacion: {
+          informativa: false,
+          avance: false,
+          decision: true,
+          coordinacion: false,
+          otro: false
+        },
+        asistencia: [
+          {
+            id: 62345,
+            iniciales: 'GER',
+            descripcion: 'Presente'
+          }
+        ]
+      }
+    }
     wrapper.vm.emitir()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.nuevoMotivo).toEqual('EF')
