@@ -65,7 +65,7 @@ export default {
       this.$store.commit('setJornadaActual', nombreTab)
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerJornadas()
     }
