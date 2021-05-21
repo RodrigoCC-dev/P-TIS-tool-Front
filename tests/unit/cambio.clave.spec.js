@@ -33,6 +33,15 @@ const mockRouter = {
 
 jest.mock('axios')
 
+axios.post.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/auth/login':
+      return Promise.resolve({ data: { jwt: 'token' }})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
 describe('CambioClave.vue', () => {
   it('variable "actual" se inicializa correctamente', () => {
     const wrapper = shallowMount(CambioClave)
@@ -229,6 +238,7 @@ describe('CambioClave.vue', () => {
 /*  Intento fallido de prueba función de autenticación con axios.post
 
   it('método "autenticar" funciona correctamente con "true"', async () => {
+    process.env.VUE_APP_API_URL = apiUrl
     const user = {
       auth: {
         email: 'juan.castro@algo.com',
@@ -240,6 +250,7 @@ describe('CambioClave.vue', () => {
         plugins: [store]
       }
     })
+
     axios.post.mockImplementation((url) => {
       switch (url) {
         case apiUrl + '/auth/login':
@@ -248,10 +259,12 @@ describe('CambioClave.vue', () => {
           return Promise.reject(new Error('not found'))
       }
     })
+
     wrapper.vm.actual = 'prueba1'
-    wrapper.vm.autenticar()
+    const respuesta = wrapper.vm.autenticar()
     await wrapper.vm.$nextTick()
-    expect(wrapper.vm.autenticar()).toBeTruthy()
+    debugger
+    expect(respuesta).toBeTruthy()
     expect(wrapper.vm.entradas.actual.error).toBeFalsy()
     expect(wrapper.vm.entradas.actual.mensaje).toEqual('')
   })

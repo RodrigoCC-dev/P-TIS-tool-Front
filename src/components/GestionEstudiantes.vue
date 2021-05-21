@@ -51,7 +51,7 @@
             <div class="field">
               <label class="label">R.U.N.:</label>
               <div class="control">
-                <input v-model="estudiante.usuario.run" v-on:input="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9">
+                <input v-model="estudiante.usuario.run" v-on:input="validarRun" :class="{ 'is-danger' : runEntrada.error }" class="input" type="text" placeholder="ej.: 12345678-9" :disabled="actualizarEstudiante">
               </div>
               <p class="is-danger help" v-if="runEntrada.error">{{ runEntrada.mensaje }}</p>
             </div>
@@ -85,7 +85,7 @@
           <div class="column is-12">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <a class="button is-primary-usach" @click="agregar">Agregar</a>
+                <a class="button is-primary-usach" @click="agregar">{{ actualizarEstudiante ? 'Actualizar' : 'Agregar' }}</a>
               </div>
               <div class="control">
                 <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
@@ -180,7 +180,7 @@
           <tr v-for="(estudiante, index) in listaEstudiantes" :key="estudiante.id">
             <th scope="row" class="has-text-centered">{{ index + 1 }}</th>
             <td class="has-text-centered">{{ visualizarRun(estudiante.run_est) }}</td>
-            <td class="has-text-left">{{ nombreCompleto(estudiante) }}</td>
+            <td class="has-text-left"><a @click="cargarEstudiante(estudiante)">{{ nombreCompleto(estudiante) }}</a></td>
             <td class="has-text-centered">{{ estudiante.correo }}</td>
             <td class="has-text-centered">{{ estudiante.jornada }}</td>
             <td class="has-text-centered"><input type="checkbox" v-model="eliminados" :value="estudiante.id"></td>
@@ -251,6 +251,7 @@ export default {
     return {
       verFormulario: false,
       estudiante: {
+        id: 0,
         usuario: {
           nombre: '',
           apellido_paterno: '',
@@ -299,7 +300,8 @@ export default {
       mostrarNomina: false,
       archivo: '',
       nombreArchivo: 'No se ha subido el archivo',
-      agregaArchivo: false
+      agregaArchivo: false,
+      actualizarEstudiante: false
     }
   },
   computed: {
@@ -348,6 +350,7 @@ export default {
       this.estudiante.usuario.run = ''
       this.estudiante.usuario.email = ''
       this.estudiante.seccion_id = null
+      this.actualizarEstudiante = false
     },
     agregarEstudiante: function () {
       this.verFormulario = true
@@ -374,11 +377,22 @@ export default {
             usuario_attributes: this.estudiante.usuario
           }
         }
-        try {
-          await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
-          this.obtenerEstudiantes()
-        } catch (e) {
-          console.log(e)
+        if (!this.actualizarEstudiante) {
+          if (!this.existeEstudiante()) {
+            try {
+              await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
+              this.obtenerEstudiantes()
+            } catch (e) {
+              console.log(e)
+            }
+          }
+        } else {
+          try {
+            await axios.patch(this.apiUrl + '/estudiantes/' + this.estudiante.id, nuevoEstudiante, { headers: Auth.postHeader() })
+            this.obtenerEstudiantes()
+          } catch (e) {
+            console.log(e)
+          }
         }
         this.verFormulario = false
       }
@@ -550,7 +564,6 @@ export default {
       esvalido = esvalido && this.validarApellidoM()
       esvalido = esvalido && this.validarEmail()
       esvalido = esvalido && this.validarSeccion()
-      esvalido = esvalido && !this.existeEstudiante()
       return esvalido
     },
     seleccionarTodos: function () {
@@ -651,9 +664,23 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    buscarIdSeccion: function (codigo) {
+      return Funciones.obtenerIdDeLista(this.secciones, 'codigo', codigo)
+    },
+    cargarEstudiante: function (estudiante) {
+      this.estudiante.id = estudiante.id
+      this.estudiante.usuario.nombre = estudiante.nombre_est
+      this.estudiante.usuario.apellido_paterno = estudiante.apellido1
+      this.estudiante.usuario.apellido_materno = estudiante.apellido2
+      this.estudiante.usuario.run = estudiante.run_est
+      this.estudiante.usuario.email = estudiante.correo
+      this.estudiante.seccion_id = this.buscarIdSeccion(estudiante.codigo_seccion)
+      this.actualizarEstudiante = true
+      this.verFormulario = true
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerSecciones()
       this.obtenerEstudiantes()
