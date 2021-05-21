@@ -155,7 +155,8 @@ export default {
         mostrar: false,
         mensaje: '¿Confirma la eliminación del grupo?'
       },
-      actualizarGrupo: false
+      actualizarGrupo: false,
+      idGrupo: 0
     }
   },
   computed: {
@@ -226,11 +227,21 @@ export default {
           grupo: this.grupo,
           estudiantes: this.estudiantes
         }
-        try {
-          await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
-          this.obtenerGrupos()
-        } catch {
-          console.log('No fue posible crear el grupo')
+        if (!this.actualizarGrupo) {
+          try {
+            await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
+            this.obtenerGrupos()
+          } catch {
+            console.log('No fue posible crear el grupo')
+          }
+        } else {
+          try {
+            await axios.patch(this.apiUrl + '/grupos/' + this.idGrupo, nuevoGrupo, { headers: Auth.postHeader() })
+            this.obtenerGrupos()
+            this.actualizarGrupo = false
+          } catch {
+            console.log('No fue posible actualizar el grupo')
+          }
         }
         this.verFormulario = false
       }
@@ -279,7 +290,7 @@ export default {
         return false
       } else if (!regExp.test(proyecto)) {
         this.entradas.proyecto.error = true
-        this.entradas.proyecto.mensaje = 'Sólo se admiten letras. Verificar que no tenga caracteres especiales'
+        this.entradas.proyecto.mensaje = 'Sólo se admiten letras. Verificar que no tenga caracteres especiales.'
         return false
       } else {
         this.entradas.proyecto.error = false
@@ -362,6 +373,7 @@ export default {
       }
     },
     editarGrupo: function (grupo) {
+      this.idGrupo = grupo.id
       this.grupo.nombre = grupo.nombre
       this.grupo.proyecto = grupo.proyecto
       this.grupo.correlativo = grupo.correlativo
