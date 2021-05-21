@@ -16,18 +16,65 @@ const store = createStore({
         proyecto: 'Proyecto de prueba unitario',
         correlativo: 34,
         jornada: 'Diurna',
-        estudiantes: [{
-          id: 92345,
-          iniciales: 'ABC',
-          usuario: {
-            nombre: 'Alberto',
-            apellido_paterno: 'Becerra',
-            apellido_materno: 'Castro',
-            run: '11111111-1',
-            email: 'alberto.becerra@algo.com'
+        estudiantes: [
+          {
+            id: 92345,
+            iniciales: 'ABC',
+            usuario: {
+              nombre: 'Alberto',
+              apellido_paterno: 'Becerra',
+              apellido_materno: 'Castro',
+              run: '11111111-1',
+              email: 'alberto.becerra@algo.com'
+            }
+          },
+          {
+            id: 134345,
+            iniciales: 'GER',
+            usuario: {
+              nombre: 'Gabriel',
+              apellido_paterno: 'Espinoza',
+              apellido_materno: 'Rodriguez',
+              run: '12345678-5',
+              email: 'gabriel.espinoza@algo.com'
+            }
+          },
+          {
+            id: 643453,
+            iniciales: 'PAR',
+            usuario: {
+              nombre: 'Patricia',
+              apellido_paterno: 'Arancibia',
+              apellido_materno: 'Robles',
+              run: '10112233-K',
+              email: 'patricia.arancibia@algo.com'
+            }
           }
-        }],
-        stakeholders: []
+        ],
+        stakeholders: [
+          {
+            id: 4643453,
+            iniciales: 'MSC',
+            usuario: {
+              nombre: 'Mauricio',
+              apellido_paterno: 'Soto',
+              apellido_materno: 'Castro',
+              run: null,
+              email: 'mauricio.soto@algo.com'
+            }
+          },
+          {
+            id: 64345,
+            iniciales: 'BAS',
+            usuario: {
+              nombre: 'Bastián',
+              apellido_paterno: 'Acevedo',
+              apellido_materno: 'Sepúlveda',
+              run: null,
+              email: 'bastian.acevedo@algo.com'
+            }
+          }
+        ]
       },
       motivos: [
         {id: 9245, motivo: 'Emitida para coordinación interna', identificador: 'ECI'},
@@ -73,7 +120,7 @@ const bitacora = {
       },
       {
         id: 63453,
-        iniciales: 'CER',
+        iniciales: 'ABC',
         descripcion: 'Presente'
       }
     ],
@@ -267,6 +314,198 @@ describe('NuevaMinuta.vue', () => {
   it('método "buscarIniciales" funciona correctamente', () => {
     wrapper.vm.bitacora = bitacora
     expect(wrapper.vm.buscarIniciales(62345)).toEqual('GER')
+  })
+
+  // Método obtenerNuevoMotivo
+  it('método "obtenerNuevoMotivo" funciona correctamente con "EF" y "Coordinacion"', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'EF',
+      minuta: {
+        id: 242345345,
+        tipo: 'Coordinacion',
+      }
+    }
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('ECI')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "EF" y "Cliente"', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'EF',
+      minuta: {
+        id: 242345345,
+        tipo: 'Cliente',
+      }
+    }
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EAC')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "EF" y otro tipo', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'EF',
+      minuta: {
+        id: 242345345,
+        tipo: 'Prueba',
+      }
+    }
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EF')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", "Coordinacion" y aprobaciones parciales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Coordinacion',
+      }
+    }
+    wrapper.vm.aprobaciones = aprobaciones
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('ECI')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", "Coordinacion" y aprobaciones totales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Coordinacion',
+      }
+    }
+    wrapper.vm.aprobaciones = [
+      {id: 24634, tipo_aprobacion: {id: 63453, identificador: 'A'}},
+      {id: 634353, tipo_aprobacion: {id: 23534, identificador: 'A'}}
+    ]
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EF')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", "Cliente" y aprobaciones parciales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Cliente',
+      }
+    }
+    wrapper.vm.aprobaciones = aprobaciones
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('ECI')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", "Cliente" y aprobaciones totales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Cliente',
+      }
+    }
+    wrapper.vm.aprobaciones = [
+      {id: 24634, tipo_aprobacion: {id: 63453, identificador: 'A'}},
+      {id: 634353, tipo_aprobacion: {id: 23534, identificador: 'A'}}
+    ]
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('ERC')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", otro tipo y aprobaciones parciales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Prueba',
+      }
+    }
+    wrapper.vm.aprobaciones = aprobaciones
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EAC')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ECI", otro tipo y sin aprobaciones', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ECI',
+      minuta: {
+        id: 242345345,
+        tipo: 'Prueba',
+      }
+    }
+    wrapper.vm.aprobaciones = []
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EF')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ERC", "Cliente" y aprobaciones parciales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ERC',
+      minuta: {
+        id: 242345345,
+        tipo: 'Cliente',
+      }
+    }
+    wrapper.vm.aprobaciones = aprobaciones
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EAC')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ERC", "Cliente" y aprobaciones totales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ERC',
+      minuta: {
+        id: 242345345,
+        tipo: 'Cliente',
+      }
+    }
+    wrapper.vm.aprobaciones = [
+      {id: 24634, tipo_aprobacion: {id: 63453, identificador: 'A'}},
+      {id: 634353, tipo_aprobacion: {id: 23534, identificador: 'A'}}
+    ]
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EF')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ERC", otro tipo y sin aprobaciones', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ERC',
+      minuta: {
+        id: 242345345,
+        tipo: 'Prueba',
+      }
+    }
+    wrapper.vm.aprobaciones = []
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EF')
+  })
+
+  it('método "obtenerNuevoMotivo" funciona correctamente con "ERC", otro tipo y aprobaciones totales', () => {
+    wrapper.vm.bitacora = {
+      id: idMinuta,
+      identificador: 'ERC',
+      minuta: {
+        id: 242345345,
+        tipo: 'Prueba',
+      }
+    }
+    wrapper.vm.aprobaciones = [
+      {id: 24634, tipo_aprobacion: {id: 63453, identificador: 'A'}},
+      {id: 634353, tipo_aprobacion: {id: 23534, identificador: 'A'}}
+    ]
+    wrapper.vm.obtenerNuevoMotivo()
+    expect(wrapper.vm.nuevoMotivo).toEqual('EAC')
   })
 
   it('método "establecerNuevaRevision" funciona correctamente con "nuevoMotivo" igual a "EF"', () => {
