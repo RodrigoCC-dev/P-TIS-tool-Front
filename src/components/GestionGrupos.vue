@@ -42,7 +42,7 @@
               <div class="column is-12">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <a class="button is-primary-usach" @click="agregar">Crear grupo</a>
+                    <a class="button is-primary-usach" @click="agregar">{{ actualizarGrupo ? 'Actualizar grupo' : 'Crear grupo'}}</a>
                   </div>
                   <div class="control">
                     <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
@@ -91,6 +91,7 @@
         <article class="message is-info">
           <div class="message-header">
             <p>{{ grupo.nombre }}</p>
+            <a class="button is-small is-link is-rounded" @click="editarGrupo(grupo)">Editar</a>
             <button class="delete" aria-label="delete" @click="borrarGrupo(grupo.id)"></button>
           </div>
           <div class="message-body">
@@ -153,7 +154,8 @@ export default {
         id: 0,
         mostrar: false,
         mensaje: '¿Confirma la eliminación del grupo?'
-      }
+      },
+      actualizarGrupo: false
     }
   },
   computed: {
@@ -238,6 +240,8 @@ export default {
       this.verFormulario = false
       this.entradas.proyecto.error = false
       this.entradas.estudiantes.error = false
+      this.quitarEstudiantesGrupo()
+      this.actualizarGrupo = false
     },
     nuevoGrupo: function () {
       this.grupo.nombre = ''
@@ -316,6 +320,55 @@ export default {
     },
     cerrarNotificacion: function () {
       this.notificar.mostrar = false
+    },
+    convertirEstudiantes: function (grupo) {
+      var lista = []
+      for (var i = 0; i < grupo.estudiantes.length; i++) {
+        lista.push(grupo.estudiantes[i].id)
+      }
+      return lista
+    },
+    agregarEstudiantesGrupo: function (grupo) {
+      var lista = []
+      var estudiante = {
+        id: 0,
+        run_est: '',
+        nombre_est: '',
+        apellido1: '',
+        apellido2: '',
+        codigo_seccion: 'Act',
+        jornada: this.jornadaActual
+      }
+      for (var i = 0; i < grupo.estudiantes.length; i++) {
+        var aux = Object.assign({}, estudiante)
+        aux.id = grupo.estudiantes[i].id
+        aux.run_est = grupo.estudiantes[i].usuario.run
+        aux.nombre_est = grupo.estudiantes[i].usuario.nombre
+        aux.apellido1 = grupo.estudiantes[i].usuario.apellido_paterno
+        aux.apellido2 = grupo.estudiantes[i].usuario.apellido_materno
+        lista.push(aux)
+      }
+      return lista
+    },
+    quitarEstudiantesGrupo: function () {
+      var indices = []
+      for (var i = 0; i < this.listaEstudiantes.length; i++) {
+        if (this.listaEstudiantes[i].codigo_seccion === 'Act') {
+          indices.push(i)
+        }
+      }
+      for (var j = indices.length - 1; j >= 0; j--) {
+        this.listaEstudiantes.splice(indices[j], 1)
+      }
+    },
+    editarGrupo: function (grupo) {
+      this.grupo.nombre = grupo.nombre
+      this.grupo.proyecto = grupo.proyecto
+      this.grupo.correlativo = grupo.correlativo
+      this.estudiantes = this.convertirEstudiantes(grupo)
+      this.listaEstudiantes = this.agregarEstudiantesGrupo(grupo).concat(this.listaEstudiantes)
+      this.verFormulario = true
+      this.actualizarGrupo = true
     }
   },
   watch: {
@@ -323,7 +376,7 @@ export default {
       this.obtenerCorrelativo(this.jornadaActual)
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerEstudiantes()
       this.obtenerGrupos()
