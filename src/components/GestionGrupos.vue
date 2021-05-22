@@ -339,6 +339,9 @@ export default {
       }
       return lista
     },
+    existeEstudiante: function (id) {
+      return Funciones.buscarIndexPorId(this.listaEstudiantes, id) !== -1
+    },
     agregarEstudiantesGrupo: function (grupo) {
       var lista = []
       var estudiante = {
@@ -351,13 +354,15 @@ export default {
         jornada: this.jornadaActual
       }
       for (var i = 0; i < grupo.estudiantes.length; i++) {
-        var aux = Object.assign({}, estudiante)
-        aux.id = grupo.estudiantes[i].id
-        aux.run_est = grupo.estudiantes[i].usuario.run
-        aux.nombre_est = grupo.estudiantes[i].usuario.nombre
-        aux.apellido1 = grupo.estudiantes[i].usuario.apellido_paterno
-        aux.apellido2 = grupo.estudiantes[i].usuario.apellido_materno
-        lista.push(aux)
+        if (!this.existeEstudiante(grupo.estudiantes[i].id)) {
+          var aux = Object.assign({}, estudiante)
+          aux.id = grupo.estudiantes[i].id
+          aux.run_est = grupo.estudiantes[i].usuario.run
+          aux.nombre_est = grupo.estudiantes[i].usuario.nombre
+          aux.apellido1 = grupo.estudiantes[i].usuario.apellido_paterno
+          aux.apellido2 = grupo.estudiantes[i].usuario.apellido_materno
+          lista.push(aux)
+        }
       }
       return lista
     },
