@@ -4,10 +4,12 @@ import axios from 'axios'
 import GestionGrupos from '@/components/GestionGrupos.vue'
 
 // Mock store
+const apiUrl = '127.0.0.1:3000'
+
 const store = createStore({
   state() {
     return {
-      apiUrl: '127.0.0.1:3000',
+      apiUrl: apiUrl,
       jornadaActual: 'Diurna'
     }
   },
@@ -42,9 +44,30 @@ const grupos = [
 ]
 
 const listaEstudiantes = [
-  {id: 29353, jornada: 'Diurna'},
-  {id: 9534, jornada: 'Diurna'},
-  {id: 926364, jornada: 'Vespertina'}
+  {
+    id: 29353,
+    run_est: '11222333-4',
+    nombre_est: 'Abel',
+    apellido1: 'Becerra',
+    apellido2: 'Contreras',
+    jornada: 'Diurna'
+  },
+  {
+    id: 9534,
+    run_est: '22333444-5',
+    nombre_est: 'Carla',
+    apellido1: 'Mandiola',
+    apellido2: 'Pereira',
+    jornada: 'Diurna'
+  },
+  {
+    id: 926364,
+    run_est: '33444555-K',
+    nombre_est: 'Mateo',
+    apellido1: 'Bermudes',
+    apellido2: 'Chacón',
+    jornada: 'Vespertina'
+  }
 ]
 
 // Mock axios
@@ -55,7 +78,34 @@ axios.get.mockImplementation((url) => {
     case '127.0.0.1:3000/grupos':
       return Promise.resolve({data: grupos})
     case '127.0.0.1:3000/estudiantes/asignacion/sin_grupo':
-      return Promise.resolve({data: []})
+      return Promise.resolve({data: listaEstudiantes})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.post.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/grupos/ultimo_grupo':
+      return Promise.resolve({data: {correlativo: 13}})
+    default:
+      return Promise.reject(new Error('not found'))
+  } /*
+  if (url === apiUrl + '/grupos/ultimo_grupo' && valor === {jornada: 'Diurna'}) {
+    return Promise.resolve({data: null})
+  } else if (url === apiUrl + '/grupos/ultimo_grupo' && valor === {jornada: 'Vespertina'}) {
+    return Promise.resolve({data: {correlativo: 6}})
+  } else if (url === apiUrl + '/grupos/ultimo_grupo' && valor === {jornada: 'Prueba'}) {
+    return Promise.resolve({data: {correlativo: 13}})
+  } else {
+    return Promise.reject(new Error('not found'))
+  } */
+})
+
+axios.patch.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/grupos/15':
+      return Promise.resolve()
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -79,19 +129,18 @@ describe('GestionGrupos.vue', () => {
         plugins: [store]
       }
     })
+    wrapper.vm.$store.commit('setJornadaActual', 'Diurna')
   })
 
-  it('variable verFormulario se inicializa en false', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable verFormulario se inicializa en false', () => {
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
-  it('variable estudiantes se inicializa vacía', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable estudiantes se inicializa vacía', () => {
     expect(wrapper.vm.estudiantes).toEqual([])
   })
 
-  it('variable entradas se inicializa correctamente', async () => {
+  it('variable entradas se inicializa correctamente', () => {
     const entradas = {
       proyecto: {
         error: false,
@@ -102,29 +151,24 @@ describe('GestionGrupos.vue', () => {
         mensaje: ''
       }
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.entradas).toEqual(entradas)
   })
 
-  it('variable grupo se inicializa correctamente', async () => {
+  it('variable grupo se inicializa correctamente', () => {
     const nuevo = {
       nombre: '',
       proyecto: '',
       correlativo: 0
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.grupo).toEqual(nuevo)
   })
 
-  it('variable listaEstudiantes se inicializa vacía', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable listaEstudiantes se inicializa vacía', () => {
     expect(wrapper.vm.listaEstudiantes).toEqual([])
   })
 
-  it('variable listaGrupos se inicializa correctamente', async () => {
-    wrapper.vm.obtenerGrupos()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.listaGrupos).toEqual(grupos)
+  it('variable listaGrupos se inicializa correctamente', () => {
+    expect(wrapper.vm.listaGrupos).toEqual([])
   })
 
   it('variable "notificar" se inicializa correctamente', () => {
@@ -133,24 +177,35 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.notificar.mensaje).toEqual('¿Confirma la eliminación del grupo?')
   })
 
-  it('propiedad computada "sinAsignar" funciona correctamente', async () => {
+  it('propiedad computada "sinAsignar" funciona correctamente', () => {
     const esperado = [
-      {id: 29353, jornada: 'Diurna'},
-      {id: 9534, jornada: 'Diurna'}
+      {
+        id: 29353,
+        run_est: '11222333-4',
+        nombre_est: 'Abel',
+        apellido1: 'Becerra',
+        apellido2: 'Contreras',
+        jornada: 'Diurna'
+      },
+      {
+        id: 9534,
+        run_est: '22333444-5',
+        nombre_est: 'Carla',
+        apellido1: 'Mandiola',
+        apellido2: 'Pereira',
+        jornada: 'Diurna'
+      },
     ]
     wrapper.vm.listaEstudiantes = listaEstudiantes
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.sinAsignar).toEqual(esperado)
   })
 
-  it('propiedad computada "mostrarLista" funciona correctamente con "true"', async () => {
+  it('propiedad computada "mostrarLista" funciona correctamente con "true"', () => {
     wrapper.vm.listaEstudiantes = listaEstudiantes
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarLista).toBeTruthy()
   })
 
-  it('propiedad computada "mostrarLista" funciona correctamente con "false"', async () => {
-    await wrapper.vm.$nextTick()
+  it('propiedad computada "mostrarLista" funciona correctamente con "false"', () => {
     expect(wrapper.vm.mostrarLista).toBeFalsy()
   })
 
@@ -188,90 +243,92 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.gruposJornada).toEqual([])
   })
 
-  it('método "concatenarNombre" funciona correctamente', async () => {
+  it('método "concatenarNombre" funciona correctamente', () => {
     const estudiante = {
       nombre_est: 'Mateo',
       apellido1: 'Iglesias',
       apellido2: 'Del Campo'
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.concatenarNombre(estudiante)).toEqual('Mateo Iglesias Del Campo')
   })
 
-  it('método "nombreCompleto" funciona correctamente', async () => {
+  it('método "nombreCompleto" funciona correctamente', () => {
     const estudiante = {
       nombre: 'Mateo',
       apellido_paterno: 'Iglesias',
       apellido_materno: 'Del Campo'
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Mateo Iglesias Del Campo')
   })
 
-  it('método "visualizarRun" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "visualizarRun" funciona correctamente', () => {
     expect(wrapper.vm.visualizarRun('12345678-9')).toEqual('12.345.678-9')
   })
 
-  it('método "mostrarClientes" funciona correctamente con "true"', async () => {
+  it('método "mostrarClientes" funciona correctamente con "true"', () => {
     const grupo = {
       stakeholders: [{id: 962354}, {id: 6235345}, {id: 63453}]
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarClientes(grupo)).toBeTruthy()
   })
 
-  it('método "mostrarClientes" funciona correctamente con "true"', async () => {
+  it('método "mostrarClientes" funciona correctamente con "false"', () => {
     const grupo = {
       stakeholders: []
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarClientes(grupo)).toBeFalsy()
   })
 
   it('método "agregarGrupo" funciona correctamente', async () => {
     wrapper.vm.verFormulario = false
+    wrapper.vm.grupo = {
+      nombre: 'G34',
+      proyecto: 'Proyecto de prueba',
+      correlativo: 34
+    }
+    wrapper.vm.estudiantes = [4634, 6234, 34533]
     wrapper.vm.agregarGrupo()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.verFormulario).toBeTruthy()
+    expect(wrapper.vm.grupo.nombre).toEqual('G14')
+    expect(wrapper.vm.grupo.proyecto).toEqual('')
+    expect(wrapper.vm.grupo.correlativo).toEqual(14)
+    expect(wrapper.vm.estudiantes).toEqual([])
+    expect(wrapper.vm.listaEstudiantes).toEqual(listaEstudiantes)
   })
 
 /* Falta implementar función axios mock por única vez
 
   const url = '127.0.0.1:3000/estudiantes/asignacion/sin_grupo'
   axios.get.mockImplementationOnce((url) => Promise.resolve({data: listaEstudiantes}))
-
+*/
   it('método "obtenerEstudiantes" funciona correctamente', async () => {
+    wrapper.vm.obtenerEstudiantes()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaEstudiantes).toEqual(listaEstudiantes)
   })
-*/
 
   it('método "obtenerGrupos" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
-    wrapper.vm.listaGrupos = []
     wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaGrupos).toEqual(grupos)
   })
 
-  it('método "noAgregar" funciona correctamente', async () => {
+  it('método "noAgregar" funciona correctamente', () => {
     wrapper.vm.verFormulario = true
     wrapper.vm.entradas.proyecto.error = true
     wrapper.vm.entradas.estudiantes.error = true
-    await wrapper.vm.$nextTick()
     wrapper.vm.noAgregar()
     expect(wrapper.vm.verFormulario).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
   })
 
-  it('método "nuevoGrupo" funciona correctamente', async () => {
+  it('método "nuevoGrupo" funciona correctamente', () => {
     wrapper.vm.grupo.nombre = 'Grupo de prueba'
     wrapper.vm.grupo.proyecto = 'Pruebas de código'
     wrapper.vm.grupo.correlativo = 623534
     wrapper.vm.estudiantes = [{id: 962345}, {id: 9629353}]
-    await wrapper.vm.$nextTick()
     wrapper.vm.nuevoGrupo()
     expect(wrapper.vm.grupo.nombre).toEqual('')
     expect(wrapper.vm.grupo.proyecto).toEqual('')
@@ -279,73 +336,71 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.estudiantes).toEqual([])
   })
 
-  it('método "validarProyecto" funciona correctamente con proyecto igual a "null"', async () => {
+  it('método "obtenerCorrelativo" funciona correctamente', async () => {
+    wrapper.vm.obtenerCorrelativo('Diurna')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupo.correlativo).toEqual(14)
+    expect(wrapper.vm.grupo.nombre).toEqual('G14')
+  })
+
+  it('método "validarProyecto" funciona correctamente con proyecto igual a "null"', () => {
     wrapper.vm.grupo.proyecto = null
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
   })
 
-  it('método "validarProyecto" funciona correctamente con proyecto igual a "undefined"', async () => {
+  it('método "validarProyecto" funciona correctamente con proyecto igual a "undefined"', () => {
     wrapper.vm.grupo.proyecto = undefined
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
   })
 
-  it('método "validarProyecto" funciona correctamente con proyecto igual a ""', async () => {
+  it('método "validarProyecto" funciona correctamente con proyecto igual a ""', () => {
     wrapper.vm.grupo.proyecto = ''
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Se debe ingresar el nombre del proyecto a realizar')
   })
 
-  it('método "validarProyecto" funciona correctamente con proyecto distinto a "regExp"', async () => {
+  it('método "validarProyecto" funciona correctamente con proyecto distinto a "regExp"', () => {
     wrapper.vm.grupo.proyecto = 'Gistdc,ast346#&#adis'
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.error).toBeTruthy()
-    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Sólo se admiten letras. Verificar que no tenga caracteres especiales')
+    expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('Sólo se admiten letras. Verificar que no tenga caracteres especiales.')
   })
 
-  it('método "validarProyecto" funciona correctamente con proyecto con "regExp" correcto', async () => {
+  it('método "validarProyecto" funciona correctamente con proyecto con "regExp" correcto', () => {
     wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarProyecto()).toBeTruthy()
     expect(wrapper.vm.entradas.proyecto.error).toBeFalsy()
     expect(wrapper.vm.entradas.proyecto.mensaje).toEqual('')
   })
 
-  it('método "validarAsignacion" funciona correctamente para "true"', async () => {
+  it('método "validarAsignacion" funciona correctamente para "true"', () => {
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarAsignacion()).toBeTruthy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('')
   })
 
-  it('método "validarAsignacion" funciona correctamente para "false"', async () => {
+  it('método "validarAsignacion" funciona correctamente para "false"', () => {
     wrapper.vm.estudiantes = []
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarAsignacion()).toBeFalsy()
     expect(wrapper.vm.entradas.estudiantes.error).toBeTruthy()
     expect(wrapper.vm.entradas.estudiantes.mensaje).toEqual('No se han asignado estudiantes al grupo')
   })
 
-  it('método "validarDatos" funciona correctamente para "true"', async () => {
+  it('método "validarDatos" funciona correctamente para "true"', () => {
     wrapper.vm.grupo.proyecto = 'Proyecto de Prueba'
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarDatos()).toBeTruthy()
   })
 
-  it('método "validarDatos" funciona correctamente para "false"', async () => {
+  it('método "validarDatos" funciona correctamente para "false"', () => {
     wrapper.vm.grupo.proyecto = undefined
     wrapper.vm.estudiantes = [{id: 943453}, {id: 9249345}]
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarDatos()).toBeFalsy()
   })
 
