@@ -50,6 +50,7 @@ const listaEstudiantes = [
     nombre_est: 'Abel',
     apellido1: 'Becerra',
     apellido2: 'Contreras',
+    codigo_seccion: 'A1',
     jornada: 'Diurna'
   },
   {
@@ -58,6 +59,7 @@ const listaEstudiantes = [
     nombre_est: 'Carla',
     apellido1: 'Mandiola',
     apellido2: 'Pereira',
+    codigo_seccion: 'A1',
     jornada: 'Diurna'
   },
   {
@@ -66,9 +68,20 @@ const listaEstudiantes = [
     nombre_est: 'Mateo',
     apellido1: 'Bermudes',
     apellido2: 'Chacón',
+    codigo_seccion: 'V21',
     jornada: 'Vespertina'
   }
 ]
+
+const agregado = [{
+  id: 92345,
+  nombre_est: 'Alberto',
+  apellido1: 'Becerra',
+  apellido2: 'Castro',
+  run_est: '11111111-1',
+  codigo_seccion: 'Act',
+  jornada: 'Diurna'
+}]
 
 // Mock axios
 jest.mock('axios')
@@ -177,6 +190,14 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.notificar.mensaje).toEqual('¿Confirma la eliminación del grupo?')
   })
 
+  it('variable "actualizarGrupo" se inicializa correctamente en "false"', () => {
+    expect(wrapper.vm.actualizarGrupo).toBeFalsy()
+  })
+
+  it('variable "idGrupo" se inicializa correctamente', () => {
+    expect(wrapper.vm.idGrupo).toEqual(0)
+  })
+
   it('propiedad computada "sinAsignar" funciona correctamente', () => {
     const esperado = [
       {
@@ -185,6 +206,7 @@ describe('GestionGrupos.vue', () => {
         nombre_est: 'Abel',
         apellido1: 'Becerra',
         apellido2: 'Contreras',
+        codigo_seccion: 'A1',
         jornada: 'Diurna'
       },
       {
@@ -193,6 +215,7 @@ describe('GestionGrupos.vue', () => {
         nombre_est: 'Carla',
         apellido1: 'Mandiola',
         apellido2: 'Pereira',
+        codigo_seccion: 'A1',
         jornada: 'Diurna'
       },
     ]
@@ -314,6 +337,8 @@ describe('GestionGrupos.vue', () => {
     expect(wrapper.vm.listaGrupos).toEqual(grupos)
   })
 
+  // Test método 'agregar'
+
   it('método "noAgregar" funciona correctamente', () => {
     wrapper.vm.verFormulario = true
     wrapper.vm.entradas.proyecto.error = true
@@ -423,5 +448,45 @@ describe('GestionGrupos.vue', () => {
     wrapper.vm.notificar.mostrar = true
     wrapper.vm.cerrarNotificacion()
     expect(wrapper.vm.notificar.mostrar).toBeFalsy()
+  })
+
+  it('método "convertirEstudiantes" funciona correctamente', () => {
+    const esperado = [92345]
+    expect(wrapper.vm.convertirEstudiantes(grupos[0])).toEqual(esperado)
+  })
+
+  it('método "existeEstudiante" funciona correctamente con "true"', () => {
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    expect(wrapper.vm.existeEstudiante(29353)).toBeTruthy()
+  })
+
+  it('método "existeEstudiante" funciona correctamente con "false"', () => {
+    wrapper.vm.listaEstudiantes = listaEstudiantes
+    expect(wrapper.vm.existeEstudiante(53)).toBeFalsy()
+  })
+
+  it('método "agregarEstudiantesGrupo" funciona correctamente', () => {
+    expect(wrapper.vm.agregarEstudiantesGrupo(grupos[0])).toEqual(agregado)
+  })
+
+  it('método "quitarEstudiantesGrupo" funciona correctamente', () => {
+    wrapper.vm.listaEstudiantes = listaEstudiantes.concat(agregado)
+    wrapper.vm.quitarEstudiantesGrupo()
+    expect(wrapper.vm.listaEstudiantes).toEqual(listaEstudiantes)
+  })
+
+  it('método "editarGrupo" funciona correctamente', () => {
+    const esperado = {
+      nombre: 'G01',
+      proyecto: 'Proyecto de prueba unitario',
+      correlativo: 34
+    }
+    wrapper.vm.editarGrupo(grupos[0])
+    expect(wrapper.vm.idGrupo).toEqual(93453)
+    expect(wrapper.vm.grupo).toEqual(esperado)
+    expect(wrapper.vm.estudiantes).toEqual([92345])
+    expect(wrapper.vm.listaEstudiantes).toEqual(agregado)
+    expect(wrapper.vm.verFormulario).toBeTruthy()
+    expect(wrapper.vm.actualizarGrupo).toBeTruthy()
   })
 })
