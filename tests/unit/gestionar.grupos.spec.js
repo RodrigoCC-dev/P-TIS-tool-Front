@@ -21,9 +21,11 @@ const store = createStore({
 })
 
 // Variables globales
+const idGrupo = 93453
+
 const grupos = [
   {
-    id: 93453,
+    id: idGrupo,
     nombre: 'G01',
     proyecto: 'Proyecto de prueba unitario',
     correlativo: 34,
@@ -99,6 +101,8 @@ axios.get.mockImplementation((url) => {
 
 axios.post.mockImplementation((url) => {
   switch (url) {
+    case apiUrl + '/grupos':
+      return Promise.resolve()
     case apiUrl + '/grupos/ultimo_grupo':
       return Promise.resolve({data: {correlativo: 13}})
     default:
@@ -117,7 +121,7 @@ axios.post.mockImplementation((url) => {
 
 axios.patch.mockImplementation((url) => {
   switch (url) {
-    case apiUrl + '/grupos/15':
+    case apiUrl + '/grupos/' + idGrupo:
       return Promise.resolve()
     default:
       return Promise.reject(new Error('not found'))
@@ -338,6 +342,30 @@ describe('GestionGrupos.vue', () => {
   })
 
   // Test método 'agregar'
+  it('método "agregar" funciona correctamente con agregar grupo', async () => {
+    wrapper.vm.grupo.nombre = 'G01'
+    wrapper.vm.grupo.proyecto = 'Proyecto de prueba unitario'
+    wrapper.vm.grupo.correlativo = 34
+    wrapper.vm.estudiantes = [92345]
+    wrapper.vm.agregar()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(grupos)
+  })
+
+  it('método "agregar" funciona correctamente con actualizar grupo', async () => {
+    wrapper.vm.idGrupo = idGrupo
+    wrapper.vm.grupo.nombre = 'G01'
+    wrapper.vm.grupo.proyecto = 'Proyecto de prueba unitario'
+    wrapper.vm.grupo.correlativo = 34
+    wrapper.vm.estudiantes = [92345]
+    wrapper.vm.actualizarGrupo = true
+    wrapper.vm.agregar()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(grupos)
+    expect(wrapper.vm.actualizarGrupo).toBeFalsy()
+  })
 
   it('método "noAgregar" funciona correctamente', () => {
     wrapper.vm.verFormulario = true
