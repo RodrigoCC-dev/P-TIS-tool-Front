@@ -144,7 +144,7 @@ export default {
         stakeholders: this.asignados
       }
       try {
-        await axios.put(this.apiUrl + '/stakeholders/' + this.grupoSeleccionado.id, asignacion, { headers: Auth.postHeader() })
+        await axios.put(this.apiUrl + '/grupos/asignacion/stakeholders/' + this.grupoSeleccionado.id, asignacion, { headers: Auth.postHeader() })
         this.$emit('actualizar')
       } catch (e) {
         console.log('No fue posible actualizar la asignación de clientes al grupo seleccionado')
@@ -155,7 +155,7 @@ export default {
       this.$emit('cerrar')
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerStakeholders()
     }
