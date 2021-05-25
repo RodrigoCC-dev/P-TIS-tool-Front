@@ -64,7 +64,7 @@
               <div class="column is-full">
                 <div class="field is-grouped is-grouped-centered">
                   <div class="control">
-                    <a class="button is-primary-usach" @click="agregar">Agregar Profesor</a>
+                    <a class="button is-primary-usach" @click="agregar">{{ actualizarProfesor ? 'Actualizar Profesor' : 'Agregar Profesor' }}</a>
                   </div>
                   <div class="control">
                     <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
@@ -233,17 +233,30 @@ export default {
     },
     async agregar () {
       if (this.validarFormulario()) {
-        const nuevo = {
+        const datos = {
           profesor: {
             usuario_attributes: this.usuario
           },
           secciones: this.seccionesAsignadas
         }
-        try {
-          await axios.post(this.apiUrl + '/profesores', nuevo, { headers: Auth.postHeader() })
-          this.obtenerProfesores()
-        } catch (e) {
-          console.log(e)
+        if (!this.actualizarProfesor) {
+          try {
+            await axios.post(this.apiUrl + '/profesores', datos, { headers: Auth.postHeader() })
+            this.obtenerProfesores()
+          } catch (e) {
+            console.log('No fue posible crear el profesor')
+            console.log(e)
+          }
+        } else {
+          try {
+            await axios.put(this.apiUrl + '/profesores/' + this.idProfesor, datos, { headers: Auth.postHeader() })
+            this.obtenerProfesores()
+          } catch (e) {
+            console.log('No fue posible actualizar el profesor')
+            console.log(e)
+          }
+          this.actualizarProfesor = false
+          this.idProfesor = 0
         }
         this.verFormulario = false
       }
