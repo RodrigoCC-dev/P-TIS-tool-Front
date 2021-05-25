@@ -42,7 +42,7 @@
                 <div class="field">
                   <label class="label">Apellido Materno</label>
                   <div class="control">
-                    <input v-model="usuario.apellido_materno" class="input" type="text" @input="validarApellidoM" placehodler="ej.: Molina">
+                    <input v-model="usuario.apellido_materno" class="input" type="text" @input="validarApellidoM" placeholder="ej.: Molina">
                   </div>
                   <p class="is-danger help" v-if="entradas.apellidoMaterno.error">{{ entradas.apellidoMaterno.mensaje }}</p>
                 </div>
@@ -127,7 +127,7 @@
             <tbody>
               <tr v-for="(profesor, index) in listaProfesores" :key="profesor.id">
                 <th scope="row" class="has-text-centered is-vcentered">{{ index + 1 }}</th>
-                <td class="is-vcentered">{{ nombreCompleto(profesor.usuario) }}</td>
+                <td class="is-vcentered"><a @click="editarProfesor(profesor)">{{ nombreCompleto(profesor.usuario) }}</a></td>
                 <td class="is-vcentered has-text-centered">{{ profesor.usuario.email }}</td>
                 <td>
                   <div v-for="seccion in profesor.secciones" :key="seccion.id">
@@ -193,7 +193,9 @@ export default {
         sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales',
         correo_mal: 'El correo ingresado no es válido',
         correo_repetido: 'El correo ingresado ya se encuentra en el sistema'
-      }
+      },
+      actualizarProfesor: false,
+      idProfesor: 0
     }
   },
   computed: {
@@ -254,6 +256,7 @@ export default {
       this.entradas.correo_elec.error = false
       this.entradas.secciones = false
       this.nuevoProfesor()
+      this.actualizarProfesor = false
     },
     validarNombre: function () {
       const regExp = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g
@@ -364,9 +367,26 @@ export default {
       esValido = esValido && this.validarSecciones()
       esValido = esValido && !this.existeProfesor()
       return esValido
+    },
+    convertirSecciones: function (listaSecciones) {
+      var lista = []
+      for (var i = 0; i < listaSecciones.length; i++) {
+        lista.push(listaSecciones[i].id)
+      }
+      return lista
+    },
+    editarProfesor: function (profesor) {
+      this.usuario.nombre = profesor.usuario.nombre
+      this.usuario.apellido_paterno = profesor.usuario.apellido_paterno
+      this.usuario.apellido_materno = profesor.usuario.apellido_materno
+      this.usuario.email = profesor.usuario.email
+      this.idProfesor = profesor.id
+      this.seccionesAsignadas = this.convertirSecciones(profesor.secciones)
+      this.actualizarProfesor = true
+      this.verFormulario = true
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerProfesores()
     }
