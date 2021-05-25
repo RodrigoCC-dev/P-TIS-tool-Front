@@ -41,6 +41,71 @@ const listaStakeholders = [
   }
 ]
 
+const idStakeholder = 1963434
+
+const grupos = [
+  {
+    id: 346345,
+    nombre: 'G01',
+    proyecto: 'Proyecto de prueba unitario',
+    correlativo: 34,
+    jornada: 'Diurna',
+    estudiantes: [{
+      id: 92345,
+      iniciales: 'ABC',
+      usuario: {
+        nombre: 'Alberto',
+        apellido_paterno: 'Becerra',
+        apellido_materno: 'Castro',
+        run: '11111111-1',
+        email: 'alberto.becerra@algo.com'
+      }
+    }],
+    stakeholders: [
+      {
+        id: idStakeholder,
+        iniciales: 'PGS',
+        usuario: {
+          nombre: 'Pedro',
+          apellido_paterno: 'Garmendia',
+          apellido_materno: 'Soto',
+          email: 'pedro.garmendia@algo.com'
+        }
+      }
+    ]
+  },
+  {
+    id: 934534,
+    nombre: 'G02',
+    proyecto: 'Segundo proyecto',
+    correlativo: 94,
+    jornada: 'Vespertina',
+    estudiantes: [{
+      id: 146345,
+      iniciales: 'PAG',
+      usuario: {
+        nombre: 'Patricio',
+        apellido_paterno: 'Alvarez',
+        apellido_materno: 'Gonzalez',
+        run: '22333444-5',
+        email: 'patricio.alvarez@algo.com'
+      }
+    }],
+    stakeholders: [
+      {
+        id: idStakeholder,
+        iniciales: 'PGS',
+        usuario: {
+          nombre: 'Pedro',
+          apellido_paterno: 'Garmendia',
+          apellido_materno: 'Soto',
+          email: 'pedro.garmendia@algo.com'
+        }
+      }
+    ]
+  }
+]
+
 // Mock axios
 jest.mock('axios')
 
@@ -49,7 +114,25 @@ axios.get.mockImplementation((url) => {
     case apiUrl + '/stakeholders/asignacion/grupos':
       return Promise.resolve({data: listaStakeholders})
     case apiUrl + '/grupos':
-      return Promise.resolve({data: []})
+      return Promise.resolve({data: grupos})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.post.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/stakeholders':
+      return Promise.resolve()
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.patch.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/stakeholders/' + idStakeholder:
+      return Promise.resolve()
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -66,17 +149,15 @@ describe('GestionClientes.vue', () => {
     })
   })
 
-  it('variable verFormulario se inicializa en false', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable verFormulario se inicializa en false', () => {
     expect(wrapper.vm.verFormulario).toBeFalsy()
   })
 
-  it('variable verAsignaciones se inicializa en false', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable verAsignaciones se inicializa en false', () => {
     expect(wrapper.vm.verAsignaciones).toBeFalsy()
   })
 
-  it('variable stakeholder se inicializa correctamente', async () => {
+  it('variable stakeholder se inicializa correctamente', () => {
     const esperado = {
       usuario: {
         nombre: '',
@@ -86,18 +167,11 @@ describe('GestionClientes.vue', () => {
       },
       grupo_id: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.stakeholder).toEqual(esperado)
   })
 
   it('variable listaStakeholders se inicializa vacía', () => {
     expect(wrapper.vm.listaStakeholders).toEqual([])
-  })
-
-  it('variable listaStakeholders se inicializa correctamente', async () => {
-    wrapper.vm.obtenerStakeholders()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.listaStakeholders).toEqual(listaStakeholders)
   })
 
   it('variable listaGrupos se inicializa correctamente', () => {
@@ -127,7 +201,7 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas).toEqual(esperado)
   })
 
-  it('variable mensajes se inicializa correctamente', async () => {
+  it('variable mensajes se inicializa correctamente', () => {
     const esperado = {
       sin_nombre: 'Debe ingresar el nombre del cliente',
       sin_apellido: 'Debe ingresar el apellido del cliente',
@@ -136,11 +210,18 @@ describe('GestionClientes.vue', () => {
       correo_mal: 'El correo ingresado no es válido',
       correo_repetido: 'El correo ingresado ya se encuentra en el sistema'
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mensajes).toEqual(esperado)
   })
 
-  it('propiedad computada listaFiltrada funciona correctamente', async () => {
+  it('variable "actualizarStakeholder" se inicializa correctamente', () => {
+    expect(wrapper.vm.actualizarStakeholder).toBeFalsy()
+  })
+
+  it('variable "idStakeholder" se inicializa correctamente', () => {
+    expect(wrapper.vm.idStakeholder).toEqual(0)
+  })
+
+  it('propiedad computada listaFiltrada funciona correctamente', () => {
     const wrapper = shallowMount(GestionClientes, {
       data() {
         return {
@@ -166,11 +247,10 @@ describe('GestionClientes.vue', () => {
         jornada: 'Diurna'
     }]
     expect(wrapper.vm.listaFiltrada).toEqual(esperado)
-    await wrapper.vm.$nextTick()
   })
 
 /*    Depende del 'state' */
-  it('propiedad computada stakeholdersPorJornada funciona correctamente', async () => {
+  it('propiedad computada stakeholdersPorJornada funciona correctamente', () => {
     const wrapper = shallowMount(GestionClientes, {
       data() {
         return {
@@ -216,58 +296,33 @@ describe('GestionClientes.vue', () => {
       email: 'juan.garmendia@algo.com'
     }]
     expect(wrapper.vm.stakeholdersPorJornada).toEqual(esperado)
-    await wrapper.vm.$nextTick()
   })
 
-  it('propiedad computada mostrarLista funciona correctamente con true', async () => {
-    const wrapper = shallowMount(GestionClientes, {
-      data() {
-        return {
-          stakeholdersPorJornada: [
-            {
-              id: 6354,
-              jornada: 'Diurna',
-              grupo: {
-                nombre: 'G01'
-              },
-              nombre: 'Juan',
-              apellido_paterno: 'Garmendia',
-              apellido_materno: 'Solis'
-            }
-          ]
-        }
-      },
-      global: {
-        plugins: [store]
-      }
-    })
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.stakeholdersPorJornada).toBeTruthy()
+  it('propiedad computada mostrarLista funciona correctamente con true', () => {
+    wrapper.vm.listaStakeholders = listaStakeholders
+    expect(wrapper.vm.mostrarLista).toBeTruthy()
   })
 
-  it('propiedad computada mostrarLista funciona correctamente con false', async () => {
-    await wrapper.vm.$nextTick()
+  it('propiedad computada mostrarLista funciona correctamente con false', () => {
     wrapper.vm.listaStakeholders = []
     expect(wrapper.vm.mostrarLista).toBeFalsy()
   })
 
-  it('método nombreCompleto funciona correctamente', async () => {
+  it('método nombreCompleto funciona correctamente', () => {
     const estudiante = {
       nombre: 'Juan',
       apellido_paterno: 'Gonzalez',
       apellido_materno: 'Soto'
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Juan Gonzalez Soto')
   })
 
-  it('método agregarCliente funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('método agregarCliente funciona correctamente', () => {
     wrapper.vm.agregarCliente()
     expect(wrapper.vm.verFormulario).toBeTruthy()
   })
 
-  it('método nuevoStakeholder funciona correctamente', async () => {
+  it('método nuevoStakeholder funciona correctamente', () => {
     const wrapper = shallowMount(GestionClientes, {
       data () {
         return {
@@ -286,7 +341,6 @@ describe('GestionClientes.vue', () => {
         plugins: [store]
       }
     })
-    await wrapper.vm.$nextTick()
     wrapper.vm.nuevoStakeholder()
     expect(wrapper.vm.stakeholder.usuario.nombre).toEqual('')
     expect(wrapper.vm.stakeholder.usuario.apellido_paterno).toEqual('')
@@ -296,14 +350,14 @@ describe('GestionClientes.vue', () => {
   })
 
   it('método "obtenerStakeholders" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
-    wrapper.vm.listaStakeholders = []
     wrapper.vm.obtenerStakeholders()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.listaStakeholders).toEqual(listaStakeholders)
   })
 
-  it('método noAgregar funciona correctamente', async () => {
+  // test método 'agregar'
+
+  it('método noAgregar funciona correctamente', () => {
     const wrapper = shallowMount(GestionClientes, {
       data() {
         return {
@@ -329,7 +383,6 @@ describe('GestionClientes.vue', () => {
         plugins: [store]
       }
     })
-    await wrapper.vm.$nextTick()
     wrapper.vm.noAgregar()
     expect(wrapper.vm.verFormulario).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
@@ -337,292 +390,265 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.entradas.apellido_materno.error).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeFalsy()
+    expect(wrapper.vm.actualizarStakeholder).toBeFalsy()
   })
 
-  it('método "validarNombre" funciona correctamente con nombre "null"', async () => {
+  it('método "obtenerGrupos" funciona correctamente', async () => {
+    wrapper.vm.obtenerGrupos()
     await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaGrupos).toEqual(grupos)
+  })
+
+  it('método "validarNombre" funciona correctamente con nombre "null"', () => {
     wrapper.vm.stakeholder.usuario.nombre = null
     expect(wrapper.vm.validarNombre()).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
   })
 
-  it('método "validarNombre" funciona correctamente con nombre ""', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarNombre" funciona correctamente con nombre ""', () => {
     wrapper.vm.stakeholder.usuario.nombre = ''
     expect(wrapper.vm.validarNombre()).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
   })
 
-  it('método "validarNombre" funciona correctamente con nombre "undefined"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarNombre" funciona correctamente con nombre "undefined"', () => {
     wrapper.vm.stakeholder.usuario.nombre = undefined
     expect(wrapper.vm.validarNombre()).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_nombre)
   })
 
-  it('método "validarNombre" funciona correctamente con nombre distinto de "regExp"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarNombre" funciona correctamente con nombre distinto de "regExp"', () => {
     wrapper.vm.stakeholder.usuario.nombre = 'Carolina14963##&$'
     expect(wrapper.vm.validarNombre()).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.error).toBeTruthy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
   })
 
-  it('método "validarNombre" funciona correctamente con nombre con "regExp" correcto', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarNombre" funciona correctamente con nombre con "regExp" correcto', () => {
     wrapper.vm.stakeholder.usuario.nombre = 'Fernanda'
     expect(wrapper.vm.validarNombre()).toBeTruthy()
     expect(wrapper.vm.entradas.nombre.error).toBeFalsy()
     expect(wrapper.vm.entradas.nombre.mensaje).toEqual('')
   })
 
-  it('método "validarApellido" funciona correctamente con apellido "null"', async () => {
+  it('método "validarApellido" funciona correctamente con apellido "null"', () => {
     var entradas = {
       error: null,
       mensaje: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarApellido(null, entradas)).toBeFalsy()
     expect(entradas.error).toBeTruthy()
     expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellido" funciona correctamente con apellido "undefined"', async () => {
+  it('método "validarApellido" funciona correctamente con apellido "undefined"', () => {
     var entradas = {
       error: null,
       mensaje: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarApellido(undefined, entradas)).toBeFalsy()
     expect(entradas.error).toBeTruthy()
     expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellido" funciona correctamente con apellido igual a ""', async () => {
+  it('método "validarApellido" funciona correctamente con apellido igual a ""', () => {
     var entradas = {
       error: null,
       mensaje: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarApellido('', entradas)).toBeFalsy()
     expect(entradas.error).toBeTruthy()
     expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellido" funciona correctamente con apellido distinto de "regExp"', async () => {
+  it('método "validarApellido" funciona correctamente con apellido distinto de "regExp"', () => {
     var entradas = {
       error: null,
       mensaje: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarApellido('#b@r$Tolomeo', entradas)).toBeFalsy()
     expect(entradas.error).toBeTruthy()
     expect(entradas.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
   })
 
-  it('método "validarApellido" funciona correctamente con apellido con "regExp" correcto', async () => {
+  it('método "validarApellido" funciona correctamente con apellido con "regExp" correcto', () => {
     var entradas = {
       error: null,
       mensaje: null
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.validarApellido('Faundez', entradas)).toBeTruthy()
     expect(entradas.error).toBeFalsy()
     expect(entradas.mensaje).toEqual('')
   })
 
-  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "null"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "null"', () => {
     wrapper.vm.stakeholder.usuario.apellido_paterno = null
     expect(wrapper.vm.validarApellidoP()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "undefined"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a "undefined"', () => {
     wrapper.vm.stakeholder.usuario.apellido_paterno = undefined
     expect(wrapper.vm.validarApellidoP()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a ""', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno igual a ""', () => {
     wrapper.vm.stakeholder.usuario.apellido_paterno = ''
     expect(wrapper.vm.validarApellidoP()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoP" funciona correctamente con apellido_paterno distinto de "regExp"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno distinto de "regExp"', () => {
     wrapper.vm.stakeholder.usuario.apellido_paterno = 'C@stro#45'
     expect(wrapper.vm.validarApellidoP()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_paterno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
   })
 
-  it('método "validarApellidoP" funciona correctamente con apellido_paterno con "regExp" correcto', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoP" funciona correctamente con apellido_paterno con "regExp" correcto', () => {
     wrapper.vm.stakeholder.usuario.apellido_paterno = 'Castro'
     expect(wrapper.vm.validarApellidoP()).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_paterno.error).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_paterno.mensaje).toEqual('')
   })
 
-  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a "null"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a "null"', () => {
     wrapper.vm.stakeholder.usuario.apellido_materno = null
     expect(wrapper.vm.validarApellidoM()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_materno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a "undefined"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a "undefined"', () => {
     wrapper.vm.stakeholder.usuario.apellido_materno = undefined
     expect(wrapper.vm.validarApellidoM()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_materno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a ""', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoM" funciona correctamente con apellido_materno igual a ""', () => {
     wrapper.vm.stakeholder.usuario.apellido_materno = ''
     expect(wrapper.vm.validarApellidoM()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_materno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual(wrapper.vm.mensajes.sin_apellido)
   })
 
-  it('método "validarApellidoM" funciona correctamente con apellido_materno distinto de "regExp"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoM" funciona correctamente con apellido_materno distinto de "regExp"', () => {
     wrapper.vm.stakeholder.usuario.apellido_materno = 'Gaeg"&3kasisr'
     expect(wrapper.vm.validarApellidoM()).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_materno.error).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual(wrapper.vm.mensajes.sin_especiales)
   })
 
-  it('método "validarApellidoM" funciona correctamente con apellido_materno con "regExp" correcto', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarApellidoM" funciona correctamente con apellido_materno con "regExp" correcto', () => {
     wrapper.vm.stakeholder.usuario.apellido_materno = 'Mendez'
     expect(wrapper.vm.validarApellidoM()).toBeTruthy()
     expect(wrapper.vm.entradas.apellido_materno.error).toBeFalsy()
     expect(wrapper.vm.entradas.apellido_materno.mensaje).toEqual('')
   })
 
-  it('método "validarEmail" funciona correctamente con email igual a "null"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email igual a "null"', () => {
     wrapper.vm.stakeholder.usuario.email = null
     expect(wrapper.vm.validarEmail()).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
   })
 
-  it('método "validarEmail" funciona correctamente con email igual a "undefined"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email igual a "undefined"', () => {
     wrapper.vm.stakeholder.usuario.email = undefined
     expect(wrapper.vm.validarEmail()).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
   })
 
-  it('método "validarEmail" funciona correctamente con email igual a ""', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email igual a ""', () => {
     wrapper.vm.stakeholder.usuario.email = ''
     expect(wrapper.vm.validarEmail()).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.sin_correo)
   })
 
-  it('método "validarEmail" funciona correctamente con email distinto a "regExp"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email distinto a "regExp"', () => {
     wrapper.vm.stakeholder.usuario.email = '&3kasti,6ka0ds9gaib9asr.b9as025'
     expect(wrapper.vm.validarEmail()).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
   })
 
-  it('método "validarEmail" funciona correctamente con email con dos "@"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email con dos "@"', () => {
     wrapper.vm.stakeholder.usuario.email = 'sebastian@ingenieria.cl@usach.com'
     expect(wrapper.vm.validarEmail()).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual(wrapper.vm.mensajes.correo_mal)
   })
 
-  it('método "validarEmail" funciona correctamente con email con "regExp" correcto', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarEmail" funciona correctamente con email con "regExp" correcto', () => {
     wrapper.vm.stakeholder.usuario.email = 'gonzalo.dominguez@gmail.com'
     expect(wrapper.vm.validarEmail()).toBeTruthy()
     expect(wrapper.vm.entradas.correo_elec.error).toBeFalsy()
     expect(wrapper.vm.entradas.correo_elec.mensaje).toEqual('')
   })
 
-  it('método "validarGrupo" funciona correctamente para valor "null"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarGrupo" funciona correctamente para valor "null"', () => {
     wrapper.vm.stakeholder.grupo_id = null
     expect(wrapper.vm.validarGrupo()).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeTruthy()
   })
 
-  it('método "validarGrupo" funciona correctamente para valor "undefined"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarGrupo" funciona correctamente para valor "undefined"', () => {
     wrapper.vm.stakeholder.grupo_id = undefined
     expect(wrapper.vm.validarGrupo()).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeTruthy()
   })
 
-  it('método "validarGrupo" funciona correctamente para valor ""', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarGrupo" funciona correctamente para valor ""', () => {
     wrapper.vm.stakeholder.grupo_id = ''
     expect(wrapper.vm.validarGrupo()).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeTruthy()
   })
 
-  it('método "validarGrupo" funciona correctamente para valor igual a "0"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarGrupo" funciona correctamente para valor igual a "0"', () => {
     wrapper.vm.stakeholder.grupo_id = 0
     expect(wrapper.vm.validarGrupo()).toBeFalsy()
     expect(wrapper.vm.entradas.grupo).toBeTruthy()
   })
 
-  it('método "validarGrupo" funciona correctamente para valor correcto', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarGrupo" funciona correctamente para valor correcto', () => {
     wrapper.vm.stakeholder.grupo_id = 64245
     expect(wrapper.vm.validarGrupo()).toBeTruthy()
     expect(wrapper.vm.entradas.grupo).toBeFalsy()
   })
 
-  it('método existeStakeholder funciona correctamente con true', async () => {
+  it('método existeStakeholder funciona correctamente con true', () => {
     const cliente = {
       usuario: {
         email: 'juan.garmendia@algo.com'
       }
     }
-    wrapper.vm.obtenerStakeholders()
-    await wrapper.vm.$nextTick()
+    wrapper.vm.listaStakeholders = listaStakeholders
     wrapper.vm.stakeholder = cliente
     expect(wrapper.vm.existeStakeholder()).toBeTruthy()
   })
 
-  it('método existeStakeholder funciona correctamente con false', async () => {
+  it('método existeStakeholder funciona correctamente con false', () => {
     const cliente = {
       usuario: {
         email: 'maria.maldonado@algo.com'
       }
     }
-    await wrapper.vm.$nextTick()
     wrapper.vm.listaStakeholders = listaStakeholders
     wrapper.vm.stakeholder = cliente
     expect(wrapper.vm.existeStakeholder()).toBeFalsy()
   })
 
-  it('método "validarFormulario" funciona correctamente con "true"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarFormulario" funciona correctamente con "true"', () => {
     wrapper.vm.listaStakeholders = listaStakeholders
     wrapper.vm.stakeholder.usuario.nombre = 'Mateo'
     wrapper.vm.stakeholder.usuario.apellido_paterno = 'Concha'
@@ -632,8 +658,7 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
   })
 
-  it('método "validarFormulario" funciona correctamente con "false"', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "validarFormulario" funciona correctamente con "false"', () => {
     wrapper.vm.listaStakeholders = listaStakeholders
     wrapper.vm.stakeholder.usuario.nombre = 'Mateo'
     wrapper.vm.stakeholder.usuario.apellido_paterno = undefined
@@ -643,24 +668,34 @@ describe('GestionClientes.vue', () => {
     expect(wrapper.vm.validarFormulario()).toBeFalsy()
   })
 
-  it('método "editarAsignaciones" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "editarAsignaciones" funciona correctamente', () => {
     wrapper.vm.verAsignaciones = false
     wrapper.vm.editarAsignaciones()
     expect(wrapper.vm.verAsignaciones).toBeTruthy()
   })
 
-  it('método "cerrarAsignaciones" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('método "cerrarAsignaciones" funciona correctamente', () => {
     wrapper.vm.verAsignaciones = true
     wrapper.vm.cerrarAsignaciones()
     expect(wrapper.vm.verAsignaciones).toBeFalsy()
   })
 
   it('método "actualizarAsignaciones" funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
     wrapper.vm.verAsignaciones = true
     wrapper.vm.actualizarAsignaciones()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.verAsignaciones).toBeFalsy()
+  })
+
+  it('método "editarStakeholder" funciona correctamente', () => {
+    wrapper.vm.editarStakeholder(listaStakeholders[0])
+    expect(wrapper.vm.actualizarStakeholder).toBeTruthy()
+    expect(wrapper.vm.idStakeholder).toEqual(listaStakeholders[0].id)
+    expect(wrapper.vm.stakeholder.usuario.nombre).toEqual(listaStakeholders[0].nombre)
+    expect(wrapper.vm.stakeholder.usuario.apellido_paterno).toEqual(listaStakeholders[0].apellido_paterno)
+    expect(wrapper.vm.stakeholder.usuario.apellido_materno).toEqual(listaStakeholders[0].apellido_materno)
+    expect(wrapper.vm.stakeholder.usuario.email).toEqual(listaStakeholders[0].email)
+    expect(wrapper.vm.stakeholder.grupo_id).toEqual(0)
+    expect(wrapper.vm.verFormulario).toBeTruthy()
   })
 })
