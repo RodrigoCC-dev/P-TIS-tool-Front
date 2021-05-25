@@ -356,6 +356,42 @@ describe('GestionClientes.vue', () => {
   })
 
   // test método 'agregar'
+  it('método "agregar" funciona correctamente para crear un nuevo stakeholder', async () => {
+    wrapper.vm.stakeholder = {
+      usuario: {
+        nombre: 'Mauricio',
+        apellido_paterno: 'Soto',
+        apellido_materno: 'Venegas',
+        email: 'mauricio.soto@algo.com'
+      },
+      grupo_id: 14634
+    }
+    wrapper.vm.agregar()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaStakeholders).toEqual(listaStakeholders)
+    expect(wrapper.vm.actualizarStakeholder).toBeFalsy()
+  })
+
+  it('método "agregar" funciona correctamente para actualizar un stakeholder', async () => {
+    wrapper.vm.stakeholder = {
+      usuario: {
+        nombre: 'Mauricio',
+        apellido_paterno: 'Soto',
+        apellido_materno: 'Venegas',
+        email: 'mauricio.soto@algo.com'
+      },
+      grupo_id: 0
+    }
+    wrapper.vm.idStakeholder = idStakeholder
+    wrapper.vm.actualizarStakeholder = true
+    wrapper.vm.agregar()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.listaStakeholders).toEqual(listaStakeholders)
+    expect(wrapper.vm.actualizarStakeholder).toBeFalsy()
+    expect(wrapper.vm.idStakeholder).toEqual(0)
+  })
 
   it('método noAgregar funciona correctamente', () => {
     const wrapper = shallowMount(GestionClientes, {
