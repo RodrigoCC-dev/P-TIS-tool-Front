@@ -362,7 +362,7 @@ export default {
       let existe = false
       let aux = false
       for (var i = 0; i < this.listaProfesores.length; i++) {
-        aux = (this.listaProfesores[i].email === this.usuario.email)
+        aux = (this.listaProfesores[i].usuario.email === this.usuario.email)
         existe = aux || existe
       }
       if (existe) {
@@ -378,7 +378,9 @@ export default {
       esValido = esValido && this.validarApellidoM()
       esValido = esValido && this.validarEmail()
       esValido = esValido && this.validarSecciones()
-      esValido = esValido && !this.existeProfesor()
+      if (!this.actualizarProfesor) {
+        esValido = esValido && !this.existeProfesor()
+      }
       return esValido
     },
     convertirSecciones: function (listaSecciones) {
