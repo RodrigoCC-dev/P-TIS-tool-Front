@@ -1,84 +1,302 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
+import axios from 'axios'
 import Minuta from '@/components/Minuta.vue'
-import { nextTick } from 'vue'
+
+// Variables globales
+const apiUrl = '127.0.0.1:3000'
+
+const tipoItems = [
+  {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
+  {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
+  {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
+]
+
+const tipoAsistencias = [
+  { id: 1, tipo: 'PRE'},
+  { id: 2, tipo: 'AUS'},
+  { id: 3, tipo: 'ACA'}
+]
+
+const tipoEstados = [
+  { id: 62343, abreviacion: 'BOR', descripcion: 'Borrador'},
+  { id: 16345, abreviacion: 'EMI', descripcion: 'Emitida'},
+  { id: 34535, abreviacion: 'CIG', descripcion: 'Comentada por integrante del grupo'},
+  { id: 43434, abreviacion: 'CSK', descripcion: 'Comentada por stakeholder'},
+  { id: 98345, abreviacion: 'RIG', descripcion: 'Respondida por integrante del grupo'},
+  { id: 78453, abreviacion: 'CER', descripcion: 'Cerrada'}
+]
+
+const idUsuario = 91345
+
+const idGrupo = 462353
+
+const grupo = {
+  id: idGrupo,
+  nombre: 'Proyecto de prueba',
+  proyecto: 'Pagina web de prueba',
+  correlativo: 46234543,
+  estudiantes: [
+    {
+      id: 5,
+      iniciales: 'CGL',
+      usuario: {
+        id: idUsuario,
+        nombre: 'Carlos',
+        apellido_paterno: 'Gonzalez',
+        apellido_materno: 'Lopez'
+      }
+    },
+    {
+      id: 6,
+      iniciales: 'FDT',
+      usuario: {
+        id: 134534,
+        nombre: 'Fernanda',
+        apellido_paterno: 'Díaz',
+        apellido_materno: 'Torres'
+      }
+    }
+  ],
+  stakeholders: [
+    {
+      id: 5,
+      iniciales: 'CGL',
+      usuario: {
+        id: 23543,
+        nombre: 'Carlos',
+        apellido_paterno: 'Gonzalez',
+        apellido_materno: 'Lopez'
+      }
+    },
+    {
+      id: 6,
+      iniciales: 'FDT',
+      usuario: {
+        id: 923453,
+        nombre: 'Fernanda',
+        apellido_paterno: 'Díaz',
+        apellido_materno: 'Torres'
+      }
+    }
+  ]
+}
+
+const estudiante = {
+  id: 23534,
+  iniciales: 'CGL',
+  usuario_id: idUsuario,
+  seccion_id: 1345343,
+  grupo_id: idGrupo,
+  usuario: {
+    id: idUsuario,
+    nombre: 'Carlos',
+    apellido_paterno: 'Gonzalez',
+    apellido_materno: 'Lopez',
+    run: '11222333-4',
+    email: 'carlos.gonzalez@algo.com',
+    rol_id: 83453
+  }
+}
+
+const semestre = {
+  id: 184353,
+  numero: 2,
+  agno: 2020,
+  activo: true,
+  inicio: '2020-09-28T00:00:00.000Z',
+  fin: '2021-01-29T00:00:00.000Z'
+}
+
+const nuevoCorrelativo = 1345
+
+
+// Mock store
+const store = createStore({
+  state() {
+    return {
+      apiUrl: apiUrl,
+      usuario: {
+        id: idUsuario,
+        nombre: 'Carlos',
+        apellido_paterno: 'Gonzalez',
+        apellido_materno: 'Lopez',
+        run: '11222333-4',
+        email: 'carlos.gonzalez@algo.com',
+        rol: {
+          id: 83453,
+          rol: 'Estudiante',
+          rango: 3
+        }
+      },
+      tipoMinutas: [
+        {id: 14634, tipo: 'Coordinacion', descripcion: 'Minuta entre estudiantes'},
+        {id: 63453, tipo: 'Cliente', descripcion: 'Minuta con el cliente'},
+        {id: 23534, tipo: 'Semanal', descripcion: 'Minuta avance semanal'}
+      ]
+    }
+  }
+})
+
+
+// Mock axios
+jest.mock('axios')
+
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/tipo_items':
+      return Promise.resolve({data: tipoItems})
+    case apiUrl + '/tipo_asistencias':
+      return Promise.resolve({data: tipoAsistencias})
+    case apiUrl + '/tipo_estados':
+      return Promise.resolve({data: tipoEstados})
+    case apiUrl + '/estudiantes/' + idUsuario:
+      return Promise.resolve({data: estudiante})
+    case apiUrl + '/grupos/' + 5:
+      return Promise.resolve({data: grupo})
+    case apiUrl + '/semestres':
+      return Promise.resolve({data: semestre})
+    case apiUrl + '/minutas/correlativo/' + grupo.id:
+      return Promise.resolve({data: nuevoCorrelativo})
+    case apiUrl + '/minutas/' + idMinuta:
+      return Promise.resolve({data: {}})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.post.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/minutas':
+      return Promise.resolve()
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+axios.patch.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/minutas/' + idMinuta:
+      return Promise.resolve()
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
 
 describe('Minuta.vue', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = shallowMount(Minuta, {
+      global: {
+        plugins: [store]
+      }
+    })
+  })
+
   it('se asigna prop "tipoMinuta" adecuadamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         tipoMinuta: 2
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().tipoMinuta).toBe(2)
   })
 
   it('se asigna prop "idBitacora" adecuadamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         idBitacora: 3
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().idBitacora).toBe(3)
   })
 
   it('se asigna prop "idMotivo" adecuadamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         idMotivo: 5
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().idMotivo).toBe(5)
   })
 
   it('se asigna prop "letraRevision" adecuadamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         letraRevision: 'Q'
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().letraRevision).toBe('Q')
   })
 
   it('se asigna prop "reEmitir" adecuadamente como "true"', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         reEmitir: true
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().reEmitir).toBeTruthy()
   })
 
   it('se asigna prop "reEmitir" adecuadamente como "false"', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         reEmitir: false
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().reEmitir).toBeFalsy()
   })
 
   it('se asigna prop "estado" adecuadamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         estado: 'Esto es una prueba'
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.props().estado).toEqual('Esto es una prueba')
   })
 
   it('variable "bitacora" se inicializa correctamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         idBitacora: 345
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.bitacora).toEqual(345)
   })
 
   it('variable minuta se inicializa correctamente', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         tipoMinuta: 2
+      },
+      global: {
+        plugins: [store]
       }
     })
     const minuta = {
@@ -102,12 +320,10 @@ describe('Minuta.vue', () => {
       decision: false,
       otro: false
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.clasificacion).toEqual(clasificacion)
   })
 
   it('variable tema se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.tema).toEqual('')
   })
 
@@ -119,28 +335,27 @@ describe('Minuta.vue', () => {
         idMotivo: 1,
         letraRevision: 'A',
         reEmitir: false
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.revision).toEqual('A')
   })
 
   it('variable asistenciaEst se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.asistenciaEst).toEqual([])
   })
 
   it('variable asistenciaStk se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.asistenciaStk).toEqual([])
   })
 
   it('variable objetivos se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.objetivos).toEqual([{id: 0, descripcion: ''}])
   })
 
   it('variable conclusiones se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.conclusiones).toEqual([{id: 0, descripcion: ''}])
   })
 
@@ -158,7 +373,6 @@ describe('Minuta.vue', () => {
         responsables: false
       }
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.item).toEqual(item)
   })
 
@@ -170,6 +384,9 @@ describe('Minuta.vue', () => {
         idMotivo: 6,
         letraRevision: 'A',
         reEmitir: false
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.motivo_id).toEqual(6)
@@ -189,47 +406,38 @@ describe('Minuta.vue', () => {
         responsables: false
       }
     }]
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.listaItems).toEqual(lista)
   })
 
   it('variable tipo_items se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.tipo_items).toEqual([])
   })
 
   it('variable tipo_asistencias se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.tipo_asistencias).toEqual([])
   })
 
   it('variable tipo_estados se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.tipo_estados).toEqual([])
   })
 
   it('variable motivos se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.motivos).toEqual([])
   })
 
   it('variable listaClasificacion se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.listaClasificacion).toEqual([])
   })
 
   it('variable estudiante se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.estudiante).toEqual({})
   })
 
   it('variable grupo se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.grupo).toEqual({})
   })
 
   it('variable semestre se inicializa correctamente', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.semestre).toEqual({})
   })
 
@@ -248,7 +456,6 @@ describe('Minuta.vue', () => {
       objetivos: false,
       conclusiones: false
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.entradas).toEqual(entrada)
   })
 
@@ -260,6 +467,9 @@ describe('Minuta.vue', () => {
         idMotivo: 6,
         letraRevision: 'A',
         reEmitir: true
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.nuevaEmision).toBeTruthy()
@@ -273,6 +483,9 @@ describe('Minuta.vue', () => {
         idMotivo: 6,
         letraRevision: 'A',
         reEmitir: false
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.nuevaEmision).toBeFalsy()
@@ -287,24 +500,33 @@ describe('Minuta.vue', () => {
         letraRevision: 'A',
         reEmitir: false,
         estado: 'Esto es una prueba'
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.revisionEstado).toEqual('Esto es una prueba')
   })
 
   it('propiedad computada esBorrador funciona correctamente con true', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         idBitacora: 3
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.esBorrador).toBeTruthy()
   })
 
   it('propiedad computada esBorrador funciona correctamente con false', () => {
-    const wrapper = mount(Minuta, {
+    const wrapper = shallowMount(Minuta, {
       propsData: {
         idBitacora: 0
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.esBorrador).toBeFalsy()
@@ -313,7 +535,6 @@ describe('Minuta.vue', () => {
   it('método removeFromArray funciona correctamente', () => {
     const array = ['Papa', 'Manzana', 'Naranja']
     const resultado = ['Manzana', 'Naranja']
-    const wrapper = shallowMount(Minuta)
     wrapper.vm.removeFromArray(array, 'Papa')
     expect(array).toEqual(resultado)
   })
@@ -324,13 +545,11 @@ describe('Minuta.vue', () => {
       apellido_paterno: 'Mackena',
       apellido_materno: 'Saldias'
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.nombreCompleto(estudiante)).toEqual('Pablo Mackena Saldias')
   })
 
   it('método convertirFecha funciona correctamente', () => {
     const fecha = '2020-12-04T13:03:50.000Z'
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.convertirFecha(fecha)).toEqual('2020-12-04')
   })
 
@@ -343,7 +562,6 @@ describe('Minuta.vue', () => {
       id: 2,
       abreviacion: 'QU'
     }]
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.buscarIdEnLista(array, 'abreviacion', 'QU')).toEqual(2)
   })
 
@@ -366,6 +584,9 @@ describe('Minuta.vue', () => {
           }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.obtenerTipoMinuta()
@@ -391,6 +612,37 @@ describe('Minuta.vue', () => {
           }
           ]
         }
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.obtenerTipoMinuta()
+    expect(wrapper.vm.minuta.tipo).toEqual('')
+  })
+
+  it('método obtenerTipoMinuta funciona correctamente con tipo_minuta_id igual a "undefined"', () => {
+    const wrapper = shallowMount(Minuta, {
+      data() {
+        return {
+          minuta:{
+            tipo_minuta_id: undefined,
+            tipo: ''
+          },
+          tipoMinutas: [
+          {
+            id: 1,
+            tipo: 'Coordinacion'
+          },
+          {
+            id: 2,
+            tipo: 'Cliente'
+          }
+          ]
+        }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.obtenerTipoMinuta()
@@ -405,7 +657,6 @@ describe('Minuta.vue', () => {
       decision: true,
       otro: false
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.convertirClasificacion(clasificacion)).toEqual(['avance', 'decision'])
   })
 
@@ -432,7 +683,6 @@ describe('Minuta.vue', () => {
       id: 7,
       asistencia_id: 8
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: 'est', id: 6})
   })
 
@@ -459,7 +709,6 @@ describe('Minuta.vue', () => {
       id: 7,
       asistencia_id: 8
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: 'stk', id: 6})
   })
 
@@ -486,7 +735,6 @@ describe('Minuta.vue', () => {
       id: 7,
       asistencia_id: 8
     }
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.convertirResponsable(lista, responsable)).toEqual({tipo: '', id: 0})
   })
 
@@ -570,6 +818,9 @@ describe('Minuta.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.convertirItems(lista, asistencia)).toEqual(esperado)
@@ -596,37 +847,8 @@ describe('Minuta.vue', () => {
       {estudiante: 5, stakeholder: '', asistencia: 3},
       {estudiante: 6, stakeholder: '', asistencia: 1}
     ]
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          tipo_asistencias: [
-            { id: 1, tipo: 'PRE'},
-            { id: 2, tipo: 'AUS'},
-            { id: 3, tipo: 'ACA'}
-          ],
-          grupo: {
-            id: 462353,
-            nombre: 'Proyecto de prueba',
-            proyecto: 'Pagina web de prueba',
-            correlativo: 46234543,
-            estudiantes: [
-              { id: 5, iniciales: 'CGL', usuario: {
-                nombre: 'Carlos',
-                apellido_paterno: 'Gonzalez',
-                apellido_materno: 'Lopez'
-              }
-            },
-              { id: 6, iniciales: 'FDT', usuario: {
-                nombre: 'Fernanda',
-                apellido_paterno: 'Díaz',
-                apellido_materno: 'Torres'
-              }
-            }
-            ]
-          }
-        }
-      }
-    })
+    wrapper.vm.tipo_asistencias = tipoAsistencias
+    wrapper.vm.grupo = grupo
     expect(wrapper.vm.convertirAsistenciaEst(array)).toEqual(esperado)
   })
 
@@ -651,37 +873,8 @@ describe('Minuta.vue', () => {
       {estudiante: '', stakeholder: 5, asistencia: 3},
       {estudiante: '', stakeholder: 6, asistencia: 1}
     ]
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          tipo_asistencias: [
-            { id: 1, tipo: 'PRE'},
-            { id: 2, tipo: 'AUS'},
-            { id: 3, tipo: 'ACA'}
-          ],
-          grupo: {
-            id: 462353,
-            nombre: 'Proyecto de prueba',
-            proyecto: 'Pagina web de prueba',
-            correlativo: 46234543,
-            stakeholders: [
-              { id: 5, iniciales: 'CGL', usuario: {
-                nombre: 'Carlos',
-                apellido_paterno: 'Gonzalez',
-                apellido_materno: 'Lopez'
-              }
-            },
-              { id: 6, iniciales: 'FDT', usuario: {
-                nombre: 'Fernanda',
-                apellido_paterno: 'Díaz',
-                apellido_materno: 'Torres'
-              }
-            }
-            ]
-          }
-        }
-      }
-    })
+    wrapper.vm.tipo_asistencias = tipoAsistencias
+    wrapper.vm.grupo = grupo
     expect(wrapper.vm.convertirAsistenciaStk(array)).toEqual(esperado)
   })
 
@@ -699,7 +892,6 @@ describe('Minuta.vue', () => {
         responsables: false
       }
     }
-    const wrapper = shallowMount(Minuta)
     wrapper.vm.agregarItem()
     expect(wrapper.vm.listaItems[1]).toEqual(nuevo)
   })
@@ -737,46 +929,44 @@ describe('Minuta.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.removerItem(wrapper.vm.listaItems[0])
     expect(wrapper.vm.listaItems.length).toEqual(1)
+    expect(wrapper.vm.listaItems[0].correlativo).toEqual(2)
   })
 
   it('método agregarObjetivo funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta)
+    const objetivo = {id: 0, descripcion: ''}
     wrapper.vm.agregarObjetivo()
     expect(wrapper.vm.objetivos.length).toEqual(2)
+    expect(wrapper.vm.objetivos[0]).toEqual(objetivo)
+    expect(wrapper.vm.objetivos[1]).toEqual(objetivo)
   })
 
   it('método removerObjetivo funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          objetivos: ['Obj1', 'Obj2']
-        }
-      }
-    })
+    wrapper.vm.objetivos = ['Obj1', 'Obj2']
     wrapper.vm.removerObjetivo(wrapper.vm.objetivos[0])
     expect(wrapper.vm.objetivos.length).toEqual(1)
+    expect(wrapper.vm.objetivos[0]).toEqual('Obj2')
   })
 
   it('método agregarConclusion funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta)
+    const conclusion = {id: 0, descripcion: ''}
     wrapper.vm.agregarConclusion()
     expect(wrapper.vm.conclusiones.length).toEqual(2)
+    expect(wrapper.vm.conclusiones[0]).toEqual(conclusion)
+    expect(wrapper.vm.conclusiones[1]).toEqual(conclusion)
   })
 
   it('método removerConclusion funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          conclusiones: ['Con1', 'Con2']
-        }
-      }
-    })
+    wrapper.vm.conclusiones = ['Con1', 'Con2']
     wrapper.vm.removerConclusion(wrapper.vm.conclusiones[0])
     expect(wrapper.vm.conclusiones.length).toEqual(1)
+    expect(wrapper.vm.conclusiones[0]).toEqual('Con2')
   })
 
   it('método limpiarCampos funciona correctamente', () => {
@@ -873,6 +1063,9 @@ describe('Minuta.vue', () => {
       },
       propsData: {
         tipoMinuta: 2
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.limpiarCampos()
@@ -891,27 +1084,13 @@ describe('Minuta.vue', () => {
   // Faltan métodos que incluyen 'axios'
 
   it('método establecerId funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          estudiante: {
-            id: 5
-          }
-        }
-      }
-    })
+    wrapper.vm.estudiante = {id: 5}
     wrapper.vm.establecerId()
     expect(wrapper.vm.minuta.estudiante_id).toEqual(5)
   })
 
   it('método establecerClasificacion funciona correctamente', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          listaClasificacion: ['informativa', 'otro']
-        }
-      }
-    })
+    wrapper.vm.listaClasificacion = ['informativa', 'otro']
     wrapper.vm.establecerClasificacion()
     expect(wrapper.vm.clasificacion.informativa).toBeTruthy()
     expect(wrapper.vm.clasificacion.avance).toBeFalsy()
@@ -937,71 +1116,44 @@ describe('Minuta.vue', () => {
             nombre: 'G02'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.establecerCodigo()).toEqual(codigo)
   })
 
   it('método "validarRevision" funciona correctamente para "revision" igual a ""', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          revision: ''
-        }
-      }
-    })
+    wrapper.vm.revision = ''
     expect(wrapper.vm.validarRevision()).toBeFalsy()
     expect(wrapper.vm.entradas.revision.error).toBeTruthy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
   })
 
   it('método "validarRevision" funciona correctamente para "revision" igual a "undefined"', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          revision: undefined
-        }
-      }
-    })
+    wrapper.vm.revision = undefined
     expect(wrapper.vm.validarRevision()).toBeFalsy()
     expect(wrapper.vm.entradas.revision.error).toBeTruthy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('No se ha ingresado la revisión de la minuta')
   })
 
   it('método "validarRevision" funciona correctamente para "revision" distinto a regExp', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          revision: 'Abc'
-        }
-      }
-    })
+    wrapper.vm.revision = 'Abc'
     expect(wrapper.vm.validarRevision()).toBeFalsy()
     expect(wrapper.vm.entradas.revision.error).toBeTruthy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('Sólo letras mayúsculas o números')
   })
 
   it('método "validarRevision" funciona correctamente para "revision" con letra mayúscula', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          revision: 'Z'
-        }
-      }
-    })
+    wrapper.vm.revision = 'Z'
     expect(wrapper.vm.validarRevision()).toBeTruthy()
     expect(wrapper.vm.entradas.revision.error).toBeFalsy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
   })
 
   it('método "validarRevision" funciona correctamente para "revision" con número', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          revision: 5
-        }
-      }
-    })
+    wrapper.vm.revision = 5
     expect(wrapper.vm.validarRevision()).toBeTruthy()
     expect(wrapper.vm.entradas.revision.error).toBeFalsy()
     expect(wrapper.vm.entradas.revision.mensaje).toEqual('')
@@ -1015,6 +1167,9 @@ describe('Minuta.vue', () => {
             fecha_reunion: ''
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarFecha()).toBeFalsy()
@@ -1029,6 +1184,9 @@ describe('Minuta.vue', () => {
             fecha_reunion: undefined
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarFecha()).toBeFalsy()
@@ -1043,6 +1201,9 @@ describe('Minuta.vue', () => {
             fecha_reunion: '642345-6345-1346'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarFecha()).toBeFalsy()
@@ -1057,6 +1218,9 @@ describe('Minuta.vue', () => {
             fecha_reunion: '2020-03-13'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarFecha()).toBeTruthy()
@@ -1064,12 +1228,10 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarHora" funciona correctamente para "hora" distinta a regExp', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarHora('46345:622523')).toBeFalsy()
   })
 
   it('método "validarHora" funciona correctamente para "hora" con regExp correcto', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarHora('12:23')).toBeTruthy()
   })
 
@@ -1081,6 +1243,9 @@ describe('Minuta.vue', () => {
             h_inicio: '46345:622523'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarHinicio()).toBeFalsy()
@@ -1095,6 +1260,9 @@ describe('Minuta.vue', () => {
             h_inicio: '13:23'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarHinicio()).toBeTruthy()
@@ -1109,6 +1277,9 @@ describe('Minuta.vue', () => {
             h_termino: '46345:622523'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarHtermino()).toBeFalsy()
@@ -1123,6 +1294,9 @@ describe('Minuta.vue', () => {
             h_termino: '13:23'
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarHtermino()).toBeTruthy()
@@ -1130,25 +1304,13 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarTema" funciona correctamente para "tema" igual a ""', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          tema: ''
-        }
-      }
-    })
+    wrapper.vm.tema = ''
     expect(wrapper.vm.validarTema()).toBeFalsy()
     expect(wrapper.vm.entradas.tema).toBeTruthy()
   })
 
   it('método "validarTema" funciona correctamente para "tema" distinto a ""', () => {
-    const wrapper = shallowMount(Minuta, {
-      data() {
-        return {
-          tema: 'Es un tema de prueba'
-        }
-      }
-    })
+    wrapper.vm.tema = 'Es un tema de prueba'
     expect(wrapper.vm.validarTema()).toBeTruthy()
     expect(wrapper.vm.entradas.tema).toBeFalsy()
   })
@@ -1172,6 +1334,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.limpiarAsistencias()
@@ -1203,6 +1368,9 @@ describe('Minuta.vue', () => {
             ]
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarAsistencia()).toBeFalsy()
@@ -1238,6 +1406,9 @@ describe('Minuta.vue', () => {
             {estudiante: 668694, stakeholder: '', asistencia: 161434}
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarAsistencia()).toBeTruthy()
@@ -1263,6 +1434,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     wrapper.vm.limpiarClasificacion()
@@ -1270,7 +1444,6 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarClasificacion" funciona correctamente para false', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarClasificacion()).toBeFalsy()
     expect(wrapper.vm.entradas.clasificacion).toBeTruthy()
   })
@@ -1295,6 +1468,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarClasificacion()).toBeTruthy()
@@ -1302,7 +1478,6 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarObjetivos" funciona correctamente para largo igual a 1 y valor "false"', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarObjetivos()).toBeFalsy()
     expect(wrapper.vm.entradas.objetivos).toBeTruthy()
   })
@@ -1327,6 +1502,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarObjetivos()).toBeTruthy()
@@ -1354,6 +1532,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarObjetivos()).toBeFalsy()
@@ -1381,6 +1562,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarObjetivos()).toBeTruthy()
@@ -1388,7 +1572,6 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarConclusiones" funciona correctamente para largo igual a 1 y valor "false"', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarConclusiones()).toBeFalsy()
     expect(wrapper.vm.entradas.conclusiones).toBeTruthy()
   })
@@ -1413,6 +1596,9 @@ describe('Minuta.vue', () => {
             conclusiones: true
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarConclusiones()).toBeTruthy()
@@ -1440,6 +1626,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarConclusiones()).toBeFalsy()
@@ -1467,6 +1656,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarConclusiones()).toBeTruthy()
@@ -1474,7 +1666,6 @@ describe('Minuta.vue', () => {
   })
 
   it('método "validarItem" funciona correctamente con valor "false"', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarItem(0)).toBeFalsy()
     expect(wrapper.vm.listaItems[0].entradas.descripcion).toBeTruthy()
     expect(wrapper.vm.listaItems[0].entradas.tipo_item).toBeTruthy()
@@ -1500,6 +1691,9 @@ describe('Minuta.vue', () => {
             }
           ]
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarItem(0)).toBeFalsy()
@@ -1526,12 +1720,11 @@ describe('Minuta.vue', () => {
               }
             }
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ]
+          tipo_items: tipoItems
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarItem(0)).toBeFalsy()
@@ -1559,12 +1752,11 @@ describe('Minuta.vue', () => {
               }
             }
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ]
+          tipo_items: tipoItems
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarItem(0)).toBeFalsy()
@@ -1592,12 +1784,11 @@ describe('Minuta.vue', () => {
               }
             }
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ]
+          tipo_items: tipoItems
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarItem(0)).toBeTruthy()
@@ -1626,12 +1817,11 @@ describe('Minuta.vue', () => {
               }
             }
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ]
+          tipo_items: tipoItems
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarListaItems()).toBeTruthy()
@@ -1656,19 +1846,17 @@ describe('Minuta.vue', () => {
               }
             }
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ]
+          tipo_items: tipoItems
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarListaItems()).toBeFalsy()
   })
 
   it('método "validarFormulario" funciona correctamente con "false"', () => {
-    const wrapper = shallowMount(Minuta)
     expect(wrapper.vm.validarFormulario()).toBeFalsy()
   })
 
@@ -1731,11 +1919,7 @@ describe('Minuta.vue', () => {
             {estudiante: 46345, stakeholder: '', asistencia: 46345},
             {estudiante: 668694, stakeholder: '', asistencia: 161434}
           ],
-          tipo_items: [
-            {id: 1, tipo: 'Agenda', descripcion: 'tipo agenda'},
-            {id: 2, tipo: 'Hecho', descripcion: 'tipo hecho'},
-            {id: 3, tipo: 'Compromiso', descripcion: 'tipo compromiso'}
-          ],
+          tipo_items: tipoItems,
           entradas: {
             revision: {
               error: false,
@@ -1751,6 +1935,9 @@ describe('Minuta.vue', () => {
             conclusiones: false
           }
         }
+      },
+      global: {
+        plugins: [store]
       }
     })
     expect(wrapper.vm.validarFormulario()).toBeTruthy()
