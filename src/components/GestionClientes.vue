@@ -67,7 +67,7 @@
                 <label class="label">Grupo a asignar:</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo.error}">
+                    <select v-model="stakeholder.grupo_id" @change="validarGrupo" :class="{ 'is-danger' : entradas.grupo.error}" :disabled="actualizarStakeholder">
                       <option v-for="grupo in listaFiltrada" :key="grupo.id" :value="grupo.id">
                         {{ grupo.nombre }} - {{ grupo.proyecto }}
                       </option>
@@ -83,7 +83,7 @@
             <div class="column is-12">
               <div class="field is-grouped is-grouped-centered">
                 <div class="control">
-                  <a class="button is-primary-usach" @click="agregar">Agregar</a>
+                  <a class="button is-primary-usach" @click="agregar">{{ actualizarStakeholder ? 'Actualizar' : 'Agregar'}}</a>
                 </div>
                 <div class="control">
                   <a class="button is-light-usach" @click="noAgregar"><strong>Cancelar</strong></a>
@@ -109,7 +109,7 @@
           <tbody>
             <tr v-for="(stakeholder, index) in stakeholdersPorJornada" :key="stakeholder.id">
               <th scope="row" class="is-vcentered has-text-centered">{{ index + 1 }}</th>
-              <td class="is-vcentered has-text-left">{{ nombreCompleto(stakeholder) }}</td>
+              <td class="is-vcentered has-text-left"><a @click="editarStakeholder(stakeholder)">{{ nombreCompleto(stakeholder) }}</a></td>
               <td class="is-vcentered has-text-centered">{{ stakeholder.email }}</td>
               <td>
                 <div v-for="grupo in stakeholder.grupos" :key="grupo.id">
@@ -186,7 +186,9 @@ export default {
         sin_especiales: 'Sólo letras. Verificar que no tenga caracteres especiales',
         correo_mal: 'El correo ingresado no es válido',
         correo_repetido: 'El correo ingresado ya se encuentra en el sistema'
-      }
+      },
+      actualizarStakeholder: false,
+      idStakeholder: 0
     }
   },
   computed: {
@@ -264,11 +266,22 @@ export default {
             id: this.stakeholder.grupo_id
           }
         }
-        try {
-          await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
-          this.obtenerStakeholders()
-        } catch (e) {
-          console.log(e)
+        if (!this.actualizarStakeholder) {
+          try {
+            await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
+            this.obtenerStakeholders()
+          } catch {
+            console.log('No fue posible crear el nuevo cliente')
+          }
+        } else {
+          try {
+            await axios.patch(this.apiUrl + '/stakeholders/' + this.idStakeholder, nuevo, { headers: Auth.postHeader() })
+            this.obtenerStakeholders()
+          } catch {
+            console.log('No fue posible actualizar la información del cliente')
+          }
+          this.actualizarStakeholder = false
+          this.idStakeholder = 0
         }
         this.verFormulario = false
       }
@@ -281,6 +294,7 @@ export default {
       this.entradas.apellido_materno.error = false
       this.entradas.correo_elec.error = false
       this.entradas.grupo = false
+      this.actualizarStakeholder = false
     },
     async obtenerGrupos () {
       try {
@@ -397,8 +411,10 @@ export default {
       esValido = esValido && this.validarApellidoP()
       esValido = esValido && this.validarApellidoM()
       esValido = esValido && this.validarEmail()
-      esValido = esValido && this.validarGrupo()
-      esValido = esValido && !this.existeStakeholder()
+      if (!this.actualizarStakeholder) {
+        esValido = esValido && this.validarGrupo()
+        esValido = esValido && !this.existeStakeholder()
+      }
       return esValido
     },
     editarAsignaciones: function () {
@@ -411,9 +427,19 @@ export default {
       this.verAsignaciones = false
       this.obtenerGrupos()
       this.obtenerStakeholders()
+    },
+    editarStakeholder: function (stakeholder) {
+      this.actualizarStakeholder = true
+      this.idStakeholder = stakeholder.id
+      this.stakeholder.usuario.nombre = stakeholder.nombre
+      this.stakeholder.usuario.apellido_paterno = stakeholder.apellido_paterno
+      this.stakeholder.usuario.apellido_materno = stakeholder.apellido_materno
+      this.stakeholder.usuario.email = stakeholder.email
+      this.stakeholder.grupo_id = 0
+      this.verFormulario = true
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerGrupos()
       this.obtenerStakeholders()

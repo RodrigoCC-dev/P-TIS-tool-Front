@@ -54,29 +54,25 @@ describe('SelectorJornada.vue', () => {
     })
   })
 
-  it('variable mostrarJornadas se inicializa correctamente con "false"', async () => {
+  it('variable mostrarJornadas se inicializa correctamente con "false"', () => {
     const wrapper = shallowMount(SelectorJornada)
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.mostrarJornadas).toBeFalsy()
   })
 
-  it('variable jornadaActual se inicializa correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('variable jornadaActual se inicializa correctamente', () => {
     expect(wrapper.vm.jornadaActual).toEqual('Diurna')
   })
 
-  it('variable jornadasProfesor se inicializa correctamente', async () => {
+  it('variable jornadasProfesor se inicializa correctamente', () => {
     const wrapper = shallowMount(SelectorJornada)
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.jornadasProfesor).toEqual([])
   })
 
-  it('variable nombreTabs se inicializa correctamente', async () => {
+  it('variable nombreTabs se inicializa correctamente', () => {
     const esperado = {
       diurna: 'Diurna',
       vespertina: 'Vespertina'
     }
-    await wrapper.vm.$nextTick()
     expect(wrapper.vm.nombreTabs).toEqual(esperado)
   })
 
@@ -89,8 +85,7 @@ describe('SelectorJornada.vue', () => {
     expect(wrapper.vm.mostrarJornadas).toBeTruthy()
   })
 
-  it('método elegirTab funciona correctamente', async () => {
-    await wrapper.vm.$nextTick()
+  it('método elegirTab funciona correctamente', () => {
     wrapper.vm.elegirTab('Vespertina')
     expect(wrapper.vm.jornadaActual).toEqual('Vespertina')
     expect(wrapper.vm.$store.state.jornadaActual).toEqual('Vespertina')
