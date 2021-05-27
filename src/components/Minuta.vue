@@ -1002,7 +1002,7 @@ export default {
       return validacion
     }
   },
-  mounted () {
+  created () {
     if (localStorage.user_tk) {
       this.obtenerTiposItem()
       this.obtenerTiposAsistencia()
