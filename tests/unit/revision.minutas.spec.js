@@ -1,31 +1,51 @@
 import { shallowMount } from '@vue/test-utils'
 import { createStore } from 'vuex'
+import axios from 'axios'
 import RevisionMinutas from '@/components/RevisionMinutas.vue'
 
+// Variables globales
+const apiUrl = '127.0.0.1:3000'
+
+const listaGrupos = [
+  {
+    id: 1, jornada: 'Diurna'
+  },
+  {
+    id: 2, jornada: 'Vespertina'
+  },
+  {
+    id: 3, jornada: 'Vespertina'
+  },
+  {
+    id: 4, jornada: 'Diurna'
+  }
+]
+
+const idGrupo = 345343
+
+// Mock store
 const store = createStore({
   state() {
     return {
+      apiUrl: apiUrl,
       jornadaActual: 'Diurna'
     }
   }
 })
 
-describe('RevisionMinutas.vue', () => {
-  const listaGrupos = [
-    {
-      id: 1, jornada: 'Diurna'
-    },
-    {
-      id: 2, jornada: 'Vespertina'
-    },
-    {
-      id: 3, jornada: 'Vespertina'
-    },
-    {
-      id: 4, jornada: 'Diurna'
-    }
-  ]
+// Mock axios
+jest.mock('axios')
 
+axios.get.mockImplementation((url) => {
+  switch (url) {
+    case apiUrl + '/minutas/grupo/' + idGrupo:
+      return Promise.resolve({data: []})
+    default:
+      return Promise.reject(new Error('not found'))
+  }
+})
+
+describe('RevisionMinutas.vue', () => {
   let wrapper
 
   beforeEach(() => {
