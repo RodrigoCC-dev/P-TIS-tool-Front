@@ -110,6 +110,165 @@ const semestre = {
 
 const nuevoCorrelativo = 1345
 
+const idBitacora = 146343
+
+const bitacora = {
+  id: idBitacora,
+  revision: 'J',
+  motivo: 'Emitida para revision del cliente',
+  identificador: 'ERC',
+  minuta: {
+    id: 9453453,
+    codigo: 'MINUTA_G02_04_2020-2_0821',
+    correlativo: 93453,
+    tema: 'Esto es una prueba',
+    creada_por: 'CGL',
+    creada_el: '2020-08-21T08:16:00.000Z',
+    tipo: 'Cliente',
+    fecha_reunion: '2020-08-21T00:00:00.000Z',
+    h_inicio: '2000-01-01T07:00:00.000Z',
+    h_termino: '2000-01-01T08:00:00.000Z',
+    clasificacion: {
+      informativa: false,
+      avance: true,
+      coordinacion: false,
+      decision: true,
+      otro: false
+    },
+    objetivos: [
+      { id: 63454, descripcion: 'Obj1' },
+      { id: 34534, descripcion: 'Obj2' }
+    ],
+    conclusiones: [
+      { id: 14534, descripcion: 'Con1' },
+      { id: 89453, descripcion: 'Con2' }
+    ],
+    asistencia: [
+      {
+        id: 913453,
+        iniciales: 'CGL',
+        id_estudiante: 5,
+        id_stakeholder: null,
+        tipo: 'PRE',
+        descripcion: 'Presente'
+      },
+      {
+        id: 3453445,
+        iniciales: 'FDT',
+        id_estudiante: null,
+        id_stakeholder: 6,
+        tipo: 'ACA',
+        descripcion: 'Ausente con aviso'
+      }
+    ],
+    items: [
+      {
+        id: 9213453,
+        tipo: 'Compromiso',
+        correlativo: 91345,
+        descripcion: 'Compromiso de prueba',
+        fecha: '2020-08-29T00:00:00.000Z',
+        responsables: [
+          {
+            id: 782345,
+            asistencia_id: 913453
+          }
+        ]
+      },
+      {
+        id: 734534,
+        tipo: 'Hecho',
+        correlativo: 13453,
+        descripcion: 'Hecho de prueba',
+        fecha: '',
+        responsables: []
+      },
+      {
+        id: 23453,
+        tipo: 'Agenda',
+        correlativo: 345342,
+        descripcion: 'Agenda de prueba',
+        fecha: '2020-09-12T00:00:00.000Z',
+        responsables: [
+          {
+            id: 434534,
+            asistencia_id: 3453445
+          }
+        ]
+      }
+    ]
+  }
+}
+
+const asistenciaEst = [
+  {estudiante: 5, stakeholder: '', asistencia: 1},
+  {estudiante: 6, stakeholder: '', asistencia: 0}
+]
+
+const asistenciaStk = [
+  {estudiante: '', stakeholder: 5, asistencia: 0},
+  {estudiante: '', stakeholder: 6, asistencia: 3}
+]
+
+const clasificacion = {
+  informativa: false,
+  avance: true,
+  coordinacion: false,
+  decision: true,
+  otro: false
+}
+
+const objetivos = [
+  { id: 63454, descripcion: 'Obj1' },
+  { id: 34534, descripcion: 'Obj2' }
+]
+
+const conclusiones = [
+  { id: 14534, descripcion: 'Con1' },
+  { id: 89453, descripcion: 'Con2' }
+]
+
+const listaItems = [
+  {
+    correlativo: 13453,
+    descripcion: 'Hecho de prueba',
+    fecha: '',
+    tipo_item_id: 2,
+    responsables: 0,
+    entradas: {
+      descripcion: false,
+      fecha: false,
+      tipo_item: false,
+      responsables: false
+    }
+  },
+  {
+    correlativo: 91345,
+    descripcion: 'Compromiso de prueba',
+    fecha: '2020-08-29',
+    tipo_item_id: 3,
+    responsables: {tipo: 'est', id: 5},
+    entradas: {
+      descripcion: false,
+      fecha: false,
+      tipo_item: false,
+      responsables: false
+    }
+  },
+  {
+    correlativo: 345342,
+    descripcion: 'Agenda de prueba',
+    fecha: '2020-09-12',
+    tipo_item_id: 1,
+    responsables: {tipo: 'stk', id: 6},
+    entradas: {
+      descripcion: false,
+      fecha: false,
+      tipo_item: false,
+      responsables: false
+    }
+  }
+]
 
 // Mock store
 const store = createStore({
@@ -152,14 +311,14 @@ axios.get.mockImplementation((url) => {
       return Promise.resolve({data: tipoEstados})
     case apiUrl + '/estudiantes/' + idUsuario:
       return Promise.resolve({data: estudiante})
-    case apiUrl + '/grupos/' + 5:
+    case apiUrl + '/grupos/' + idGrupo:
       return Promise.resolve({data: grupo})
     case apiUrl + '/semestres':
       return Promise.resolve({data: semestre})
-    case apiUrl + '/minutas/correlativo/' + grupo.id:
+    case apiUrl + '/minutas/correlativo/' + idGrupo:
       return Promise.resolve({data: nuevoCorrelativo})
-    case apiUrl + '/minutas/' + idMinuta:
-      return Promise.resolve({data: {}})
+    case apiUrl + '/minutas/' + idBitacora:
+      return Promise.resolve({data: bitacora})
     default:
       return Promise.reject(new Error('not found'))
   }
@@ -188,6 +347,10 @@ describe('Minuta.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(Minuta, {
+      propsData: {
+        idBitacora: 0,
+        tipoMinuta: 63453
+      },
       global: {
         plugins: [store]
       }
@@ -1082,6 +1245,117 @@ describe('Minuta.vue', () => {
   })
 
   // Faltan métodos que incluyen 'axios'
+  it('método "obtenerTiposItem" funciona correctamente', async () => {
+    wrapper.vm.obtenerTiposItem()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tipo_items).toEqual(tipoItems)
+  })
+
+  it('método "obtenerTiposAsistencia" funciona correctamente', async () => {
+    wrapper.vm.obtenerTiposAsistencia()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tipo_asistencias).toEqual(tipoAsistencias)
+  })
+
+  it('método "obtenerTiposEstado" funciona correctamente', async () => {
+    wrapper.vm.obtenerTiposEstado()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.tipo_estados).toEqual(tipoEstados)
+  })
+
+  it('método "obtenerInfoEstudiante" funciona correctamente para nueva minuta', async () => {
+    debugger
+    wrapper.vm.obtenerInfoEstudiante()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.estudiante).toEqual(estudiante)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.grupo).toEqual(grupo)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minuta.correlativo).toEqual(nuevoCorrelativo)
+  })
+
+  it('método "obtenerSemestre" funciona correctamente', async () => {
+    wrapper.vm.obtenerSemestre()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.semestre).toEqual(semestre)
+  })
+
+  it('método "obtenerCorrelativo" funciona correctamente con nueva minuta', async () => {
+    wrapper.vm.grupo = grupo
+    wrapper.vm.obtenerCorrelativo()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minuta.correlativo).toEqual(nuevoCorrelativo)
+    expect(wrapper.vm.minuta.tipo).toEqual('Cliente')
+  })
+
+  it('método "obtenerCorrelativo" funciona correctamente con minuta existente', async () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        idBitacora: idBitacora,
+        tipoMinuta: 63453,
+        reEmitir: false
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.tipo_asistencias = tipoAsistencias
+    wrapper.vm.tipo_items = tipoItems
+    wrapper.vm.grupo = grupo
+    wrapper.vm.obtenerCorrelativo()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minuta.codigo).toEqual('MINUTA_G02_04_2020-2_0821')
+    expect(wrapper.vm.minuta.correlativo).toEqual(93453)
+    expect(wrapper.vm.minuta.fecha_reunion).toEqual('2020-08-21')
+    expect(wrapper.vm.minuta.h_inicio).toEqual('07:00')
+    expect(wrapper.vm.minuta.h_termino).toEqual('08:00')
+    expect(wrapper.vm.minuta.tipo_minuta_id).toEqual(63453)
+    expect(wrapper.vm.asistenciaEst).toEqual(asistenciaEst)
+    expect(wrapper.vm.asistenciaStk).toEqual(asistenciaStk)
+    expect(wrapper.vm.clasificacion).toEqual(clasificacion)
+    expect(wrapper.vm.listaClasificacion).toEqual(['avance', 'decision'])
+    expect(wrapper.vm.tema).toEqual('Esto es una prueba')
+    expect(wrapper.vm.revision).toEqual('J')
+    expect(wrapper.vm.objetivos).toEqual(objetivos)
+    expect(wrapper.vm.conclusiones).toEqual(conclusiones)
+    expect(wrapper.vm.listaItems).toEqual(listaItems)
+    expect(wrapper.vm.minuta.tipo).toEqual('Cliente')
+  })
+
+  it('método "obtenerMinuta" funciona correctamente', async () => {
+    const wrapper = shallowMount(Minuta, {
+      propsData: {
+        idBitacora: idBitacora,
+        tipoMinuta: 63453,
+        reEmitir: false
+      },
+      global: {
+        plugins: [store]
+      }
+    })
+    wrapper.vm.tipo_asistencias = tipoAsistencias
+    wrapper.vm.tipo_items = tipoItems
+    wrapper.vm.grupo = grupo
+    wrapper.vm.obtenerMinuta()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.minuta.codigo).toEqual('MINUTA_G02_04_2020-2_0821')
+    expect(wrapper.vm.minuta.correlativo).toEqual(93453)
+    expect(wrapper.vm.minuta.fecha_reunion).toEqual('2020-08-21')
+    expect(wrapper.vm.minuta.h_inicio).toEqual('07:00')
+    expect(wrapper.vm.minuta.h_termino).toEqual('08:00')
+    expect(wrapper.vm.minuta.tipo_minuta_id).toEqual(63453)
+    expect(wrapper.vm.asistenciaEst).toEqual(asistenciaEst)
+    expect(wrapper.vm.asistenciaStk).toEqual(asistenciaStk)
+    expect(wrapper.vm.clasificacion).toEqual(clasificacion)
+    expect(wrapper.vm.listaClasificacion).toEqual(['avance', 'decision'])
+    expect(wrapper.vm.tema).toEqual('Esto es una prueba')
+    expect(wrapper.vm.revision).toEqual('J')
+    expect(wrapper.vm.objetivos).toEqual(objetivos)
+    expect(wrapper.vm.conclusiones).toEqual(conclusiones)
+    expect(wrapper.vm.listaItems).toEqual(listaItems)
+    expect(wrapper.vm.minuta.tipo).toEqual('Cliente')
+  })
 
   it('método establecerId funciona correctamente', () => {
     wrapper.vm.estudiante = {id: 5}
