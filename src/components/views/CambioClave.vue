@@ -127,9 +127,15 @@ export default {
     validarNueva: function () {
       if (this.nueva !== undefined) {
         if (this.nueva !== '') {
-          this.entradas.nueva.error = false
-          this.entradas.nueva.mensaje = ''
-          return true
+          if (this.nueva !== this.actual) {
+            this.entradas.nueva.error = false
+            this.entradas.nueva.mensaje = ''
+            return true
+          } else {
+            this.entradas.nueva.error = true
+            this.entradas.nueva.mensaje = 'La clave ingresada es idéntica a la clave actual'
+            return false
+          }
         } else {
           this.entradas.nueva.error = true
           this.entradas.nueva.mensaje = 'No se ha ingresado la nueva clave'
