@@ -3,9 +3,9 @@
 
     <div class="columns is-centered">
       <div class="column is-7">
-        <div class="notification" :class="notificacion.error ? 'is-danger' : 'is-success'" v-if="notificacion.mostrar">
+        <div class="notification" :class="notificacion.error ? 'is-danger-usach' : 'is-success-usach'" v-if="notificacion.mostrar">
           <button class="delete" @click="cerrarNotificacion"></button>
-          <strong>{{ notificacion.mensaje }}</strong>
+          {{ notificacion.mensaje }}
         </div>
       </div>
     </div>
