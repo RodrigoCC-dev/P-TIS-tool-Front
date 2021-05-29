@@ -68,6 +68,7 @@ sonarqube:
   allow_failure: true
   only:
     - master
+    - main
 
 to_docker:
   image: docker:latest
