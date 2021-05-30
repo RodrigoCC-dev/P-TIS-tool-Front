@@ -252,8 +252,10 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/stakeholders/asignacion/grupos', { headers: Auth.authHeader() })
         this.listaStakeholders = response.data
-      } catch {
-        console.log('No fue posible obtener la lista de Clientes')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la lista de Clientes. Por favor, intente nuevamente recargando la página.')
       }
     },
     async agregar () {
@@ -270,15 +272,32 @@ export default {
           try {
             await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
             this.obtenerStakeholders()
-          } catch {
-            console.log('No fue posible crear el nuevo cliente')
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se ha creado exitosamente el nuevo cliente')
+          } catch (e) {
+            console.error(e)
+            console.log('')
+            this.$store.commit('setClaseNotError', true)
+            try {
+              this.$store.commit('setNotificacion', e.response)
+            } catch {
+              this.$store.commit('setNotificacion', 'Error. No fue posible crear el nuevo cliente. Por favor, intente nuevamente.')
+            }
           }
         } else {
           try {
             await axios.patch(this.apiUrl + '/stakeholders/' + this.idStakeholder, nuevo, { headers: Auth.postHeader() })
             this.obtenerStakeholders()
-          } catch {
-            console.log('No fue posible actualizar la información del cliente')
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se ha actualizado el cliente exitosamente')
+          } catch (e) {
+            console.error(e)
+            this.$store.commit('setClaseNotError', true)
+            try {
+              this.$store.commit('setNotificacion', e.response)
+            } catch {
+              this.$store.commit('setNotificacion', 'Error. No fue posible actualizar los datos del cliente. Por favor intente nuevamente.')
+            }
           }
           this.actualizarStakeholder = false
           this.idStakeholder = 0
@@ -300,8 +319,10 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
-      } catch {
-        console.log('No se han obtenido los grupos')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('Error. No se ha podido obtener los grupos. Por favor recargue la página para volver a intentarlo.')
       }
     },
     validarNombre: function () {
