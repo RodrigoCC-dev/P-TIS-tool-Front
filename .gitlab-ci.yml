@@ -16,7 +16,7 @@ build:
     paths:
       - dist
   before_script:
-    - echo "VUE_APP_API_URL='http://34.122.189.193:8080'" > .env
+    - echo "VUE_APP_API_URL='http://199.223.233.227:8080'" > .env
 
 test:
   stage: unit test
@@ -68,6 +68,7 @@ sonarqube:
   allow_failure: true
   only:
     - master
+    - main
 
 to_docker:
   image: docker:latest
