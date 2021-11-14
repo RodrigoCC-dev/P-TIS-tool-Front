@@ -66,9 +66,6 @@ sonarqube:
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true
   allow_failure: true
-  only:
-    - master
-    - main
 
 to_docker:
   image: docker:latest
@@ -82,3 +79,5 @@ to_docker:
     - echo "deploying to Docker start..."
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
