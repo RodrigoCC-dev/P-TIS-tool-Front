@@ -24,7 +24,7 @@ RUN npm install --progress:false
 ################
 
 # Image for production
-FROM ubuntu:nginx
+FROM nginx:ubuntu
 
 # Port to expose
 EXPOSE 80
