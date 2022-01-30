@@ -28,7 +28,7 @@ EXPOSE 80
 
 # Install 'nano' y 'git'
 RUN rm -rf /tmp/* /var/cache/apk/*
-RUN apt-get update && apt-get install nano git
+RUN apt-get update && apt-get install -y nano git
 
 # Copy artifact build from the 'build environment'
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
