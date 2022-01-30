@@ -10,9 +10,6 @@ ENV PORT=80
 # Set workdir
 WORKDIR usr/src/app
 
-RUN rm -rf /tmp/* /var/cache/apk/*
-RUN apt-get update && apt-get install nano
-
 # Install dependencies
 COPY . usr/src/app
 COPY package.json package-lock.json ./
@@ -28,6 +25,10 @@ FROM nginx:latest
 
 # Port to expose
 EXPOSE 80
+
+# Install 'nano' y 'git'
+RUN rm -rf /tmp/* /var/cache/apk/*
+RUN apt-get update && apt-get install nano git
 
 # Copy artifact build from the 'build environment'
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
