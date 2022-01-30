@@ -1,0 +1,10 @@
+.env
+.env.example
+.editorconfig
+.gitignore
+.gitlab-ci.yml
+sonar-project.properties
+wdio.local.conf.js
+wdio.sauce.conf.js
+wdio.shared.conf.js
+tests/
