@@ -19,5 +19,5 @@ cd ~/.acme.sh
 
 # Copiar certificados creados en carpeta de acceso
 mkdir /certificates
-cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.cer /certificates/mmrptis.ga.cer
-cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.key /certificates/mmrptis.ga.key
+cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.cer /certificates/cert_file.cer
+cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.key /certificates/key_file.key
