@@ -16,7 +16,7 @@ build:
     paths:
       - dist
   before_script:
-    - echo "VUE_APP_API_URL='http://199.223.233.227:8080'" > .env
+    - echo "VUE_APP_API_URL='http://www.mmrptis.ga:8080'" > .env
 
 test:
   stage: unit test
@@ -66,9 +66,6 @@ sonarqube:
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true
   allow_failure: true
-  only:
-    - master
-    - main
 
 to_docker:
   image: docker:latest
@@ -82,3 +79,5 @@ to_docker:
     - echo "deploying to Docker start..."
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
