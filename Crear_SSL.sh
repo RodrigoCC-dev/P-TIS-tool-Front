@@ -15,6 +15,7 @@ apt install -y cron socat
 
 # Emitir certificados
 cd ~/.acme.sh
+echo '---------------------------------------------'
 echo 'Ingrese el dominio que usará la aplicación:'
 read dominio
 ./acme.sh --issue -d $dominio -d www.${dominio} -w /usr/share/nginx/html
