@@ -1,6 +1,7 @@
 <template>
   <div>
 
+    <Notificacion/>
     <nav>
       <div class="tabs">
         <ul>
@@ -31,6 +32,7 @@ import RevisionMinutas from '@/components/RevisionMinutas.vue'
 import GestionClientes from '@/components/GestionClientes.vue'
 import RevisionAvances from '@/components/RevisionAvances.vue'
 import EstadisticasGrupo from '@/components/EstadisticasGrupo.vue'
+import Notificacion from '@/components/Notificacion.vue'
 
 const nombreTabs = {
   Estudiantes: 'estudiantes',
@@ -49,7 +51,8 @@ export default {
     RevisionMinutas,
     GestionClientes,
     RevisionAvances,
-    EstadisticasGrupo
+    EstadisticasGrupo,
+    Notificacion
   },
   data () {
     return {
