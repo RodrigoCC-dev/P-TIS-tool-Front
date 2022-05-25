@@ -122,6 +122,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/registros/grupo/' + id, { headers: Auth.authHeader() })
         this.registros = response.data
       } catch (e) {
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener los datos del grupo. Por favor intente nuevamente recargando la página.')
         console.log(e)
       }
     },
