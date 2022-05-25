@@ -322,7 +322,7 @@ export default {
       } catch (e) {
         console.error(e)
         this.$store.commit('setClaseNotError', true)
-        this.$store.commit('Error. No se ha podido obtener los grupos. Por favor recargue la página para volver a intentarlo.')
+        this.$store.commit('setNotificacion', 'Error. No se ha podido obtener los grupos. Por favor recargue la página para volver a intentarlo.')
       }
     },
     validarNombre: function () {
