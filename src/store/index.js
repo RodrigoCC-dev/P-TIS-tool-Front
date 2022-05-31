@@ -21,6 +21,10 @@ export default createStore({
       exito: false,
       alarma: false,
       error: false
+    },
+    mensajeNotificacion: {
+      alarma: 'No fue posible obtener alguno datos del servidor. ',
+      general: 'Por favor, intente nuevamente recargando la página.'
     }
   },
   mutations: {
