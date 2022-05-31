@@ -426,7 +426,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'usuario', 'tipoMinutas']),
+    ...mapState(['apiUrl', 'usuario', 'tipoMinutas', 'mensajeNotificacion']),
 
     esBorrador: function () {
       return this.bitacora !== 0
@@ -620,7 +620,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/tipo_items', { headers: Auth.authHeader() })
         this.tipo_items = response.data
       } catch {
-        console.log('No fue posible obtener los tipos de items')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la lista de items. ' + this.mensajeNotificacion.general)
       }
     },
     async obtenerTiposAsistencia () {
@@ -629,6 +630,8 @@ export default {
         this.tipo_asistencias = response.data
       } catch {
         console.log('No fue posible obtener los tipos de asistencia')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', this.mensajeNotificacion.alarma + this.mensajeNotificacion.general)
       }
     },
     async obtenerTiposEstado () {
@@ -637,6 +640,8 @@ export default {
         this.tipo_estados = response.data
       } catch {
         console.log('No fue posible obtener los tipos de estados')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', this.mensajeNotificacion.alarma + this.mensajeNotificacion.general)
       }
     },
     async obtenerInfoEstudiante () {
@@ -648,10 +653,12 @@ export default {
           this.grupo = respuesta.data
           this.obtenerCorrelativo()
         } catch {
-          console.log('No fue posible obtener la información del grupo del estudiante')
+          this.$store.commit('setClaseNotAlarma', true)
+          this.$store.commit('setNotificacion', 'No fue posible obtener la información del grupo del estudiante. ' + this.mensajeNotificacion.general)
         }
       } catch {
-        console.log('No fue posible obtener la información del estudiante')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la información del estudiante. ' + this.mensajeNotificacion.general)
       }
     },
     async obtenerSemestre () {
@@ -659,7 +666,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
         this.semestre = response.data
       } catch {
-        console.log('No se obtuvo la información del semestre')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se obtuvo la información del semestre. ' + this.mensajeNotificacion.general)
       }
     },
     async obtenerCorrelativo () {
@@ -671,8 +679,9 @@ export default {
         } else {
           this.obtenerMinuta()
         }
-      } catch (e) {
-        console.log('No fue posible obtener el correlativo')
+      } catch {
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener el nuevo número de minuta. ' + this.mensajeNotificacion.general)
       }
     },
     async obtenerMinuta () {
@@ -696,8 +705,9 @@ export default {
         this.conclusiones = response.data.minuta.conclusiones
         this.listaItems = this.convertirItems(response.data.minuta.items, response.data.minuta.asistencia)
         this.minuta.tipo = response.data.minuta.tipo
-      } catch (e) {
-        console.log(e)
+      } catch {
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la información de la minuta. ', this.mensajeNotificacion.general)
       }
     },
     establecerId: function () {
@@ -786,9 +796,11 @@ export default {
             this.limpiarCampos()
           } catch {
             if (estado === 'BOR') {
-              console.log('No se pudo guardar la minuta')
+              this.$store.commit('setClaseNotError', true)
+              this.$store.commit('setNotificacion', 'No se pudo guardar la minuta. ' + this.mensajeNotificacion.general)
             } else {
-              console.log('No se pudo emitir la minuta')
+              this.$store.commit('setClaseNotError', true)
+              this.$store.commit('setNotificacion', 'No se pudo emitir la minuta. ' + this.mensajeNotificacion.general)
             }
           }
         } else {
@@ -798,9 +810,11 @@ export default {
             this.limpiarCampos()
           } catch {
             if (estado === 'BOR') {
-              console.log('No se pudo actualizar la información de la minuta')
+              this.$store.commit('setClaseNotError', true)
+              this.$store.commit('setNotificacion', 'No se pudo actualizar la información de la minuta. ' + this.mensajeNotificacion.general)
             } else {
-              console.log('No se pudo emitir la minuta')
+              this.$store.commit('setClaseNotError', true)
+              this.$store.commit('setNotificacion', 'No se pudo emitir la minuta. ' + this.mensajeNotificacion.general)
             }
           }
         }
