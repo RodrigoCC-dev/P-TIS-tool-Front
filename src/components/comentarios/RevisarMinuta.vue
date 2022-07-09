@@ -48,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'mensajeNotificacion']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
@@ -60,7 +60,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
         this.bitacora = response.data
       } catch (e) {
-        console.log('No fue posible obtener los datos de la minuta seleccionada')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener los datos de la minuta seleccionada. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
