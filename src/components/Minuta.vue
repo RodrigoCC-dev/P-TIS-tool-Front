@@ -619,17 +619,18 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_items', { headers: Auth.authHeader() })
         this.tipo_items = response.data
-      } catch {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', 'No fue posible obtener la lista de items. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerTiposAsistencia () {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_asistencias', { headers: Auth.authHeader() })
         this.tipo_asistencias = response.data
-      } catch {
-        console.log('No fue posible obtener los tipos de asistencia')
+      } catch (e) {
+        console.log(e)
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', this.mensajeNotificacion.alarma + this.mensajeNotificacion.general)
       }
@@ -638,10 +639,11 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/tipo_estados', { headers: Auth.authHeader() })
         this.tipo_estados = response.data
-      } catch {
+      } catch (e) {
         console.log('No fue posible obtener los tipos de estados')
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', this.mensajeNotificacion.alarma + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerInfoEstudiante () {
@@ -652,13 +654,15 @@ export default {
           const respuesta = await axios.get(this.apiUrl + '/grupos/' + this.estudiante.grupo_id, { headers: Auth.authHeader() })
           this.grupo = respuesta.data
           this.obtenerCorrelativo()
-        } catch {
+        } catch (e) {
           this.$store.commit('setClaseNotAlarma', true)
           this.$store.commit('setNotificacion', 'No fue posible obtener la información del grupo del estudiante. ' + this.mensajeNotificacion.general)
+          console.log(e)
         }
-      } catch {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', 'No fue posible obtener la información del estudiante. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerSemestre () {
@@ -794,13 +798,15 @@ export default {
             await axios.post(this.apiUrl + '/minutas', nuevaMinuta, { headers: Auth.postHeader() })
             this.$emit('cerrar')
             this.limpiarCampos()
-          } catch {
+          } catch (e) {
             if (estado === 'BOR') {
               this.$store.commit('setClaseNotError', true)
               this.$store.commit('setNotificacion', 'No se pudo guardar la minuta. ' + this.mensajeNotificacion.general)
+              console.log(e)
             } else {
               this.$store.commit('setClaseNotError', true)
               this.$store.commit('setNotificacion', 'No se pudo emitir la minuta. ' + this.mensajeNotificacion.general)
+              console.log(e)
             }
           }
         } else {
@@ -808,13 +814,15 @@ export default {
             await axios.patch(this.apiUrl + '/minutas/' + this.bitacora, nuevaMinuta, { headers: Auth.postHeader() })
             this.$emit('cerrar')
             this.limpiarCampos()
-          } catch {
+          } catch (e) {
             if (estado === 'BOR') {
               this.$store.commit('setClaseNotError', true)
               this.$store.commit('setNotificacion', 'No se pudo actualizar la información de la minuta. ' + this.mensajeNotificacion.general)
+              console.log(e)
             } else {
               this.$store.commit('setClaseNotError', true)
               this.$store.commit('setNotificacion', 'No se pudo emitir la minuta. ' + this.mensajeNotificacion.general)
+              console.log(e)
             }
           }
         }

@@ -462,27 +462,30 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/estados', { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch () {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', 'No se han obtenido las minutas a mostrar. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerParaRevisar () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
         this.listaRevision = response.data
-      } catch () {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', 'No se han podido obtener las minutas a revisar. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerRespondidas () {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/revision/respondidas', { headers: Auth.authHeader() })
         this.listaRespondidasGrupo = response.data
-      } catch () {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotifiacion', 'No se ha podido obtener las minutas respondidas. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async obtenerAvances () {
@@ -490,9 +493,10 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/avances/semanales/grupo/' + await this.grupo.id, { headers: Auth.authHeader() })
         this.listaAvances = response.data
         this.categorizarAvances()
-      } catch () {
+      } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
         this.$store.commit('setNotificacion', 'No se han obtenido las minutas de avance semanal. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     editarBorrador: function (id) {

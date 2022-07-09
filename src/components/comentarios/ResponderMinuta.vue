@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'mensajeNotificacion']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
@@ -50,7 +50,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
         this.bitacora = response.data
       } catch (e) {
-        console.log('No fue posible obtener la información de la minuta seleccionada')
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la información de la minuta seleccionada. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -59,7 +60,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/comentarios/' + bitacoraId, { headers: Auth.authHeader() })
         this.comentarios = response.data
       } catch (e) {
-        console.log('No fue posible obtener los comentarios de la minuta')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener los comentarios de la minuta. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -68,8 +70,11 @@ export default {
       try {
         await axios.post(this.apiUrl + '/respuestas', envio, { headers: Auth.postHeader() })
         this.$emit('cerrar')
+        this.$store.commit('setClaseNotExito', true)
+        this.$store.commit('setNotificacion', 'Se han guardado con éxito sus respuestas.')
       } catch (e) {
-        console.log('No fue posible enviar las respuestas')
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible guardar las respuestas. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
