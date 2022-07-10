@@ -35,7 +35,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'jornadaActual'])
+    ...mapState(['apiUrl', 'jornadaActual', 'mensajeNotificacion'])
   },
   methods: {
     async obtenerJornadas () {
@@ -57,8 +57,10 @@ export default {
             this.mostrarJornadas = false
           }
         }
-      } catch {
-        console.log('No fue posible obtener las jornadas del profesor')
+      } catch (e) {
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener las jornadas. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     elegirTab: function (nombreTab) {
