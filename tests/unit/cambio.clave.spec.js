@@ -68,6 +68,16 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.entradas).toEqual(esperado)
   })
 
+  it('variable "notificacion" se inicializa correctamente', () =>{
+    const esperado = {
+      mostrar: false,
+      mensaje: '',
+      error: false
+    }
+    const wrapper = shallowMount(CambioClave)
+    expect(wrapper.vm.notificacion).toEqual(esperado)
+  })
+
   it('método "validarActual" funciona correctamente para "actual" igual a "undefined"', () => {
     const wrapper = shallowMount(CambioClave, {
       data() {
@@ -351,5 +361,23 @@ describe('CambioClave.vue', () => {
     expect(wrapper.vm.actual).toEqual('')
     expect(wrapper.vm.nueva).toEqual('')
     expect(wrapper.vm.repetirNueva).toEqual('')
+  })
+
+  it('método "cerrarNotificacion" funciona correctamente', () => {
+    const wrapper = shallowMount(CambioClave, {
+      data () {
+        return {
+          notificacion: {
+            mostrar: true,
+            mensaje: 'Mensaje cualquiera',
+            error: true
+          }
+        }
+      }
+    })
+    wrapper.vm.cerrarNotificacion()
+    expect(wrapper.vm.notificacion.mostrar).toBeFalsy()
+    expect(wrapper.vm.notificacion.error).toBeFalsy()
+    expect(wrapper.vm.notificacion.mensaje).toEqual('')
   })
 })
