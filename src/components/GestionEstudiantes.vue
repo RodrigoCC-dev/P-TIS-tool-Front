@@ -305,7 +305,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'secciones']),
+    ...mapState(['apiUrl', 'secciones', 'mensajeNotificacion']),
 
     mostrarEliminar: function () {
       return this.eliminados.length > 0
@@ -338,10 +338,11 @@ export default {
         } else {
           this.mostrarLista = false
         }
-      } catch {
+      } catch (e) {
         this.mostrarLista = false
         this.$store.commit('setClaseNotAlarma', true)
-        this.$store.commit('setNotificacion', 'Hubo un error inesperado al intentar obtener los datos de los estudiantes. Por favor intente nuevamente recargando la página.')
+        this.$store.commit('setNotificacion', 'Hubo un error inesperado al intentar obtener los datos de los estudiantes. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     nuevoEstudiante: function () {
@@ -384,7 +385,7 @@ export default {
               await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
               this.obtenerEstudiantes()
               this.$store.commit('setClaseNotExito', true)
-              this.$store.commit('setNotificacion', 'Se ha agregado al estudiante con éxito')
+              this.$store.commit('setNotificacion', 'Se ha agregado al estudiante con éxito.')
             } catch (e) {
               console.error(e)
               this.$store.commit('setClaseNotError', true)
