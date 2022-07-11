@@ -273,7 +273,7 @@ export default {
             await axios.post(this.apiUrl + '/stakeholders', nuevo, { headers: Auth.postHeader() })
             this.obtenerStakeholders()
             this.$store.commit('setClaseNotExito', true)
-            this.$store.commit('setNotificacion', 'Se ha creado exitosamente el nuevo cliente')
+            this.$store.commit('setNotificacion', 'Se ha creado exitósamente el nuevo cliente')
           } catch (e) {
             console.error(e)
             console.log('')
@@ -289,7 +289,7 @@ export default {
             await axios.patch(this.apiUrl + '/stakeholders/' + this.idStakeholder, nuevo, { headers: Auth.postHeader() })
             this.obtenerStakeholders()
             this.$store.commit('setClaseNotExito', true)
-            this.$store.commit('setNotificacion', 'Se ha actualizado el cliente exitosamente')
+            this.$store.commit('setNotificacion', 'Se ha actualizado el cliente exitósamente')
           } catch (e) {
             console.error(e)
             this.$store.commit('setClaseNotError', true)
