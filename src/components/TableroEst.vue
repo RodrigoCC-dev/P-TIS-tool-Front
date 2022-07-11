@@ -484,7 +484,7 @@ export default {
         this.listaRespondidasGrupo = response.data
       } catch (e) {
         this.$store.commit('setClaseNotAlarma', true)
-        this.$store.commit('setNotifiacion', 'No se ha podido obtener las minutas respondidas. ' + this.mensajeNotificacion.general)
+        this.$store.commit('setNotificacion', 'No se ha podido obtener las minutas respondidas. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },

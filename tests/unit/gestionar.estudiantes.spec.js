@@ -10,12 +10,30 @@ const store = createStore({
   state() {
     return {
       apiUrl: apiUrl,
-      secciones: []
+      secciones: [],
+      notificacion: {
+        mensaje: '',
+        mostrar: false
+      },
+      claseNotificacion: {
+        exito: false,
+        alarma: false,
+        error: false
+      }
     }
   },
   mutations: {
     setSecciones (state, valor) {
       state.secciones = valor
+    },
+    setNotificacion (state, valor) {
+      state.notificacion.mensaje = valor
+      state.notificacion.mostrar = true
+    },
+    setClaseNotExito (state, valor) {
+      state.claseNotificacion.exito = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.error = false
     }
   }
 })
