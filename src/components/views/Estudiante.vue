@@ -1,6 +1,7 @@
 <template>
   <div class="has-text-left">
 
+    <Notificacion/>
     <div v-if="crearMinuta">
 
       <Minuta :tipo-minuta="tipo" :id-bitacora="idBitacora" :id-motivo="idMotivo" :re-emitir="esNuevaEmision" :letra-revision="nuevaRevision" :estado="revisionEstado" v-if="verFormulario" @cerrar="cerrarFormulario"/>
@@ -101,6 +102,7 @@ import Emision from '@/components/comentarios/NuevaMinuta.vue'
 import Semanal from '@/components/semanal/Semanal.vue'
 import RevisionSemanal from '@/components/semanal/RevisionSemanal.vue'
 import RevisarMinuta from '@/components/comentarios/RevisarMinuta.vue'
+import Notificacion from '@/components/Notificacion.vue'
 
 import axios from 'axios'
 import Auth from '@/services/auth.js'
@@ -118,7 +120,8 @@ export default {
     Emision,
     Semanal,
     RevisionSemanal,
-    RevisarMinuta
+    RevisarMinuta,
+    Notificacion
   },
   data () {
     return {

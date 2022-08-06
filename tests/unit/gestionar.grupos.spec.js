@@ -10,12 +10,30 @@ const store = createStore({
   state() {
     return {
       apiUrl: apiUrl,
-      jornadaActual: 'Diurna'
+      jornadaActual: 'Diurna',
+      notificacion: {
+        mensaje: '',
+        mostrar: false
+      },
+      claseNotificacion: {
+        exito: false,
+        alarma: false,
+        error: false
+      }
     }
   },
   mutations: {
     setJornadaActual (state, valor) {
       state.jornadaActual = valor
+    },
+    setNotificacion (state, valor) {
+      state.notificacion.mensaje = valor
+      state.notificacion.mostrar = true
+    },
+    setClaseNotExito (state, valor) {
+      state.claseNotificacion.exito = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.error = false
     }
   }
 })

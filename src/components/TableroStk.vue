@@ -205,7 +205,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'stakeholder', 'grupo', 'jornadaActual']),
+    ...mapState(['apiUrl', 'stakeholder', 'grupo', 'jornadaActual', 'mensajeNotificacion']),
 
     mostrarRevision: function () {
       return this.listaRevision.length > 0
@@ -268,8 +268,10 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/cliente/' + this.grupo.id, { headers: Auth.authHeader() })
         this.listaMinutas = response.data
         this.categorizarMinutas()
-      } catch {
-        console.log('No se han obtenido las minutas a mostrar')
+      } catch (e) {
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se han obtenido las minutas a mostrar. ' + this.mensajeNotficacion.general)
+        console.log(e)
       }
     },
     revisarMinuta: function (id) {

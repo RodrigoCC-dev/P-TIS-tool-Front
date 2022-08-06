@@ -255,7 +255,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'estudiante', 'grupo']),
+    ...mapState(['apiUrl', 'estudiante', 'grupo', 'mensajeNotificacion']),
 
     actualizarAvance: function () {
       return Object.keys(this.bitacora).length > 0
@@ -339,7 +339,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/correlativo/semanal/' + this.grupo.id, { headers: Auth.authHeader() })
         this.minuta.correlativo = response.data
       } catch (e) {
-        console.log('No fue posible obtener el correlativo de la minuta')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener el correlativo de la minuta. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -347,8 +348,10 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/semestres', { headers: Auth.authHeader() })
         this.semestre = response.data
-      } catch {
-        console.log('No se obtuvo la información del semestre')
+      } catch (e) {
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se obtuvo la información del semestre. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     async guardar () {
@@ -366,8 +369,11 @@ export default {
           try {
             await axios.post(this.apiUrl + '/minutas/avance/semanal', items, { headers: Auth.postHeader() })
             this.$emit('cerrar')
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se han guardado los logros, metas e impedimentos.')
           } catch (e) {
-            console.log('No fue posible guardar los logros y metas de la semana')
+            this.$store.commit('setClaseNotError', true)
+            this.$store.commit('setNotificacion', 'No fue posible guardar los logros y metas de la semana. ' + this.mensajeNotificacion.general)
             console.log(e)
           }
         } else {
@@ -388,8 +394,11 @@ export default {
       try {
         await axios.post(this.apiUrl + '/minutas/actualizar/avance/semanal', items, { headers: Auth.postHeader() })
         this.$emit('cerrar')
+        this.$store.commit('setClaseNotExito', true)
+        this.$store.commit('setNotificacion', 'Se han actualizado los logros, metas e impedimentos.')
       } catch (e) {
-        console.log('No fue posible actualizar los logros y metas de la semana')
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible actualizar los logros y metas de la semana. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },

@@ -1,6 +1,7 @@
 <template>
   <div class="has-text-left">
 
+    <Notificacion/>
     <div v-if="verTablero">
 
       <SelectorJornada/>
@@ -91,6 +92,7 @@ import Comentar from '@/components/comentarios/ComentarMinuta.vue'
 import Respuestas from '@/components/comentarios/RespuestasMinuta.vue'
 import SelectorJornada from '@/components/SelectorJornada.vue'
 import RevisarMinuta from '@/components/comentarios/RevisarMinuta.vue'
+import Notificacion from '@/components/Notificacion.vue'
 
 export default {
   name: 'Stakeholder',
@@ -99,7 +101,8 @@ export default {
     Comentar,
     Respuestas,
     SelectorJornada,
-    RevisarMinuta
+    RevisarMinuta,
+    Notificacion
   },
   data () {
     return {

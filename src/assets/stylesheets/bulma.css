@@ -2855,6 +2855,21 @@ fieldset[disabled] .button {
   color: #cc0f35;
 }
 
+.notification.is-danger-usach {
+  background-color: rgba(124, 37, 41, 0.7);
+  color: #fff;
+}
+
+.notification.is-success-usach {
+  background-color: rgba(37, 74, 93, 0.5);
+  color: #fff;
+}
+
+.notification.is-warning-usach {
+  background-color: rgba(222, 124, 0, 0.5);
+  color: rgba(0, 0, 0, 0.7);
+}
+
 .progress {
   -moz-appearance: none;
   -webkit-appearance: none;

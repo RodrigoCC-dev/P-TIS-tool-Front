@@ -305,7 +305,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'secciones']),
+    ...mapState(['apiUrl', 'secciones', 'mensajeNotificacion']),
 
     mostrarEliminar: function () {
       return this.eliminados.length > 0
@@ -338,9 +338,11 @@ export default {
         } else {
           this.mostrarLista = false
         }
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
         this.mostrarLista = false
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'Hubo un error inesperado al intentar obtener los datos de los estudiantes. ' + this.mensajeNotificacion.general)
+        console.log(e)
       }
     },
     nuevoEstudiante: function () {
@@ -382,16 +384,28 @@ export default {
             try {
               await axios.post(this.apiUrl + '/estudiantes', nuevoEstudiante, { headers: Auth.postHeader() })
               this.obtenerEstudiantes()
+              this.$store.commit('setClaseNotExito', true)
+              this.$store.commit('setNotificacion', 'Se ha agregado al estudiante con éxito.')
             } catch (e) {
-              console.log(e)
+              console.error(e)
+              this.$store.commit('setClaseNotError', true)
+              this.$store.commit('setNotificacion', 'Hubo un error al tratar de agregar al estudiante. Por favor, intente nuevamente.')
             }
           }
         } else {
           try {
             await axios.patch(this.apiUrl + '/estudiantes/' + this.estudiante.id, nuevoEstudiante, { headers: Auth.postHeader() })
             this.obtenerEstudiantes()
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se ha actualizado el estudiante correctamente')
           } catch (e) {
-            console.log(e)
+            console.error(e)
+            try {
+              this.$store.commit('setNotificacion', e.response)
+            } catch {
+              this.$store.commit('setNotificacion', 'Hubo un error al tratar de actualizar el estudiante. Por favor, intente nuevamente.')
+            }
+            this.$store.commit('setClaseNotError', true)
           }
         }
         this.verFormulario = false
@@ -588,11 +602,22 @@ export default {
         await axios.post(this.apiUrl + '/estudiantes/eliminar', estudiante, { headers: Auth.postHeader() })
         this.notificar = false
         this.obtenerEstudiantes()
+        this.$store.commit('setClaseNotExito', true)
+        if (this.eliminados.length === 1) {
+          this.$store.commit('setNotificacion', 'El estudiante ha sido eliminado exitosamente')
+        } else {
+          this.$store.commit('setNotificacion', 'Los estudiantes se han eliminado exitosamente')
+        }
         this.eliminados = []
       } catch (e) {
         this.notificar = false
-        console.log('No fue posible eliminar los estudiantes seleccioandos')
-        console.log(e)
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        try {
+          this.$store.commit('setNotificacion', e.response)
+        } catch {
+          this.$store.commit('setNotificacion', 'No fue posible eliminar los estudiantes seleccioandos')
+        }
       }
     },
     cargarNomina: function () {
@@ -612,9 +637,16 @@ export default {
           await axios.post(this.apiUrl + '/estudiantes/archivo/nuevos', formData, { headers: Auth.fileHeader() })
           this.obtenerEstudiantes()
           this.limpiarNomina()
+          this.$store.commit('setClaseNotExito', true)
+          this.$store.commit('setNotificacion', 'Se han agregado los estudiantes exitosamente')
         } catch (e) {
-          console.log('No se ha podido enviar el archivo')
-          console.log(e)
+          console.error(e)
+          this.$store.commit('setClaseNotError', true)
+          try {
+            this.$store.commit('setNotificacion', e.response)
+          } catch {
+            this.$store.commit('setNotificacion', 'No se han podido enviar el archivo para agregar los nuevos estudiantes. Por favor intente nuevamente.')
+          }
         }
       }
     },
@@ -656,13 +688,14 @@ export default {
             document.body.appendChild(fileLink)
             fileLink.click()
           } else {
-            console.log('No fue posible descargar del archivo')
+            this.$store.commit('setClaseNotError', true)
+            this.$store.commit('setNotificacion', 'No fue posible descargar del archivo. Por favor intente nuevamente.')
           }
         }).catch(function (e) {
-          console.log(e)
+          console.error(e)
         })
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     },
     buscarIdSeccion: function (codigo) {
