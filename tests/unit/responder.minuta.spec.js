@@ -23,6 +23,16 @@ const store = createStore({
       state.claseNotificacion.exito = valor
       state.claseNotificacion.alarma = false
       state.claseNotificacion.error = false
+    },
+    setClaseNotAlarma (state, valor) {
+      state.claseNotificacion.alarma = valor
+      state.claseNotificacion.exito = false
+      state.claseNotificacion.error = false
+    },
+    setClaseNotError (state, valor) {
+      state.claseNotificacion.error = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.exito = false
     }
   }
 })
