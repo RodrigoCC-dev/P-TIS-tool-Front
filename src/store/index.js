@@ -12,7 +12,20 @@ export default createStore({
     secciones: [],
     tipoAprobaciones: [],
     motivos: [],
-    jornadaActual: 'Diurna'
+    jornadaActual: 'Diurna',
+    notificacion: {
+      mensaje: '',
+      mostrar: false
+    },
+    claseNotificacion: {
+      exito: false,
+      alarma: false,
+      error: false
+    },
+    mensajeNotificacion: {
+      alarma: 'No fue posible obtener alguno datos del servidor. ',
+      general: 'Por favor, intente nuevamente recargando la página.'
+    }
   },
   mutations: {
     setAutenticacion (state, valor) {
@@ -44,6 +57,32 @@ export default createStore({
     },
     setJornadaActual (state, valor) {
       state.jornadaActual = valor
+    },
+    setNotificacion (state, valor) {
+      state.notificacion.mensaje = valor
+      state.notificacion.mostrar = true
+    },
+    setClaseNotExito (state, valor) {
+      state.claseNotificacion.exito = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.error = false
+    },
+    setClaseNotAlarma (state, valor) {
+      state.claseNotificacion.alarma = valor
+      state.claseNotificacion.exito = false
+      state.claseNotificacion.error = false
+    },
+    setClaseNotError (state, valor) {
+      state.claseNotificacion.error = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.exito = false
+    },
+    cerrarNotificacion (state) {
+      state.notificacion.mensaje = ''
+      state.notificacion.mostrar = false
+      state.claseNotificacion.error = false
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.exito = false
     }
   },
   actions: {

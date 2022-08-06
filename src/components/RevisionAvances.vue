@@ -129,8 +129,9 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/avances/semanales/grupo/' + this.grupoSeleccionado.id, { headers: Auth.authHeader() })
         this.listaAvances = response.data
       } catch (e) {
-        console.log('No se han obtenido las minutas de avance del grupo seleccionado')
         console.log(e)
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No se han obtenido las minutas de avance del grupo seleccionado. Por favor intente nuevamente recargando la página.')
       }
     },
     revisarAvance: function (bitacora) {

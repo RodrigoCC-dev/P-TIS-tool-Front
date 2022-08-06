@@ -134,8 +134,10 @@ export default {
       try {
         const response = await axios.get(this.apiUrl + '/minutas/grupo/' + grupoId, { headers: Auth.authHeader() })
         this.listaMinutas = response.data
-      } catch {
-        console.log('No fue posible obtener las minutas')
+      } catch (e) {
+        console.log(e)
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la lista de minutas. Por favor, intente nuevamente recargando la página.')
       }
     },
     async traerMinuta (bitacoraId) {
@@ -143,8 +145,10 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
         this.bitacora = response.data
         this.mostrarFormulario = true
-      } catch {
-        console.log('No fue posible obtener la información de la minuta seleccionada')
+      } catch (e) {
+        console.log(e)
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la información de la minuta seleccionada. Por favor intente nuevamente recargando la página.')
       }
     },
     cerrarFormulario: function () {

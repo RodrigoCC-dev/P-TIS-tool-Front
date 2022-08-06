@@ -27,7 +27,23 @@ const store = createStore({
           }
         }],
         stakeholders: []
+      },
+      notificacion: {
+        mensaje: '',
+        mostrar: false
+      },
+      claseNotificacion: {
+        exito: false,
+        alarma: false,
+        error: false
       }
+    }
+  },
+  mutations: {
+    setClaseNotAlarma (state, valor) {
+      state.claseNotificacion.alarma = valor
+      state.claseNotificacion.exito = false
+      state.claseNotificacion.error = false
     }
   }
 })

@@ -15,9 +15,12 @@ apt install -y cron socat
 
 # Emitir certificados
 cd ~/.acme.sh
-./acme.sh --issue -d mmrptis.ga -d www.mmrptis.ga -w /usr/share/nginx/html
+echo '---------------------------------------------'
+echo 'Ingrese el dominio que usará la aplicación:'
+read dominio
+./acme.sh --issue -d $dominio -d www.${dominio} -w /usr/share/nginx/html
 
 # Copiar certificados creados en carpeta de acceso
 mkdir /certificates
-cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.cer /certificates/mmrptis.ga.cer
-cp /root/.acme.sh/mmrptis.ga/mmrptis.ga.key /certificates/mmrptis.ga.key
+cp /root/.acme.sh/${dominio}/${dominio}.cer /certificates/cert_file.cer
+cp /root/.acme.sh/${dominio}/${dominio}.key /certificates/key_file.key

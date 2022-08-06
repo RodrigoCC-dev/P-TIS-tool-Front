@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo', 'tipoAprobaciones']),
+    ...mapState(['apiUrl', 'grupo', 'tipoAprobaciones', 'mensajeNotificacion']),
 
     mostrarMinuta: function () {
       return Object.keys(this.bitacora).length > 0
@@ -101,7 +101,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/' + bitacoraId, { headers: Auth.authHeader() })
         this.bitacora = response.data
       } catch (e) {
-        console.log('No fue posible obtener la información de la minuta seleccionada')
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible obtener la información de la minuta seleccionada. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -113,8 +114,11 @@ export default {
       }
       try {
         await axios.post(this.apiUrl + '/comentarios', comentarios, { headers: Auth.postHeader() })
+        this.$store.commit('setClaseNotExito', true)
+        this.$store.commit('setNotificacion', 'Se han guardado sus comentarios.')
       } catch (e) {
-        console.log('No fue posible enviar los comentarios')
+        this.$store.commit('setClaseNotError', true)
+        this.$store.commit('setNotificacion', 'No fue posible guardar los comentarios. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },

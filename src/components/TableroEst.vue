@@ -379,7 +379,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiUrl', 'grupo']),
+    ...mapState(['apiUrl', 'grupo', 'mensajeNotificacion']),
 
     mostrarBorradores: function () {
       return this.listaBorradores.length > 0
@@ -463,7 +463,8 @@ export default {
         this.listaMinutas = response.data
         this.categorizarMinutas()
       } catch (e) {
-        console.log('No se han obtenido las minutas a mostrar')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se han obtenido las minutas a mostrar. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -472,7 +473,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/grupo', { headers: Auth.authHeader() })
         this.listaRevision = response.data
       } catch (e) {
-        console.log('No se han podido obtener las minutas a revisar')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se han podido obtener las minutas a revisar. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -481,7 +483,8 @@ export default {
         const response = await axios.get(this.apiUrl + '/minutas/revision/respondidas', { headers: Auth.authHeader() })
         this.listaRespondidasGrupo = response.data
       } catch (e) {
-        console.log('No se ha podido obtener las minutas respondidas')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se ha podido obtener las minutas respondidas. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },
@@ -491,7 +494,8 @@ export default {
         this.listaAvances = response.data
         this.categorizarAvances()
       } catch (e) {
-        console.log('No se han obtenido las minutas de avance semanal')
+        this.$store.commit('setClaseNotAlarma', true)
+        this.$store.commit('setNotificacion', 'No se han obtenido las minutas de avance semanal. ' + this.mensajeNotificacion.general)
         console.log(e)
       }
     },

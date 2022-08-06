@@ -1,6 +1,15 @@
 <template>
   <div>
 
+    <div class="columns is-centered">
+      <div class="column is-7">
+        <div class="notification" :class="notificacion.error ? 'is-danger-usach' : 'is-success-usach'" v-if="notificacion.mostrar">
+          <button class="delete" @click="cerrarNotificacion"></button>
+          {{ notificacion.mensaje }}
+        </div>
+      </div>
+    </div>
+
     <div class="columns">
 
       <div class="column is-6 is-offset-3">
@@ -86,6 +95,11 @@ export default {
           error: false,
           mensaje: ''
         }
+      },
+      notificacion: {
+        mostrar: false,
+        mensaje: '',
+        error: false
       }
     }
   },
@@ -113,9 +127,15 @@ export default {
     validarNueva: function () {
       if (this.nueva !== undefined) {
         if (this.nueva !== '') {
-          this.entradas.nueva.error = false
-          this.entradas.nueva.mensaje = ''
-          return true
+          if (this.nueva !== this.actual) {
+            this.entradas.nueva.error = false
+            this.entradas.nueva.mensaje = ''
+            return true
+          } else {
+            this.entradas.nueva.error = true
+            this.entradas.nueva.mensaje = 'La clave ingresada es idéntica a la clave actual'
+            return false
+          }
         } else {
           this.entradas.nueva.error = true
           this.entradas.nueva.mensaje = 'No se ha ingresado la nueva clave'
@@ -194,11 +214,21 @@ export default {
           try {
             await axios.patch(this.apiUrl + '/usuarios/' + this.usuario.id, usuario, { headers: Auth.postHeader() })
             await Auth.login(this.usuario.email, this.nueva)
-            this.redirigirUsuario()
+            this.notificacion.mensaje = 'Se ha cambiado exitósamente la clave de acceso'
+            this.notificacion.error = false
+            this.notificacion.mostrar = true
+            // this.redirigirUsuario()
           } catch (e) {
             console.log('No se ha podido cambiar la clave de acceso')
             console.log(e)
+            this.notificacion.mensaje = 'Error, no ha ha podido cambiar la clave de acceso'
+            this.notificacion.error = true
+            this.notificacion.mostrar = true
           }
+        } else {
+          this.notificacion.mensaje = 'Ocurrió un error, intente nuevamente'
+          this.notificacion.error = true
+          this.notificacion.mostrar = true
         }
       }
     },
@@ -235,6 +265,11 @@ export default {
       this.limpiarActual()
       this.limpiarNueva()
       this.limpiarRepetir()
+    },
+    cerrarNotificacion: function () {
+      this.notificacion.mostrar = false
+      this.notificacion.error = false
+      this.notificacion.mensaje = ''
     }
   }
 }

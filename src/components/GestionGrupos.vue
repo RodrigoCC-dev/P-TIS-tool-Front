@@ -208,17 +208,31 @@ export default {
         const response = await axios.get(this.apiUrl + '/estudiantes/asignacion/sin_grupo', { headers: Auth.authHeader() })
         if (response.data !== null) {
           this.listaEstudiantes = response.data
+        } else {
+          this.listaEstudiantes = []
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
+        this.$store.commit('setClaseNotError', true)
+        try {
+          this.$store.commit('setNotificacion', error.response)
+        } catch (e) {
+          this.$store.commit('setNotificacion', 'Error. No se ha podido obtener los estudiantes a asignar. Por favor recargue la página e intente nuevamente.')
+        }
       }
     },
     async obtenerGrupos () {
       try {
         const response = await axios.get(this.apiUrl + '/grupos', { headers: Auth.authHeader() })
         this.listaGrupos = response.data
-      } catch {
-        console.log('No se han obtenido los grupos')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        try {
+          this.$store.commit('setNotificacion', e.response)
+        } catch {
+          this.$store.commit('setNotificacion', 'Error. No se han obtenido los grupos. Por favor recargue la página.')
+        }
       }
     },
     async agregar () {
@@ -231,16 +245,32 @@ export default {
           try {
             await axios.post(this.apiUrl + '/grupos', nuevoGrupo, { headers: Auth.postHeader() })
             this.obtenerGrupos()
-          } catch {
-            console.log('No fue posible crear el grupo')
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se ha creado el grupo exitosamente')
+          } catch (e) {
+            console.error(e)
+            this.$store.commit('setClaseNotError', true)
+            try {
+              this.$store.commit('setNotificacion', e.response)
+            } catch {
+              this.$store.commit('setNotificacion', 'Error. No fue posible crear el grupo. Por favor, intente nuevamente.')
+            }
           }
         } else {
           try {
             await axios.patch(this.apiUrl + '/grupos/' + this.idGrupo, nuevoGrupo, { headers: Auth.postHeader() })
             this.obtenerGrupos()
             this.actualizarGrupo = false
-          } catch {
-            console.log('No fue posible actualizar el grupo')
+            this.$store.commit('setClaseNotExito', true)
+            this.$store.commit('setNotificacion', 'Se ha actualizado el grupo correctamente')
+          } catch (e) {
+            console.error(e)
+            this.$store.commit('setClaseNotError', true)
+            try {
+              this.$store.commit('setNotificacion', e.response)
+            } catch {
+              this.$store.commit('Error. No fue posible actualizar el grupo. Por favor intente nuevamente.')
+            }
           }
         }
         this.verFormulario = false
@@ -277,8 +307,14 @@ export default {
             this.grupo.nombre = 'G' + this.grupo.correlativo
           }
         }
-      } catch {
-        console.log('No se pudo obtener correlativo')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        try {
+          this.$store.commit('setNotificacion', e.response)
+        } catch {
+          this.$store.commit('setNotificacion', 'No se pudo obtener el correlativo del grupo. Por favor intente nuevamente.')
+        }
       }
     },
     validarProyecto: function () {
@@ -323,8 +359,16 @@ export default {
       try {
         await axios.delete(this.apiUrl + '/grupos/' + this.notificar.id, { headers: Auth.authHeader() })
         this.obtenerGrupos()
-      } catch {
-        console.log('No fue posible borrar el grupo')
+        this.$store.commit('setClaseNotExito', true)
+        this.$store.commit('setNotificacion', 'Se ha borrado el grupo exitosamente')
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setClaseNotError', true)
+        try {
+          this.$store.commit('setNotificacion', e.response)
+        } catch {
+          this.$store.commit('setNotificacion', 'Error. No se ha podido eliminar el grupo. Por favor, intente nuevamente.')
+        }
       }
       this.notificar.mostrar = false
       this.notificar.id = 0
