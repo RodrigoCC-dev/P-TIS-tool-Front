@@ -31,6 +31,17 @@ const store = createStore({
         {id: 235, identificador: 'RC', descripcion: 'Rechazada con comentarios', rango: 4}
       ]
     }
+  },
+  mutations: {
+    setNotificacion (state, valor) {
+      state.notificacion.mensaje = valor
+      state.notificacion.mostrar = true
+    },
+    setClaseNotExito (state, valor) {
+      state.claseNotificacion.exito = valor
+      state.claseNotificacion.alarma = false
+      state.claseNotificacion.error = false
+    }
   }
 })
 
