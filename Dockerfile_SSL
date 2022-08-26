@@ -31,7 +31,7 @@ RUN rm -rf /tmp/* /var/cache/apk/*
 RUN apt-get update && apt-get install -y nano git
 
 # Copy artifact build from the 'build environment'
-COPY ./nginx_SSl.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx_ssl.conf /etc/nginx/conf.d/default.conf
 COPY ./dist /usr/share/nginx/html
 
 # Run nginx
