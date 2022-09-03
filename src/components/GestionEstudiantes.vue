@@ -400,11 +400,7 @@ export default {
             this.$store.commit('setNotificacion', 'Se ha actualizado el estudiante correctamente')
           } catch (e) {
             console.error(e)
-            try {
-              this.$store.commit('setNotificacion', e.response)
-            } catch {
-              this.$store.commit('setNotificacion', 'Hubo un error al tratar de actualizar el estudiante. Por favor, intente nuevamente.')
-            }
+            this.$store.commit('setNotificacion', 'Hubo un error al tratar de actualizar el estudiante. Por favor, intente nuevamente.')
             this.$store.commit('setClaseNotError', true)
           }
         }
@@ -613,11 +609,7 @@ export default {
         this.notificar = false
         console.error(e)
         this.$store.commit('setClaseNotError', true)
-        try {
-          this.$store.commit('setNotificacion', e.response)
-        } catch {
-          this.$store.commit('setNotificacion', 'No fue posible eliminar los estudiantes seleccioandos')
-        }
+        this.$store.commit('setNotificacion', 'No fue posible eliminar los estudiantes seleccioandos')
       }
     },
     cargarNomina: function () {
@@ -642,11 +634,7 @@ export default {
         } catch (e) {
           console.error(e)
           this.$store.commit('setClaseNotError', true)
-          try {
-            this.$store.commit('setNotificacion', e.response)
-          } catch {
-            this.$store.commit('setNotificacion', 'No se han podido enviar el archivo para agregar los nuevos estudiantes. Por favor intente nuevamente.')
-          }
+          this.$store.commit('setNotificacion', 'No se han podido enviar el archivo para agregar los nuevos estudiantes. Por favor intente nuevamente.')
         }
       }
     },
